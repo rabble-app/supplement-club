@@ -25,7 +25,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} antialiased`}
       >
+        <Header />
+
         {children}
+
+        <Footer />
       </body>
     </html>
   );
