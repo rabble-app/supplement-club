@@ -108,7 +108,7 @@ export default function Home() {
     <div className="min-h-screen container-width grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
 
       <div className="relative">
-        <div className="flex flex-col lg:justify-center items-start absolute top-0 pt-[72px] px-[16px] lg:p-[0] lg:left-[68px] lg:w-[600px] h-full">
+        <div className="flex flex-col lg:justify-center items-start absolute top-0 pt-[72px] md:pt-[131px] px-[16px] lg:px-[0] lg:left-[68px] lg:w-[600px] h-full">
           <div className="text-[32px] lg:text-[34px] leading-[48px] lg:leading-[51px] font-[700] font-helvetica text-blue mb-[23px]">Pharmaceutical Grade Supplements at a Fraction of the Cost</div>
           <p className="text-[16px] lg:text-[24px] leading-[24px] lg:leading-[36px] text-blue mb-[58px] max-w-[461px]">Join buying teams for 100% pure, premium ingredients direct from world-leading laboratories and get it delivered direct to you up to 73% cheaper.</p>
           <Image
@@ -128,7 +128,7 @@ export default function Home() {
         />
 
         <Image
-          className="lg:hidden h-[720px]"
+          className="lg:hidden"
           src="/images/homepage/supplement-mobile.svg"
           alt="Buy product"
           width={1600}
