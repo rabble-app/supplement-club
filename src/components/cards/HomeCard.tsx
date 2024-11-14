@@ -1,7 +1,7 @@
 import { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import Image from "next/image";
 
-export default function HomeCard({ model }: { model: IHomeCardModel }) {
+export default function HomeCard(model: Readonly<IHomeCardModel>) {
     return (
         <div className="grid gap-y-[16px]">
             <div className="flex gap-x-[8px] items-center">

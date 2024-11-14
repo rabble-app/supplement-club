@@ -4,4 +4,5 @@ export interface IHomeCardModel {
     title: string;
     subtitle: string;
     description: string;
+    id: number;
 }

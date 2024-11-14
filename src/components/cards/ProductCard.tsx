@@ -3,14 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { IProductModel } from "@/utils/models/IProductModel";
 
-export default function ProductCard({ product }: { product: IProductModel }) {
+export default function ProductCard(product: Readonly<IProductModel>) {
     return (
         <div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
             <span className="leading-[18px] text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px]">3 Month Supply</span>
             {product.isComming && (
-                <>
-                    <p className="text-[36px] leading-[41px] text-white bg-blue py-[6px] px-[10px] absolute top-[200px] left-[0] right-[0] text-center">Coming Soon</p>
-                </>
+                <p className="text-[36px] leading-[41px] text-white bg-blue py-[6px] px-[10px] absolute top-[200px] left-[0] right-[0] text-center">Coming Soon</p>
             )}
             <Image
                 src={product.src}
@@ -29,9 +27,7 @@ export default function ProductCard({ product }: { product: IProductModel }) {
                             height={18}
                         />
                         {product.subscribers > 0 && (
-                            <>
-                                <span>{product.subscribers}</span>
-                            </>
+                            <span>{product.subscribers}</span>
                         )}
                     </div>
                 </div>

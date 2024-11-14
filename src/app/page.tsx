@@ -17,26 +17,32 @@ import { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 
 const faqs = [
   {
+    id: 1,
     question: 'What is Supplement Club?',
     answer: 'AG1 is a daily Foundational Nutrition supplement that supports your health holistically. It’s a science-driven blend of vitamins, good bacteria, and whole food sourced nutrients that lay the foundation for daily performance',
   },
   {
+    id: 2,
     question: 'How and when do I drink my AG1?',
     answer: '',
   },
   {
+    id: 3,
     question: 'Do I need to drink AG1 every day?',
     answer: '',
   },
   {
+    id: 4,
     question: 'Can I take more than one scoop a day?',
     answer: '',
   },
   {
+    id: 5,
     question: 'Is AG1 organic?',
     answer: '',
   },
   {
+    id: 6,
     question: 'Do I get anything for recommending AG1?',
     answer: '',
   }
@@ -44,6 +50,7 @@ const faqs = [
 
 const products = [
   {
+    id: 1,
     src: "/images/homepage/supplement.svg",
     altSrc: "Supplement",
     corporation: "Balchem Corporation",
@@ -55,6 +62,7 @@ const products = [
     price: 42.00
   },
   {
+    id: 2,
     src: "/images/homepage/supplement.svg",
     altSrc: "Supplement",
     corporation: "Balchem Corporation",
@@ -66,6 +74,7 @@ const products = [
     price: 42.00
   },
   {
+    id: 3,
     src: "/images/homepage/supplement.svg",
     altSrc: "Supplement",
     corporation: "Balchem Corporation",
@@ -81,6 +90,7 @@ const products = [
 
 const homeCards = [
   {
+    id: 1,
     src: "/images/homepage/truck.svg",
     alt: "Truck",
     title: "Get Started Today",
@@ -88,6 +98,7 @@ const homeCards = [
     description: "Choose the supplements you want today, and we'll ship you a 'sync package' the next day. This ensures you have enough supply to last until the next quarterly drop."
   },
   {
+    id: 2,
     src: "/images/homepage/people.svg",
     alt: "People",
     title: "There’s Savings in Numbers",
@@ -95,6 +106,7 @@ const homeCards = [
     description: "Your sync package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of sync with the bulk ordering cycle."
   },
   {
+    id: 3,
     src: "/images/homepage/labs.svg",
     alt: "Labs",
     title: "Straight from the Source",
@@ -140,8 +152,8 @@ export default function Home() {
 
         <div className="grid gap-y-[56px] justify-end my-[80px] lg:my-[0] px-[16px] lg:px-[0]">
           <div className="text-[40px] lg:text-[96px] leading-[46px] lg:leading-[110px] font-[700] font-helvetica text-blue">How does it work?</div>
-          {homeCards.map((card, index) => (
-            <HomeCardComponent key={index} model={card} />
+          {homeCards.map((card) => (
+            <HomeCardComponent key={card.id} {...card} />
           ))}
         </div>
 
@@ -273,8 +285,8 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-[16px]">
-          {products.map((product, index) => (
-            <ProductCardComponent key={index} product={product} />
+          {products.map((product) => (
+            <ProductCardComponent key={product.id} {...product} />
           ))}
         </div>
       </div>
@@ -460,8 +472,8 @@ export default function Home() {
       <div className="grid lg:grid-cols-[294px_1fr] items-start mx-[16px] py-[80px] lg:p-[0] lg:pb-[100px]">
         <p className="text-[32px] lg:text-[40px] leading-[36px] lg:leading-[55px] text-black3 lg:mb-[24px] lg:mb-[0]">FAQs</p>
         <div>
-          {faqs.map((faq, index) => (
-            <Accordion key={index} type="single" collapsible>
+          {faqs.map((faq) => (
+            <Accordion key={faq.id} type="single" collapsible>
               <AccordionItem value="item-1">
                 <AccordionTrigger>{faq.question}</AccordionTrigger>
                 <AccordionContent>
