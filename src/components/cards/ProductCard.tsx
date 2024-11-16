@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { IProductModel } from "@/utils/models/IProductModel";
+import { IProductCardModel } from "@/utils/models/IProductCardModel";
 
-export default function ProductCard(product: Readonly<IProductModel>) {
+export default function ProductCard(product: Readonly<IProductCardModel>) {
     return (
         <div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
             <span className="leading-[18px] text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px]">3 Month Supply</span>

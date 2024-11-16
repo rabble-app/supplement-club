@@ -1,4 +1,4 @@
-export interface IProductModel {
+export default interface IProductCardModel {
     id: number;
     name: string;
     description: string;

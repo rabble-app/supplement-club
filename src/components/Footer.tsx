@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
-    return <footer className="flex flex-col items-center pt-[40px] px-[16px] pb-[40px] lg:pt-[60px] lg:px-[32px] lg:pb-[30px] bg-cream1">
+    return <footer className="flex flex-col items-center pt-[40px] pb-[40px] lg:pt-[60px] lg:px-[32px] lg:pb-[30px] bg-cream1">
         <div className="container-width grid gap-[24px] lg:grid-cols-[1fr_805px] lg:gap-[0]">
             <div className="flex flex-col gap-[24px]">
                 <p className="text-[24px] leading-[27px] font-[700] italic text-black">Supplement Club</p>

@@ -12,7 +12,7 @@ import {
 import HomeCardComponent from '@/components/cards/HomeCard'
 import ProductCardComponent from '@/components/cards/ProductCard'
 import { IFaqQuestionModel } from "@/utils/models/IFaqQuestionModel";
-import { IProductModel } from "@/utils/models/IProductModel";
+import { IProductCardModel } from "@/utils/models/IProductCardModel";
 import { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 
 const faqs = [
@@ -86,7 +86,7 @@ const products = [
     price: 39.50,
     isComming: true
   }
-] as IProductModel[]
+] as IProductCardModel[]
 
 const homeCards = [
   {
@@ -119,9 +119,9 @@ export default function Home() {
   return (
     <div className="min-h-screen container-width grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
 
-      <div className="relative">
+      <div className="relative  mx-[-16px] md:mx-[0]">
         <div className="flex flex-col lg:justify-center items-start absolute top-0 pt-[72px] md:pt-[131px] px-[16px] lg:px-[0] lg:left-[68px] lg:w-[600px] h-full">
-          <div className="text-[32px] lg:text-[34px] leading-[48px] lg:leading-[51px] font-[700] font-helvetica text-blue mb-[23px]">Pharmaceutical Grade Supplements at a Fraction of the Cost</div>
+          <div className="text-[32px] lg:text-[34px] leading-[48px] lg:leading-[51px] font-[700] text-blue mb-[23px]">Pharmaceutical Grade Supplements at a Fraction of the Cost</div>
           <p className="text-[16px] lg:text-[24px] leading-[24px] lg:leading-[36px] text-blue mb-[58px] max-w-[461px]">Join buying teams for 100% pure, premium ingredients direct from world-leading laboratories and get it delivered direct to you up to 73% cheaper.</p>
           <Image
             className="my-auto lg:ml-[175px] h-[160px]"
@@ -148,10 +148,10 @@ export default function Home() {
         />
       </div>
 
-      <div className="grid lg:grid-cols-[632px_1fr] gap-x-[73px] bg-white">
+      <div className="grid lg:grid-cols-[632px_1fr] mx-[-16px] md:mx-[0] gap-x-[73px] bg-white">
 
         <div className="grid gap-y-[56px] justify-end my-[80px] lg:my-[0] px-[16px] lg:px-[0]">
-          <div className="text-[40px] lg:text-[96px] leading-[46px] lg:leading-[110px] font-[700] font-helvetica text-blue">How does it work?</div>
+          <div className="text-[40px] lg:text-[96px] leading-[46px] lg:leading-[110px] font-[700] text-blue">How does it work?</div>
           {homeCards.map((card) => (
             <HomeCardComponent key={card.id} {...card} />
           ))}
@@ -183,7 +183,7 @@ export default function Home() {
 
       </div>
 
-      <div className="lg:container-width grid lg:grid-cols-2 gap-x-[42px] py-[23px] px-[16px] lg:pt-[32px] lg:pb-[32px] lg:px-[0] bg-white">
+      <div className="lg:container-width grid lg:grid-cols-2 gap-x-[42px] py-[23px] mx-[-16px] md:mx-[0] px-[16px] lg:pt-[32px] lg:pb-[32px] lg:px-[0] bg-white">
         <div className="relative">
           <Image
             className="max-h-[716px]"
@@ -274,7 +274,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px] lg:p-[0]">
+      <div className="grid gap-y-[32px] lg:gap-y-[50px] pt-[48px]">
         <div className="flex justify-between items-center">
           <div className="grid gap-y-[16px]">
             <p className="text-[32px] leading-[36px] font-[700] text-black">Products</p>
@@ -291,7 +291,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-2 lg:grid-cols-7 mx-[16px] py-[80px] lg:p-[0]">
+      <div className="w-full grid grid-cols-2 lg:grid-cols-7 py-[80px] lg:p-[0]">
 
         <div className="p-[12px] border-grey10 border-[1px] grid gap-[4px]">
           <Image
@@ -412,7 +412,7 @@ export default function Home() {
           <p className="text-[18px] leading-[24px] text-black">Mood & Anxiety</p></div>
       </div>
 
-      <div className="lg:container-width relative bg-blue w-auto lg:bg-transparent">
+      <div className="lg:container-width relative bg-blue w-auto lg:bg-transparent mx-[-16px] md:mx-[0]">
         <div className="bg-blue px-[16px] lg:px-[32px] pt-[40px] pb-[76px] lg:mr-[270px] grid gap-[56px] lg:gap-[112px]">
           <p className="max-w-[500px] text-[32px] lg:text-[50px] leading-[40px] lg:leading-[58px] text-white order-1">Get started on Supplement club</p>
           <div className="max-w-[500px] text-[24px] lg:text-[32px] leading-[27px] lg:leading-[36px] font-[700] text-white order-2">
@@ -469,7 +469,7 @@ export default function Home() {
         />
       </div>
 
-      <div className="grid lg:grid-cols-[294px_1fr] items-start mx-[16px] py-[80px] lg:p-[0] lg:pb-[100px]">
+      <div className="grid lg:grid-cols-[294px_1fr] items-start py-[80px] lg:p-[0] lg:pb-[100px]">
         <p className="text-[32px] lg:text-[40px] leading-[36px] lg:leading-[55px] text-black3 lg:mb-[24px] lg:mb-[0]">FAQs</p>
         <div>
           {faqs.map((faq) => (
