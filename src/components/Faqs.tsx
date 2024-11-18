@@ -37,7 +37,7 @@ const faqs = [
 
 export default function Faqs() {
 	return (
-		<div className="grid lg:grid-cols-[294px_1fr] items-start py-[80px] lg:p-[0] lg:pb-[100px]">
+		<div className="grid lg:grid-cols-[294px_1fr] items-start pb-[80px] lg:pb-[100px]">
 			<p className="text-[32px] lg:text-[40px] leading-[36px] lg:leading-[55px] text-black3 lg:mb-[0]">
 				FAQs
 			</p>

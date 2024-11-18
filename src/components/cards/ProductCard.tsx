@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
+import type IProductCardModel from "@/utils/models/IProductCardModel";
 import Image from "next/image";
 import Link from "next/link";
-import { IProductCardModel } from "@/utils/models/IProductCardModel";
 
 export default function ProductCard(product: Readonly<IProductCardModel>) {
     return (
@@ -19,13 +19,8 @@ export default function ProductCard(product: Readonly<IProductCardModel>) {
             <div className="grid gap-y-[16px]">
                 <div className="flex justify-between items-center leading-[18px]">
                     <div className="text-grey4">Quarterly Subscription</div>
-                    <div className="text-blue grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
-                        <Image
-                            src="/images/people.svg"
-                            alt="People logomark"
-                            width={18}
-                            height={18}
-                        />
+					<div className="text-blue grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
+						<Image src="/images/people.svg" alt="People logomark" width={18} height={18} />
                         {product.subscribers > 0 && (
                             <span>{product.subscribers}</span>
                         )}
@@ -38,13 +33,8 @@ export default function ProductCard(product: Readonly<IProductCardModel>) {
                     <p className="leading-[18px] text-grey5">{product.description}</p>
                 </div>
 
-                <div className="grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
-                    <Image
-                        src="/images/icons/checkmark-icon.svg"
-                        alt="Checkmark logomark"
-                        width={18}
-                        height={18}
-                    />
+				<div className="grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
+					<Image src="/images/icons/checkmark-icon.svg" alt="Checkmark logomark" width={18} height={18} />
                     <p className="leading-[18px] text-black">100% Magnesium Bisglycinate TRAACS</p>
                 </div>
 
