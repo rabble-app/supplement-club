@@ -11,7 +11,7 @@ export default function Footer() {
                 <div className="flex items-center justify-start gap-x-[16px]">
                     <Link href={'https://www.facebook.com/'}>
                         <Image
-                            src="/images/homepage/facebook.svg"
+                            src="/images/facebook.svg"
                             alt="User profile bag"
                             width={13}
                             height={25}
@@ -19,7 +19,7 @@ export default function Footer() {
                     </Link>
                     <Link href={'https://www.instagram.com/'}>
                         <Image
-                            src="/images/homepage/instagram.svg"
+                            src="/images/instagram.svg"
                             alt="User profile bag"
                             width={25}
                             height={25}
@@ -27,7 +27,7 @@ export default function Footer() {
                     </Link>
                     <Link href={'https://www.tiktok.com/'}>
                         <Image
-                            src="/images/homepage/tiktok.svg"
+                            src="/images/tiktok.svg"
                             alt="User profile bag"
                             width={21}
                             height={25}

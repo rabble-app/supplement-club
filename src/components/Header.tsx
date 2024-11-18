@@ -30,7 +30,7 @@ export default function Header() {
                 <div className="hidden lg:flex lg:gap-x-[24px] lg:items-center">
                     <div className="flex gap-x-[8px] text-white">
                         <Image
-                            src="/images/homepage/user-profile.svg"
+                            src="/images/user-profile.svg"
                             alt="User profile icon"
                             width={16}
                             height={16}
@@ -43,7 +43,7 @@ export default function Header() {
 
                     <Link href="/buy">
                         <Image
-                            src="/images/homepage/bag.svg"
+                            src="/images/bag.svg"
                             alt="User profile bag"
                             width={19}
                             height={19}
@@ -54,7 +54,7 @@ export default function Header() {
 
                 <Image
                     className="flex lg:hidden hover:cursor-pointer"
-                    src="/images/homepage/bars.svg"
+                    src="/images/bars.svg"
                     alt="Bars icon"
                     width={16}
                     height={16}

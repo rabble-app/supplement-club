@@ -21,7 +21,7 @@ export default function ProductCard(product: Readonly<IProductModel>) {
                     <div className="text-grey4">Quarterly Subscription</div>
                     <div className="text-blue grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
                         <Image
-                            src="/images/homepage/people.svg"
+                            src="/images/people.svg"
                             alt="People logomark"
                             width={18}
                             height={18}
