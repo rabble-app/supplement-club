@@ -6,15 +6,12 @@ import { Button } from "@/components/ui/button";
 export default function Header() {
     return <header>
         <div className="flex justify-center items-center h-[40px] bg-blue2">
-            <a
+            <div
                 className="text-blue3 underline"
-                href="https://www.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
             >
                 <span className="hidden lg:block">Next Day Delivery on all Subscription start up packs. Getting you to the next drop on January 1st 2025</span>
                 <span className="block lg:hidden">Refer a friend and get £5 reward</span>
-            </a>
+            </div>
         </div>
 
         <div className="flex items-center h-[54px] px-[16px] lg:h-[90px] bg-blue">

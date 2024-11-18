@@ -283,9 +283,9 @@ export default function Home() {
             <div className="flex flex-col gap-[4px] lg:gap-[22px]">
               <p className="text-center text-[20px] leading-[27px] font-[700] text-black">££££</p>
               <div className="flex flex-col">
-                <div className="lg:py-[30px] h-[177px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px] text-center">Typical Advertising Spend</div>
-                <div className="px-[5px] py-[25px] lg:py-[30px] text-center lg:h-[82px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">The Middlemen&apos;s Cut</div>
-                <div className="px-[5px] py-[14px] lg:py-[30px] text-center bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">The Cost of Ingredients</div>
+                <div className="lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px] text-center">Typical Advertising Spend</div>
+                <div className="px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[100px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">The Middlemen&apos;s Cut</div>
+                <div className="px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[72px] bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">The Cost of Ingredients</div>
               </div>
               <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">What brands charge</p>
             </div>
