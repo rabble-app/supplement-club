@@ -118,85 +118,85 @@ const homeCards = [
 const images = [
   {
     id: 1,
-    src: "/icons/heart-pulse-icon.svg",
+    src: "/images/icons/heart-pulse-icon.svg",
     alt: "Checkmark icon",
     title: "Heart Health"
   },
   {
     id: 2,
-    src: "/icons/baby-icon.svg",
+    src: "/images/icons/baby-icon.svg",
     alt: "Baby icon",
     title: "Fertility"
   },
   {
     id: 3,
-    src: "/icons/bed-icon.svg",
+    src: "/images/icons/bed-icon.svg",
     alt: "Bed icon",
     title: "Sleep"
   },
   {
     id: 4,
-    src: "/icons/energy-icon.svg",
+    src: "/images/icons/energy-icon.svg",
     alt: "Energy icon",
     title: "Energy"
   },
   {
     id: 5,
-    src: "/icons/hourglass-icon.svg",
+    src: "/images/icons/hourglass-icon.svg",
     alt: "Hourglass icon",
     title: "Healthy Aging"
   },
   {
     id: 6,
-    src: "/icons/tree-icon.svg",
+    src: "/images/icons/tree-icon.svg",
     alt: "Tree icon",
     title: "Longevity"
   },
   {
     id: 7,
-    src: "/icons/dumbell-icon.svg",
+    src: "/images/icons/dumbell-icon.svg",
     alt: "Dumbell icon",
     title: "Weight Training"
   },
   {
     id: 8,  
-    src: "/icons/athletes-icon.svg",
+    src: "/images/icons/athletes-icon.svg",
     alt: "Athletes icon",
     title: "Athletes"
   },
   {
     id: 9,
-    src: "/icons/shield-icon.svg",
+    src: "/images/icons/shield-icon.svg",
     alt: "Shield icon",
     title: "Immunity"
   },
   {
     id: 10,
-    src: "/icons/brain-icon.svg",
+    src: "/images/icons/brain-icon.svg",
     alt: "Brain icon",
     title: "Cognitive Function"
   },
   {
     id: 11,
-    src: "/icons/bones-icon.svg",
+    src: "/images/icons/bones-icon.svg",
     alt: "Bones icon",
     title: "Joint Health"     
   },
   {
     id: 12,
-    src: "/icons/intensine-icon.svg",
+    src: "/images/icons/intensine-icon.svg",
     alt: "Intensine icon",
     title: "Gut Health"
   },
   {
     id: 13,
-    src: "/icons/water-drop-icon.svg",
+    src: "/images/icons/water-drop-icon.svg",
     alt: "Water drop icon",
     title: "Skin Health"
   },
   {
     id: 14,
-    src: "/icons/flower-icon.svg",
+    src: "/images/icons/flower-icon.svg",
     alt: "Flower icon",
     title: "Mood & Anxiety"
   }     
@@ -315,7 +315,7 @@ export default function Home() {
 
               <div className="flex flex-col gap-[8px]">
                 <Image
-                  src="/icons/buy-cashier-discount-icon.svg"
+                  src="/images/icons/buy-cashier-discount-icon.svg"
                   alt="Cashier discount icon"
                   width={32}
                   height={32}
@@ -325,7 +325,7 @@ export default function Home() {
 
               <div className="flex flex-col gap-[8px]">
                 <Image
-                  src="/icons/buy-discount-rack-icon.svg"
+                  src="/images/icons/buy-discount-rack-icon.svg"
                   alt="Discountrack icon"
                   width={32}
                   height={32}
@@ -335,7 +335,7 @@ export default function Home() {
 
               <div className="flex flex-col gap-[8px]">
                 <Image
-                  src="/icons/buy-discount-shop-icon.svg"
+                  src="/images/icons/buy-discount-shop-icon.svg"
                   alt="Checkmark icon"
                   width={32}
                   height={32}
@@ -345,7 +345,7 @@ export default function Home() {
 
               <div className="flex flex-col gap-[8px]">
                 <Image
-                  src="/icons/buy-discount-shop-2-icon.svg"
+                  src="/images/icons/buy-discount-shop-2-icon.svg"
                   alt="Checkmark icon"
                   width={32}
                   height={32}
@@ -424,7 +424,7 @@ export default function Home() {
               <div className="flex gap-[6px] items-center text-[12px] leading-[20px] font-inter text-white">
                 <Image
                   className="text-white"
-                  src="/icons/check-icon.svg"
+                  src="/images/icons/check-icon.svg"
                   alt="Checkmark icon"
                   width={16}
                   height={16}
@@ -432,7 +432,7 @@ export default function Home() {
                 Update or cancel anytime</div>
               <div className="flex gap-[6px] items-center text-[12px] leading-[20px] font-inter text-white">
                 <Image
-                  src="/icons/check-icon.svg"
+                  src="/images/icons/check-icon.svg"
                   alt="Checkmark icon"
                   width={16}
                   height={16}

@@ -40,7 +40,7 @@ export default function ProductCard(product: Readonly<IProductModel>) {
 
                 <div className="grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
                     <Image
-                        src="/icons/checkmark-icon.svg"
+                        src="/images/icons/checkmark-icon.svg"
                         alt="Checkmark logomark"
                         width={18}
                         height={18}
