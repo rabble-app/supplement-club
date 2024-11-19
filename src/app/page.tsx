@@ -423,7 +423,10 @@ export default function Home() {
 			</div>
 
 			<ProductInfo />
-			<Faqs />
+
+			<div className="pt-[48px] lg:pt-[0]">
+				<Faqs />
+			</div>
 		</div>
 	);
 }

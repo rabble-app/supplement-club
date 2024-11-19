@@ -185,8 +185,8 @@ export default function Labs() {
 				</div>
 
 				<Carousel className="mt-[100px] md:my-[24px]">
-					<CarouselPrevious className="absolute left-[0] md:left-[calc(100%-160px)] top-[-55px] md:top-[-40px] h-[52px] w-[64px] rounded-[0] text-blue border-blue" />
-					<CarouselNext className="absolute right-[calc(100%-144px)] md:right-0 top-[-55px] md:top-[-40px] h-[52px] w-[64px] rounded-[0] text-blue border-blue" />
+					<CarouselPrevious className="absolute left-[0] md:left-[calc(100%-160px)] top-[-55px] md:top-[-50px] h-[52px] w-[64px] rounded-[0] text-blue border-blue" />
+					<CarouselNext className="absolute right-[calc(100%-144px)] md:right-0 top-[-55px] md:top-[-50px] h-[52px] w-[64px] rounded-[0] text-blue border-blue" />
 
 					<CarouselContent className="md:-ml-1 max-h-[630px] md:max-h-auto">
 						{laboratories.map((laboratory) => (
