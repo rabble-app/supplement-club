@@ -1,7 +1,7 @@
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
 import Image from "next/image";
 
-export default function cardCard(card: Readonly<ILaboratoryCardModel>) {
+export default function LaboratoryCard(card: Readonly<ILaboratoryCardModel>) {
 	return (
 		<div className="grid bg-grey8">
 			<Image className="w-full h-full object-cover" src={card.logo} alt={card.altLogo} width={390} height={230} />
