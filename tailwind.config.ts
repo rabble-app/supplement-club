@@ -14,6 +14,10 @@ export default {
 				blue2: '#DFDFFF',
 				blue3: '#00038F',
 				blue4: '#007AFF',
+				blue5: '#7578FF',
+				blue6: '#EFF0FF',
+				blue7: '#DFDFFF',
+				blue8: '#00038F1A',
 				yellow: '#FBF89F',
 				yello1: '#FFFED8',
 				cream: '#F9F7F4',
@@ -25,7 +29,7 @@ export default {
 				grey: '#D9D9D9',
 				grey1: '#565656',
 				grey2: '#CCCCCC',
-				grey3: 'E3E3E3',
+				grey3: '#E3E3E3',
 				grey4: '#8E8E93',
 				grey5: '#767676',
 				grey6: '#757575',
@@ -35,6 +39,9 @@ export default {
 				grey10: '#E6E3CF',
 				grey11: '#F4F4F4',
 				grey12: '#F6F6F6',
+				grey13: '#E3E3E3',
+				grey14: '#F9F9F9',
+				grey15: '#999999'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -62,6 +69,19 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			fontFamily: {
+				'inconsolata': ['inconsolata'],
+				'figtree': ['figtree'],
+				'inter': ['inter'],
+				'roboto': ['roboto'],
+				'helvetica': ['helvetica'],
+				'hagerman': ['hagerman']
+			},
+			boxShadow: {
+				'card': '0px 10px 60px 0px #0000001A',
+				'login': '0px 1px 2px 0px #0000000D',
+				'3': '0px 4px 16px 0px #00000014'
 			}
 		}
 	},
