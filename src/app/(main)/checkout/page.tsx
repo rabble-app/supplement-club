@@ -207,11 +207,12 @@ export default function Checkout() {
 											)}
 										/>
 									</div>
+
 									<FormField
 										control={currentForm.control}
 										name="postcode"
 										render={({ field }) => (
-											<FormItem>
+											<FormItem className="hidden md:grid">
 												<FormLabel>Postcode*</FormLabel>
 												<FormControl>
 													<Input {...field} />
@@ -227,7 +228,7 @@ export default function Checkout() {
 											<FormItem>
 												<FormLabel>Address1*</FormLabel>
 												<FormControl>
-													<Input {...field} />
+													<Input {...field} placeholder="Somewhere around" />
 												</FormControl>
 											</FormItem>
 										)}
@@ -240,48 +241,65 @@ export default function Checkout() {
 											<FormItem>
 												<FormLabel>Address2*</FormLabel>
 												<FormControl>
-													<Input {...field} />
+													<Input {...field} placeholder="Near somewhere" />
 												</FormControl>
 											</FormItem>
 										)}
 									/>
-									<FormField
-										control={currentForm.control}
-										name="city"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>City*</FormLabel>
-												<FormControl>
-													<Input {...field} />
-												</FormControl>
-											</FormItem>
-										)}
-									/>
+									<div className="grid grid-cols-2 gap-[24px] md:contents">
+										<FormField
+											control={currentForm.control}
+											name="city"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>City*</FormLabel>
+													<FormControl>
+														<Input {...field} placeholder="London" />
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={currentForm.control}
+											name="postcode"
+											render={({ field }) => (
+												<FormItem className="md:hidden">
+													<FormLabel>Postcode*</FormLabel>
+													<FormControl>
+														<Input {...field} />
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+									</div>
 
-									<FormField
-										control={currentForm.control}
-										name="country"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Country*</FormLabel>
-												<FormControl>
-													<Input {...field} />
-												</FormControl>
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={currentForm.control}
-										name="mobileNumber"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Mobile Number*</FormLabel>
-												<FormControl>
-													<Input {...field} />
-												</FormControl>
-											</FormItem>
-										)}
-									/>
+									<div className="grid grid-cols-2 gap-[24px] md:contents">
+										<FormField
+											control={currentForm.control}
+											name="country"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Country*</FormLabel>
+													<FormControl>
+														<Input {...field} placeholder="United Kingdom" />
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+
+										<FormField
+											control={currentForm.control}
+											name="mobileNumber"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Mobile Number</FormLabel>
+													<FormControl>
+														<Input {...field} />
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+									</div>
 								</>
 							)}
 
