@@ -1,10 +1,10 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddressAutofill } from "@mapbox/search-js-react";
 import Image from "next/image";
 import Link from "next/link";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	type SubmitHandler,
 	type UseFormReturn,
@@ -52,10 +52,12 @@ type AllFormTypes =
 	| z.infer<typeof step2FormSchema>
 	| z.infer<typeof step3FormSchema>;
 
+const MAPBOX_ACCESS_TOKEN =
+	"pk.eyJ1Ijoic3VwcGxlbWVudGNsdWIiLCJhIjoiY20zc292MHpyMDAwbTJpcXQ5aGFodjVyaiJ9.CMtnw7cylX3qQOYBFhHIPA";
+
 export default function Checkout() {
 	const [step, setStep] = useState(1);
 
-	// Initialize all forms unconditionally
 	const step1Form = useForm<z.infer<typeof step1FormSchema>>({
 		resolver: zodResolver(step1FormSchema),
 	});
@@ -75,7 +77,6 @@ export default function Checkout() {
 	const onSubmit: SubmitHandler<AllFormTypes> = (data) => {
 		console.log("Form data:", data);
 
-		// Example step transition
 		if (step < 4) {
 			setStep(step + 1);
 		} else {
@@ -207,7 +208,6 @@ export default function Checkout() {
 											)}
 										/>
 									</div>
-
 									<FormField
 										control={currentForm.control}
 										name="postcode"
@@ -215,24 +215,26 @@ export default function Checkout() {
 											<FormItem className="hidden md:grid">
 												<FormLabel>Postcode*</FormLabel>
 												<FormControl>
-													<Input {...field} />
+													<Input {...field} autoComplete="postal-code" />
 												</FormControl>
 											</FormItem>
 										)}
 									/>
-
-									<FormField
-										control={currentForm.control}
-										name="address1"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Address1*</FormLabel>
-												<FormControl>
-													<Input {...field} placeholder="Somewhere around" />
-												</FormControl>
-											</FormItem>
-										)}
-									/>
+									{/* @ts-expect-error - Mapbox types are incompatible with current React types */}
+									<AddressAutofill accessToken={MAPBOX_ACCESS_TOKEN}>
+										<FormField
+											control={currentForm.control}
+											name="address1"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Address*</FormLabel>
+													<FormControl>
+														<Input {...field} autoComplete="address-line1" />
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+									</AddressAutofill>
 
 									<FormField
 										control={currentForm.control}
@@ -241,7 +243,11 @@ export default function Checkout() {
 											<FormItem>
 												<FormLabel>Address2*</FormLabel>
 												<FormControl>
-													<Input {...field} placeholder="Near somewhere" />
+													<Input
+														{...field}
+														placeholder="Near somewhere"
+														autoComplete="address-line2"
+													/>
 												</FormControl>
 											</FormItem>
 										)}
@@ -254,7 +260,11 @@ export default function Checkout() {
 												<FormItem>
 													<FormLabel>City*</FormLabel>
 													<FormControl>
-														<Input {...field} placeholder="London" />
+														<Input
+															{...field}
+															placeholder="London"
+															autoComplete="address-level2"
+														/>
 													</FormControl>
 												</FormItem>
 											)}
@@ -266,13 +276,12 @@ export default function Checkout() {
 												<FormItem className="md:hidden">
 													<FormLabel>Postcode*</FormLabel>
 													<FormControl>
-														<Input {...field} />
+														<Input {...field} autoComplete="postal-code" />
 													</FormControl>
 												</FormItem>
 											)}
 										/>
 									</div>
-
 									<div className="grid grid-cols-2 gap-[24px] md:contents">
 										<FormField
 											control={currentForm.control}
@@ -281,7 +290,11 @@ export default function Checkout() {
 												<FormItem>
 													<FormLabel>Country*</FormLabel>
 													<FormControl>
-														<Input {...field} placeholder="United Kingdom" />
+														<Input
+															{...field}
+															placeholder="United Kingdom"
+															autoComplete="address-level1"
+														/>
 													</FormControl>
 												</FormItem>
 											)}
