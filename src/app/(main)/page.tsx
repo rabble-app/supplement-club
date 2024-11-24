@@ -172,7 +172,7 @@ export default function Home() {
 		<div className="min-h-screen container-width grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
 			<div className="relative mx-[-16px] md:mx-[0]">
 				<div className="flex flex-col lg:justify-center items-start absolute top-0 pt-[72px] md:pt-[131px] px-[16px] lg:px-[0] lg:left-[68px] lg:w-[600px] h-full">
-					<div className="text-[32px] lg:text-[34px] leading-[48px] lg:leading-[51px] font-[700] font-helvetica text-blue mb-[23px]">
+					<div className="text-[32px] lg:text-[34px] leading-[48px] lg:leading-[51px] font-bold font-helvetica text-blue mb-[23px]">
 						Pharmaceutical Grade Supplements at a Fraction of the Cost
 					</div>
 					<p className="text-[16px] lg:text-[24px] leading-[24px] lg:leading-[36px] text-blue mb-[58px] max-w-[461px]">
@@ -207,7 +207,7 @@ export default function Home() {
 
 			<div className="grid lg:grid-cols-[632px_1fr] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
 				<div className="grid gap-y-[56px] justify-end my-[80px] lg:my-[0] px-[16px] lg:px-[0]">
-					<div className="text-[40px] lg:text-[96px] leading-[46px] lg:leading-[110px] font-[700] font-helvetica text-blue">
+					<div className="text-[40px] lg:text-[96px] leading-[46px] lg:leading-[110px] font-bold font-helvetica text-blue">
 						How does it work?
 					</div>
 					{homeCards.map((card) => (
@@ -216,7 +216,7 @@ export default function Home() {
 				</div>
 
 				<div className="h-[700px] lg:h-[833px] bg-white">
-					<div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent"/>
+					<div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent" />
 					<div className="bg-blue h-[350px] lg:h-[453px] relative">
 						<Image
 							className="absolute bottom-[70px] left-[-35px] h-[520px] lg:h-[700px]"
@@ -228,9 +228,9 @@ export default function Home() {
 						<div className="px-[16px] py-[24px] lg:px-[32px] w-full grid items-end h-full lg:h-[453px]">
 							<div>
 								<div className="mb-[40px] text-white">
-									<div className="text-[32px] leading-[36px] font-[700] flex justify-between mb-[7px]">
+									<div className="text-[32px] leading-[36px] font-bold flex justify-between mb-[7px]">
 										Ubiquinol{" "}
-										<span className="text-[32px] leading-[36px] font-[700]">
+										<span className="text-[32px] leading-[36px] font-bold">
 											£45.00
 										</span>
 									</div>
@@ -244,11 +244,7 @@ export default function Home() {
 										</p>
 									</div>
 								</div>
-								<Button
-									font={"bold"}
-									className="bg-white text-blue w-full"
-									asChild
-								>
+								<Button className="bg-white text-blue w-full font-bold" asChild>
 									<Link href="/buy">Buy now</Link>
 								</Button>
 							</div>
@@ -268,26 +264,26 @@ export default function Home() {
 					/>
 					<div className="absolute left-[0] top-[0] w-full h-full grid grid-cols-2 gap-[24px] items-end px-[17px] lg:px-[32px] py-[22px] lg:py-[42px]">
 						<div className="flex flex-col gap-[4px] lg:gap-[22px]">
-							<p className="text-center text-[20px] leading-[27px] font-[700] text-black">
+							<p className="text-center text-[20px] leading-[27px] font-bold text-black">
 								££££
 							</p>
 							<div className="flex flex-col">
-								<div className="lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px]">
+								<div className="lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-bold flex justify-center items-center w-full px-[10px] lg:px-[30px]">
 									Typical Advertising Spend
 								</div>
-								<div className="px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[100px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
+								<div className="px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[100px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-bold flex justify-center items-center w-full">
 									The Middlemen&apos;s Cut
 								</div>
-								<div className="px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[72px] bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
+								<div className="px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[72px] bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-bold flex justify-center items-center w-full">
 									The Cost of Ingredients
 								</div>
 							</div>
-							<p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
+							<p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-bold text-white">
 								What brands charge
 							</p>
 						</div>
 						<div className="flex flex-col gap-[4px] lg:gap-[22px]">
-							<p className="text-center text-[20px] leading-[27px] font-[700] text-black">
+							<p className="text-center text-[20px] leading-[27px] font-bold text-black">
 								£
 							</p>
 							<Button
@@ -296,7 +292,7 @@ export default function Home() {
 							>
 								<Link href="/about">Club Price</Link>
 							</Button>
-							<p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
+							<p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-bold text-white">
 								What we charge
 							</p>
 						</div>
@@ -305,7 +301,7 @@ export default function Home() {
 
 				<div className="flex flex-col justify-between">
 					<div>
-						<p className="text-[24px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-[700] text-blue pt-[32px] lg:pt-[18px] pb-[16px]">
+						<p className="text-[24px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-bold text-blue pt-[32px] lg:pt-[18px] pb-[16px]">
 							Pharmaceutical grade Ingredients aren&apos;t expensive. Marketing
 							them is.
 						</p>
@@ -325,7 +321,7 @@ export default function Home() {
 							<br />
 							<br />
 						</p>
-						<p className="font-[700] mb-[32px] lg:mb-[18px]">
+						<p className="font-bold mb-[32px] lg:mb-[18px]">
 							Supplement Club Subscribers don&apos;t pay for:
 						</p>
 						<div className="grid grid-cols-2 gap-[32px] lg:gap-[0] lg:grid-cols-4 items-center mb-[48px] lg:mb-[0px]">
@@ -383,11 +379,11 @@ export default function Home() {
 			<div className="grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px] lg:p-[0] mx-[-16px] md:mx-[0]">
 				<div className="flex justify-between items-center">
 					<div className="grid gap-y-[16px]">
-						<p className="text-[32px] leading-[36px] font-[700] text-black">
+						<p className="text-[32px] leading-[36px] font-bold text-black">
 							Products
 						</p>
 						<p className="bg-white leading-[18px] text-grey1 py-[4px] px-[10px]">
-							Next Drop: <span className="font-[700] ">January 1st 2025</span>
+							Next Drop: <span className="font-bold ">January 1st 2025</span>
 						</p>
 					</div>
 
