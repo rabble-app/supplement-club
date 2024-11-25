@@ -27,6 +27,7 @@ export default function ForgotPasswordPage() {
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// call api
+		console.log(values);
 	}
 
 	return (

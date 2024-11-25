@@ -35,6 +35,7 @@ export default function ChangePasswordPage() {
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// call api
+		console.log(values);
 	}
 
 	return (

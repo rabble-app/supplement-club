@@ -29,6 +29,7 @@ export default function LoginPage() {
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// call api
+		console.log(values);
 	}
 
 	return (

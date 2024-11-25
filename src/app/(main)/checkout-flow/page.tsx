@@ -1,11 +1,26 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AddressAutofill } from "@mapbox/search-js-react";
 import InputMask from "@mona-health/react-input-mask";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+
+type AddressAutofillProps = {
+	accessToken: string;
+	children: React.ReactNode;
+};
+const AddressAutofill = dynamic(
+	() =>
+		import("@mapbox/search-js-react").then(
+			(r) => r.AddressAutofill as React.ComponentType<AddressAutofillProps>,
+		),
+	{
+		ssr: false,
+	},
+);
+
 import {
 	type SubmitHandler,
 	type UseFormReturn,
@@ -84,7 +99,7 @@ export default function Checkout() {
 		}
 	};
 
-	const updateCardNumber = (e) => {
+	const updateCardNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
 		currentForm.setValue("cardNumber", e.target.value.replaceAll(" ", ""));
 	};
 
@@ -92,7 +107,8 @@ export default function Checkout() {
 		if (step < 4) {
 			setStep(step + 1);
 		} else {
-			// call api for save
+			// call api
+			console.log(data);
 		}
 	};
 
@@ -203,7 +219,6 @@ export default function Checkout() {
 											</FormItem>
 										)}
 									/>
-									{/* @ts-expect-error - Mapbox types are incompatible with current React types */}
 									<AddressAutofill accessToken={MAPBOX_ACCESS_TOKEN}>
 										<FormField
 											control={currentForm.control}
@@ -337,11 +352,11 @@ export default function Checkout() {
 															/>
 															<InputMask
 																mask="9999 9999 9999 9999"
-																value={field.value || ""}
-																alwaysShowMask={false}
-																maskPlaceholder={"0000 0000 0000 0000"}
+																maskPlaceholder="0000 0000 0000 0000"
 																className="h-[24px] outline-none font-roboto text-grey16"
-																onChange={(e) => updateCardNumber(e)}
+																onChange={(
+																	e: React.ChangeEvent<HTMLInputElement>,
+																) => updateCardNumber(e)}
 															/>
 															<Button
 																onClick={(e) => {
