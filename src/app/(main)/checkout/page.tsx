@@ -56,7 +56,7 @@ const MAPBOX_ACCESS_TOKEN =
 	"pk.eyJ1Ijoic3VwcGxlbWVudGNsdWIiLCJhIjoiY20zc292MHpyMDAwbTJpcXQ5aGFodjVyaiJ9.CMtnw7cylX3qQOYBFhHIPA";
 
 export default function Checkout() {
-	const [step, setStep] = useState(1);
+	const [step, setStep] = useState(3);
 
 	const step1Form = useForm<z.infer<typeof step1FormSchema>>({
 		resolver: zodResolver(step1FormSchema),
@@ -75,73 +75,42 @@ export default function Checkout() {
 	) as UseFormReturn<AllFormTypes>;
 
 	const onSubmit: SubmitHandler<AllFormTypes> = (data) => {
-		console.log("Form data:", data);
-
 		if (step < 4) {
 			setStep(step + 1);
 		} else {
-			alert("Form completed!");
+			console.log("Form completed!");
 		}
 	};
 
+	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
+
 	return (
-		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] container-width mx-[-16px] md:mx-0">
+		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
 			<div className="flex flex-col gap-[40px] my-[32px]">
 				{step < 4 && (
 					<div className="flex justify-between items-center">
-						<div className="grid gap-[8px] text-[12px] md:text-[14px] leading-[12px] md:leading-[15px] font-bold font-inconsolata">
+						{steps.map((value, idx) => (
 							<div
-								className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-[42px] ${step === 1 || step > 1 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
+								key={value}
+								className="grid gap-[8px] text-[12px] md:text-[14px] leading-[12px] md:leading-[15px] font-bold font-inconsolata"
 							>
-								{step === 1 ? (
-									1
-								) : (
-									<Image
-										src="/images/icons/check-white-icon.svg"
-										alt="Check icon"
-										width={16}
-										height={16}
-									/>
-								)}
+								<div
+									className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-[42px] ${step === idx + 1 || step > idx + 1 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
+								>
+									{step === idx + 1 ? (
+										step
+									) : (
+										<Image
+											src="/images/icons/check-white-icon.svg"
+											alt="Check icon"
+											width={16}
+											height={16}
+										/>
+									)}
+								</div>
+								{value}
 							</div>
-							Create an Account
-						</div>
-
-						<div className="grid gap-[8px] text-[12px] md:text-[14px] leading-[12px] md:leading-[15px] font-bold font-inconsolata">
-							<div
-								className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-[42px] ${step === 2 || step > 2 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
-							>
-								{step === 2 ? (
-									2
-								) : (
-									<Image
-										src="/images/icons/check-white-icon.svg"
-										alt="Check icon"
-										width={16}
-										height={16}
-									/>
-								)}
-							</div>
-							Delivery Address
-						</div>
-
-						<div className="grid gap-[8px] text-[12px] md:text-[14px] leading-[12px] md:leading-[15px] font-bold font-inconsolata">
-							<div
-								className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-[42px] ${step === 3 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
-							>
-								{step === 3 ? (
-									3
-								) : (
-									<Image
-										src="/images/icons/check-white-icon.svg"
-										alt="Check icon"
-										width={16}
-										height={16}
-									/>
-								)}
-							</div>
-							Delivery Address
-						</div>
+						))}
 					</div>
 				)}
 
