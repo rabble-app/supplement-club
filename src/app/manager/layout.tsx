@@ -9,7 +9,7 @@ export default function RootLayout({
 		<div>
 			<header className="w-full h-[78px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto">
 				<Link
-					className="text-[24px] md:text-[40px] leading-[27px] md:leading-[46px] font-bold font-hagerman"
+					className="text-[24px] md:text-[40px] leading-[27px] md:leading-[46px] font-hagerman"
 					href="/"
 				>
 					Supplement Club

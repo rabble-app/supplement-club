@@ -72,7 +72,7 @@ export default function ManagerPage() {
 							<p className="text-[12px] leading-[13px] text-grey4 uppercase font-inconsolata font-[600]">
 								KANEKA CORPRATION
 							</p>
-							<p className="text-[20px] leading-[24px] font-bold font-hagerman">
+							<p className="text-[20px] leading-[24px] font-hagerman">
 								Coenzyme Q10 Ubiquinol Kaneka TM
 							</p>
 							<p className="text-[12px] leading-[13px] text-grey4 font-inconsolata font-[600]">
