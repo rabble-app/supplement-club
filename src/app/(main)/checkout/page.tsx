@@ -1,17 +1,5 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AddressAutofill } from "@mapbox/search-js-react";
-import Image from "next/image";
-import Link from "next/link";
-import {
-	type SubmitHandler,
-	type UseFormReturn,
-	useForm,
-} from "react-hook-form";
-import { z } from "zod";
-
 import OrderCard from "@/components/cards/OrderCard";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,7 +11,18 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddressAutofill } from "@mapbox/search-js-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import {
+	type SubmitHandler,
+	type UseFormReturn,
+	useForm,
+} from "react-hook-form";
+import { z } from "zod";
 
 const step1FormSchema = z.object({
 	email: z
@@ -44,7 +43,9 @@ const step2FormSchema = z.object({
 });
 
 const step3FormSchema = z.object({
-	cardNumber: z.string({ required_error: "Field is required." }),
+	cardNumber: z
+		.string()
+		.regex(/^\d{16}$/, "Card number must be exactly 16 digits"),
 });
 
 type AllFormTypes =
@@ -73,6 +74,16 @@ export default function Checkout() {
 	const currentForm = (
 		step === 1 ? step1Form : step === 2 ? step2Form : step3Form
 	) as UseFormReturn<AllFormTypes>;
+
+	const autoFillCardNumber = async () => {
+		const clipboardCardNumber = await navigator.clipboard.readText();
+		if (clipboardCardNumber !== "" && clipboardCardNumber.length === 16) {
+			currentForm.setValue("cardNumber", clipboardCardNumber);
+		} else {
+			// test card
+			currentForm.setValue("cardNumber", "4111111111111111");
+		}
+	};
 
 	const onSubmit: SubmitHandler<AllFormTypes> = (data) => {
 		if (step < 4) {
@@ -311,14 +322,30 @@ export default function Checkout() {
 													<FormLabel>Card Number</FormLabel>
 													<FormControl>
 														<div className="relative">
-															<Input className="pl-[48px]" {...field} />
+															<Input
+																className="pl-[48px]"
+																{...field}
+																placeholder="0000 0000 0000 0000"
+															/>
 															<Image
 																src="/images/icons/card-icon.svg"
-																className="absolute top-1/2 left-3 transform -translate-y-1/2"
+																className="absolute top-1/2 left-[12px] transform -translate-y-1/2"
 																alt="Card icon"
 																width={24}
 																height={24}
 															/>
+															<Button
+																onClick={(e) => {
+																	e.preventDefault();
+																	autoFillCardNumber();
+																}}
+																className="bg-black text-white font-roboto cursor-pointer px-[6px] py-[4px] flex justify-center gap-[2px] h-[32px] absolute top-1/2 right-[12px] transform -translate-y-1/2"
+															>
+																<div>
+																	Autofill{" "}
+																	<span className="text-green">link</span>
+																</div>
+															</Button>
 														</div>
 													</FormControl>
 												</FormItem>
