@@ -41,39 +41,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
+const step1FormSchema = z.object({
+	email: z
+		.string({ required_error: "Field is required." })
+		.email({ message: "Invalid email address." }),
+	password: z.string({ required_error: "Field is required." }),
+});
+
+const step2FormSchema = z.object({
+	firstName: z.string({ required_error: "Field is required." }),
+	lastName: z.string({ required_error: "Field is required." }),
+	address1: z.string({ required_error: "Field is required." }),
+	address2: z.string({ required_error: "Field is required." }),
+	city: z.string({ required_error: "Field is required." }),
+	postcode: z.string({ required_error: "Field is required." }),
+	country: z.string({ required_error: "Field is required." }),
+	mobileNumber: z.string({ required_error: "Field is required." }).optional(),
+});
+
+const step3FormSchema = z.object({
+	cardNumber: z
+		.string()
+		.regex(/^\d{16}$/, "Card number must be exactly 16 digits"),
+});
+
+type AllFormTypes =
+	| z.infer<typeof step1FormSchema>
+	| z.infer<typeof step2FormSchema>
+	| z.infer<typeof step3FormSchema>;
+
+const MAPBOX_ACCESS_TOKEN =
+	"pk.eyJ1Ijoic3VwcGxlbWVudGNsdWIiLCJhIjoiY20zc292MHpyMDAwbTJpcXQ5aGFodjVyaiJ9.CMtnw7cylX3qQOYBFhHIPA";
+
 export default function Checkout() {
-	const step1FormSchema = z.object({
-		email: z
-			.string({ required_error: "Field is required." })
-			.email({ message: "Invalid email address." }),
-		password: z.string({ required_error: "Field is required." }),
-	});
-
-	const step2FormSchema = z.object({
-		firstName: z.string({ required_error: "Field is required." }),
-		lastName: z.string({ required_error: "Field is required." }),
-		address1: z.string({ required_error: "Field is required." }),
-		address2: z.string({ required_error: "Field is required." }),
-		city: z.string({ required_error: "Field is required." }),
-		postcode: z.string({ required_error: "Field is required." }),
-		country: z.string({ required_error: "Field is required." }),
-		mobileNumber: z.string({ required_error: "Field is required." }).optional(),
-	});
-
-	const step3FormSchema = z.object({
-		cardNumber: z
-			.string()
-			.regex(/^\d{16}$/, "Card number must be exactly 16 digits"),
-	});
-
-	type AllFormTypes =
-		| z.infer<typeof step1FormSchema>
-		| z.infer<typeof step2FormSchema>
-		| z.infer<typeof step3FormSchema>;
-
-	const MAPBOX_ACCESS_TOKEN =
-		"pk.eyJ1Ijoic3VwcGxlbWVudGNsdWIiLCJhIjoiY20zc292MHpyMDAwbTJpcXQ5aGFodjVyaiJ9.CMtnw7cylX3qQOYBFhHIPA";
-
 	const [step, setStep] = useState(1);
 
 	const step1Form = useForm<z.infer<typeof step1FormSchema>>({
@@ -171,7 +171,7 @@ export default function Checkout() {
 											<FormItem>
 												<FormLabel>Password*</FormLabel>
 												<FormControl>
-													<Input {...field} />
+													<Input {...field} type="password" />
 												</FormControl>
 											</FormItem>
 										)}
@@ -351,6 +351,7 @@ export default function Checkout() {
 																height={24}
 															/>
 															<InputMask
+																{...field}
 																mask="9999 9999 9999 9999"
 																maskPlaceholder="0000 0000 0000 0000"
 																className="h-[24px] outline-none font-roboto text-grey16"

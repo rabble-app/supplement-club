@@ -14,21 +14,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export default function ChangePasswordPage() {
-	const formSchema = z
-		.object({
-			password: z.string({ required_error: "Field is required." }),
-			confirmPassword: z.string({ required_error: "Field is required." }),
-		})
-		.superRefine(({ confirmPassword, password }, ctx) => {
-			if (confirmPassword !== password) {
-				ctx.addIssue({
-					code: "custom",
-					path: ["confirmPassword"],
-				});
-			}
-		});
+const formSchema = z
+	.object({
+		password: z.string({ required_error: "Field is required." }),
+		confirmPassword: z.string({ required_error: "Field is required." }),
+	})
+	.superRefine(({ confirmPassword, password }, ctx) => {
+		if (confirmPassword !== password) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["confirmPassword"],
+			});
+		}
+	});
 
+export default function ChangePasswordPage() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});

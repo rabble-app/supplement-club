@@ -15,14 +15,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export default function LoginPage() {
-	const formSchema = z.object({
-		email: z
-			.string({ required_error: "Field is required." })
-			.email({ message: "Invalid email address." }),
-		password: z.string({ required_error: "Field is required." }),
-	});
+const formSchema = z.object({
+	email: z
+		.string({ required_error: "Field is required." })
+		.email({ message: "Invalid email address." }),
+	password: z.string({ required_error: "Field is required." }),
+});
 
+export default function LoginPage() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});

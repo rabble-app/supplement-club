@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export default function ForgotPasswordPage() {
-	const formSchema = z.object({
-		email: z
-			.string({ required_error: "Field is required." })
-			.email({ message: "Invalid email address." }),
-	});
+const formSchema = z.object({
+	email: z
+		.string({ required_error: "Field is required." })
+		.email({ message: "Invalid email address." }),
+});
 
+export default function ForgotPasswordPage() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
