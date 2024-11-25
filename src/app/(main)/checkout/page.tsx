@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddressAutofill } from "@mapbox/search-js-react";
+import InputMask from "@mona-health/react-input-mask";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -39,7 +40,7 @@ const step2FormSchema = z.object({
 	city: z.string({ required_error: "Field is required." }),
 	postcode: z.string({ required_error: "Field is required." }),
 	country: z.string({ required_error: "Field is required." }),
-	mobileNumber: z.string({ required_error: "Field is required." }),
+	mobileNumber: z.string({ required_error: "Field is required." }).optional(),
 });
 
 const step3FormSchema = z.object({
@@ -79,17 +80,18 @@ export default function Checkout() {
 		const clipboardCardNumber = await navigator.clipboard.readText();
 		if (clipboardCardNumber !== "" && clipboardCardNumber.length === 16) {
 			currentForm.setValue("cardNumber", clipboardCardNumber);
-		} else {
-			// test card
-			currentForm.setValue("cardNumber", "4111111111111111");
 		}
+	};
+
+	const updateCardNumber = (e) => {
+		currentForm.setValue("cardNumber", e.target.value.replaceAll(" ", ""));
 	};
 
 	const onSubmit: SubmitHandler<AllFormTypes> = (data) => {
 		if (step < 4) {
 			setStep(step + 1);
 		} else {
-			console.log("Form completed!");
+			// call api for save
 		}
 	};
 
@@ -106,7 +108,7 @@ export default function Checkout() {
 								className="grid gap-[8px] text-[12px] md:text-[14px] leading-[12px] md:leading-[15px] font-bold font-inconsolata"
 							>
 								<div
-									className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-[42px] ${step === idx + 1 || step > idx + 1 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
+									className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-auto md:mx-[42px] ${step === idx + 1 || step > idx + 1 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
 								>
 									{step === idx + 1 ? (
 										step
@@ -209,7 +211,11 @@ export default function Checkout() {
 												<FormItem>
 													<FormLabel>Address*</FormLabel>
 													<FormControl>
-														<Input {...field} autoComplete="address-line1" />
+														<Input
+															{...field}
+															autoComplete="address-line1"
+															placeholder="Somewhere around"
+														/>
 													</FormControl>
 												</FormItem>
 											)}
@@ -321,27 +327,31 @@ export default function Checkout() {
 												<FormItem>
 													<FormLabel>Card Number</FormLabel>
 													<FormControl>
-														<div className="relative">
-															<Input
-																className="pl-[48px]"
-																{...field}
-																placeholder="0000 0000 0000 0000"
-															/>
+														<div className="grid grid-cols-[24px_1fr_92px] items-center gap-[12px] h-[48px] border-[1px] border-black px-[12px] py-[8px]">
 															<Image
 																src="/images/icons/card-icon.svg"
-																className="absolute top-1/2 left-[12px] transform -translate-y-1/2"
 																alt="Card icon"
 																width={24}
 																height={24}
+															/>
+															<InputMask
+																mask="9999 9999 9999 9999"
+																{...field}
+																alwaysShowMask={false}
+																maskPlaceholder={
+																	field.value ? null : "0000 0000 0000 0000"
+																}
+																className="h-[24px] outline-none font-roboto text-grey16"
+																onChange={(e) => updateCardNumber(e)}
 															/>
 															<Button
 																onClick={(e) => {
 																	e.preventDefault();
 																	autoFillCardNumber();
 																}}
-																className="bg-black text-white font-roboto cursor-pointer px-[6px] py-[4px] flex justify-center gap-[2px] h-[32px] absolute top-1/2 right-[12px] transform -translate-y-1/2"
+																className="bg-black text-white font-roboto cursor-pointer h-[32px]"
 															>
-																<div>
+																<div className="flex items-center gap-[2px]">
 																	Autofill{" "}
 																	<span className="text-green">link</span>
 																</div>
