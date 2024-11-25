@@ -43,7 +43,8 @@ export default {
 				grey13: '#E3E3E3',
 				grey14: '#F9F9F9',
 				grey15: '#999999',
-				grey16: '#666666'
+				grey16: '#666666',
+				grey17: '#9E9E9E'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

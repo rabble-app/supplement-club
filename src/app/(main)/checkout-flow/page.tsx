@@ -125,10 +125,10 @@ export default function Checkout() {
 								className="grid gap-[8px] text-[12px] md:text-[14px] leading-[12px] md:leading-[15px] font-bold font-inconsolata"
 							>
 								<div
-									className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-auto md:mx-[42px] ${step === idx + 1 || step > idx + 1 ? "bg-blue text-white" : "bg-grey12 text-grey13"}`}
+									className={`w-[40px] h-[40px] rounded-[50%] flex items-center justify-center mx-auto md:mx-[42px] ${step === idx + 1 || step > idx + 1 ? "bg-blue text-white" : "bg-grey12 text-grey17"}`}
 								>
-									{step === idx + 1 ? (
-										step
+									{step === idx + 1 || step < idx + 1 ? (
+										idx + 1
 									) : (
 										<Image
 											src="/images/icons/check-white-icon.svg"
@@ -655,9 +655,11 @@ export default function Checkout() {
 						name="Glass Bottle Container"
 						src="/images/ubiquinol.svg"
 					>
-						<div className="text-[20px] leading-[20px] text-black font-bold font-inconsolata line-through flex items-center gap-[5px]">
-							£18.00{" "}
-							<span className="text-[12px] leading-[100%] text-grey1">
+						<div className="flex items-center gap-[5px]">
+							<span className="text-[20px] leading-[20px] text-black font-bold font-inconsolata line-through">
+								£18.00{" "}
+							</span>
+							<span className="text-[12px] leading-[100%] text-grey1 no-underline relative">
 								FREE
 							</span>
 						</div>
