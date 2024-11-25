@@ -655,11 +655,11 @@ export default function Checkout() {
 						name="Glass Bottle Container"
 						src="/images/ubiquinol.svg"
 					>
-						<div className="text-[12px] leading-[100%] text-grey1 flex items-center gap-[5px]">
-							<span className="text-[20px] leading-[20px] text-black font-bold font-inconsolata line-through">
-								£18.00
+						<div className="text-[20px] leading-[20px] text-black font-bold font-inconsolata line-through flex items-center gap-[5px]">
+							£18.00{" "}
+							<span className="text-[12px] leading-[100%] text-grey1">
+								FREE
 							</span>
-							FREE
 						</div>
 					</OrderCard>
 
