@@ -56,7 +56,7 @@ const step2FormSchema = z.object({
 	city: z.string({ required_error: "Field is required." }),
 	postcode: z.string({ required_error: "Field is required." }),
 	country: z.string({ required_error: "Field is required." }),
-	mobileNumber: z.string({ required_error: "Field is required." }).optional(),
+	mobileNumber: z.number({ required_error: "Field is required." }).optional(),
 });
 
 const step3FormSchema = z.object({
@@ -88,9 +88,15 @@ export default function Checkout() {
 		resolver: zodResolver(step3FormSchema),
 	});
 
-	const currentForm = (
-		step === 1 ? step1Form : step === 2 ? step2Form : step3Form
-	) as UseFormReturn<AllFormTypes>;
+	const currentForm = (() => {
+		if (step === 1) {
+			return step1Form;
+		}
+		if (step === 2) {
+			return step2Form;
+		}
+		return step3Form;
+	})() as UseFormReturn<AllFormTypes>;
 
 	const autoFillCardNumber = async () => {
 		const clipboardCardNumber = await navigator.clipboard.readText();
