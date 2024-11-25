@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,24 +12,23 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-	password: z.string({ required_error: "Field is required." }).min(1),
-});
-
 export default function LoginPage() {
+	const formSchema = z.object({
+		email: z
+			.string({ required_error: "Field is required." })
+			.email({ message: "Invalid email address." }),
+		password: z.string({ required_error: "Field is required." }),
+	});
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+		// call api
 	}
 
 	return (
@@ -58,7 +57,6 @@ export default function LoginPage() {
 								<FormControl>
 									<Input {...field} />
 								</FormControl>
-								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -79,7 +77,6 @@ export default function LoginPage() {
 								<FormControl>
 									<Input type="password" {...field} />
 								</FormControl>
-								<FormMessage />
 							</FormItem>
 						)}
 					/>

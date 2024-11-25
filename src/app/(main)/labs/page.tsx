@@ -1,3 +1,9 @@
+import Image from "next/image";
+
+import Faqs from "@/components/Faqs";
+import ProductInfo from "@/components/ProductInfo";
+import GoalCardComponent from "@/components/cards/GoalCard";
+import LaboratoryCard from "@/components/cards/LaboratoryCard";
 import {
 	Carousel,
 	CarouselContent,
@@ -5,15 +11,10 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import Image from "next/image";
 
-import GoalCardComponent from "@/components/cards/GoalCard";
-import LaboratoryCard from "@/components/cards/LaboratoryCard";
 import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
 
-import Faqs from "@/components/Faqs";
-import ProductInfo from "@/components/ProductInfo";
 export default function Labs() {
 	const laboratories = [
 		{

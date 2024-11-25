@@ -1,17 +1,5 @@
 "use client";
 
-import OrderCard from "@/components/cards/OrderCard";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddressAutofill } from "@mapbox/search-js-react";
 import InputMask from "@mona-health/react-input-mask";
@@ -24,6 +12,19 @@ import {
 	useForm,
 } from "react-hook-form";
 import { z } from "zod";
+
+import OrderCard from "@/components/cards/OrderCard";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 const step1FormSchema = z.object({
 	email: z

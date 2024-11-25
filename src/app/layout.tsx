@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree, Inter, Roboto } from "next/font/google";
 import localFont from "next/font/local";
+
 import "./../../public/styles/globals.css";
 
 /** @fonts */

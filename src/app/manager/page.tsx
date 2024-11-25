@@ -1,6 +1,8 @@
-import ManagerCard from "@/components/cards/ManagerOptionCard";
-import type IManagerOptionCardModel from "@/utils/models/IManagerOptionCardModel";
 import Image from "next/image";
+
+import ManagerCard from "@/components/cards/ManagerOptionCard";
+
+import type IManagerOptionCardModel from "@/utils/models/IManagerOptionCardModel";
 
 export default function ManagerPage() {
 	const yourAccount = [

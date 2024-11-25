@@ -11,22 +11,30 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-	password: z.string({ required_error: "Field is required." }).min(1),
-	confirmPassword: z.string({ required_error: "Field is required." }).min(1),
-});
-
 export default function ChangePasswordPage() {
+	const formSchema = z
+		.object({
+			password: z.string({ required_error: "Field is required." }),
+			confirmPassword: z.string({ required_error: "Field is required." }),
+		})
+		.superRefine(({ confirmPassword, password }, ctx) => {
+			if (confirmPassword !== password) {
+				ctx.addIssue({
+					code: "custom",
+					path: ["confirmPassword"],
+				});
+			}
+		});
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+		// call api
 	}
 
 	return (
@@ -50,7 +58,6 @@ export default function ChangePasswordPage() {
 								<FormControl>
 									<Input type="password" {...field} />
 								</FormControl>
-								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -65,7 +72,6 @@ export default function ChangePasswordPage() {
 								<FormControl>
 									<Input type="password" {...field} />
 								</FormControl>
-								<FormMessage />
 							</FormItem>
 						)}
 					/>

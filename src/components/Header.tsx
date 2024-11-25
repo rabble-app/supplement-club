@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -8,8 +11,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import Image from "next/image";
-import Link from "next/link";
 
 export default function Header() {
 	return (
@@ -95,17 +96,19 @@ export default function Header() {
 								</DialogClose>
 							</div>
 							<DialogFooter className="grid gap-[16px]">
-								<div className="flex gap-x-[8px] text-white items-center justify-center border-[1px] border-blue5 h-[38px]">
-									<Image
-										src="/images/user-profile.svg"
-										alt="User profile icon"
-										width={16}
-										height={16}
-									/>
-									<DialogClose asChild>
-										<Link href="/auth/login">Login</Link>
-									</DialogClose>
-								</div>
+								<DialogClose asChild>
+									<Link href="/auth/login">
+										<div className="flex gap-x-[8px] text-white items-center justify-center border-[1px] border-blue5 h-[38px]">
+											<Image
+												src="/images/user-profile.svg"
+												alt="User profile icon"
+												width={16}
+												height={16}
+											/>
+											Login
+										</div>
+									</Link>
+								</DialogClose>
 
 								<div className="grid grid-cols-[1fr_24px] gap-x-[16px] items-center h-[38px]">
 									<DialogClose asChild>

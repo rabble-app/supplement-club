@@ -1,5 +1,6 @@
-import type IOrderCardModel from "@/utils//models/IOrderCardModel";
 import Image from "next/image";
+
+import type IOrderCardModel from "@/utils//models/IOrderCardModel";
 
 export default function OrderCard(model: Readonly<IOrderCardModel>) {
 	return (

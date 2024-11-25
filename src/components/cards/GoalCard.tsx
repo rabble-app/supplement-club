@@ -1,6 +1,7 @@
-import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 import Image from "next/image";
 import Link from "next/link";
+
+import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 
 export default function GoalCard(card: Readonly<IGoalCardModel>) {
 	return (

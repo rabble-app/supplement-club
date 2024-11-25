@@ -1,7 +1,9 @@
-import { Button } from "@/components/ui/button";
-import type IProductCardModel from "@/utils/models/IProductCardModel";
 import Image from "next/image";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
+import type IProductCardModel from "@/utils/models/IProductCardModel";
 
 export default function ProductCard(product: Readonly<IProductCardModel>) {
 	return (

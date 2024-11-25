@@ -1,4 +1,10 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+
 import type { IFaqQuestionModel } from "@/utils/models/IFaqQuestionModel";
 
 const faqs = [

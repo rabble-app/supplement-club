@@ -11,23 +11,22 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-});
-
 export default function ForgotPasswordPage() {
+	const formSchema = z.object({
+		email: z
+			.string({ required_error: "Field is required." })
+			.email({ message: "Invalid email address." }),
+	});
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+		// call api
 	}
 
 	return (
@@ -56,7 +55,6 @@ export default function ForgotPasswordPage() {
 								<FormControl>
 									<Input {...field} />
 								</FormControl>
-								<FormMessage />
 							</FormItem>
 						)}
 					/>

@@ -1,6 +1,7 @@
-import type IManagerOptionCardModel from "@/utils/models/IManagerOptionCardModel";
 import Image from "next/image";
 import Link from "next/link";
+
+import type IManagerOptionCardModel from "@/utils/models/IManagerOptionCardModel";
 
 export default function ManagerOptionCard(
 	model: Readonly<IManagerOptionCardModel>,

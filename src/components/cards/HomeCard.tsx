@@ -1,5 +1,6 @@
-import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import Image from "next/image";
+
+import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 
 export default function HomeCard(model: Readonly<IHomeCardModel>) {
 	return (

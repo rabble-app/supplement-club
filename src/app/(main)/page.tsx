@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-import HomeCardComponent from "@/components/cards/HomeCard";
-import ProductCardComponent from "@/components/cards/ProductCard";
-import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
-import type IProductCardModel from "@/utils/models/IProductCardModel";
-
 import Faqs from "@/components/Faqs";
 import ProductInfo from "@/components/ProductInfo";
+import HomeCardComponent from "@/components/cards/HomeCard";
+import ProductCardComponent from "@/components/cards/ProductCard";
+import { Button } from "@/components/ui/button";
+
+import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
+import type IProductCardModel from "@/utils/models/IProductCardModel";
 
 const products = [
 	{
