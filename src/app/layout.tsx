@@ -33,7 +33,7 @@ const inconsolata = localFont({
 });
 
 const hagerman = localFont({
-	src: "./../../public/fonts/Hagerman.ttf",
+	src: "./../../public/fonts/Hagerman_Font Regular.ttf",
 	variable: "--font-hagerman",
 	display: "block",
 });

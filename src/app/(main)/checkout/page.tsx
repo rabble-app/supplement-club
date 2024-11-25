@@ -310,7 +310,16 @@ export default function Checkout() {
 												<FormItem>
 													<FormLabel>Card Number</FormLabel>
 													<FormControl>
-														<Input {...field} />
+														<div className="relative">
+															<Input className="pl-[48px]" {...field} />
+															<Image
+																src="/images/icons/card-icon.svg"
+																className="absolute top-1/2 left-3 transform -translate-y-1/2"
+																alt="Card icon"
+																width={24}
+																height={24}
+															/>
+														</div>
 													</FormControl>
 												</FormItem>
 											)}
