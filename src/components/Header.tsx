@@ -68,7 +68,7 @@ export default function Header() {
               />
             </Link>
           </div>
-          <Link href="/labs" className="font-inconsolata font-bold text-base text-white">
+          <Link href="/labs" className="font-inconsolata font-bold text-base text-white lg:hidden">
             Labs
           </Link>
           {/* <Image
