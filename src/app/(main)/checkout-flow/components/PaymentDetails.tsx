@@ -27,7 +27,7 @@ const step3FormSchema = z.object({
 export default function PaymentDetails({
 	step,
 	updateStepAction,
-}: { step: number; updateStepAction: (newValue: number) => void }) {
+}: Readonly<{ step: number; updateStepAction: (newValue: number) => void }>) {
 	const currentForm = useForm<z.infer<typeof step3FormSchema>>({
 		resolver: zodResolver(step3FormSchema),
 	});

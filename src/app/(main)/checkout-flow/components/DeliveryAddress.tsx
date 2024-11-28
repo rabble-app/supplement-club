@@ -46,7 +46,7 @@ const step2FormSchema = z.object({
 export default function DeliveryAddress({
 	step,
 	updateStepAction,
-}: { step: number; updateStepAction: (newValue: number) => void }) {
+}: Readonly<{ step: number; updateStepAction: (newValue: number) => void }>) {
 	const currentForm = useForm<z.infer<typeof step2FormSchema>>({
 		resolver: zodResolver(step2FormSchema),
 	});

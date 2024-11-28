@@ -23,7 +23,7 @@ const step1FormSchema = z.object({
 export default function CreateAccount({
 	step,
 	updateStepAction,
-}: { step: number; updateStepAction: (newValue: number) => void }) {
+}: Readonly<{ step: number; updateStepAction: (newValue: number) => void }>) {
 	const currentForm = useForm<z.infer<typeof step1FormSchema>>({
 		resolver: zodResolver(step1FormSchema),
 	});

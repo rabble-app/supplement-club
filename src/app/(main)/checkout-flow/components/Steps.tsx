@@ -1,6 +1,8 @@
 import Image from "next/image";
 
-export default function Steps({ activeStep }: { activeStep: number }) {
+export default function Steps({
+	activeStep,
+}: Readonly<{ activeStep: number }>) {
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 	return (
 		<div>

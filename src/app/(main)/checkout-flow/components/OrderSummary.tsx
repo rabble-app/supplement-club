@@ -2,7 +2,9 @@ import OrderCard from "@/components/cards/OrderCard";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 
-export default function OrderSummary({ activeStep }: { activeStep: number }) {
+export default function OrderSummary({
+	activeStep,
+}: Readonly<{ activeStep: number }>) {
 	return (
 		<div className="grid gap-[24px] p-[16px] md:p-[24px] bg-grey12">
 			{activeStep < 4 && (
