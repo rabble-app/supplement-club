@@ -266,13 +266,13 @@ export default function Home() {
       <div className="lg:container-width grid lg:grid-cols-2 gap-x-[42px] py-[23px] px-[16px] lg:pt-[32px] lg:pb-[32px] lg:px-[0] bg-white mx-[-16px] md:mx-[0]">
         <div className="relative">
           <Image
-            className="max-h-[716px]"
-            src="/images/pillow.svg"
+            className="max-h-[716px] h-[387px]"
+            src="/images/pillow.png"
             alt="Checkmark icon"
             width={632}
             height={716}
           />
-          <div className="absolute left-[0] top-[0] w-full h-full grid grid-cols-2 gap-[24px] items-end px-[17px] lg:px-[32px] py-[22px] lg:py-[42px]">
+          <div className="absolute left-[0] top-[0] w-full h-full grid grid-cols-2 gap-[24px] items-end px-[17px] lg:px-[32px] py-[10px] lg:py-[42px]">
             <div className="flex flex-col gap-[4px] lg:gap-[22px]">
               <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
                 ££££

@@ -10,7 +10,7 @@ export default function HomeCard(model: Readonly<IHomeCardModel>) {
 					{model.title}
 				</span>
 			</div>
-			<div className="text-[20px] md:text-[22px] leading-[18px] md:leading-[24px] font-[700] text-black font-inconsolata">
+			<div className="text-[20px] md:text-[22px] leading-[24px] font-[700] text-black font-inconsolata">
 				{model.subtitle}
 			</div>
 			<div className="text-[14px] md:text-[18px] leading-[26px] text-grey1">
