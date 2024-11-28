@@ -311,8 +311,8 @@ export default function Home() {
 
         <div className="flex flex-col justify-between">
           <div>
-            <p className="text-[24px] lg:text-[40px] leading-[32px] lg:leading-[58px] !font-[800] text-blue pt-[32px] lg:pt-[18px] pb-[16px] font-inconsolata">
-              Pharmaceutical Grade Ingredients Aren&apos;t Expensive. Marketing
+            <p className="text-[32px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-[800] text-blue pt-[32px] lg:pt-[18px] pb-[16px] font-inconsolata">
+              Pharmaceutical Grade Ingredients Aren&apos;t Expensive. <br />Marketing
               them is.
             </p>
             <p className="text-[14px] lg:text-[18px] leading-[26px] text-grey6">

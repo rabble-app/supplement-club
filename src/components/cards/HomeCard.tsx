@@ -6,7 +6,7 @@ export default function HomeCard(model: Readonly<IHomeCardModel>) {
 		<div className="grid gap-y-[16px]">
 			<div className="flex gap-x-[8px] items-center">
 				<Image src={model.src} alt={model.alt} width={32} height={32} />
-				<span className="text-[32px] leading-[23px] md:leading-[32px] text-blue font-[400] font-hagerman">
+				<span className="text-[32px] leading-[32px] md:leading-[40px] text-blue font-[400] font-hagerman">
 					{model.title}
 				</span>
 			</div>
