@@ -11,6 +11,18 @@ const inter = Inter({ subsets: ['latin'], variable: "--font-inter", display: 'bl
 const figtree = Figtree({ subsets: ['latin'], variable: "--font-figtree", display: 'block' })
 const roboto = Roboto({ subsets: ['latin'], weight: "400", variable: "--font-roboto", display: 'block' })
 
+const inconsolata = localFont({
+	src: "./../../public/fonts/Inconsolata.ttf",
+	variable: "--font-inconsolata",
+	display: "block",
+});
+
+const hagerman = localFont({
+	src: "./../../public/fonts/Hagerman_Font Regular.ttf",
+	variable: "--font-hagerman",
+	display: "block",
+});
+
 export const metadata: Metadata = {
   title: "Supplement Club"
 };
@@ -23,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} antialiased`}
+        className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} antialiased`}
       >
         <Header />
 

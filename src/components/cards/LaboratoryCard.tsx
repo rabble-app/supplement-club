@@ -7,14 +7,14 @@ export default function LaboratoryCard(card: Readonly<ILaboratoryCardModel>) {
 			<Image className="w-full h-full object-cover" src={card.logo} alt={card.altLogo} width={390} height={230} />
 			<div className="py-[32px] px-[24px] min-h-[430px]">
 				<div className=" grid gap-[8px]">
-					<div className="text-[24px] leading-[27px] text-black flex justify-between">
+					<div className="text-[24px] leading-[27px] text-black flex justify-between font-inconsolata font-bold">
 						{card.title}
 						<div className="text-[17px] leading-[20px] text-blue flex items-center gap-[4px]">
 							<Image src="/images/icons/marker-icon.svg" alt="marker" width={20} height={20} />
 							{card.country}
 						</div>
 					</div>
-					<div className="leading-[30px] text-grey1 whitespace-pre-line">
+					<div className="leading-[30px] text-black whitespace-pre-line">
 						{card.description}
 					</div>
 				</div>

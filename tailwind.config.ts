@@ -62,7 +62,15 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			fontFamily: {
+				'inconsolata': ['inconsolata'],
+				'figtree': ['figtree'],
+				'inter': ['inter'],
+				'roboto': ['roboto'],
+				'helvetica': ['helvetica'],
+				'hagerman': ['hagerman']
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
