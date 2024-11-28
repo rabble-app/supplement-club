@@ -15,7 +15,7 @@ import ProductInfo from "@/components/ProductInfo";
 const products = [
   {
     id: 1,
-    src: "/images/supplement.svg",
+    src: "/images/supplement2.png",
     altSrc: "Supplement",
     corporation: "Balchem Corporation",
     name: "Magnesium Bisglycinate TRAACS",
@@ -28,7 +28,7 @@ const products = [
   },
   {
     id: 2,
-    src: "/images/supplement.svg",
+    src: "/images/supplement2.png",
     altSrc: "Supplement",
     corporation: "Kaneka Corporation",
     name: "COENZYME Q10 UBIQUINOL",
@@ -41,7 +41,7 @@ const products = [
   },
   {
     id: 3,
-    src: "/images/supplement.svg",
+    src: "/images/supplement2.png",
     altSrc: "Supplement",
     corporation: "ASTAREAL",
     name: "ASTAREAL ASTAXANTHIN",
@@ -225,11 +225,11 @@ export default function Home() {
           <div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent" />
           <div className="bg-blue h-[350px] lg:h-[453px] relative">
             <Image
-              className="absolute bottom-[70px] left-[-35px] h-[520px] lg:h-[700px]"
-              src="/images/supplement.svg"
+              className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto  h-[420px] lg:h-[533px]"
+              src="/images/supplement2.png"
               alt="Supplement"
-              width={1500}
-              height={520}
+              width={308}
+              height={533}
             />
             <div className="px-[16px] py-[24px] lg:px-[32px] w-full grid items-end h-full lg:h-[453px]">
               <div>
