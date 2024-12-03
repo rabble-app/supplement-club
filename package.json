@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dev:mobile": "next dev -H 192.168.0.3"
+    "dev:mobile": "next dev -H 192.168.0.13"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

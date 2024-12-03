@@ -117,7 +117,7 @@ export default function Labs() {
 			<div className="grid pt-[32px] md:pt-[0] md:grid-cols-[480px_1fr] gap-[40px] md:gap-x-[52px]">
 				<div className="flex flex-col justify-between order-1 gap-[32px]">
 					<div>
-						<h1 className="text-[32px] md:text-[56px] leading-[38px] md:leading-[67px] font-bold text-black4 pb-[32px] md:pb-[16px]">
+						<h1 className="text-[32px] md:text-[48px] leading-[38px] md:leading-[57px] font-[400] text-black4 pb-[32px] md:pb-[16px] font-hagerman">
 							Take Control of Your Supplement Choices with Full Transparency
 						</h1>
 						<p className="text-grey6">
@@ -132,28 +132,28 @@ export default function Labs() {
 				</div>
 
 				<div className="grid order-2 pb-[18px] md:pb-[0]">
-					<div className="bg-yellow p-[8px] text-[14px] leading-[28px] text-black h-[44px]">
+					<div className="bg-yellow p-[8px] text-[14px] leading-[28px] text-black h-[44px] font-inconsolata font-bold">
 						POWER AND AFFORDABILITY IN NUMBERS
 					</div>
 					<div className="grid grid-cols-2 gap-[37px] mt-[19px] md:mt-[8px]">
-						<div className="text-[60px] md:text-[89px] leading-[68px] md:leading-[95px] text-black grid gap-[10px] md:gap-[8px]">
+						<div className="text-[60px] md:text-[89px] leading-[68px] md:leading-[95px] text-black grid gap-[10px] md:gap-[8px] font-inconsolata">
 							100%
-							<p className="leading-[28px] font-bold text-black">
+							<p className="leading-[28px] font-[700] text-black font-helvetica">
 								Traceability
 							</p>
 						</div>
-						<div className="text-[60px] md:text-[89px] leading-[68px] md:leading-[95px] text-black grid gap-[10px] md:gap-[8px]">
+						<div className="text-[60px] md:text-[89px] leading-[68px] md:leading-[95px] text-black grid gap-[10px] md:gap-[8px] font-inconsolata">
 							43%
-							<p className="leading-[28px] font-bold text-black">
+							<p className="leading-[28px] font-[700] text-black font-helvetica">
 								Cheaper on Average
 							</p>
 						</div>
 					</div>
 
-					<div className="text-grey7 whitespace-pre-line mt-[32px] md:mt-[40px]">
-						At Supplement Club, we source ingredients directly from the
-						world&apos;s leading laboratories, ensuring the highest purity and
-						potency. Without middlemen or unnecessary markups, every product
+					<div className="text-grey6 whitespace-pre-line mt-[32px] md:mt-[40px]">
+						At Supplement Club, we source ingredients directly from the world&apos;s
+						leading laboratories, ensuring the highest purity and potency.
+						Without middlemen or unnecessary markups, every product
 						is third-party tested for quality and effectiveness.
 						<br />
 						<br />
@@ -173,16 +173,17 @@ export default function Labs() {
 			</div>
 
 			<div className="w-[calc(100vw-32px)] md:w-auto">
-				<div className="grid md:grid-cols-[1fr_335px]">
-					<div>
-						<p className="text-[24px] md:text-[56px] leading-[28px] md:leading-[67px] font-bold text-black">
-							Meet the Laboratories
-						</p>
-						<div className="md:max-w-[550px] text-[14px] md:text-[20px] leading-[21px] md:leading-[30px] text-grey6">
-							Supplement industry is plagued by subpar ingredients that
-							don&apos;t work. Know where your ingredients are coming from.
-						</div>
+
+			<div className="grid md:grid-cols-[1fr_335px]">
+				<div>
+					<p className="text-[24px] md:text-[56px] leading-[28px] md:leading-[67px] font-[400] text-black font-hagerman">
+						Meet the Laboratories
+					</p>
+					<div className="md:max-w-[550px] text-[14px] md:text-[20px] leading-[21px] md:leading-[30px] text-grey6 font-inconsolata">
+						Supplement industry is plagued by subpar ingredients that don&apos;t
+						work. Know where your ingredients are coming from.
 					</div>
+				</div>
 				</div>
 
 				<Carousel className="mt-[100px] md:my-[24px]">
@@ -204,7 +205,7 @@ export default function Labs() {
 
 			<div className="grid md:grid-cols-3 md:gap-x-[16px] gap-y-[54px]">
 				<div className="flex flex-col gap-[10px]">
-					<p className="text-[32px] leading-[36px] font-bold text-black">
+					<p className="text-[32px] leading-[36px] font-[400] text-black font-hagerman">
 						Shop by Goal
 					</p>
 					<p className="text-grey6">
@@ -220,7 +221,7 @@ export default function Labs() {
 
 			<div className="grid gap-[16px] md:gap-[0] md:grid-cols-2">
 				<div>
-					<div className="text-[24px] leading-[24px] font-bold flex items-center justify-center bg-blue text-white h-[60px] rounded-t-[8px] md:rounded-tr-[0] md:rounded-tl-[8px] border-b-[1px] border-solid border-white">
+					<div className="font-inconsolata text-[24px] leading-[24px] font-[700] flex items-center justify-center bg-blue text-white h-[60px] rounded-t-[8px] md:rounded-tr-[0] md:rounded-tl-[8px] border-b-[1px] border-solid border-white">
 						Supplement Club
 					</div>
 					<div className="flex gap-[3px] items-center bg-blue text-white h-[60px] leading-[16px] py-[12px] px-[18px] md:p-[18px] border-b-[1px] border-solid border-white">
@@ -255,7 +256,7 @@ export default function Labs() {
 					</div>
 				</div>
 				<div>
-					<div className="text-[24px] leading-[24px] font-bold flex items-center justify-center bg-yellow text-black h-[60px] rounded-t-[8px] md:rounded-tr-[8px] border-b-[1px] border-solid border-white">
+					<div className="font-inconsolata text-[24px] leading-[24px] font-[700] flex items-center justify-center bg-yellow text-black h-[60px] rounded-t-[8px] md:rounded-tr-[8px] border-b-[1px] border-solid border-white">
 						Brands
 					</div>
 					<div className="flex gap-[3px] items-center bg-yellow text-black h-[60px] leading-[17px] p-[18px] border-b-[1px] border-solid border-white">
