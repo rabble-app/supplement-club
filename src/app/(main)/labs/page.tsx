@@ -1,3 +1,9 @@
+import Image from "next/image";
+
+import Faqs from "@/components/Faqs";
+import ProductInfo from "@/components/ProductInfo";
+import GoalCardComponent from "@/components/cards/GoalCard";
+import LaboratoryCard from "@/components/cards/LaboratoryCard";
 import {
 	Carousel,
 	CarouselContent,
@@ -5,15 +11,10 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import Image from "next/image";
 
-import GoalCardComponent from "@/components/cards/GoalCard";
-import LaboratoryCard from "@/components/cards/LaboratoryCard";
 import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
 
-import Faqs from "@/components/Faqs";
-import ProductInfo from "@/components/ProductInfo";
 export default function Labs() {
 	const laboratories = [
 		{
@@ -112,7 +113,7 @@ export default function Labs() {
 	] as IGoalCardModel[];
 
 	return (
-	<div className="container-width md:pt-[57px] bg-grey11 md:bg-transparent grid gap-[80px] md:gap-[140px]">
+		<div className="container-width md:pt-[57px] bg-grey11 md:bg-transparent grid gap-[80px] md:gap-[140px]">
 			<div className="grid pt-[32px] md:pt-[0] md:grid-cols-[480px_1fr] gap-[40px] md:gap-x-[52px]">
 				<div className="flex flex-col justify-between order-1 gap-[32px]">
 					<div>
@@ -124,7 +125,7 @@ export default function Labs() {
 							not brand marketing.
 						</p>
 					</div>
-					<p className="font-[700] text-blue underline  break-words">
+					<p className="font-bold text-blue underline  break-words">
 						Make informed decisions about your supplements. Get access to the
 						highest-quality ingredients—without the markups.
 					</p>
@@ -158,8 +159,9 @@ export default function Labs() {
 						<br />
 						Unlike many brands that dilute their formulas with cheaper
 						ingredients and offer vague labels, we provide clear, transparent
-						sourcing. You&apos;ll know exactly how much of each active ingredient
-						you&apos;re getting and why it works—no fillers, no hidden formulas.
+						sourcing. You&apos;ll know exactly how much of each active
+						ingredient you&apos;re getting and why it works—no fillers, no
+						hidden formulas.
 						<br />
 						<br />
 						We partner with laboratories focused on ingredient
@@ -291,7 +293,7 @@ export default function Labs() {
 			</div>
 
 			<ProductInfo />
-			
+
 			<Faqs />
 		</div>
 	);

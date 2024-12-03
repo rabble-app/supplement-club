@@ -1,8 +1,18 @@
 /** @format */
 
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Header() {
   return (
@@ -68,16 +78,72 @@ export default function Header() {
               />
             </Link>
           </div>
-          <Link href="/labs" className="font-inconsolata font-bold text-base text-white lg:hidden">
-            Labs
-          </Link>
-          {/* <Image
-            className="flex lg:hidden hover:cursor-pointer"
-            src="/images/bars.svg"
-            alt="Bars icon"
-            width={16}
-            height={16}
-          /> */}
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Image
+                className="flex lg:hidden hover:cursor-pointer"
+                src="/images/bars.svg"
+                alt="Bars icon"
+                width={16}
+                height={16}
+              />
+            </DialogTrigger>
+            <DialogContent className="w-[calc(100%-32px)] grid gap-[32px] p-[16px] bg-blue text-white">
+              <DialogHeader>
+                <DialogTitle className="text-[32px] leading-[36px] text-left flex justify-between items-center">
+                  Supplement Club
+                  <DialogClose asChild>
+                    <Image
+                      src="/images/icons/close-icon.svg"
+                      alt="Close icon"
+                      width={24}
+                      height={24}
+                    />
+                  </DialogClose>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-[24px] mt-[20px]">
+                <DialogClose asChild>
+                  <Link href="/products">Products</Link>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Link href="/labs">Labs</Link>
+                </DialogClose>
+              </div>
+              <DialogFooter className="grid gap-[16px]">
+                <DialogClose asChild>
+                  <Link href="/auth/login">
+                    <div className="flex gap-x-[8px] text-white items-center justify-center border-[1px] border-blue5 h-[38px]">
+                      <Image
+                        src="/images/user-profile.svg"
+                        alt="User profile icon"
+                        width={16}
+                        height={16}
+                      />
+                      Login
+                    </div>
+                  </Link>
+                </DialogClose>
+
+                <div className="grid grid-cols-[1fr_24px] gap-x-[16px] items-center h-[38px]">
+                  <DialogClose asChild>
+                    <Button className="bg-yellow text-blue h-[38px]" asChild>
+                      <Link href="/buy">Buy Now</Link>
+                    </Button>
+                  </DialogClose>
+                  <Link href="/buy">
+                    <Image
+                      src="/images/bag.svg"
+                      alt="User profile bag"
+                      width={24}
+                      height={24}
+                    />
+                  </Link>
+                </div>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </header>

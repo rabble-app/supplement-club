@@ -1,16 +1,16 @@
 /** @format */
 
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-import HomeCardComponent from "@/components/cards/HomeCard";
-import ProductCardComponent from "@/components/cards/ProductCard";
-import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
-import type IProductCardModel from "@/utils/models/IProductCardModel";
-
 import Faqs from "@/components/Faqs";
 import ProductInfo from "@/components/ProductInfo";
+import HomeCardComponent from "@/components/cards/HomeCard";
+import ProductCardComponent from "@/components/cards/ProductCard";
+import { Button } from "@/components/ui/button";
+
+import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
+import type IProductCardModel from "@/utils/models/IProductCardModel";
 
 const products = [
   {
@@ -266,7 +266,7 @@ export default function Home() {
       <div className="lg:container-width grid lg:grid-cols-2 gap-x-[42px] py-[23px] px-[16px] lg:pt-[32px] lg:pb-[32px] lg:px-[0] bg-white mx-[-16px] md:mx-[0]">
         <div className="relative">
           <Image
-            className="max-h-[716px] h-[387px]"
+            className="max-h-[716px] lg:h-[716px]"
             src="/images/pillow.png"
             alt="Checkmark icon"
             width={632}

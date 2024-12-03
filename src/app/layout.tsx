@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import './../../public/styles/globals.css';
 import { Inter, Figtree, Roboto, Inconsolata } from "next/font/google";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 
 /** @fonts */
 const helvetica = localFont({ src: "./../../public/fonts/GeistVF.woff", variable: "--font-helvetica", display: 'block' });
@@ -20,24 +18,20 @@ const hagerman = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Supplement Club"
+	title: "Supplement Club",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body
         className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} antialiased`}
       >
-        <Header />
-
         {children}
-
-        <Footer />
       </body>
     </html>
   );
