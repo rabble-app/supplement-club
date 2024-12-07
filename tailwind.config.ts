@@ -55,7 +55,8 @@ export default {
 				grey22: '#E8E8E8',
 				grey23: '#B7B7B7',
 				grey24: '#FFFFFF',
-				grey25: '#9B9B9B'
+				grey25: '#9B9B9B',
+				grey26: '#D8D8D8'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -247,193 +247,193 @@ export default function Preorder() {
 	const [loggedIn] = React.useState(false);
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] min-h-screen container-width relative">
-			<div className="contents md:grid gap-[32px]">
-				<div className="bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
-					<div className="grid gap-[60px]">
-						<Carousel setApi={setApi} className="w-full relative">
-							<CarouselContent
-								className={` ${loggedIn ? "" : "opacity-[40%]"}`}
-							>
-								{productImages.map((i) => (
-									<CarouselItem key={i.id}>
-										<Image
-											src={i.image}
-											alt={i.imageAlt}
-											style={{ width: "100%", height: "auto" }}
-											width={700}
-											height={700}
-										/>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-							<CarouselPrevious className="hidden md:flex absolute left-[16px] rounded-[50%] h-[48px] w-[48px] text-black border-black p-0 bg-white" />
-							<CarouselNext className="hidden md:flex absolute right-[16px] rounded-[50%] h-[48px] w-[48px] text-black border-black p-0 bg-white" />
+			<div className="contents bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0] md:grid md:gap-[60px]">
+				<Carousel
+					setApi={setApi}
+					className="w-full relative order-1 md:order-none mt-[20px] md:mt-[0]"
+				>
+					<CarouselContent className={` ${loggedIn ? "" : "opacity-[40%]"}`}>
+						{productImages.map((i) => (
+							<CarouselItem key={i.id}>
+								<Image
+									src={i.image}
+									alt={i.imageAlt}
+									style={{ width: "100%", height: "auto" }}
+									width={700}
+									height={700}
+								/>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+					<CarouselPrevious className="flex absolute left-[16px] rounded-[50%] h-[48px] w-[48px] text-black border-black p-0 bg-white" />
+					<CarouselNext className="flex absolute right-[16px] rounded-[50%] h-[48px] w-[48px] text-black border-black p-0 bg-white" />
 
-							<div className="hidden md:flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
-								<div className="flex gap-[8px]">
-									{Array.from({ length: 7 }).map((item, index) => (
-										<div
-											key={index}
-											className="h-[8px] w-[8px] rounded-[50%] bg-grey2"
-										/>
-									))}
-								</div>
-							</div>
-
-							<div className="flex justify-between items-center md:hidden">
-								<p className="leading-[18px] text-grey4 mb-[2px]">
-									Quarterly Subscription
-								</p>
-								<div className="grid grid-cols-[24px_28px] gap-[4px] text-blue text-[16px] leading-[24px]">
-									<Image
-										src="/images/icons/user-profile-group-blue-icon.svg"
-										className="mb-auto"
-										alt="User profile group icon"
-										width={24}
-										height={24}
-									/>
-									678
-								</div>
-							</div>
-
-							<div className="flex left-0 right-0 transform absolute bottom-[50px] w-full bg-blue py-[12px] h-[72px]">
-								<div className="text-white text-[16px] leading-[24px] font-helvetica flex text-center max-w-[300px] mx-auto">
-									PRE-ORDER TO BECOME FOUNDING MEMBER AND GET 10%OFF - FOREVER
-								</div>
-							</div>
-						</Carousel>
-
-						<Launches />
-
-						<div className="grid gap-[24px]">
-							<div className="grid gap-[8px]">
-								<p className="text-[26px] leading-[39px] font-inconsolata font-bold">
-									Why Ubiquinol is Essential for Your Health
-								</p>
-								<p className="font-helvetica">
-									Ubiquinol powers cellular energy production and protects your
-									cells from oxidative stress, making it vital for staying
-									healthy, energetic, and vibrant as you age.S
-								</p>
-							</div>
-
-							<Separator className="bg-black h-[1px]" />
-
-							<div className="grid gap-[8px]">
-								<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
-									Boosts Cellular Energy
-								</p>
-								<p>
-									Ubiquinol is key to making ATP, the fuel your cells need to
-									function. Think of ATP as the battery that powers everything
-									from muscle movement to heart function. Without enough ATP,
-									your body slows down, causing fatigue and reduced performance.
-								</p>
-							</div>
-
-							<Separator className="bg-black h-[1px]" />
-
-							<div className="grid gap-[8px]">
-								<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
-									Protects Against Free Radicals
-								</p>
-								<p>
-									Ubiquinol acts as a shield against free radicals—unstable
-									molecules that damage your cells. These molecules are produced
-									during normal activities (like exercising) and from external
-									factors (like pollution). Ubiquinol helps neutralize them,
-									preventing cell damage and slowing down the aging process,
-									especially in vital organs like your heart, brain, and
-									muscles.
-								</p>
-							</div>
-
-							<Separator className="bg-black h-[1px]" />
-
-							<div className="grid gap-[8px]">
-								<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
-									Supports Healthy Aging
-								</p>
-								<p>
-									As you age, your body produces less Ubiquinol, which means
-									less ATP and fewer antioxidants. This leads to low energy,
-									slower recovery, and reduced heart health. Supplementing with
-									Ubiquinol helps restore these vital functions and keeps you
-									feeling energized and youthful.
-								</p>
-							</div>
-						</div>
-
-						<div>
-							{faqs.map((faq, index) => (
-								<Accordion key={faq.id} type="single" collapsible>
-									<Separator
-										className={`${index === faqs.length - 1 ? "" : ""} bg-black h-[1px]`}
-									/>
-									<AccordionItem value="products">
-										<AccordionTrigger>
-											<div className="grid gap-[16px] grid-cols-[32px_1fr] items-center text-[26px] leading-[27px] font-inconsolata font-bold text-black">
-												<Image
-													src={faq.image}
-													alt={faq.imageAlt}
-													width={32}
-													height={32}
-												/>{" "}
-												{faq.question}
-											</div>
-										</AccordionTrigger>
-										<AccordionContent>
-											<div className="mt-[-8px]">
-												<p className="text-[20px] leading-[30px] font-bold font-inconsolata mb-[8px]">
-													{faq.title}
-												</p>
-												<div className="text-[16px] leading-[24px] font-helvetica mb-[16px]">
-													{faq.description}
-												</div>
-												{faq.optionName && (
-													<div className="text-[16px] leading-[24px] font-bold font-helvetica italic mb-[8px]">
-														{faq.optionName}
-													</div>
-												)}
-												{faq.options && (
-													<ul className="list-disc list-inside">
-														{faq.options.map((option) => (
-															<li className="pl-[10px]" key={option}>
-																{option}
-															</li>
-														))}
-													</ul>
-												)}
-											</div>
-										</AccordionContent>
-									</AccordionItem>
-								</Accordion>
-							))}
-						</div>
-
-						<ProfuctTable />
-
-						<div className="grid grid-cols-3 gap-x-[16px] gap-y-[16px] mb-[84px]">
-							{lastSectionItems.map((item) => (
+					<div className="flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
+						<div className="flex gap-[8px]">
+							{Array.from({ length: 7 }).map((item, index) => (
 								<div
-									key={item.id}
-									className="grid gap-[8px] grid-cols-[24px_1fr] items-start text-[12px] leading-[14px] font-helvetica"
-								>
-									<Image
-										src={item.image}
-										alt={item.imageAlt}
-										width={24}
-										height={24}
-									/>{" "}
-									{item.title}
-								</div>
+									key={index}
+									className="h-[8px] w-[8px] rounded-[50%] bg-grey2"
+								/>
 							))}
 						</div>
 					</div>
+
+					<div className="flex left-0 right-0 transform absolute bottom-[50px] w-full bg-blue py-[12px] h-[72px]">
+						<div className="text-white text-[16px] leading-[24px] font-helvetica flex text-center max-w-[300px] mx-auto">
+							PRE-ORDER TO BECOME FOUNDING MEMBER AND GET 10%OFF - FOREVER
+						</div>
+					</div>
+				</Carousel>
+
+				<div className="flex justify-between items-center order-2 md:hidden">
+					<p className="leading-[18px] text-grey4 mb-[2px]">
+						Quarterly Subscription
+					</p>
+					<div className="grid grid-cols-[24px_28px] gap-[4px] text-blue text-[16px] leading-[24px]">
+						<Image
+							src="/images/icons/user-profile-group-blue-icon.svg"
+							className="mb-auto"
+							alt="User profile group icon"
+							width={24}
+							height={24}
+						/>
+						678
+					</div>
+				</div>
+
+				<div className="order-4 md:order-none">
+					<Launches />
+				</div>
+
+				<div className="grid gap-[24px] order-5 md:order-none">
+					<div className="grid gap-[8px]">
+						<p className="text-[26px] leading-[39px] font-inconsolata font-bold">
+							Why Ubiquinol is Essential for Your Health
+						</p>
+						<p className="font-helvetica">
+							Ubiquinol powers cellular energy production and protects your
+							cells from oxidative stress, making it vital for staying healthy,
+							energetic, and vibrant as you age.S
+						</p>
+					</div>
+
+					<Separator className="bg-black h-[1px]" />
+
+					<div className="grid gap-[8px]">
+						<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
+							Boosts Cellular Energy
+						</p>
+						<p>
+							Ubiquinol is key to making ATP, the fuel your cells need to
+							function. Think of ATP as the battery that powers everything from
+							muscle movement to heart function. Without enough ATP, your body
+							slows down, causing fatigue and reduced performance.
+						</p>
+					</div>
+
+					<Separator className="bg-black h-[1px]" />
+
+					<div className="grid gap-[8px]">
+						<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
+							Protects Against Free Radicals
+						</p>
+						<p>
+							Ubiquinol acts as a shield against free radicals—unstable
+							molecules that damage your cells. These molecules are produced
+							during normal activities (like exercising) and from external
+							factors (like pollution). Ubiquinol helps neutralize them,
+							preventing cell damage and slowing down the aging process,
+							especially in vital organs like your heart, brain, and muscles.
+						</p>
+					</div>
+
+					<Separator className="bg-black h-[1px]" />
+
+					<div className="grid gap-[8px]">
+						<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
+							Supports Healthy Aging
+						</p>
+						<p>
+							As you age, your body produces less Ubiquinol, which means less
+							ATP and fewer antioxidants. This leads to low energy, slower
+							recovery, and reduced heart health. Supplementing with Ubiquinol
+							helps restore these vital functions and keeps you feeling
+							energized and youthful.
+						</p>
+					</div>
+				</div>
+
+				<div className="order-6 md:order-none">
+					{faqs.map((faq, index) => (
+						<Accordion key={faq.id} type="single" collapsible>
+							<Separator
+								className={`${index === faqs.length - 1 ? "" : ""} bg-black h-[1px]`}
+							/>
+							<AccordionItem value="products">
+								<AccordionTrigger>
+									<div className="grid gap-[16px] grid-cols-[32px_1fr] items-center text-[26px] leading-[27px] font-inconsolata font-bold text-black">
+										<Image
+											src={faq.image}
+											alt={faq.imageAlt}
+											width={32}
+											height={32}
+										/>{" "}
+										{faq.question}
+									</div>
+								</AccordionTrigger>
+								<AccordionContent>
+									<div className="mt-[-8px]">
+										<p className="text-[20px] leading-[30px] font-bold font-inconsolata mb-[8px]">
+											{faq.title}
+										</p>
+										<div className="text-[16px] leading-[24px] font-helvetica mb-[16px]">
+											{faq.description}
+										</div>
+										{faq.optionName && (
+											<div className="text-[16px] leading-[24px] font-bold font-helvetica italic mb-[8px]">
+												{faq.optionName}
+											</div>
+										)}
+										{faq.options && (
+											<ul className="list-disc list-inside">
+												{faq.options.map((option) => (
+													<li className="pl-[10px]" key={option}>
+														{option}
+													</li>
+												))}
+											</ul>
+										)}
+									</div>
+								</AccordionContent>
+							</AccordionItem>
+						</Accordion>
+					))}
+				</div>
+
+				<div className="order-7 md:order-none">
+					<ProfuctTable />
+				</div>
+
+				<div className="grid grid-cols-3 gap-x-[16px] gap-y-[16px] mb-[84px] order-8 md:order-none">
+					{lastSectionItems.map((item) => (
+						<div
+							key={item.id}
+							className="grid gap-[8px] grid-cols-[24px_1fr] items-start text-[12px] leading-[14px] font-helvetica"
+						>
+							<Image
+								src={item.image}
+								alt={item.imageAlt}
+								width={24}
+								height={24}
+							/>{" "}
+							{item.title}
+						</div>
+					))}
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-[16px] md:gap-[24px]">
+			<div className="flex flex-col gap-[16px] md:gap-[24px] order-3 md:order-none">
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>

@@ -23,8 +23,8 @@ export default function MemberCard({
 }) {
 	return (
 		<div
-			className={`grid gap-[16px] p-[16px] md:px-[36px] items-center rounded-[8px] mx-auto 
-                ${isActive ? "grid-cols-[63px_1fr_auto] bg-white shadow-3 h-[138px] w-full" : "bg-grey21 h-[106px] w-[calc(100%-72px)]"}`}
+			className={`grid gap-[16px] p-[16px] md:px-[36px] items-center rounded-[8px] mx-auto  w-full
+                ${isActive ? "grid-cols-[52px_1fr_auto] bg-white shadow-3 h-[138px] mx-[-16px] md:mx-[0]" : "bg-grey21 h-[106px] md:w-[calc(100%-72px)]"}`}
 		>
 			{isActive && (
 				<div className="rounded-[50%] flex justify-center items-center w-[52px] h-[52px] bg-blue8">

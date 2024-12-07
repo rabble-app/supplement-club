@@ -325,7 +325,7 @@ export default function ProductDetails({
 					</div>
 				</Carousel>
 
-				<div className="order-3 bg-grey11 md:bg-transparent md:order-none mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
+				<div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
 					<TeamPrice members={175} />
 
 					<div className="grid gap-[60px] mt-[51px] md:mt-[0]">

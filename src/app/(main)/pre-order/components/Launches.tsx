@@ -21,7 +21,7 @@ export default function Launches() {
 			<Separator className="bg-grey22 h-[1px]" />
 
 			<div className="px-[16px]">
-				<MembersLaunches members={44} />
+				<MembersLaunches members={46} />
 			</div>
 		</div>
 	);
