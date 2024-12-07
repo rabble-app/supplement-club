@@ -27,19 +27,24 @@ export default function MembersLaunches({ members }: { members: number }) {
 	const currentIndex = members <= 50 ? 0 : members >= 200 ? 2 : 1;
 	return (
 		<div className="flex justify-end md:gap-[60px] mb-[52px] relative mx-[-16px] md:mx-[0]">
-			<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 h-[16px] w-[calc(100%-80px)] bg-grey19 z-[2] flex items-center gap-[5px] shadow-progress rounded-[20px]">
-				{Array.from({ length: 50 }, (_, i) => i + 1).map((i, index) => (
-					<div
-						key={i}
-						className={`min-w-[12px] h-[12px] ${
-							(index * 5) < members ? "bg-grey23" : "bg-grey18"
-						}`}
-					/>
-				))}
-			</div>
+			<div className="h-[26px] flex items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 w-[calc(100%-80px)]">
+				<div className="bg-grey19 z-[2] flex items-center gap-[5px] shadow-progress rounded-[20px] h-[16px]">
+					{Array.from({ length: 31 }, (_, i) => i + 1).map((i, index) => (
+						<div
+							key={i}
+							className={`min-w-[12px] h-[12px] ${
+								(index * 5) < members ? "bg-grey23" : "bg-grey18"
+							}`}
+						/>
+					))}
+				</div>
 
-			<div className="absolute left-[180px] top-[87px] z-[1] h-[26px] text-[12px] leading-[13px] font-bold font-helvetica w-[30px] flex justify-center items-center rounded-[50%] border-[2px] border-white text-white bg-grey23">
-				{members}
+				<div
+					className={`absolute z-[2] h-[28px] text-[12px] leading-[13px] font-bold font-helvetica w-[30px] flex 
+				justify-center items-center rounded-[50%] border-[1px] border-white text-white bg-grey23 left-[140px]`}
+				>
+					{members}
+				</div>
 			</div>
 
 			{members < 50 && (
