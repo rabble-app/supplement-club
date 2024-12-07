@@ -1,15 +1,37 @@
 import type { Metadata } from "next";
+import { Figtree, Inconsolata, Inter, Roboto } from "next/font/google";
 import localFont from "next/font/local";
-import './../../public/styles/globals.css';
-import { Inter, Figtree, Roboto, Inconsolata } from "next/font/google";
+import { Toaster } from "sonner";
+import "./../../public/styles/globals.css";
 
 /** @fonts */
-const helvetica = localFont({ src: "./../../public/fonts/GeistVF.woff", variable: "--font-helvetica", display: 'block' });
-const inter = Inter({ subsets: ['latin'], variable: "--font-inter", display: 'block' })
-const figtree = Figtree({ subsets: ['latin'], variable: "--font-figtree", display: 'block' })
-const roboto = Roboto({ subsets: ['latin'], weight: "400", variable: "--font-roboto", display: 'block' })
-const inconsolata = Inconsolata({ subsets: ['latin'], weight: ["400", "700","800","900"], variable: "--font-inconsolata", display: 'block' })
-
+const helvetica = localFont({
+	src: "./../../public/fonts/GeistVF.woff",
+	variable: "--font-helvetica",
+	display: "block",
+});
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "block",
+});
+const figtree = Figtree({
+	subsets: ["latin"],
+	variable: "--font-figtree",
+	display: "block",
+});
+const roboto = Roboto({
+	subsets: ["latin"],
+	weight: "400",
+	variable: "--font-roboto",
+	display: "block",
+});
+const inconsolata = Inconsolata({
+	subsets: ["latin"],
+	weight: ["400", "700", "800", "900"],
+	variable: "--font-inconsolata",
+	display: "block",
+});
 
 const hagerman = localFont({
 	src: "./../../public/fonts/Hagerman_Font Regular.ttf",
@@ -26,13 +48,15 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body
+				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} antialiased`}
+			>
+				{children}
+
+				<Toaster richColors />
+			</body>
+		</html>
+	);
 }

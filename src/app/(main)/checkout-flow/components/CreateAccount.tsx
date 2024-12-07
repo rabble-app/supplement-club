@@ -46,7 +46,7 @@ export default function CreateAccount({
 						<FormItem>
 							<FormLabel>Email*</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} placeholder="e.g. newton@mail.com" />
 							</FormControl>
 						</FormItem>
 					)}
@@ -58,7 +58,7 @@ export default function CreateAccount({
 						<FormItem>
 							<FormLabel>Password*</FormLabel>
 							<FormControl>
-								<Input {...field} type="password" />
+								<Input {...field} type="password" placeholder="*************" />
 							</FormControl>
 						</FormItem>
 					)}

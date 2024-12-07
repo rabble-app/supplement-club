@@ -10,14 +10,17 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				red: '#B42318',
+				red2: '#FEE4E2',
 				blue: '#00038F',
 				blue2: '#DFDFFF',
 				blue3: '#00038F',
 				blue4: '#007AFF',
 				blue5: '#7578FF',
 				blue6: '#EFF0FF',
-				blue7: '#DFDFFF',	
 				blue8: '#00038F1A',
+				blue9: '#E2E3FF',
+				blue10: '#E5E6F4',
 				green: '#61D27A',
 				yellow: '#FBF89F',
 				yello1: '#FFFED8',
@@ -44,7 +47,15 @@ export default {
 				grey14: '#F9F9F9',
 				grey15: '#999999',
 				grey16: '#666666',
-				grey17: '#9E9E9E'
+				grey17: '#9E9E9E',
+				grey18: '#DEDEDE',
+				grey19: '#EEEEEE',
+				grey20: '#E4E4E4',
+				grey21: '#F7F7F7',
+				grey22: '#E8E8E8',
+				grey23: '#B7B7B7',
+				grey24: '#FFFFFF',
+				grey25: '#9B9B9B'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,7 +95,8 @@ export default {
 			boxShadow: {
 				'card': '0px 10px 60px 0px #0000001A',
 				'login': '0px 1px 2px 0px #0000000D',
-				'3': '0px 4px 16px 0px #00000014'
+				'3': '0px 4px 16px 0px #00000014',
+				'progress': '0px 4px 4px 0px #5B5B5B1A inset'
 			}
 		}
 	},

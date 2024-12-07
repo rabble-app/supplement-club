@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/accordion";
 
 import type { IFaqQuestionModel } from "@/utils/models/IFaqQuestionModel";
+import { Separator } from "@radix-ui/react-separator";
 
 const faqs = [
 	{
@@ -53,12 +54,15 @@ export default function Faqs() {
 				FAQs
 			</p>
 			<div>
-				{faqs.map((faq) => (
+				{faqs.map((faq, index) => (
 					<Accordion key={faq.id} type="single" collapsible>
 						<AccordionItem value="item-2">
 							<AccordionTrigger>{faq.question}</AccordionTrigger>
 							<AccordionContent>{faq.answer}</AccordionContent>
 						</AccordionItem>
+						<Separator
+							className={`${index === faqs.length - 1 ? "" : ""} border-b h-[1px]`}
+						/>
 					</Accordion>
 				))}
 			</div>

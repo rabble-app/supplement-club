@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +15,7 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const formSchema = z.object({
 	email: z
@@ -25,11 +27,31 @@ const formSchema = z.object({
 export default function LoginPage() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
+		mode: "onChange",
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// call api
 		console.log(values);
+		toast.custom(
+			(t) => (
+				<div className="grid grid-cols-[16px_228px_16px] gap-[10px] items-center text-red bg-red2 py-[8px] px-[16px]">
+					<Image
+						src="/images/icons/error-icon.svg"
+						alt="error icon"
+						width={16}
+						height={16}
+					/>
+					<div>Invalid email or password</div>
+					<Button className="text-red p-[0]" onClick={() => toast.dismiss(t)}>
+						x
+					</Button>
+				</div>
+			),
+			{
+				position: "top-right",
+			},
+		);
 	}
 
 	return (
@@ -53,10 +75,10 @@ export default function LoginPage() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel className="text-[16px] font-bold font-inconsolata">
-									Email
+									Email*
 								</FormLabel>
 								<FormControl>
-									<Input {...field} />
+									<Input {...field} placeholder="e.g. newton@mail.com" />
 								</FormControl>
 							</FormItem>
 						)}
@@ -64,10 +86,10 @@ export default function LoginPage() {
 					<FormField
 						control={form.control}
 						name="password"
-						render={({ field }) => (
-							<FormItem>
+						render={({ field, fieldState }) => (
+							<FormItem className={`${fieldState.invalid ? "error" : ""}`}>
 								<FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
-									Password{" "}
+									Password*{" "}
 									<Link
 										className="text-blue font-roboto font-[400] underline"
 										href="/auth/forgot-password/"
@@ -76,7 +98,11 @@ export default function LoginPage() {
 									</Link>
 								</FormLabel>
 								<FormControl>
-									<Input type="password" {...field} />
+									<Input
+										type="password"
+										{...field}
+										placeholder="*************"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
@@ -84,7 +110,7 @@ export default function LoginPage() {
 
 					<Button
 						type="submit"
-						className="bg-blue text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold"
+						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
 						Login
 					</Button>

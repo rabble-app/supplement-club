@@ -2,11 +2,11 @@ import Image from "next/image";
 
 export default function Steps({
 	activeStep,
-}: Readonly<{ activeStep: number }>) {
-	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
+	steps,
+}: Readonly<{ activeStep: number; steps: string[] }>) {
 	return (
 		<div>
-			{activeStep < 4 && (
+			{activeStep < steps.length + 1 && (
 				<div className="flex justify-between items-center">
 					{steps.map((value, idx) => (
 						<div

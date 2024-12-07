@@ -17,7 +17,7 @@ export default function OrderSummary({
 				<p className="text-[20px] leading-[24px] font-inconsolata text-grey4">
 					KANEKA CORPRATION
 				</p>
-				<div className="text-[24px] leading-[28px] font-hagerman">
+				<div className="text-[40px] leading-[48px] font-hagerman">
 					Coenzyme Q10 Ubiquinol Kaneka TM
 				</div>
 				<div className="flex items-center gap-[8px]">
@@ -88,7 +88,7 @@ export default function OrderSummary({
 			)}
 			{activeStep !== 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-					Subscription
+					Subscriptions
 				</p>
 			)}
 
@@ -112,7 +112,7 @@ export default function OrderSummary({
 				</div>
 			</OrderCard>
 
-			{activeStep < 4 && <Separator className="bg-grey13" />}
+			<Separator className="bg-grey13 h-[1px]" />
 
 			<div className="grid gap-[7px] md:gap-0 md:grid-cols-[84px_1fr]">
 				<div>
