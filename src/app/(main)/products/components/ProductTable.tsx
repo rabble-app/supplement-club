@@ -1,12 +1,17 @@
 import { Separator } from "@radix-ui/react-select";
 
 import type IProductTableModel from "@/utils/models/IProductTableModel";
-const productTableHeader = [
-	{ key: "colum1", label: "Product" },
-	{ key: "colum2", label: "Kaneka Ubiquinol" },
-	{ key: "colum3", label: "Leading Brands" },
-	{ key: "colum4", label: "Ubiquinone" },
-];
+
+const productTableIHeader = {
+	colum1: "Product",
+	colum2: "Kaneka Ubiquinol",
+	colum3: "Leading Brands",
+	colum4: "Ubiquinone",
+} as IProductTableModel;
+
+const UBIQUINONE = "100mg Ubiquinone";
+const GENERAL_BENEFITS = "General energy, antioxidant support";
+const HIGH_ABSORPTION = "High, designed for rapid absorption";
 
 const productTableItems = [
 	{
@@ -25,19 +30,19 @@ const productTableItems = [
 		colum1: "Bioavailability",
 		colum2: "3-8x higher",
 		colum3: "Moderate (boosted by BioPerine)",
-		colum4: "High, designed for rapid absorption",
+		colum4: HIGH_ABSORPTION,
 	},
 	{
 		colum1: "Absorption Rate",
 		colum2: "Fast, active form",
 		colum3: "Moderate (BioPerine enhances absorption)",
-		colum4: "High, designed for rapid absorption",
+		colum4: HIGH_ABSORPTION,
 	},
 	{
 		colum1: "Dosage per Serving",
 		colum2: "100mg Ubiquinol",
-		colum3: "100mg Ubiquinone",
-		colum4: "100mg Ubiquinone",
+		colum3: UBIQUINONE,
+		colum4: UBIQUINONE,
 	},
 	{
 		colum1: "Clinical Backing",
@@ -48,8 +53,8 @@ const productTableItems = [
 	{
 		colum1: "Targeted Benefits",
 		colum2: "Energy, heart health, recovery",
-		colum3: "General energy, antioxidant support",
-		colum4: "General energy, antioxidant support",
+		colum3: GENERAL_BENEFITS,
+		colum4: GENERAL_BENEFITS,
 	},
 	{
 		colum1: "Price per Serving",
@@ -83,53 +88,46 @@ const productTableItems = [
 	},
 ] as IProductTableModel[];
 
-export default function ProductTable() {
-	const renderCell = (
-		content: string,
-		isHeader: boolean,
-		isFirstHighlighted: boolean,
-		isLastHighlighted: boolean,
-		isHighlighted?: boolean,
-	) => (
-		<p
-			className={`font-roboto ${isHeader ? "text-blue font-bold" : "text-blue"} 
-		  ${isHighlighted ? "text-white bg-blue my-[-11px]" : ""} 
-		  ${isFirstHighlighted ? " rounded-t-[6px]" : ""} 
-		  ${isLastHighlighted ? " rounded-b-[6px]" : ""} 
-		  text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words`}
-		>
-			{content}
-		</p>
-	);
-
+export default function ProfuctTable() {
 	return (
 		<div className="grid">
-			{/* Render Header */}
 			<div className="grid grid-cols-[1fr_100px_60px_60px] md:grid-cols-[1fr_140px_140px_140px] p-[10px] h-[50px] border-[1px] border-transparent">
-				{productTableHeader.map((header, index) =>
-					renderCell(header.label, true, index === 1, false, index === 1),
-				)}
+				<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center text-center">
+					{productTableIHeader.colum1}
+				</p>
+				<p className="font-roboto text-white bg-blue my-[-11px] text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center rounded-t-[6px]">
+					{productTableIHeader.colum2}
+				</p>
+				<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center">
+					{productTableIHeader.colum3}
+				</p>
+				<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center">
+					{productTableIHeader.colum4}
+				</p>
 			</div>
 
-			{/* Render Table Rows */}
 			<div className="border-[1px] border-blue rounded-[8px] overflow-hidden">
 				{productTableItems.map((item, index) => (
 					<div key={item.colum1}>
 						<div
-							className={`grid grid-cols-[1fr_100px_60px_60px] md:grid-cols-[1fr_140px_140px_140px] p-[10px] md:h-[50px] ${
-								index === productTableItems.length - 1 ? "mb-[20px]" : ""
-							}`}
+							className={`grid grid-cols-[1fr_100px_60px_60px] md:grid-cols-[1fr_140px_140px_140px] p-[10px] md:h-[50px] ${index === productTableItems.length - 1 ? "mb-[20px]" : ""}`}
 						>
-							{productTableHeader.map((header, i) =>
-								renderCell(
-									item[header.key as keyof IProductTableModel],
-									false,
-									false,
-									index === productTableItems.length - 1,
-									i === 1,
-								),
-							)}
+							<p className="font-bold font-inconsolata text-blue text-[12px] leading-[12px] flex items-center break-words">
+								{item.colum1}
+							</p>
+							<p
+								className={`font-roboto text-white bg-blue my-[-11px] text-[12px] leading-[12px] px-[10px] break-words flex items-center justify-center text-center ${index === productTableItems.length - 1 ? "rounded-b-[6px] mb-[-20px] pb-[20px]" : ""}`}
+							>
+								{item.colum2}
+							</p>
+							<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words">
+								{item.colum3}
+							</p>
+							<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words">
+								{item.colum4}
+							</p>
 						</div>
+
 						<Separator className="bg-blue h-[1px]" />
 					</div>
 				))}
