@@ -90,11 +90,9 @@ const faqs = [
 export default function ProductFaqs() {
 	return (
 		<div>
-			{faqs.map((faq, index) => (
+			{faqs.map((faq) => (
 				<Accordion key={faq.id} type="single" collapsible>
-					<Separator
-						className={`${index === faqs.length - 1 ? "" : ""} bg-black h-[1px]`}
-					/>
+					<Separator className="bg-black h-[1px]" />
 					<AccordionItem value="products">
 						<AccordionTrigger>
 							<div className="grid gap-[16px] grid-cols-[32px_1fr] items-center text-[26px] leading-[27px] font-inconsolata font-bold text-black">
