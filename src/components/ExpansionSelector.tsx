@@ -37,18 +37,14 @@ export default function ExpansionSelector({
 							checked={selectedCategories.includes(option.id)}
 							onChange={() => handleCategoryChange(option.id)}
 						/>
-						<span
+
+						<button
+							type="button"
 							onClick={() => handleCategoryChange(option.id)}
-							onKeyUp={(e) => {
-								if (e.key === "Enter" || e.key === " ") {
-									// Handle Enter and Space keys
-									handleCategoryChange(option.id);
-								}
-							}}
 							className="text-[16px] leading-[20px] font-[500] font-inter cursor-pointer"
 						>
 							{option.label}
-						</span>
+						</button>
 					</div>
 				))}
 			</CollapsibleContent>
