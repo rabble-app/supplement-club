@@ -61,8 +61,8 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 					{model.spotsRemainds && (
 						<p className="text-[14px] leading-[14px] font-inconsolata text-blue">
 							<span className="text-[14px] leading-[14px] font-inconsolata font-bold">
-								{model.spotsRemainds} {/* */}
-							</span>
+								{model.spotsRemainds}
+							</span>{" "}
 							Founder Spots Remaining!
 						</p>
 					)}

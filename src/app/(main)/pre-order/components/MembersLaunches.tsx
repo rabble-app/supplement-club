@@ -33,23 +33,38 @@ export default function MembersLaunches({
 	} else if (members >= 200) {
 		currentIndex = 2;
 	}
+
+	function getTextColor(index: number) {
+		let color = "text-grey6";
+		if (index === currentIndex || index < currentIndex) {
+			color = "text-blue";
+		}
+		return color;
+	}
+
+	function getProgressCellColor(index: number) {
+		let color = "bg-grey18";
+		if (index * 5 < members) {
+			color = "bg-grey23";
+		}
+		return color;
+	}
+
 	return (
 		<div className="flex justify-end md:gap-[60px] mb-[52px] relative mx-[-16px] md:mx-[0]">
 			<div className="h-[26px] flex items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 w-[calc(100%-80px)]">
 				<div className="bg-grey19 z-[2] flex items-center gap-[5px] shadow-progress rounded-[20px] h-[16px]">
 					{Array.from({ length: 31 }, (_, i) => i + 1).map((i, index) => (
 						<div
-							key={i}
-							className={`min-w-[12px] h-[12px] ${
-								(index * 5) < members ? "bg-grey23" : "bg-grey18"
-							}`}
+							key={`cell-${i}`}
+							className={`min-w-[12px] h-[12px] ${getProgressCellColor(index)}`}
 						/>
 					))}
 				</div>
 
 				<div
-					className={`absolute z-[2] h-[28px] text-[12px] leading-[13px] font-bold font-helvetica w-[30px] flex 
-				justify-center items-center rounded-[50%] border-[1px] border-white text-white bg-grey23 left-[140px]`}
+					className="absolute z-[2] h-[28px] text-[12px] leading-[13px] font-bold font-helvetica w-[30px] flex 
+				justify-center items-center rounded-[50%] border-[1px] border-white text-white bg-grey23 left-[140px]"
 				>
 					{members}
 				</div>
@@ -73,12 +88,12 @@ export default function MembersLaunches({
 					<div className="p-[10px] grid gap-[8px] z-[1] relative w-[100px]">
 						<div className="grid gap-[4px] mx-auto">
 							<p
-								className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${index === currentIndex || index < currentIndex ? "text-blue" : "text-grey6"}`}
+								className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${getTextColor(index)}`}
 							>
 								£{item.price}.00{" "}
 							</p>
 							<p
-								className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${index === currentIndex || index < currentIndex ? "text-blue" : "text-grey6"}`}
+								className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${getTextColor(index)}`}
 							>
 								{item.percent}% OFF
 							</p>
