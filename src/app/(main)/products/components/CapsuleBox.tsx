@@ -6,6 +6,26 @@ import { Separator } from "@radix-ui/react-separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import type { ISubscriptionModel } from "@/utils/models/ISubscriptionModel";
+const generateImage = (count: number) => (
+	<div
+		className="flex justify-center mx-auto relative h-[24px]"
+		style={{ width: `${20 * count}px` }}
+	>
+		{Array.from({ length: count }).map((_, index) => (
+			<Image
+				key={`pill-${index}`}
+				className="absolute"
+				style={{
+					left: `${index * 20}px`,
+				}}
+				src="/images/icons/pillow-icon.svg"
+				alt={`pillow icon ${index + 1}`}
+				width={24}
+				height={24}
+			/>
+		))}
+	</div>
+);
 
 const options = [
 	{
@@ -15,14 +35,7 @@ const options = [
 		description: "Heart health, energy, 40+.",
 		subtitle2: "Early Fertility",
 		description2: "Mitochondrial support for egg/sperm quality.",
-		image: (
-			<Image
-				src="/images/icons/pillow-icon.svg"
-				alt="pillow icon"
-				width={24}
-				height={24}
-			/>
-		),
+		image: generateImage(1),
 	},
 	{
 		value: "2",
@@ -31,25 +44,7 @@ const options = [
 		description: "Energy, cardio boost, active individuals.",
 		subtitle2: "Anti-aging",
 		description2: "Mitochondrial function, antioxidant support.",
-		image: (
-			<div className="flex justify-center w-[38px] mx-auto relative h-[24px]">
-				<Image
-					src="/images/icons/pillow-icon.svg"
-					className="mx-auto absolute right-[13px] top-[1px]"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-
-				<Image
-					className="mx-auto absolute left-[13px] top-[1px]"
-					src="/images/icons/pillow-icon.svg"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-			</div>
-		),
+		image: generateImage(2),
 	},
 	{
 		value: "3",
@@ -57,68 +52,19 @@ const options = [
 		subtitle1: "Moderate fatigue",
 		description: "Recovery, athletes, physical training.",
 		subtitle2: "Advanced Fertility",
-		description2: "Energy support during IVF",
-		image: (
-			<div className="flex justify-center w-[58px] mx-auto relative h-[24px]">
-				<Image
-					className="mx-auto absolute left-[28px] top-[1px]"
-					src="/images/icons/pillow-icon.svg"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-				<Image
-					src="/images/icons/pillow-icon.svg"
-					className="mx-auto absolute right-[18px] top-[1px]"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-				<Image
-					className="mx-auto absolute left-[5px] top-[1px]"
-					src="/images/icons/pillow-icon.svg"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-			</div>
-		),
+		description2: "Energy support during IVF.",
+		image: generateImage(3),
 	},
 	{
 		value: "4",
 		title: "4 Capsules per Day",
 		subtitle1: "Therapeutic",
-		description: "Heart health, weightlifting recovery",
+		description: "Heart health, weightlifting recovery.",
 		subtitle2: "Advanced anti-aging",
 		description2: "High-dose longevity support.",
-		image: (
-			<div className="flex justify-center w-[58px] mx-auto relative h-[24px]">
-				<Image
-					className="mx-auto absolute left-[28px] top-[1px]"
-					src="/images/icons/pillow-icon.svg"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-				<Image
-					src="/images/icons/pillow-icon.svg"
-					className="mx-auto absolute right-[18px] top-[1px]"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-				<Image
-					className="mx-auto absolute left-[5px] top-[1px]"
-					src="/images/icons/pillow-icon.svg"
-					alt="pillow icon"
-					width={24}
-					height={24}
-				/>
-			</div>
-		),
+		image: generateImage(4),
 	},
 ] as ISubscriptionModel[];
-
 const descriptions = [
 	{
 		value: "1",
