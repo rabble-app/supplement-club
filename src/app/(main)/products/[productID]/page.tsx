@@ -161,14 +161,12 @@ export default function ProductDetails({
 
 					<div className="hidden md:flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
 						<div className="flex gap-[8px]">
-							{Array.from({ length: count }).map((item, index) => (
+							{Array.from({ length: count }, (_, idx) => (
 								<div
-									key={index}
-									className={
-										current === index + 1
-											? "h-[8px] w-[8px] rounded-[50%] bg-black"
-											: "h-[8px] w-[8px] rounded-[50%] bg-grey2"
-									}
+									key={`dot-${current}`}
+									className={`h-[8px] w-[8px] rounded-[50%] ${
+										current === idx + 1 ? "bg-black" : "bg-grey2"
+									}`}
 								/>
 							))}
 						</div>

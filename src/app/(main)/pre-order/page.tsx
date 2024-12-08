@@ -163,9 +163,9 @@ export default function Preorder() {
 
 					<div className="flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
 						<div className="flex gap-[8px]">
-							{Array.from({ length: productImages.length }).map((_, index) => (
+							{Array.from({ length: productImages.length }).map(() => (
 								<div
-									key={index}
+									key={`len-${productImages.length}`}
 									className="h-[8px] w-[8px] rounded-[50%] bg-grey2"
 								/>
 							))}
