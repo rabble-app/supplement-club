@@ -2,62 +2,49 @@ import Image from "next/image";
 
 import type { ICorporationModel } from "@/utils/models/ICorporationModel";
 
-const listOfImages = [
+const iconDetails = [
 	{
 		id: 1,
-		src: "/images/icons/heart-pulse-icon.svg",
+		file: "heart-pulse-icon.svg",
 		alt: "Checkmark icon",
 		title: "Heart Health",
 	},
-	{
-		id: 2,
-		src: "/images/icons/baby-icon.svg",
-		alt: "Baby icon",
-		title: "Fertility",
-	},
-	{
-		id: 3,
-		src: "/images/icons/energy-icon.svg",
-		alt: "Energy icon",
-		title: "Energy",
-	},
+	{ id: 2, file: "baby-icon.svg", alt: "Baby icon", title: "Fertility" },
+	{ id: 3, file: "energy-icon.svg", alt: "Energy icon", title: "Energy" },
 	{
 		id: 4,
-		src: "/images/icons/dumbell-icon.svg",
+		file: "dumbell-icon.svg",
 		alt: "Dumbell icon",
 		title: "Weight Training",
 	},
 	{
 		id: 5,
-		src: "/images/icons/hourglass-icon.svg",
+		file: "hourglass-icon.svg",
 		alt: "Hourglass icon",
 		title: "Healthy Aging",
 	},
-	{
-		id: 6,
-		src: "/images/icons/tree-icon.svg",
-		alt: "Tree icon",
-		title: "Longevity",
-	},
-	{
-		id: 7,
-		src: "/images/icons/athletes-icon.svg",
-		alt: "Athletes icon",
-		title: "Athletes",
-	},
+	{ id: 6, file: "tree-icon.svg", alt: "Tree icon", title: "Longevity" },
+	{ id: 7, file: "athletes-icon.svg", alt: "Athletes icon", title: "Athletes" },
 	{
 		id: 8,
-		src: "/images/icons/brain-icon.svg",
+		file: "brain-icon.svg",
 		alt: "Brain icon",
 		title: "Cognitive Function",
 	},
 	{
 		id: 9,
-		src: "/images/icons/water-drop-icon.svg",
+		file: "water-drop-icon.svg",
 		alt: "Water drop icon",
 		title: "Skin Health",
 	},
-] as ICorporationModel[];
+];
+
+const listOfImages = iconDetails.map(({ id, file, alt, title }) => ({
+	id,
+	src: `/images/icons/${file}`,
+	alt,
+	title,
+})) as ICorporationModel[];
 
 export default function ImageBox() {
 	return (
