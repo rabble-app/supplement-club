@@ -23,7 +23,12 @@ const step1FormSchema = z.object({
 export default function CreateAccount({
 	step,
 	updateStepAction,
-}: Readonly<{ step: number; updateStepAction: (newValue: number) => void }>) {
+	children,
+}: Readonly<{
+	step: number;
+	updateStepAction: (newValue: number) => void;
+	children?: React.ReactNode;
+}>) {
 	const currentForm = useForm<z.infer<typeof step1FormSchema>>({
 		resolver: zodResolver(step1FormSchema),
 	});
@@ -37,26 +42,9 @@ export default function CreateAccount({
 		<Form {...currentForm}>
 			<form
 				onSubmit={currentForm.handleSubmit(onSubmit)}
-				className="flex flex-col gap-[24px] pt-[32px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
+				className="flex flex-col gap-[24px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
 			>
-				<div className="grid gap-[16px]">
-					<p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-						PRE-ORDER Now to become a Founding Member{" "}
-					</p>
-					<div className="grid gap-[8px]">
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							Only get charged when we hit 50 pre-orders.
-						</p>
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							By becoming a founding member you get an extra 10% off the team
-							price forever{" "}
-						</p>
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							Lead time is 6 weeks from when we charge you - but you get 10% off
-							your subscription forever
-						</p>
-					</div>
-				</div>
+				{children}
 
 				<FormField
 					control={currentForm.control}
@@ -90,10 +78,10 @@ export default function CreateAccount({
 				<div className="flex justify-center gap-[5px] items-center text-[16px] leading-[24px] font-roboto">
 					Have an account?
 					<Link
-						className="text-blue text-[16px] leading-[24px] font-roboto underline"
+						className="text-blue text-[16px] leading-[24px] font-roboto"
 						href="/login"
 					>
-						Login
+						Log in
 					</Link>
 				</div>
 			</form>

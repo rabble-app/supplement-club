@@ -1,17 +1,17 @@
 "use client";
 
 import AvailablePayment from "@/components/AvailablePayment";
+import CreateAccount from "@/components/CreateAccount";
 import Delivery from "@/components/Delivery";
 import Steps from "@/components/Steps";
 import { useState } from "react";
 import ConfirmJoining from "./components/ConfirmJoining";
-import CreateAccount from "./components/CreateAccount";
 import DeliveryAddress from "./components/DeliveryAddress";
 import OrderSummary from "./components/OrderSummary";
 import PaymentDetails from "./components/PaymentDetails";
 
 export default function Checkout() {
-	const [step, setStep] = useState<number>(4);
+	const [step, setStep] = useState<number>(1);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
