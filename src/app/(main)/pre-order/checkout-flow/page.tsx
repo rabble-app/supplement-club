@@ -5,14 +5,14 @@ import { useState } from "react";
 import AvailablePayment from "@/components/AvailablePayment";
 import CreateAccount from "@/components/CreateAccount";
 import Delivery from "@/components/Delivery";
+import DeliveryAddress from "@/components/DeliveryAddress";
 import Steps from "@/components/Steps";
 import ConfirmJoining from "../components/ConfirmJoining";
-import DeliveryAddress from "../components/DeliveryAddress";
 import OrderSummary from "../components/OrderSummary";
 import PaymentDetails from "../components/PaymentDetails";
 
 export default function CheckoutFlow() {
-	const [step, setStep] = useState<number>(4);
+	const [step, setStep] = useState<number>(2);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
@@ -42,7 +42,26 @@ export default function CheckoutFlow() {
 					</CreateAccount>
 				)}
 				{step === 2 && (
-					<DeliveryAddress step={step} updateStepAction={setStep} />
+					<DeliveryAddress step={step} updateStepAction={setStep}>
+						<div className="grid gap-[16px]">
+							<p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+								PRE-ORDER Now to become a Founding Member{" "}
+							</p>
+							<div className="grid gap-[8px]">
+								<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+									Only get charged when we hit 50 pre-orders.
+								</p>
+								<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+									By becoming a founding member you get an extra 10% off the
+									team price forever
+								</p>
+								<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+									Lead time is 6 weeks from when we charge you - but you get 10%
+									off your subscription forever
+								</p>
+							</div>
+						</div>
+					</DeliveryAddress>
 				)}
 				{step === 3 && (
 					<PaymentDetails step={step} updateStepAction={setStep} />

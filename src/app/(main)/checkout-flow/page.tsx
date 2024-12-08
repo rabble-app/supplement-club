@@ -6,7 +6,7 @@ import Delivery from "@/components/Delivery";
 import Steps from "@/components/Steps";
 import { useState } from "react";
 import ConfirmJoining from "./components/ConfirmJoining";
-import DeliveryAddress from "./components/DeliveryAddress";
+import DeliveryAddress from "@/components/DeliveryAddress";
 import OrderSummary from "./components/OrderSummary";
 import PaymentDetails from "./components/PaymentDetails";
 

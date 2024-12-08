@@ -47,7 +47,12 @@ const step2FormSchema = z.object({
 export default function DeliveryAddress({
 	step,
 	updateStepAction,
-}: Readonly<{ step: number; updateStepAction: (newValue: number) => void }>) {
+	children,
+}: Readonly<{
+	step: number;
+	updateStepAction: (newValue: number) => void;
+	children?: React.ReactNode;
+}>) {
 	const currentForm = useForm<z.infer<typeof step2FormSchema>>({
 		resolver: zodResolver(step2FormSchema),
 	});
@@ -63,24 +68,7 @@ export default function DeliveryAddress({
 				onSubmit={currentForm.handleSubmit(onSubmit)}
 				className="flex flex-col gap-[24px] p-[16px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
 			>
-				<div className="grid gap-[16px]">
-					<p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-						PRE-ORDER Now to become a Founding Member{" "}
-					</p>
-					<div className="grid gap-[8px]">
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							Only get charged when we hit 50 pre-orders.
-						</p>
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							By becoming a founding member you get an extra 10% off the team
-							price forever
-						</p>
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							Lead time is 6 weeks from when we charge you - but you get 10% off
-							your subscription forever
-						</p>
-					</div>
-				</div>
+				{children}
 
 				<div className="grid grid-cols-2 gap-[24px]">
 					<FormField
