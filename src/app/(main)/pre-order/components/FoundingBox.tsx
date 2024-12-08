@@ -1,6 +1,6 @@
 import { Separator } from "@radix-ui/react-separator";
-import { Link } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
@@ -85,7 +85,7 @@ export default function FoundingBox() {
 				/>
 			</div>
 
-			<div className="bg-grey14 p-[16px] md:py-[32px] md:px-[18px] mx-[-16px] md:mx-[16px]">
+			<div className="bg-grey14 p-[16px] md:py-[32px] md:px-[18px] mx-[-16px] md:mx-[16px] grid gap-[33px]">
 				<div className="grid gap-[8px] px-[16px]">
 					<p className="text-[24px] leading-[28px] font-bold font-inconsolata">
 						Share With Others For More Discounts
@@ -110,7 +110,7 @@ export default function FoundingBox() {
 					</div>
 				</div>
 
-				<div className="grid gap-[16px] px-[16px]">
+				<div className="grid gap-[16px] md:px-[16px]">
 					<DiscoutCard
 						name="Subscription"
 						currentStep={0}

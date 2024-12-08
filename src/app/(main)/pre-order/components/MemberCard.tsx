@@ -2,11 +2,16 @@ import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
 import Image from "next/image";
 
 export default function MemberCard(model: Readonly<IMemberCardModel>) {
+	let rootClass =
+		"grid gap-[16px] p-[16px] md:px-[36px] items-center rounded-[8px] mx-auto w-full";
+	if (model.isActive) {
+		rootClass +=
+			"grid-cols-[52px_1fr_auto] bg-white shadow-3 h-[138px] mx-[-16px] md:mx-[0]";
+	} else {
+		rootClass += "bg-grey21 h-[106px] md:w-[calc(100%-72px)]";
+	}
 	return (
-		<div
-			className={`grid gap-[16px] p-[16px] md:px-[36px] items-center rounded-[8px] mx-auto  w-full
-                ${model.isActive ? "grid-cols-[52px_1fr_auto] bg-white shadow-3 h-[138px] mx-[-16px] md:mx-[0]" : "bg-grey21 h-[106px] md:w-[calc(100%-72px)]"}`}
-		>
+		<div className={rootClass}>
 			{model.isActive && (
 				<div className="rounded-[50%] flex justify-center items-center w-[52px] h-[52px] bg-blue8">
 					<Image
@@ -55,12 +60,10 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 					</div>
 					{model.spotsRemainds && (
 						<p className="text-[14px] leading-[14px] font-inconsolata text-blue">
-							<>
-								<span className="text-[14px] leading-[14px] font-inconsolata font-bold">
-									{model.spotsRemainds}{" "}
-								</span>
-								Founder Spots Remaining!
-							</>
+							<span className="text-[14px] leading-[14px] font-inconsolata font-bold">
+								{model.spotsRemainds} {/* */}
+							</span>
+							Founder Spots Remaining!
 						</p>
 					)}
 				</div>

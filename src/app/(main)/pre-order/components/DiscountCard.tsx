@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function DiscoutCard(model: Readonly<IReferalCardModel>) {
 	return (
 		<div
-			className={`grid grid-cols-[63px_1fr_70px] w-full gap-[16px] p-[16px] items-center mx-auto 
+			className={`grid grid-cols-[63px_1fr_auto] w-full gap-[16px] p-[16px] items-center mx-auto 
                 ${model.isActive ? " bg-white shadow-3 h-[127px] rounded-[8px]" : ""}`}
 		>
 			{model.isActive && model.steps === model.currentStep && (
@@ -59,7 +59,7 @@ export default function DiscoutCard(model: Readonly<IReferalCardModel>) {
 			</div>
 
 			<div
-				className={`font-inconsolata flex gap-[5px] items-center ${model.isActive ? "text-blue text-[24px] leading-[25px] font-[800]" : " text-[18px] leading-[18px] font-inconsolata text-grey15"}`}
+				className={`font-inconsolata flex gap-[5px] items-center font-[800] ${model.isActive ? "text-blue text-[32px] leading-[33px]" : "text-[24px] leading-[25px] text-grey15"}`}
 			>
 				£{model.price.toFixed(2)}
 			</div>

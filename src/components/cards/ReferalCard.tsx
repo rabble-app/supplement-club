@@ -2,43 +2,36 @@ import type { IReferalCardModel } from "@/utils/models/IReferalCardModel";
 import Image from "next/image";
 
 export default function ReferalCard(model: Readonly<IReferalCardModel>) {
+	let imageAlt = "Add user";
+	let imageSrc = "/images/icons/add-user-icon.svg";
+	let imageClasses =
+		"rounded-[50%] flex justify-center items-center w-[52px] h-[52px] bg-blue8";
+
+	if (!model.isActive && model.steps === model.currentStep) {
+		imageAlt = "User badge";
+		imageSrc = "/images/icons/user-badge-icon.svg";
+		imageClasses += " bg-blue8";
+	} else if (!model.isActive && model.steps !== model.currentStep) {
+		imageAlt = "Lock image";
+		imageSrc = "/images/icons/lock-icon.svg";
+		imageClasses += " bg-grey20";
+	}
+
+	let priceClass = "font-inconsolata flex gap-[5px] items-center font-[800]";
+	if (model.isActive) {
+		priceClass += " text-blue text-[32px] leading-[33px]";
+	} else {
+		priceClass += " text-[24px] leading-[25px] text-grey15";
+	}
+
 	return (
 		<div
-			className={`grid grid-cols-[63px_1fr_70px] gap-[16px] p-[16px] items-center rounded-[8px] mx-auto w-full 
+			className={`grid grid-cols-[63px_1fr_auto] gap-[16px] p-[16px] items-center rounded-[8px] mx-auto w-full 
                 ${model.isActive ? " bg-white shadow-3 h-[127px]" : "bg-grey19 md:w-[calc(100%-16px)]"}`}
 		>
-			{model.isActive && model.steps === model.currentStep && (
-				<div className="rounded-[50%] flex justify-center items-center w-[52px] h-[52px] bg-blue8">
-					<Image
-						src="/images/icons/add-user-icon.svg"
-						alt="User badge"
-						width={24}
-						height={24}
-					/>
-				</div>
-			)}
-
-			{!model.isActive && model.steps === model.currentStep && (
-				<div className="rounded-[50%] flex justify-center items-center w-[52px] h-[52px] bg-blue8">
-					<Image
-						src="/images/icons/user-badge-icon.svg"
-						alt="User badge"
-						width={24}
-						height={24}
-					/>
-				</div>
-			)}
-
-			{!model.isActive && model.steps !== model.currentStep && (
-				<div className="rounded-[50%] flex justify-center items-center w-[52px] h-[52px] bg-grey20">
-					<Image
-						src="/images/icons/lock-icon.svg"
-						alt="Lock icon"
-						width={24}
-						height={24}
-					/>
-				</div>
-			)}
+			<div className={imageClasses}>
+				<Image src={imageSrc} alt={imageAlt} width={24} height={24} />
+			</div>
 			<div className="grid gap-[8px]">
 				<p
 					className={` font-hagerman ${model.isActive ? "text-black text-[20px] leading-[23px]" : " text-grey4 text-[18px] leading-[20px]"}`}
@@ -59,11 +52,7 @@ export default function ReferalCard(model: Readonly<IReferalCardModel>) {
 				)}
 			</div>
 
-			<div
-				className={`font-inconsolata flex gap-[5px] items-center ${model.isActive ? "text-blue text-[24px] leading-[25px]  font-[800]" : " text-[18px] leading-[18px] font-inconsolata text-grey15"}`}
-			>
-				£{model.price.toFixed(2)}
-			</div>
+			<div className={priceClass}>£{model.price.toFixed(2)}</div>
 		</div>
 	);
 }
