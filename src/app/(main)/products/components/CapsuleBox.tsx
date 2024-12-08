@@ -120,28 +120,29 @@ export default function CapsuleBox() {
 				className="md:grid-cols-4"
 			>
 				{options.map((option) => (
-					<div
+					<label
 						key={option.value}
-						onClick={() => setSelected(option.value.toString())}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								setSelected(option.value.toString());
-							}
-						}}
-						className={`grid gap-[8px] p-[8px] relative cursor-pointer ${selected === option.value ? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]" : "border-[1px] border-grey18"}  `}
+						className={`grid gap-[8px] p-[8px] relative cursor-pointer ${
+							selected === option.value
+								? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
+								: "border-[1px] border-grey18"
+						}`}
 					>
+						<input
+							type="radio"
+							value={option.value}
+							checked={selected === option.value}
+							onChange={() => setSelected(option.value.toString())}
+							className="sr-only" // Hide the input but keep it accessible
+						/>
 						<div className="grid gap-[8px] justify-center">
 							<RadioGroupItem value={option.value} className="mx-auto" />
-
 							{option.image}
 						</div>
-
 						<p className="text-[12px] leading-[13px] font-bold font-helvetica text-center">
 							{option.title}
 						</p>
-
 						<Separator className="bg-grey13 h-[1px]" />
-
 						<div className="grid gap-[4px]">
 							<p className="text-grey6 text-[14px] leading-[16px]">
 								{option.subtitle1}
@@ -150,13 +151,10 @@ export default function CapsuleBox() {
 								{option.description}
 							</p>
 						</div>
-
 						{currentOption?.value === option.value.toString() && (
 							<div className="hidden md:flex absolute bottom-[-10px] w-full h-[20px] bg-white" />
 						)}
-
 						<Separator className="bg-grey13 h-[1px]" />
-
 						<div className="grid gap-[4px]">
 							<p className="text-grey6 text-[14px] leading-[16px] font-helvetica">
 								{option.subtitle2}
@@ -165,7 +163,6 @@ export default function CapsuleBox() {
 								{option.description2}
 							</p>
 						</div>
-
 						{currentOption?.value === option.value.toString() && (
 							<Separator className="md:hidden bg-grey13 h-[1px]" />
 						)}
@@ -185,7 +182,6 @@ export default function CapsuleBox() {
 												(£0.25/capsule)
 											</span>
 										</div>
-
 										<div>
 											<div className="text-[16px] leading-[18px] text-grey4">
 												RRP{" "}
@@ -199,7 +195,6 @@ export default function CapsuleBox() {
 										</div>
 									</div>
 								</div>
-
 								<div className="flex flex-col gap-[2px]">
 									<p className="text-grey7 text-[12px] leading-[13px]">
 										{currentOption.option}
@@ -210,10 +205,9 @@ export default function CapsuleBox() {
 								</div>
 							</div>
 						)}
-					</div>
+					</label>
 				))}
 			</RadioGroup>
-
 			{currentOption && (
 				<div
 					key={currentOption?.option}

@@ -61,14 +61,12 @@ const BreadcrumbLink = React.forwardRef<
 BreadcrumbLink.displayName = "BreadcrumbLink";
 
 const BreadcrumbPage = React.forwardRef<
-	HTMLSpanElement,
-	React.ComponentPropsWithoutRef<"span">
+	HTMLButtonElement,
+	React.ButtonHTMLAttributes<HTMLButtonElement>
 >(({ className, ...props }, ref) => (
-	<span
+	<button
 		ref={ref}
-		role="link"
 		aria-disabled="true"
-		aria-current="page"
 		className={cn(
 			"font-normal text-neutral-950 dark:text-neutral-50",
 			className,
