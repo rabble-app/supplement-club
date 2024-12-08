@@ -13,7 +13,7 @@ const generateImage = (count: number) => (
 	>
 		{Array.from({ length: count }).map((_, index) => (
 			<Image
-				key={`pill-${index}`}
+				key={`pill-${index + 1}`}
 				className="absolute"
 				style={{
 					left: `${index * 20}px`,
