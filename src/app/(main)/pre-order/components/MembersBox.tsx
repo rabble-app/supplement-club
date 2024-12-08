@@ -1,8 +1,10 @@
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
+
+import { Separator } from "@radix-ui/react-separator";
+
 import MembersLaunches from "./MembersLaunches";
 
-export default function Launches() {
+export default function MembersBox() {
 	return (
 		<div className="py-[24px] bg-white rounded-[4px] shadow-3">
 			<div className="pb-[26px] px-[16px]">

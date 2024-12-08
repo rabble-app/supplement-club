@@ -1,6 +1,6 @@
+import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
 import OrderCard from "@/components/cards/OrderCard";
 import { Separator } from "@radix-ui/react-separator";
-import Image from "next/image";
 
 export default function OrderSummary({
 	activeStep,
@@ -13,23 +13,8 @@ export default function OrderSummary({
 				</h1>
 			)}
 
-			<div className="grid gap-[8px]">
-				<p className="text-[20px] leading-[24px] font-inconsolata text-grey4">
-					KANEKA CORPRATION
-				</p>
-				<div className="text-[40px] leading-[48px] font-hagerman">
-					Coenzyme Q10 Ubiquinol Kaneka TM
-				</div>
-				<div className="flex items-center gap-[8px]">
-					<Image
-						src="/images/icons/link-icon.svg"
-						alt="security-card-icon"
-						width={24}
-						height={24}
-					/>
-					<p className="text-[14px] leading-[16px] text-grey6">100mg</p>
-				</div>
-			</div>
+			<CorporationCardInfo />
+
 			{activeStep === 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 					FREE NEXT DAY DELIVERY

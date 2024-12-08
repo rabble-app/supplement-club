@@ -1,5 +1,6 @@
-import type IProductTableModel from "@/utils/models/IProductTableModel";
 import { Separator } from "@radix-ui/react-select";
+
+import type IProductTableModel from "@/utils/models/IProductTableModel";
 
 const productTableIHeader = {
 	colum1: "Product",

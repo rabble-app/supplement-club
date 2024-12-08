@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import AvailablePayment from "@/components/AvailablePayment";
 import Steps from "@/components/Steps";
-import { useState } from "react";
 import ConfirmJoining from "../components/ConfirmJoining";
 import CreateAccount from "../components/CreateAccount";
 import Delivery from "../components/Delivery";
@@ -11,11 +12,11 @@ import OrderSummary from "../components/OrderSummary";
 import PaymentDetails from "../components/PaymentDetails";
 
 export default function CheckoutFlow() {
-	const [step, setStep] = useState<number>(4);
+	const [step, setStep] = useState<number>(1);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
-			<div className="flex flex-col gap-[20px] md:gap-[40px] md:mt-[24px] md:my-[32px]">
+			<div className="flex flex-col gap-[20px] md:gap-[40px] md:mb-[32px]">
 				<Steps activeStep={step} steps={steps} />
 
 				{step === 1 && <CreateAccount step={step} updateStepAction={setStep} />}

@@ -15,7 +15,7 @@ export default function Checkout() {
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
-			<div className="flex flex-col gap-[40px] my-[32px]">
+			<div className="flex flex-col gap-[40px] mb-[32px]">
 				<Steps activeStep={step} steps={steps} />
 
 				{step === 1 && <CreateAccount step={step} updateStepAction={setStep} />}

@@ -5,7 +5,7 @@ export default function Steps({
 	steps,
 }: Readonly<{ activeStep: number; steps: string[] }>) {
 	return (
-		<div>
+		<div className="pt-[24px] md:pt-[32px]">
 			{activeStep < steps.length + 1 && (
 				<div className="flex justify-between items-center">
 					{steps.map((value, idx) => (

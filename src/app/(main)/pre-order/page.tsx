@@ -1,13 +1,11 @@
 "use client";
 
-import OrderCard from "@/components/cards/OrderCard";
+import React from "react";
+
+import Image from "next/image";
+import Link from "next/link";
+
 import TotalCard from "@/components/cards/TotalCard";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -24,150 +22,17 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Separator } from "@radix-ui/react-separator";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import CapsuleBox from "../products/components/CapsuleBox";
 import ProfuctTable from "../products/components/ProductTable";
-import Subscription from "../products/components/Subscription";
-import DiscoutCard from "./components/DiscountCard";
-import Launches from "./components/Launches";
-import Members from "./components/Members";
+import CorporationBox from "./components/CorporationBox";
+import FoundingBox from "./components/FoundingBox";
+import MemberCard from "./components/MemberCard";
+import MembersBox from "./components/MembersBox";
 
-const images = [
-	{
-		id: 1,
-		src: "/images/icons/heart-pulse-icon.svg",
-		alt: "Checkmark icon",
-		title: "Heart Health",
-	},
-	{
-		id: 2,
-		src: "/images/icons/baby-icon.svg",
-		alt: "Baby icon",
-		title: "Fertility",
-	},
-	{
-		id: 3,
-		src: "/images/icons/energy-icon.svg",
-		alt: "Energy icon",
-		title: "Energy",
-	},
-	{
-		id: 4,
-		src: "/images/icons/dumbell-icon.svg",
-		alt: "Dumbell icon",
-		title: "Weight Training",
-	},
-	{
-		id: 5,
-		src: "/images/icons/hourglass-icon.svg",
-		alt: "Hourglass icon",
-		title: "Healthy Aging",
-	},
-	{
-		id: 6,
-		src: "/images/icons/tree-icon.svg",
-		alt: "Tree icon",
-		title: "Longevity",
-	},
-	{
-		id: 7,
-		src: "/images/icons/athletes-icon.svg",
-		alt: "Athletes icon",
-		title: "Athletes",
-	},
-	{
-		id: 8,
-		src: "/images/icons/brain-icon.svg",
-		alt: "Brain icon",
-		title: "Cognitive Function",
-	},
-	{
-		id: 9,
-		src: "/images/icons/water-drop-icon.svg",
-		alt: "Water drop icon",
-		title: "Skin Health",
-	},
-];
+import ProductFaqs from "@/components/ProductFaqs";
+import PreOrderInfo from "./components/PreOrderInfo";
 
-const faqs = [
-	{
-		id: 1,
-		image: "/images/icons/cells-icon.svg",
-		imageAlt: "snowflake icon",
-		question: "Aging (40+)",
-		title: "Why Ubiquinol Matters",
-		description:
-			"As you age, your body produces less Ubiquinol, reducing your ability to create ATP, the energy your cells need to function. This leads to low energy, slower recovery, and reduced heart health. Ubiquinol helps replenish the active form of CoQ10, restoring cellular energy and protecting against oxidative stress.",
-		optionName: "Benefits",
-		options: [
-			"Increased energy levels ",
-			"Improved heart health",
-			"Slows down the aging process by reducing oxidative damage to cells",
-		],
-	},
-	{
-		id: 2,
-		image: "/images/icons/heart-pulse-icon.svg",
-		imageAlt: "heart pulse icon",
-		question: "Heart Health",
-		title: "",
-		description: "",
-		optionName: "",
-		options: [],
-	},
-	{
-		id: 3,
-		image: "/images/icons/dumbell-icon.svg",
-		imageAlt: "Dumbell icon",
-		question: "Training/Athletics",
-		title: "",
-		description: "",
-		optionName: "",
-		options: [],
-	},
-	{
-		id: 4,
-		image: "/images/icons/hourglass-icon.svg",
-		imageAlt: "Hourglass icon",
-		question: "Anti Aging",
-		title: "",
-		description: "",
-		optionName: "",
-		options: [],
-	},
-	{
-		id: 5,
-		image: "/images/icons/baby-icon.svg",
-		imageAlt: "Baby icon",
-		question: "Fertility",
-		title: "",
-		description: "",
-		optionName: "",
-		options: [],
-	},
-	{
-		id: 6,
-		image: "/images/icons/energy-icon.svg",
-		imageAlt: "Energy icon",
-		question: "Energy and Fatigue",
-		title: "",
-		description: "",
-		optionName: "",
-		options: [],
-	},
-	{
-		id: 7,
-		image: "/images/icons/brain-icon.svg",
-		imageAlt: "Brain icon",
-		question: "Brain Health",
-		title: "",
-		description: "",
-		optionName: "",
-		options: [],
-	},
-];
+import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
 
 const lastSectionItems = [
 	{
@@ -207,6 +72,39 @@ const lastSectionItems = [
 		title: "Continuously improved since 2010",
 	},
 ];
+
+const itemsMembers = [
+	{
+		id: 1,
+		doseTitle: "180 Capsules Every 3 months",
+		name: "FOUNDING MEMBER",
+		discountTitle: "10% OFF TEAM PRICE",
+		doseValue: "First 50 Spots",
+		price: 40.5,
+		capsulePrice: 0.22,
+		spotsRemainds: 4,
+		forever: true,
+		isActive: true,
+	},
+	{
+		id: 2,
+		doseTitle: "180 Capsules Every 3 months",
+		name: "EARLY MEMBER",
+		doseValue: "Next 200 Spots",
+		discountTitle: "5% Off Team Price",
+		price: 43,
+		capsulePrice: 0.23,
+		forever: true,
+	},
+	{
+		id: 3,
+		doseTitle: "180 Capsules Every 3 months",
+		name: "MEMBER",
+		capsulePrice: 0.25,
+		discountTitle: "Standard Team Price",
+		price: 45,
+	},
+] as IMemberCardModel[];
 
 const productImages = [
 	{
@@ -265,7 +163,7 @@ export default function Preorder() {
 
 					<div className="flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
 						<div className="flex gap-[8px]">
-							{Array.from({ length: 7 }).map((item, index) => (
+							{Array.from({ length: productImages.length }).map((_, index) => (
 								<div
 									key={index}
 									className="h-[8px] w-[8px] rounded-[50%] bg-grey2"
@@ -298,112 +196,15 @@ export default function Preorder() {
 				</div>
 
 				<div className="order-4 md:order-none">
-					<Launches />
+					<MembersBox />
 				</div>
 
-				<div className="grid gap-[24px] order-5 md:order-none">
-					<div className="grid gap-[8px]">
-						<p className="text-[26px] leading-[39px] font-inconsolata font-bold">
-							Why Ubiquinol is Essential for Your Health
-						</p>
-						<p className="font-helvetica">
-							Ubiquinol powers cellular energy production and protects your
-							cells from oxidative stress, making it vital for staying healthy,
-							energetic, and vibrant as you age.S
-						</p>
-					</div>
-
-					<Separator className="bg-black h-[1px]" />
-
-					<div className="grid gap-[8px]">
-						<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
-							Boosts Cellular Energy
-						</p>
-						<p>
-							Ubiquinol is key to making ATP, the fuel your cells need to
-							function. Think of ATP as the battery that powers everything from
-							muscle movement to heart function. Without enough ATP, your body
-							slows down, causing fatigue and reduced performance.
-						</p>
-					</div>
-
-					<Separator className="bg-black h-[1px]" />
-
-					<div className="grid gap-[8px]">
-						<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
-							Protects Against Free Radicals
-						</p>
-						<p>
-							Ubiquinol acts as a shield against free radicals—unstable
-							molecules that damage your cells. These molecules are produced
-							during normal activities (like exercising) and from external
-							factors (like pollution). Ubiquinol helps neutralize them,
-							preventing cell damage and slowing down the aging process,
-							especially in vital organs like your heart, brain, and muscles.
-						</p>
-					</div>
-
-					<Separator className="bg-black h-[1px]" />
-
-					<div className="grid gap-[8px]">
-						<p className="text-[20px] leading-[30px] font-inconsolata font-bold">
-							Supports Healthy Aging
-						</p>
-						<p>
-							As you age, your body produces less Ubiquinol, which means less
-							ATP and fewer antioxidants. This leads to low energy, slower
-							recovery, and reduced heart health. Supplementing with Ubiquinol
-							helps restore these vital functions and keeps you feeling
-							energized and youthful.
-						</p>
-					</div>
+				<div className="order-5 md:order-none">
+					<PreOrderInfo />
 				</div>
 
 				<div className="order-6 md:order-none">
-					{faqs.map((faq, index) => (
-						<Accordion key={faq.id} type="single" collapsible>
-							<Separator
-								className={`${index === faqs.length - 1 ? "" : ""} bg-black h-[1px]`}
-							/>
-							<AccordionItem value="products">
-								<AccordionTrigger>
-									<div className="grid gap-[16px] grid-cols-[32px_1fr] items-center text-[26px] leading-[27px] font-inconsolata font-bold text-black">
-										<Image
-											src={faq.image}
-											alt={faq.imageAlt}
-											width={32}
-											height={32}
-										/>{" "}
-										{faq.question}
-									</div>
-								</AccordionTrigger>
-								<AccordionContent>
-									<div className="mt-[-8px]">
-										<p className="text-[20px] leading-[30px] font-bold font-inconsolata mb-[8px]">
-											{faq.title}
-										</p>
-										<div className="text-[16px] leading-[24px] font-helvetica mb-[16px]">
-											{faq.description}
-										</div>
-										{faq.optionName && (
-											<div className="text-[16px] leading-[24px] font-bold font-helvetica italic mb-[8px]">
-												{faq.optionName}
-											</div>
-										)}
-										{faq.options && (
-											<ul className="list-disc list-inside">
-												{faq.options.map((option) => (
-													<li className="pl-[10px]" key={option}>
-														{option}
-													</li>
-												))}
-											</ul>
-										)}
-									</div>
-								</AccordionContent>
-							</AccordionItem>
-						</Accordion>
-					))}
+					<ProductFaqs />
 				</div>
 
 				<div className="order-7 md:order-none">
@@ -448,52 +249,17 @@ export default function Preorder() {
 					</BreadcrumbList>
 				</Breadcrumb>
 
-				<div className="grid gap-[8px]">
-					<p className="text-[20px] leading-[24px] font-[500] font-inconsolata text-grey4">
-						KANEKA CORPRATION
-					</p>
-					<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman">
-						Coenzyme Q10 Ubiquinol Kaneka TM
-					</div>
-					<div className="flex items-center gap-[8px]">
-						<Image
-							src="/images/icons/link-icon.svg"
-							alt="security-card-icon"
-							width={24}
-							height={24}
-						/>
-						<p className="text-[14px] leading-[16px] text-grey6">100mg</p>
-					</div>
-				</div>
-
-				<div className="flex flex-col gap-[16px] font-helvetica">
-					<p>
-						Ubiquinol is the body-ready and active form of CoQ10 important for
-						virtually every cell in the body. It powers cellular energy
-						production and protects your cells from oxidative stress, making it
-						vital for staying healthy, energetic, and vibrant as you age.
-						<br />
-						<br />
-						Kaneka Corporation are the leading manufacturer based in Japan.
-					</p>
-					<div className="h-[56px] border-[1px] border-grey18 flex justify-center items-center gap-[16px]">
-						{images.map((image) => (
-							<Image
-								key={image.id}
-								src={image.src}
-								alt={image.alt}
-								width={24}
-								height={24}
-							/>
-						))}
-					</div>
-				</div>
+				<CorporationBox />
 
 				{!loggedIn && (
 					<div className="flex flex-col gap-[24px]">
-						<Subscription />
+						<CapsuleBox />
 
-						<Members />
+						<div className="grid gap-[16px] bg-white">
+							{itemsMembers.map((item) => (
+								<MemberCard key={item.id} {...item} />
+							))}
+						</div>
 
 						<TotalCard
 							capsules={180}
@@ -509,144 +275,7 @@ export default function Preorder() {
 					</div>
 				)}
 
-				{loggedIn && (
-					<div className="grid gap-[24px]">
-						<div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
-							<Image
-								src="/images/icons/user-badge-icon.svg"
-								alt="User badge"
-								width={15}
-								height={15}
-							/>
-							YOU’RE A FOUNDING MEMBER!
-						</div>
-
-						<div className="grid gap-[10px] p-[24px] bg-grey12">
-							<OrderCard
-								id={1}
-								alt="supplement mockup"
-								description="180 Capsules Every 3 months"
-								name="Quarterly Subscription"
-								delivery="Triggered when 50 pre-orders Complete"
-								src="/images/supplement-mockup.svg"
-							>
-								<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
-									£41.00{" "}
-									<span className="text-[12px] leading-[13px] md:leading-[12px] text-grey1 font-inconsolata font-bold">
-										(£0.25 / capsule)
-									</span>
-								</div>
-							</OrderCard>
-
-							<OrderCard
-								id={1}
-								alt="supplement mockup"
-								description="Startup Package"
-								name="Glass Bottle Container"
-								src="/images/ubiquinol.svg"
-							>
-								<div className="grid gap-[7px]">
-									<p className="text-[20px] leading-[21px] font-inconsolata line-through font-bold md:text-end">
-										£0.00
-									</p>
-									<div className="text-[20px] leading-[21px] font-inconsolata text-grey4 mb-[16px]">
-										RRP{" "}
-										<span className="text-[20px] leading-[21px] font-inconsolata line-through font-bold">
-											£18
-										</span>{" "}
-										<span className="text-[20px] leading-[21px] font-inconsolata font-bold text-blue">
-											FREE
-										</span>
-									</div>
-								</div>
-							</OrderCard>
-
-							<Separator className="bg-grey13 h-[1px]" />
-
-							<OrderCard
-								id={1}
-								alt="supplement mockup"
-								delivery="This Quarter"
-								name="Succesful Referal x 1"
-							>
-								<div className="text-[20px] leading- font-bold text-black flex items-center gap-[5px] font-inconsolata">
-									£-5.00{" "}
-								</div>
-							</OrderCard>
-
-							<Separator className="bg-grey13 h-[1px]" />
-
-							<TotalCard
-								capsules={180}
-								price={35.5}
-								rrp={144}
-								percent={75}
-								capsulePrice={0.21}
-							/>
-						</div>
-
-						<div className="bg-grey14 p-[16px] md:py-[32px] md:px-[18px] mx-[-16px] md:mx-[16px]">
-							<div className="grid gap-[8px] px-[16px]">
-								<p className="text-[24px] leading-[28px] font-bold font-inconsolata">
-									Share With Others For More Discounts
-								</p>
-
-								<p className="text-[14px] leading-[16px] font-helvetica text-grey4">
-									Every Quarter you have up to £15.00 in referral credits. Share
-									with friends and you both get £5 off when they sign up.
-								</p>
-
-								<Button className="bg-blue text-white w-full font-bold h-[48px]">
-									<Link
-										className="text-[16px] leading-[24px] font-[600] font-inconsolata"
-										href="#"
-									>
-										Invite Friends & Earn £5
-									</Link>
-								</Button>
-
-								<div className="text-[14px] leading-[14px] font-inconsolata font-[600] flex justify-center items-center text-blue bg-blue2 h-[31px]">
-									Earn £5 for each friend who joins! They get £5 off too.
-								</div>
-							</div>
-
-							<div className="grid gap-[16px] px-[16px]">
-								<DiscoutCard
-									name="Subscription"
-									currentStep={0}
-									steps={0}
-									price={40}
-								/>
-								<div className="md:mx-[-48px]">
-									<DiscoutCard
-										name="Referral Rookie"
-										description="£5 off Team Price"
-										currentStep={1}
-										isActive={true}
-										steps={1}
-										price={36}
-									/>
-								</div>
-
-								<DiscoutCard
-									name="Team Builder"
-									currentStep={1}
-									steps={2}
-									description="£10 off Team Price"
-									price={30}
-								/>
-
-								<DiscoutCard
-									name="Super Sharer"
-									currentStep={1}
-									steps={3}
-									description="£15 off Team Price"
-									price={25}
-								/>
-							</div>
-						</div>
-					</div>
-				)}
+				{loggedIn && <FoundingBox />}
 			</div>
 		</div>
 	);

@@ -1,5 +1,7 @@
 "use client";
+import { useState } from "react";
 
+import ExpansionSelector from "@/components/ExpansionSelector";
 import ProductCard from "@/components/cards/ProductCard";
 import {
 	Breadcrumb,
@@ -9,19 +11,11 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
-import ExpansionSelector from "@/components/ExpansionSelector";
 import { Button } from "@/components/ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import SortBy from "./components/SortBy";
+
 import type { ICategoryModel } from "@/utils/models/ICategoryModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import { useState } from "react";
 
 export default function Products() {
 	const [showAll, setShowAll] = useState(false);
@@ -110,21 +104,6 @@ export default function Products() {
 		},
 	] as IProductCardModel[];
 
-	const sortBy = [
-		{
-			id: 1,
-			value: "Highest",
-		},
-		{
-			id: 2,
-			value: "Lowest",
-		},
-		{
-			id: 3,
-			value: "Date",
-		},
-	] as const;
-
 	const showAllProduct = () => {
 		setShowAll(!showAll);
 	};
@@ -155,25 +134,7 @@ export default function Products() {
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
-
-					<p className="text-[16px] leading-[18px] font-[700] font-helvetica hidden md:flex gap-x-[16px] items-center pt-[25px]">
-						Sort by
-						<Select>
-							<SelectTrigger className="w-[150px]">
-								<SelectValue
-									className="text-[14px] leading-[16px] font-[400] font-helvetica"
-									placeholder="Most Popular"
-								/>
-							</SelectTrigger>
-							<SelectContent className="bg-white">
-								{sortBy.map((el) => (
-									<SelectItem key={el.id} value={el.id.toString()}>
-										{el.value}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</p>
+					<SortBy />
 				</div>
 				<div className="grid md:grid-cols-[340px_1fr_] gap-x-[72px]">
 					<div className="mb-[13px] md:mb-[0]">

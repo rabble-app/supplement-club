@@ -1,8 +1,11 @@
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import type { ISubscriptionModel } from "@/utils/models/ISubscriptionModel";
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import React from "react";
+
+import { Separator } from "@radix-ui/react-separator";
+
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+import type { ISubscriptionModel } from "@/utils/models/ISubscriptionModel";
 
 const options = [
 	{
@@ -159,7 +162,7 @@ const descriptions = [
 	},
 ] as const;
 
-export default function Subscription() {
+export default function CapsuleBox() {
 	const [selected, setSelected] = React.useState("2");
 	const currentOption = descriptions.find((d) => d.value === selected);
 

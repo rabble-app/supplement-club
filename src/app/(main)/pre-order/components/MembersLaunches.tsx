@@ -1,6 +1,7 @@
-import type IUnlockTeamPriceMode from "@/utils/models/IUnlockTeamPriceMode";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
+
+import type IUnlockTeamPriceMode from "@/utils/models/IUnlockTeamPriceMode";
 
 const teamsItems = [
 	{
