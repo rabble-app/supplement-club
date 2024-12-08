@@ -1,3 +1,4 @@
+import RetailPrice from "@/components/RetailPrice";
 import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
 import OrderCard from "@/components/cards/OrderCard";
 import { Separator } from "@radix-ui/react-separator";
@@ -48,20 +49,7 @@ export default function OrderSummary({
 				name="Glass Bottle Container"
 				src="/images/ubiquinol.svg"
 			>
-				<div className="grid gap-[7px]">
-					<p className="text-[20px] leading-[21px] font-inconsolata line-through font-bold md:text-end">
-						£0.00
-					</p>
-					<div className="text-[20px] leading-[21px] font-inconsolata text-grey4 mb-[16px]">
-						RRP{" "}
-						<span className="text-[20px] leading-[21px] font-inconsolata line-through font-bold">
-							£18
-						</span>{" "}
-						<span className="text-[20px] leading-[21px] font-inconsolata font-bold text-blue">
-							FREE
-						</span>
-					</div>
-				</div>
+				<RetailPrice />
 			</OrderCard>
 
 			<Separator className="bg-grey13 h-[1px]" />

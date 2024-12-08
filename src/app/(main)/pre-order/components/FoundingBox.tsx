@@ -6,6 +6,7 @@ import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
 import { Button } from "@/components/ui/button";
 
+import RetailPrice from "@/components/RetailPrice";
 import ReferalCard from "@/components/cards/ReferalCard";
 
 export default function FoundingBox() {
@@ -45,20 +46,7 @@ export default function FoundingBox() {
 					name="Glass Bottle Container"
 					src="/images/ubiquinol.svg"
 				>
-					<div className="grid gap-[7px]">
-						<p className="text-[20px] leading-[21px] font-inconsolata line-through font-bold md:text-end">
-							£0.00
-						</p>
-						<div className="text-[20px] leading-[21px] font-inconsolata text-grey4 mb-[16px]">
-							RRP{" "}
-							<span className="text-[20px] leading-[21px] font-inconsolata line-through font-bold">
-								£18
-							</span>{" "}
-							<span className="text-[20px] leading-[21px] font-inconsolata font-bold text-blue">
-								FREE
-							</span>
-						</div>
-					</div>
+					<RetailPrice />
 				</OrderCard>
 
 				<Separator className="bg-grey13 h-[1px]" />
