@@ -27,7 +27,12 @@ const step3FormSchema = z.object({
 export default function PaymentDetails({
 	step,
 	updateStepAction,
-}: Readonly<{ step: number; updateStepAction: (newValue: number) => void }>) {
+	children,
+}: Readonly<{
+	step: number;
+	updateStepAction: (newValue: number) => void;
+	children: React.ReactNode;
+}>) {
 	const currentForm = useForm<z.infer<typeof step3FormSchema>>({
 		resolver: zodResolver(step3FormSchema),
 	});
@@ -55,18 +60,7 @@ export default function PaymentDetails({
 				className="flex flex-col gap-[24px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
 			>
 				<div className="grid gap-[24px]">
-					<p className="text-[16px] leading-[19px] font-bold">
-						Billing Address
-					</p>
-					<div className="flex items-center gap-[8px]">
-						<Checkbox id="delivery" />
-						<label
-							htmlFor="delivery"
-							className="text-[16px] leading-[19px] text-black5 cursor-pointer"
-						>
-							Same as delivery address
-						</label>
-					</div>
+					{children}
 
 					<Separator className="bg-grey13" />
 

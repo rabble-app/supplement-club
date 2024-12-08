@@ -3,12 +3,13 @@
 import AvailablePayment from "@/components/AvailablePayment";
 import CreateAccount from "@/components/CreateAccount";
 import Delivery from "@/components/Delivery";
+import DeliveryAddress from "@/components/DeliveryAddress";
+import PaymentDetails from "@/components/PaymentDetails";
 import Steps from "@/components/Steps";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import ConfirmJoining from "./components/ConfirmJoining";
-import DeliveryAddress from "@/components/DeliveryAddress";
 import OrderSummary from "./components/OrderSummary";
-import PaymentDetails from "./components/PaymentDetails";
 
 export default function Checkout() {
 	const [step, setStep] = useState<number>(1);
@@ -23,7 +24,20 @@ export default function Checkout() {
 					<DeliveryAddress step={step} updateStepAction={setStep} />
 				)}
 				{step === 3 && (
-					<PaymentDetails step={step} updateStepAction={setStep} />
+					<PaymentDetails step={step} updateStepAction={setStep}>
+						<p className="text-[16px] leading-[19px] font-bold">
+							Billing Address
+						</p>
+						<div className="flex items-center gap-[8px]">
+							<Checkbox id="delivery" />
+							<label
+								htmlFor="delivery"
+								className="text-[16px] leading-[19px] text-black5 cursor-pointer"
+							>
+								Same as delivery address
+							</label>
+						</div>
+					</PaymentDetails>
 				)}
 				{step === 4 && <ConfirmJoining />}
 			</div>
