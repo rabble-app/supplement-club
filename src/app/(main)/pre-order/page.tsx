@@ -19,7 +19,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
 	Carousel,
-	type CarouselApi,
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
@@ -243,15 +242,11 @@ const productImages = [
 ];
 
 export default function Preorder() {
-	const [setApi] = React.useState<CarouselApi>();
 	const [loggedIn] = React.useState(false);
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] min-h-screen container-width relative">
 			<div className="contents bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0] md:grid md:gap-[60px]">
-				<Carousel
-					setApi={setApi}
-					className="w-full relative order-1 md:order-none mt-[20px] md:mt-[0]"
-				>
+				<Carousel className="w-full relative order-1 md:order-none mt-[20px] md:mt-[0]">
 					<CarouselContent className={` ${loggedIn ? "" : "opacity-[40%]"}`}>
 						{productImages.map((i) => (
 							<CarouselItem key={i.id}>

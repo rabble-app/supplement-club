@@ -4,14 +4,18 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import type { ICategoryModel } from "@/utils/models/ICategoryModel";
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export default function ExpansionSelector({ title, categories }) {
-	const [selectedCategories, setSelectedCategories] = useState([]);
+export default function ExpansionSelector({
+	title,
+	categories,
+}: Readonly<{ title: string; categories: ICategoryModel[] }>) {
+	const [selectedCategories, setSelectedCategories] = useState([] as number[]);
 
-	const handleCategoryChange = (categoryId) => {
+	const handleCategoryChange = (categoryId: number) => {
 		setSelectedCategories((prevSelected) =>
 			prevSelected.includes(categoryId)
 				? prevSelected.filter((id) => id !== categoryId)
@@ -26,7 +30,7 @@ export default function ExpansionSelector({ title, categories }) {
 				<ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
 			</CollapsibleTrigger>
 			<CollapsibleContent className="grid gap-[16px]">
-				{categories.map((option) => (
+				{categories.map((option: ICategoryModel) => (
 					<div key={option.id} className="flex items-center gap-x-[10px]">
 						<Checkbox
 							value={option.label}
@@ -35,6 +39,12 @@ export default function ExpansionSelector({ title, categories }) {
 						/>
 						<span
 							onClick={() => handleCategoryChange(option.id)}
+							onKeyUp={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									// Handle Enter and Space keys
+									handleCategoryChange(option.id);
+								}
+							}}
 							className="text-[16px] leading-[20px] font-[500] font-inter cursor-pointer"
 						>
 							{option.label}

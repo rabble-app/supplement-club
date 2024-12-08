@@ -19,6 +19,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import type { ICategoryModel } from "@/utils/models/ICategoryModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 import { useState } from "react";
 
@@ -41,7 +42,7 @@ export default function Products() {
 			id: 4,
 			label: "Stacks",
 		},
-	] as const;
+	] as ICategoryModel[];
 
 	const goals = [
 		{
@@ -64,7 +65,7 @@ export default function Products() {
 			id: 5,
 			label: "Foundational Health",
 		},
-	] as const;
+	] as ICategoryModel[];
 
 	const products = [
 		{
@@ -166,7 +167,7 @@ export default function Products() {
 							</SelectTrigger>
 							<SelectContent className="bg-white">
 								{sortBy.map((el) => (
-									<SelectItem key={el.id} value={el.id}>
+									<SelectItem key={el.id} value={el.id.toString()}>
 										{el.value}
 									</SelectItem>
 								))}
