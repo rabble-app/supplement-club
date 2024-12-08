@@ -5,4 +5,5 @@ export interface IReferalCardModel {
 	price: number;
 	description?: string;
 	isActive?: boolean;
+	rootClass?: string
 }

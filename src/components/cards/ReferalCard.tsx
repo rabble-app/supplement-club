@@ -18,37 +18,38 @@ export default function ReferalCard(model: Readonly<IReferalCardModel>) {
 	}
 
 	let priceClass = "font-inconsolata flex gap-[5px] items-center font-[800]";
+	let nameClass = "font-hagerman";
+	let descriptionClass = "font-inconsolata";
+	let rootClass =
+		"grid grid-cols-[63px_1fr_auto] gap-[16px] p-[16px] items-center rounded-[8px] mx-auto w-full";
+
 	if (model.isActive) {
 		priceClass += " text-blue text-[32px] leading-[33px]";
+		descriptionClass += " text-black text-[20px] leading-[20px]";
+		nameClass += " text-black text-[20px] leading-[23px]";
+		rootClass += " bg-white shadow-3 h-[127px]";
 	} else {
 		priceClass += " text-[24px] leading-[25px] text-grey15";
+		descriptionClass += " text-grey4 text-[14px] leading-[14px]";
+		nameClass += " text-grey4 text-[18px] leading-[20px]";
 	}
 
+	rootClass += ` ${model.rootClass}`;
+
 	return (
-		<div
-			className={`grid grid-cols-[63px_1fr_auto] gap-[16px] p-[16px] items-center rounded-[8px] mx-auto w-full 
-                ${model.isActive ? " bg-white shadow-3 h-[127px]" : "bg-grey19 md:w-[calc(100%-16px)]"}`}
-		>
+		<div className={rootClass}>
 			<div className={imageClasses}>
 				<Image src={imageSrc} alt={imageAlt} width={24} height={24} />
 			</div>
 			<div className="grid gap-[8px]">
-				<p
-					className={` font-hagerman ${model.isActive ? "text-black text-[20px] leading-[23px]" : " text-grey4 text-[18px] leading-[20px]"}`}
-				>
+				<p className={nameClass}>
 					{model.name}{" "}
-					<span
-						className={` font-hagerman ${model.isActive ? "text-black text-[20px] leading-[23px]" : " text-grey4 text-[18px] leading-[20px]"}`}
-					>
+					<span className={nameClass}>
 						({model.currentStep}/{model.steps})
 					</span>
 				</p>
 				{model.description && (
-					<p
-						className={` font-inconsolata ${model.isActive ? "text-black text-[20px] leading-[20px]" : " text-grey4 text-[14px] leading-[14px]"}`}
-					>
-						{model.description}
-					</p>
+					<p className={descriptionClass}>{model.description}</p>
 				)}
 			</div>
 

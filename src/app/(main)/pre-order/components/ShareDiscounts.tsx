@@ -43,6 +43,7 @@ export default function ShareDiscounts() {
 				steps={0}
 				name="Founding Member Subscription"
 				price={40}
+				rootClass="bg-grey19"
 			/>
 
 			<div className="mx-[-16px] md:mx-[-32px]">
@@ -53,6 +54,7 @@ export default function ShareDiscounts() {
 					description="£5 off"
 					price={35.5}
 					isActive={true}
+					rootClass="bg-grey19"
 				/>
 			</div>
 
@@ -62,6 +64,7 @@ export default function ShareDiscounts() {
 				name="Team Builder"
 				description="£10 off"
 				price={30.5}
+				rootClass="bg-grey19"
 			/>
 
 			<ReferalCard
@@ -70,6 +73,7 @@ export default function ShareDiscounts() {
 				name="Super Sharer"
 				description="£15 off"
 				price={25.5}
+				rootClass="bg-grey19"
 			/>
 		</div>
 	);

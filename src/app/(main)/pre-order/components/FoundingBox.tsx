@@ -6,7 +6,7 @@ import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
 import { Button } from "@/components/ui/button";
 
-import DiscoutCard from "./DiscountCard";
+import ReferalCard from "@/components/cards/ReferalCard";
 
 export default function FoundingBox() {
 	return (
@@ -111,14 +111,14 @@ export default function FoundingBox() {
 				</div>
 
 				<div className="grid gap-[16px] md:px-[16px]">
-					<DiscoutCard
+					<ReferalCard
 						name="Subscription"
 						currentStep={0}
 						steps={0}
 						price={40}
 					/>
 					<div className="md:mx-[-48px]">
-						<DiscoutCard
+						<ReferalCard
 							name="Referral Rookie"
 							description="£5 off Team Price"
 							currentStep={1}
@@ -128,7 +128,7 @@ export default function FoundingBox() {
 						/>
 					</div>
 
-					<DiscoutCard
+					<ReferalCard
 						name="Team Builder"
 						currentStep={1}
 						steps={2}
@@ -136,7 +136,7 @@ export default function FoundingBox() {
 						price={30}
 					/>
 
-					<DiscoutCard
+					<ReferalCard
 						name="Super Sharer"
 						currentStep={1}
 						steps={3}
