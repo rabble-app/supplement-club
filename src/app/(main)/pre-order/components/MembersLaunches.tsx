@@ -71,7 +71,7 @@ export default function MembersLaunches({
 			</div>
 
 			{members < 50 && (
-				<div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute top-[220px] left-1/2 transform -translate-x-1/2 -translate-y-1/2  md:left-[75px] md:top-[50px]">
+				<div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute top-[220px] left-1/2 transform -translate-x-1/2 -translate-y-1/2  md:left-[138px] md:top-[60px]">
 					When it gets to 50 people we will launch the product
 				</div>
 			)}

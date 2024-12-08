@@ -17,7 +17,7 @@ export default function ReferalCard(model: Readonly<IReferalCardModel>) {
 		imageClasses += " bg-grey20";
 	}
 
-	let priceClass = "font-inconsolata flex gap-[5px] items-center font-[800]";
+	let priceClass = "font-inconsolata flex gap-[5px] items-center font-[700]";
 	let nameClass = "font-hagerman";
 	let descriptionClass = "font-inconsolata";
 	let rootClass =

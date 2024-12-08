@@ -83,7 +83,7 @@ export default function Products() {
 	const toggleShowAll = () => setShowAll((prev) => !prev);
 
 	return (
-		<div>
+		<div className="pb-[50px] bg-grey11 md:bg-transparent">
 			<p className="hidden md:block text-[32px] leading-[37px]  font-hagerman text-black bg-yellow py-[16px] text-center">
 				Everyone&apos;s Joining Supplement Club
 			</p>
