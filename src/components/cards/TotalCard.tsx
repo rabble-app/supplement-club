@@ -1,3 +1,5 @@
+import TotalPercentCard from "./TotalPercentCard";
+
 export default function TotalCard({
 	capsules,
 	price,
@@ -29,15 +31,8 @@ export default function TotalCard({
 						(£{capsulePrice} / capsule)
 					</span>
 				</div>
-				<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4">
-					RRP{" "}
-					<span className="text-[24px] leading-[25px] font-inconsolata line-through font-bold">
-						£{rrp}
-					</span>{" "}
-					<span className="text-[24px] leading-[25px] font-inconsolata font-bold text-blue">
-						{percent}% OFF
-					</span>
-				</div>
+
+				<TotalPercentCard price={rrp} percent={percent} />
 			</div>
 		</div>
 	);

@@ -3,6 +3,7 @@ import { Separator } from "@radix-ui/react-separator";
 import RetailPrice from "@/components/RetailPrice";
 import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
 import OrderCard from "@/components/cards/OrderCard";
+import TotalPercentCard from "@/components/cards/TotalPercentCard";
 
 export default function OrderSummary({
 	activeStep,
@@ -99,15 +100,7 @@ export default function OrderSummary({
 							</span>
 						</div>
 					)}
-					<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">
-						RRP{" "}
-						<span className="text-[24px] leading-[25px] font-inconsolata line-through font-bold">
-							£144
-						</span>{" "}
-						<span className="text-[24px] leading-[25px] font-inconsolata font-bold text-blue">
-							65% OFF
-						</span>
-					</div>
+					<TotalPercentCard price={144} percent={65} />
 				</div>
 			</div>
 		</div>
