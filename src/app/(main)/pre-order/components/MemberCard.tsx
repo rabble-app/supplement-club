@@ -6,9 +6,9 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 		"grid gap-[16px] p-[16px] md:px-[36px] items-center rounded-[8px] mx-auto w-full";
 	if (model.isActive) {
 		rootClass +=
-			"grid-cols-[52px_1fr_auto] bg-white shadow-3 h-[138px] mx-[-16px] md:mx-[0]";
+			" grid-cols-[52px_1fr_auto] bg-white shadow-3 h-[138px] mx-[-16px] md:mx-[0]";
 	} else {
-		rootClass += "bg-grey21 h-[106px] md:w-[calc(100%-72px)]";
+		rootClass += " bg-grey21 h-[106px] md:w-[calc(100%-72px)]";
 	}
 	return (
 		<div className={rootClass}>
