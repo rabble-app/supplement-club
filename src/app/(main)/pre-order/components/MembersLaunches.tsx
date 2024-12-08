@@ -24,8 +24,15 @@ const teamsItems = [
 	},
 ] as IUnlockTeamPriceMode[];
 
-export default function MembersLaunches({ members }: { members: number }) {
-	const currentIndex = members <= 50 ? 0 : members >= 200 ? 2 : 1;
+export default function MembersLaunches({
+	members,
+}: Readonly<{ members: number }>) {
+	let currentIndex = 1;
+	if (members <= 50) {
+		currentIndex = 0;
+	} else if (members >= 200) {
+		currentIndex = 2;
+	}
 	return (
 		<div className="flex justify-end md:gap-[60px] mb-[52px] relative mx-[-16px] md:mx-[0]">
 			<div className="h-[26px] flex items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 w-[calc(100%-80px)]">

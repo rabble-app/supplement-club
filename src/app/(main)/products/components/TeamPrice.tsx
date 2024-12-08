@@ -31,15 +31,28 @@ const teamsItems = [
 	},
 ] as IUnlockTeamPriceMode[];
 
-export default function TeamPrice({ members }: { members: number }) {
-	const currentIndex =
-		members <= 50
-			? 0
-			: members >= 500
-				? 3
-				: members > 50 && members <= 300
-					? 1
-					: 2;
+export default function TeamPrice({ members }: Readonly<{ members: number }>) {
+	function getCurrentClasses(index: number) {
+		let classes = " bg-grey19 my-[15px]";
+
+		if (index === currentIndex) {
+			classes = " bg-white h-[223px] rounded-[5px] my-[0]";
+		} else if (index < currentIndex) {
+			classes = "bg-grey14 my-[15px]";
+		}
+
+		return classes;
+	}
+
+	let currentIndex = 2;
+
+	if (members <= 50) {
+		currentIndex = 0;
+	} else if (members >= 500) {
+		currentIndex = 3;
+	} else if (members > 50 && members <= 300) {
+		currentIndex = 1;
+	}
 	const teamPrice = teamsItems[currentIndex];
 	return (
 		<div>
@@ -125,7 +138,7 @@ export default function TeamPrice({ members }: { members: number }) {
 
 						<div
 							className={`p-[10px] border-[1px] border-grey20 grid gap-[8px] z-[1] h-[192px] relative
-								 ${index === currentIndex ? " bg-white h-[223px] rounded-[5px] my-[0]" : index < currentIndex ? "bg-grey14 my-[15px]" : " bg-grey19 my-[15px]"}`}
+								 ${getCurrentClasses(index)}`}
 						>
 							<div className="grid gap-[4px] mx-auto">
 								<p

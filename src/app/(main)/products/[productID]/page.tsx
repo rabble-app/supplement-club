@@ -117,7 +117,7 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({
 	params,
-}: { params: Promise<ProductDetailsProps> }) {
+}: Readonly<{ params: Promise<ProductDetailsProps> }>) {
 	const [api, setApi] = React.useState<CarouselApi>();
 	const [current, setCurrent] = React.useState(0);
 	const [count, setCount] = React.useState(0);
@@ -163,7 +163,7 @@ export default function ProductDetails({
 						<div className="flex gap-[8px]">
 							{Array.from({ length: count }, (_, idx) => (
 								<div
-									key={`dot-${current}`}
+									key={`dot-${idx + 1}`}
 									className={`h-[8px] w-[8px] rounded-[50%] ${
 										current === idx + 1 ? "bg-black" : "bg-grey2"
 									}`}

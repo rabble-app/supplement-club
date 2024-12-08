@@ -140,7 +140,7 @@ const productImages = [
 ];
 
 export default function Preorder() {
-	const [loggedIn] = React.useState(false);
+	const [loggedIn] = React.useState(true);
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] min-h-screen container-width relative">
 			<div className="contents bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0] md:grid md:gap-[60px]">
@@ -163,9 +163,9 @@ export default function Preorder() {
 
 					<div className="flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
 						<div className="flex gap-[8px]">
-							{Array.from({ length: productImages.length }).map(() => (
+							{Array.from({ length: productImages.length }).map((_, idx) => (
 								<div
-									key={`len-${productImages.length}`}
+									key={`len-${idx + 1}`}
 									className="h-[8px] w-[8px] rounded-[50%] bg-grey2"
 								/>
 							))}
