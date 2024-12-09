@@ -23,6 +23,14 @@
   }
 }
 
+::placeholder {
+  color: #666666;
+}
+
+.border-red::placeholder {
+  color: #B42318;
+}
+
 [data-state="closed"] > .plus,
 [data-state="open"] > .minus {
   display: block;
