@@ -1,3 +1,9 @@
+import Link from "next/link";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -6,12 +12,7 @@ import {
 	FormItem,
 	FormLabel,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
 
 const step1FormSchema = z.object({
 	email: z

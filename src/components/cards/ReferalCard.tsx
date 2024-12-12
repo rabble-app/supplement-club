@@ -1,5 +1,6 @@
-import type { IReferalCardModel } from "@/utils/models/IReferalCardModel";
 import Image from "next/image";
+
+import type { IReferalCardModel } from "@/utils/models/IReferalCardModel";
 
 export default function ReferalCard(model: Readonly<IReferalCardModel>) {
 	let imageAlt = "Add user";

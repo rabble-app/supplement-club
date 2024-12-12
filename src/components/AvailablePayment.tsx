@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 export default function AvailablePayment() {
 	return (
 		<div className="flex flex-col gap-[8px]">

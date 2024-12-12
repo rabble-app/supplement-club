@@ -110,6 +110,7 @@ export default function Products() {
 					</Breadcrumb>
 					<SortBy />
 				</div>
+
 				<div className="grid md:grid-cols-[340px_1fr_] gap-x-[72px]">
 					<div className="mb-[13px] md:mb-[0]">
 						<p className="text-[24px] md:text-[40px] leading-[36px] md:leading-[60px] font-hagerman text-black mb-[23px] order-1">

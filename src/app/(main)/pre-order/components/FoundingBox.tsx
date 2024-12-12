@@ -2,12 +2,11 @@ import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import Link from "next/link";
 
+import RetailPrice from "@/components/RetailPrice";
 import OrderCard from "@/components/cards/OrderCard";
+import ReferalCard from "@/components/cards/ReferalCard";
 import TotalCard from "@/components/cards/TotalCard";
 import { Button } from "@/components/ui/button";
-
-import RetailPrice from "@/components/RetailPrice";
-import ReferalCard from "@/components/cards/ReferalCard";
 
 export default function FoundingBox() {
 	return (
@@ -57,7 +56,7 @@ export default function FoundingBox() {
 					delivery="This Quarter"
 					name="Succesful Referal x 1"
 				>
-					<div className="text-[20px] leading- font-bold text-black flex items-center gap-[5px] font-inconsolata">
+					<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
 						£-5.00{" "}
 					</div>
 				</OrderCard>

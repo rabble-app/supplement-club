@@ -28,11 +28,8 @@ export default function SortBy() {
 		<div className="text-[16px] leading-[18px] font-[700] font-helvetica hidden md:flex gap-x-[16px] items-center pt-[25px]">
 			Sort by
 			<Select>
-				<SelectTrigger className="w-[150px]">
-					<SelectValue
-						className="text-[14px] leading-[16px] font-[400] font-helvetica"
-						placeholder="Most Popular"
-					/>
+				<SelectTrigger className="w-[150px] border-none">
+					<SelectValue placeholder="Most Popular" />
 				</SelectTrigger>
 				<SelectContent className="bg-white">
 					{sortBy.map((el) => (

@@ -27,6 +27,7 @@
   color: #666666;
 }
 
+.border-red [value="0000 0000 0000 0000"],
 .border-red::placeholder {
   color: #B42318;
 }

@@ -12,6 +12,8 @@ export default {
 			colors: {
 				red: '#B42318',
 				red2: '#FEE4E2',
+				red3: '#FF3B30',
+				red4: '#8F0002',
 				blue: '#00038F',
 				blue2: '#DFDFFF',
 				blue3: '#00038F',
@@ -21,6 +23,9 @@ export default {
 				blue8: '#00038F1A',
 				blue9: '#E2E3FF',
 				blue10: '#E5E6F4',
+				blue11: '#3064FF',
+				blue12: '#C6DDFF',
+				blue13: '#F0F1FF',
 				green: '#61D27A',
 				yellow: '#FBF89F',
 				yello1: '#FFFED8',
@@ -56,7 +61,14 @@ export default {
 				grey23: '#B7B7B7',
 				grey24: '#FFFFFF',
 				grey25: '#9B9B9B',
-				grey26: '#D8D8D8'
+				grey26: '#D8D8D8',
+				grey27: '#787880',
+				grey28: '#C7C7CC',
+				grey29: '#AAAAAA',
+				grey30: '#E5E5E5',
+				grey31: '#B6B6B6',
+				grey32: '#CED1D3',
+				grey33: '#808080'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -91,7 +103,8 @@ export default {
 				'inter': ['inter'],
 				'roboto': ['roboto'],
 				'helvetica': ['helvetica'],
-				'hagerman': ['hagerman']
+				'hagerman': ['hagerman'],
+				'sf-pro': ['sf-pro-text']
 			},
 			boxShadow: {
 				'card': '0px 10px 60px 0px #0000001A',

@@ -1,5 +1,6 @@
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
+
+import { Separator } from "@radix-ui/react-separator";
 
 import type IUnlockTeamPriceMode from "@/utils/models/IUnlockTeamPriceMode";
 

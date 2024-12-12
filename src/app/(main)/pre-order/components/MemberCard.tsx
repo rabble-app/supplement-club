@@ -1,5 +1,6 @@
-import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
 import Image from "next/image";
+
+import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
 
 export default function MemberCard(model: Readonly<IMemberCardModel>) {
 	let rootClass =

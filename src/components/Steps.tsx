@@ -3,11 +3,14 @@ import Image from "next/image";
 export default function Steps({
 	activeStep,
 	steps,
-}: Readonly<{ activeStep: number; steps: string[] }>) {
+	alignStart,
+}: Readonly<{ activeStep: number; steps: string[]; alignStart?: boolean }>) {
 	return (
 		<div className="pt-[24px] md:pt-[32px]">
 			{activeStep < steps.length + 1 && (
-				<div className="flex justify-between items-center">
+				<div
+					className={`flex items-center ${alignStart ? "justify-start gap-[100px]" : "justify-between"}`}
+				>
 					{steps.map((value, idx) => (
 						<div
 							key={value}

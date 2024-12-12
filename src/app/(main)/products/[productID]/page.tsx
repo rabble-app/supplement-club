@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
 
-import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { Separator } from "@radix-ui/react-separator";
 
+import BottomSection from "@/components/BottomSection";
+import ProductFaqs from "@/components/ProductFaqs";
 import ReferFriends from "@/components/ReferFriends";
 import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
@@ -26,19 +27,12 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-
-import BottomSection from "@/components/BottomSection";
-import ProductFaqs from "@/components/ProductFaqs";
 import CorporationBox from "../../pre-order/components/CorporationBox";
 import PreOrderInfo from "../../pre-order/components/PreOrderInfo";
 import Subscription from "../components/CapsuleBox";
 import ProfuctTable from "../components/ProductTable";
 import ReferalDiscounts from "../components/ReferalDiscounts";
 import TeamPrice from "../components/TeamPrice";
-
-const StickyFooter = dynamic(() => import("@/components/StickyFooter"), {
-	ssr: false,
-});
 
 const productImages = [
 	{
@@ -97,10 +91,10 @@ export default function ProductDetails({
 			setCurrent(api.selectedScrollSnap() + 1);
 		});
 	}, [api]);
-	const [loggedIn] = React.useState(false);
+	const [loggedIn] = React.useState(true);
 
 	return (
-		<div className="grid md:grid-cols-2 gap-[16px] min-h-screen container-width relative overflow-hidden">
+		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">
 			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
@@ -168,7 +162,7 @@ export default function ProductDetails({
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none">
+			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start">
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -238,7 +232,7 @@ export default function ProductDetails({
 							capsulePrice={0.25}
 						/>
 
-						<Button className="bg-blue text-white w-full font-bold">
+						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
 							Start My Subscription
 						</Button>
 
@@ -304,7 +298,7 @@ export default function ProductDetails({
 								delivery="This Quarter"
 								name="Succesful Referal x 1"
 							>
-								<div className="text-[20px] leading- font-bold text-black flex items-center gap-[5px] font-inconsolata">
+								<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
 									£-5.00{" "}
 								</div>
 							</OrderCard>
@@ -320,15 +314,12 @@ export default function ProductDetails({
 							/>
 						</div>
 
-						<div className="hidden md:flex">
+						<div className="fixed bottom-[0] left-[0] right-[0] md:relative z-[100]">
 							<ReferFriends />
 						</div>
 
-						<StickyFooter className="md:hidden pt-[32px] bg-grey11">
-							<ReferFriends />
-						</StickyFooter>
-
 						<div className="bg-grey11 md:hidden h-[16px] mx-[-16px] my-[-10px]" />
+
 						<ReferalDiscounts />
 					</div>
 				)}

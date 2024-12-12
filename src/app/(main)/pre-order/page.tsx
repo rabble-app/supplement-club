@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
-
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
+import BottomSection from "@/components/BottomSection";
+import ProductFaqs from "@/components/ProductFaqs";
 import TotalCard from "@/components/cards/TotalCard";
 import {
 	Breadcrumb,
@@ -29,11 +30,8 @@ import CorporationBox from "./components/CorporationBox";
 import FoundingBox from "./components/FoundingBox";
 import MemberCard from "./components/MemberCard";
 import MembersBox from "./components/MembersBox";
-
-import ProductFaqs from "@/components/ProductFaqs";
 import PreOrderInfo from "./components/PreOrderInfo";
 
-import BottomSection from "@/components/BottomSection";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
 
 const itemsMembers = [

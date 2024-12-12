@@ -1,4 +1,9 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+
+import ShowTextBasedOnRoute from "./components/ShowTextBasedOnRoute";
 
 export default function RootLayout({
 	children,
@@ -7,16 +12,28 @@ export default function RootLayout({
 }>) {
 	return (
 		<div>
-			<header className="w-full h-[78px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto">
+			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-between md:justify-center items-center m-auto px-[16px]">
 				<Link
-					className="text-[24px] md:text-[40px] leading-[27px] md:leading-[46px] font-hagerman"
+					className="text-[16px] md:text-[24px] leading-[18px] text-blue12 md:hidden flex items-center font-helvetica gap-[8px]"
 					href="/"
 				>
-					Supplement Club
+					<Image
+						src="/images/icons/home-icon.svg"
+						alt="Lock icon"
+						width={24}
+						height={24}
+					/>
+					Home
 				</Link>
+				<div className=" text-[24px] leading-[27px] font-hagerman">
+					Supplement Club
+				</div>
 			</header>
+			<ShowTextBasedOnRoute />
 
-			<div className="px-[16px] pt-[24px] md:p-[0]">{children}</div>
+			<div className="px-[16px] md:px-[0] bg-grey12 md:bg-transparent">
+				{children}
+			</div>
 		</div>
 	);
 }

@@ -95,7 +95,10 @@ export default function Header() {
 								height={16}
 							/>
 						</DialogTrigger>
-						<DialogContent className="w-[calc(100%-32px)] grid gap-[32px] p-[16px] bg-blue text-white">
+						<DialogContent
+							align={"top"}
+							className="w-[calc(100%-32px)] grid gap-[32px] p-[16px] bg-blue text-white"
+						>
 							<DialogHeader>
 								<DialogTitle className="text-[32px] leading-[36px] text-left flex justify-between items-center">
 									Supplement Club

@@ -39,6 +39,12 @@ const hagerman = localFont({
 	display: "block",
 });
 
+const pro = localFont({
+	src: "./../../public/fonts/SF-ProText-Regular.ttf",
+	variable: "--sf-pro-text",
+	display: "block",
+});
+
 export const metadata: Metadata = {
 	title: "Supplement Club",
 };
@@ -51,7 +57,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} antialiased`}
+				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} ${pro.variable} antialiased`}
 			>
 				{children}
 

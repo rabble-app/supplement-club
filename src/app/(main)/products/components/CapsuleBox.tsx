@@ -6,6 +6,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import type { ISubscriptionModel } from "@/utils/models/ISubscriptionModel";
+
 const generateImage = (count: number) => (
 	<div
 		className="flex justify-center mx-auto relative h-[24px]"

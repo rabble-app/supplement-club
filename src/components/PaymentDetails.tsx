@@ -22,6 +22,7 @@ const step3FormSchema = z.object({
 	cardNumber: z
 		.string()
 		.regex(/^\d{16}$/, "Card number must be exactly 16 digits"),
+	terms: z.boolean(),
 });
 
 export default function PaymentDetails({
@@ -45,6 +46,7 @@ export default function PaymentDetails({
 	};
 
 	const updateCardNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(e.target.value);
 		currentForm.setValue("cardNumber", e.target.value.replaceAll(" ", ""));
 	};
 
@@ -81,8 +83,14 @@ export default function PaymentDetails({
 											/>
 											<InputMask
 												{...field}
+												value={field.value ?? ""}
 												mask="9999 9999 9999 9999"
-												maskPlaceholder="0000 0000 0000 0000"
+												alwaysShowMask="true"
+												maskPlaceholder={
+													!field || !field.value || field.value === ""
+														? "0000 0000 0000 0000"
+														: ""
+												}
 												className="h-[24px] outline-none font-roboto text-grey16"
 												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 													updateCardNumber(e)
@@ -108,15 +116,26 @@ export default function PaymentDetails({
 
 					<Separator className="bg-grey13" />
 
-					<div className="flex items-center gap-[8px]">
-						<Checkbox id="terms" />
-						<label
-							htmlFor="terms"
-							className="text-[16px] leading-[19px] text-black5 cursor-pointer"
-						>
-							I accept the Terms of Service and Privacy Policy
-						</label>
-					</div>
+					<FormField
+						control={currentForm.control}
+						name="terms"
+						render={({ field }) => (
+							<FormItem className="grid grid-cols-[20px_1fr] gap-[8px] items-center">
+								<FormControl>
+									<Checkbox
+										checked={field.value}
+										onCheckedChange={field.onChange}
+									/>
+								</FormControl>
+
+								<FormLabel className="p-[0] mt-[0]">
+									<div className="text-[16px] leading-[19px] text-black5 cursor-pointer mt-[-8px]">
+										I accept the Terms of Service and Privacy Policy
+									</div>
+								</FormLabel>
+							</FormItem>
+						)}
+					/>
 
 					<p className="text-[14px] leading-[16px]">
 						By making this purchase your supplement club will automatically

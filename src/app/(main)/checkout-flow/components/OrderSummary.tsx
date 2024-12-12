@@ -1,8 +1,9 @@
+import { Separator } from "@radix-ui/react-separator";
+
 import RetailPrice from "@/components/RetailPrice";
 import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
 import OrderCard from "@/components/cards/OrderCard";
 import TotalPercentCard from "@/components/cards/TotalPercentCard";
-import { Separator } from "@radix-ui/react-separator";
 
 export default function OrderSummary({
 	activeStep,
@@ -22,6 +23,7 @@ export default function OrderSummary({
 					FREE NEXT DAY DELIVERY
 				</p>
 			)}
+
 			{activeStep !== 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 					NEXT DAY DELIVERY
@@ -60,6 +62,7 @@ export default function OrderSummary({
 					Quarterly Subscription
 				</p>
 			)}
+
 			{activeStep !== 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 					Subscriptions

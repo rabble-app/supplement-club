@@ -20,6 +20,7 @@ export default function ReferalDiscountCard(
 					height={23}
 				/>
 			</div>
+
 			<div className="text-[14px] leading-[16px] font-helvetica flex flex-col justify-center gap-[8px]">
 				<p
 					className={`text-[20px] leading-[23px] uppercase font-hagerman ${model.isActive ? "text-black" : "text-grey6"}`}
@@ -37,6 +38,7 @@ export default function ReferalDiscountCard(
 					£{model.priceOff} off Team Price
 				</p>
 			</div>
+
 			<div
 				className={`font-inconsolata font-[800] flex items-center  ${model.isActive ? "text-blue text-[32px] leading-[33px]" : "text-grey15 text-[24px] leading-[25px]"}`}
 			>
