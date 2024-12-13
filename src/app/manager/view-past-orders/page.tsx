@@ -113,7 +113,7 @@ export default function Orders() {
 					</CollapsibleTrigger>
 					<CollapsibleContent className="grid gap-[16px] bg-white">
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4 pt-[16px]">
-							smol plan non-bio
+							smol plan non-bio{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
 								£5.80
 							</span>
@@ -122,28 +122,28 @@ export default function Orders() {
 						<Separator className="bg-grey33/[55%] h-[1px]" />
 
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
-							Subtotal
+							Subtotal{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
 								£5.80
 							</span>
 						</p>
 
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
-							Referral discounts
+							Referral discounts{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
 								£0.00
 							</span>
 						</p>
 
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
-							Free delivery
+							Free delivery{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
 								£0.00
 							</span>
 						</p>
 
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
-							Total
+							Total{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
 								£5.80
 							</span>

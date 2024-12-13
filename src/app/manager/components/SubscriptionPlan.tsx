@@ -14,6 +14,21 @@ export default function SubscriptionPlan({
 	const [changePlan, setChangePlan] = React.useState(false);
 	const [initCapsule, setInitCapsule] = React.useState(capsule);
 
+	function getBoxClasses(idx: number) {
+		const isFirst = idx === 0;
+		const isLast = idx === 3;
+		const isSelected = idx + 1 === initCapsule;
+
+		return [
+			isFirst && "rounded-l-[4px]",
+			isLast && "rounded-r-[4px] border-l-[0]",
+			!isFirst && !isLast && "border-l-[0]",
+			isSelected ? "bg-blue text-white border-none" : "text-grey31",
+		]
+			.filter(Boolean)
+			.join(" ");
+	}
+
 	return (
 		<div className="py-[16px] px-[12px] bg-white shadow-card rounded-[12px] grid gap-[16px]">
 			<div className="grid gap-[4px]">
@@ -47,11 +62,7 @@ export default function SubscriptionPlan({
 					<Button
 						key={`len-${idx + 1}`}
 						onClick={() => changePlan && setInitCapsule(idx + 1)}
-						className={`border-[1px] border-grey31 font-sf-pro h-[33px] flex justify-center items-center
-                            ${idx === 0 ? "rounded-l-[4px]" : idx === 3 ? "rounded-r-[4px] border-l-[0]" : "border-l-[0]"}
-                            ${idx + 1 === initCapsule ? "bg-blue text-white border-none" : "text-grey31"}
-                            
-                            `}
+						className={`border-[1px] border-grey31 font-sf-pro h-[33px] flex justify-center items-center ${getBoxClasses(idx)}`}
 					>
 						{idx + 1}
 					</Button>

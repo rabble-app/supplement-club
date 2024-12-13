@@ -87,7 +87,7 @@ export default function PaymentDetails({
 												mask="9999 9999 9999 9999"
 												alwaysShowMask="true"
 												maskPlaceholder={
-													!field || !field.value || field.value === ""
+													!field?.value || field.value === ""
 														? "0000 0000 0000 0000"
 														: ""
 												}
