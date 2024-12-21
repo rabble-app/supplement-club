@@ -26,6 +26,7 @@ export default {
 				blue11: '#3064FF',
 				blue12: '#C6DDFF',
 				blue13: '#F0F1FF',
+				blue14: '#4B4C6F',
 				green: '#61D27A',
 				yellow: '#FBF89F',
 				yello1: '#FFFED8',
@@ -68,7 +69,9 @@ export default {
 				grey30: '#E5E5E5',
 				grey31: '#B6B6B6',
 				grey32: '#CED1D3',
-				grey33: '#808080'
+				grey33: '#808080',
+				grey34: '#9C9C9C',
+				grey35: '#EFEFEF'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -110,6 +113,7 @@ export default {
 				'card': '0px 10px 60px 0px #0000001A',
 				'login': '0px 1px 2px 0px #0000000D',
 				'3': '0px 4px 16px 0px #00000014',
+				'4': '0px 8px 8px -4px #00000008',
 				'progress': '0px 4px 4px 0px #5B5B5B1A inset'
 			}
 		}

@@ -50,7 +50,7 @@ const otherActions = [
 export default function ManagerPage() {
 	return (
 		<div>
-			<div className="grid gap-[32px] black max-w-[600px] mx-auto my-[46px]">
+			<div className="grid gap-[32px] black max-w-[600px] mx-auto py-[46px]">
 				<h1 className="text-[24px] leading-[28px] font-bold font-hagerman">
 					Welcome Back Maxwell. 👋🏻
 				</h1>

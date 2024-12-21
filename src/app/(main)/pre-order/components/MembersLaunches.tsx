@@ -53,7 +53,7 @@ export default function MembersLaunches({
 
 	return (
 		<div className="flex justify-end md:gap-[60px] mb-[52px] relative mx-[-16px] md:mx-[0]">
-			<div className="h-[26px] flex items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 w-[calc(100%-80px)]">
+			<div className="h-[26px] flex items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-hidden w-[calc(100%-80px)]">
 				<div className="bg-grey19 z-[2] flex items-center gap-[5px] shadow-progress rounded-[20px] h-[16px]">
 					{Array.from({ length: 31 }, (_, i) => i + 1).map((i, index) => (
 						<div
