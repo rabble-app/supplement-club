@@ -73,6 +73,17 @@ export default function Refer() {
 	function onOpenChange(open: boolean) {
 		setIsDialogOpen(open);
 	}
+	function getCardVisibility(id: number) {
+		if (activeRefer === id) {
+			return "";
+		}
+
+		if (inProgress) {
+			return "opacity-[4%]";
+		}
+		return "opacity-10";
+	}
+
 	return (
 		<div className="max-w-[600px] mx-auto pt-[16px] pb-[100px] md:py-[90px]">
 			<div className="md:px-[16px] md:py-[32px] border-[1px] border-grey12 grid gap-[40px]">
@@ -80,7 +91,7 @@ export default function Refer() {
 					{referralCards.map((card) => (
 						<div className="relative" key={card.id}>
 							<Image
-								className={`${activeRefer === card.id ? "100" : inProgress ? "opacity-[4%]" : "opacity-10"}`}
+								className={getCardVisibility(card.id)}
 								src={card.imageSrc}
 								alt={card.imageAlt}
 								width={171}
