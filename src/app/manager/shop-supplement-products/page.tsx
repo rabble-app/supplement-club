@@ -3,28 +3,31 @@
 import ProductCard from "@/components/cards/ProductCard";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 
+const commonProperties = {
+	src: "/images/supplement2.png",
+	altSrc: "Supplement",
+};
+
 const products: IProductCardModel[] = [
 	{
 		id: 1,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "Balchem Corporation",
-		name: "Magnesium Bisglycinate TRAACS",
-		description: "Supports Muscle Function & Relaxation",
+		...commonProperties,
+		corporation: "Balchem Corporation_1",
+		name: "Magnesium Bisglycinate TRAACS_1",
+		description: "Supports Muscle Function & Relaxation_1",
 		subscribers: 1034,
-		ingredient: "80% Magnesium Bisglycinate TRAACS",
+		ingredient: "80% Magnesium Bisglycinate TRAACS_1",
 		rrpPrice: 76.36,
 		rrpDiscount: 45,
 		price: 42.02,
 	},
 	{
 		id: 2,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "KANEKA CORPORATION",
-		name: "COENZYME Q10 UBIQUINOL",
-		description: "Supports Cellular Energy & Heart Health",
-		ingredient: "90% Kaneka Ubiquinol",
+		...commonProperties,
+		corporation: "KANEKA CORPORATION_2",
+		name: "COENZYME Q10 UBIQUINOL_2",
+		description: "Supports Cellular Energy & Heart Health_2",
+		ingredient: "90% Kaneka Ubiquinol_2",
 		subscribers: 678,
 		rrpPrice: 76.35,
 		rrpDiscount: 45,
@@ -32,12 +35,11 @@ const products: IProductCardModel[] = [
 	},
 	{
 		id: 3,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "ASTAREAL2",
-		name: "ASTAREAL ASTAXANTHIN2",
-		description: "Powerful Antioxidant for Skin & Muscle Health2",
-		ingredient: "100% AstaReal Astaxanthin2",
+		...commonProperties,
+		corporation: "ASTAREAL_3",
+		name: "ASTAREAL ASTAXANTHIN_3",
+		description: "Powerful Antioxidant for Skin & Muscle Health_3",
+		ingredient: "100% AstaReal Astaxanthin_3",
 		subscribers: 2,
 		rrpPrice: 63.73,
 		rrpDiscount: 39,
