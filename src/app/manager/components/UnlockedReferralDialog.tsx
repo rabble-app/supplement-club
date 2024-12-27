@@ -1,10 +1,10 @@
-import Image from "next/image";
-
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
 	DialogClose,
 	DialogDescription,
 	DialogTitle,
 } from "@radix-ui/react-dialog";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -29,6 +29,12 @@ export default function UnlockedReferralDialog({
 				border={"rounded"}
 				className="sm:max-w-[600px] gap-[16px] px-[11px]"
 			>
+				<DotLottieReact
+					src="https://lottie.host/391e5370-8c76-4cc8-8575-2f97c9212f44/6EsEfviRS8.lottie"
+					loop
+					autoplay
+					className="absolute left-[-100px] top-[0] bottom-[0] right-[-100px]"
+				/>
 				<DialogClose className="absolute right-[16px] top-[16px]">
 					<div className="w-[38px] h-[38px] flex justify-center">
 						<Image
