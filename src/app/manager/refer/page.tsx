@@ -4,11 +4,11 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 import ReferalDiscountCard from "@/app/(main)/products/components/ReferalDiscountCard";
+import ReferralCard from "@/components/manager/refer/ReferralCard";
+import ReferralProgress from "@/components/manager/refer/ReferralProgress";
+import UnlockedReferralDialog from "@/components/manager/refer/UnlockedReferralDialog";
 import type { IReferalDiscountModel } from "@/utils/models/IReferalDiscountModel";
 import InputMask from "@mona-health/react-input-mask";
-import ReferralCard from "../components/ReferralCard";
-import ReferralProgress from "../components/ReferralProgress";
-import UnlockedReferralDialog from "../components/UnlockedReferralDialog";
 
 export default function Refer() {
 	const [cardModel, setCardModel] = React.useState<string>("");

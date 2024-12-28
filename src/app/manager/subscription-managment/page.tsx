@@ -10,11 +10,11 @@ import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
 import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
 import TotalPercentCard from "@/components/cards/TotalPercentCard";
+import SubscriptionCancelDialog from "@/components/manager/subscription-managment/SubscriptionCancelDialog";
+import SubscriptionCard from "@/components/manager/subscription-managment/SubscriptionCard";
+import SubscriptionPlan from "@/components/manager/subscription-managment/SubscriptionPlan";
+import SubscriptionSkipDialog from "@/components/manager/subscription-managment/SubscriptionSkipDialog";
 import { Button } from "@/components/ui/button";
-import SubscriptionCancelDialog from "../components/SubscriptionCancelDialog";
-import SubscriptionCard from "../components/SubscriptionCard";
-import SubscriptionPlan from "../components/SubscriptionPlan";
-import SubscriptionSkipDialog from "../components/SubscriptionSkipDialog";
 
 export default function Subscriptions() {
 	const [step, setStep] = useState<number>(1);

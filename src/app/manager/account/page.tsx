@@ -1,7 +1,7 @@
-import EmailChangeDialog from "../components/EmailChangeDialog";
-import ManageAccountCard from "../components/ManageAccountCard";
-import PaymentCardDialog from "../components/PaymentCardDialog";
-import ShippingDetailsDialog from "../components/ShippingDetailsDialog";
+import EmailChangeDialog from "@/components/manager/account/EmailChangeDialog";
+import ManageAccountCard from "@/components/manager/account/ManageAccountCard";
+import PaymentCardDialog from "@/components/manager/account/PaymentCardDialog";
+import ShippingDetailsDialog from "@/components/manager/account/ShippingDetailsDialog";
 
 export default function Account() {
 	return (

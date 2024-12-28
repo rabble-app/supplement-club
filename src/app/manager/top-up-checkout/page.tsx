@@ -6,9 +6,9 @@ import AvailablePayment from "@/components/AvailablePayment";
 import BillingAddress from "@/components/BillingAddress";
 import PaymentDetails from "@/components/PaymentDetails";
 import Steps from "@/components/Steps";
-import SuccessDialog from "../components/SuccessDialog";
-import TopUpCapsuleHeading from "../components/TopUpCapsuleHeading";
-import TopUpOrderSummary from "../components/TopUpOrderSummary";
+import SuccessDialog from "@/components/manager/top-up-checkout/SuccessDialog";
+import TopUpCapsuleHeading from "@/components/manager/top-up-checkout/TopUpCapsuleHeading";
+import TopUpOrderSummary from "@/components/manager/top-up-checkout/TopUpOrderSummary";
 
 export default function TopUpCheckout() {
 	const [step, setStep] = useState<number>(1);
