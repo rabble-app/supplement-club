@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import ShowTextBasedOnRoute from "./components/ShowTextBasedOnRoute";
+import ShowTextBasedOnRoute from "@/components/dashboard/ShowTextBasedOnRoute";
 
 export default function RootLayout({
 	children,

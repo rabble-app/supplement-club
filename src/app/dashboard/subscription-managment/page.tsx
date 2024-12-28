@@ -10,10 +10,10 @@ import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
 import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
 import TotalPercentCard from "@/components/cards/TotalPercentCard";
-import SubscriptionCancelDialog from "@/components/manager/subscription-managment/SubscriptionCancelDialog";
-import SubscriptionCard from "@/components/manager/subscription-managment/SubscriptionCard";
-import SubscriptionPlan from "@/components/manager/subscription-managment/SubscriptionPlan";
-import SubscriptionSkipDialog from "@/components/manager/subscription-managment/SubscriptionSkipDialog";
+import SubscriptionCancelDialog from "@/components/dashboard/subscription-managment/SubscriptionCancelDialog";
+import SubscriptionCard from "@/components/dashboard/subscription-managment/SubscriptionCard";
+import SubscriptionPlan from "@/components/dashboard/subscription-managment/SubscriptionPlan";
+import SubscriptionSkipDialog from "@/components/dashboard/subscription-managment/SubscriptionSkipDialog";
 import { Button } from "@/components/ui/button";
 
 export default function Subscriptions() {

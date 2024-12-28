@@ -4,9 +4,9 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 import ReferalDiscountCard from "@/app/(main)/products/components/ReferalDiscountCard";
-import ReferralCard from "@/components/manager/refer/ReferralCard";
-import ReferralProgress from "@/components/manager/refer/ReferralProgress";
-import UnlockedReferralDialog from "@/components/manager/refer/UnlockedReferralDialog";
+import ReferralCard from "@/components/dashboard/refer/ReferralCard";
+import ReferralProgress from "@/components/dashboard/refer/ReferralProgress";
+import UnlockedReferralDialog from "@/components/dashboard/refer/UnlockedReferralDialog";
 import type { IReferalDiscountModel } from "@/utils/models/IReferalDiscountModel";
 import InputMask from "@mona-health/react-input-mask";
 

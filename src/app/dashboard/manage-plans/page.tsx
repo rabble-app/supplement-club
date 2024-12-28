@@ -1,6 +1,6 @@
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 
-import ManagePlanCard from "@/components/manager/manage-plans/ManagePlanCard";
+import ManagePlanCard from "@/components/dashboard/manage-plans/ManagePlanCard";
 
 const subscriptions = [
 	{
