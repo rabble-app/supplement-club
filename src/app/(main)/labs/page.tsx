@@ -12,10 +12,13 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 
+import { getProduct } from "@/services/products";
+import { mapSingleProductModel } from "@/utils/helpers";
 import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
+import type { IProductModel } from "@/utils/models/api/IProductModel";
 
-export default function Labs() {
+export default async function Labs() {
 	const laboratories = [
 		{
 			id: 1,
@@ -112,6 +115,19 @@ export default function Labs() {
 		},
 	] as IGoalCardModel[];
 
+	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID!;
+
+	const fetchProduct = async () => {
+		const response = (await getProduct(productId)) as {
+			data: IProductModel;
+		};
+
+		const model = mapSingleProductModel(response.data);
+		return [model];
+	};
+
+	const [product] = await fetchProduct();
+
 	return (
 		<div className="container-width md:pt-[57px] bg-grey11 md:bg-transparent grid gap-[80px] md:gap-[140px]">
 			<div className="grid pt-[32px] md:pt-[0] md:grid-cols-[480px_1fr] gap-[40px] md:gap-x-[52px]">
@@ -151,9 +167,9 @@ export default function Labs() {
 					</div>
 
 					<div className="text-grey6 whitespace-pre-line mt-[32px] md:mt-[40px]">
-						At Supplement Club, we source ingredients directly from the world&apos;s
-						leading laboratories, ensuring the highest purity and potency.
-						Without middlemen or unnecessary markups, every product
+						At Supplement Club, we source ingredients directly from the
+						world&apos;s leading laboratories, ensuring the highest purity and
+						potency. Without middlemen or unnecessary markups, every product
 						is third-party tested for quality and effectiveness.
 						<br />
 						<br />
@@ -173,17 +189,16 @@ export default function Labs() {
 			</div>
 
 			<div className="w-[calc(100vw-32px)] md:w-auto">
-
-			<div className="grid md:grid-cols-[1fr_335px]">
-				<div>
-					<p className="text-[24px] md:text-[56px] leading-[28px] md:leading-[67px] font-[400] text-black font-hagerman">
-						Meet the Laboratories
-					</p>
-					<div className="md:max-w-[550px] text-[14px] md:text-[20px] leading-[21px] md:leading-[30px] text-grey6 font-inconsolata">
-						Supplement industry is plagued by subpar ingredients that don&apos;t
-						work. Know where your ingredients are coming from.
+				<div className="grid md:grid-cols-[1fr_335px]">
+					<div>
+						<p className="text-[24px] md:text-[56px] leading-[28px] md:leading-[67px] font-[400] text-black font-hagerman">
+							Meet the Laboratories
+						</p>
+						<div className="md:max-w-[550px] text-[14px] md:text-[20px] leading-[21px] md:leading-[30px] text-grey6 font-inconsolata">
+							Supplement industry is plagued by subpar ingredients that
+							don&apos;t work. Know where your ingredients are coming from.
+						</div>
 					</div>
-				</div>
 				</div>
 
 				<Carousel className="mt-[100px] md:my-[24px]">
@@ -292,7 +307,7 @@ export default function Labs() {
 				</div>
 			</div>
 
-			<ProductInfo />
+			<ProductInfo product={product} />
 
 			<Faqs />
 		</div>

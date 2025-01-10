@@ -17,7 +17,7 @@ export default function DiscountBox() {
 			<Button className="bg-blue text-white w-full font-bold flex justify-center items-center font-inconsolata">
 				Invite Friends & Earn £5
 			</Button>
-			<p className="text-[14px] leading-[14px] font-bold font-inconsolata text-blue flex justify-center items-center bg-blue7 h-[31px] px-[8px]">
+			<p className="text-[14px] leading-[14px] font-bold font-inconsolata text-blue flex justify-center items-center bg-blue2 h-[31px] px-[8px]">
 				Earn £5 for each friend who joins! They get £5 off too.
 			</p>
 		</div>

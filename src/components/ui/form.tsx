@@ -2,7 +2,7 @@
 
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import * as React from "react";
+import React from "react";
 import {
 	Controller,
 	type ControllerProps,
@@ -97,7 +97,7 @@ const FormLabel = React.forwardRef<
 	return (
 		<Label
 			ref={ref}
-			className={cn(error && "text-red-500 dark:text-red-900", className)}
+			className={cn(error && "text-red dark:text-red-900", className)}
 			htmlFor={formItemId}
 			{...props}
 		/>
@@ -116,6 +116,7 @@ const FormControl = React.forwardRef<
 		<Slot
 			ref={ref}
 			id={formItemId}
+			className={cn(error && "border-[1px] border-red dark:text-red-900")}
 			aria-describedby={
 				!error
 					? `${formDescriptionId}`

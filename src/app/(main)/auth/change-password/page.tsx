@@ -1,8 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,35 +15,29 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z
-	.object({
-		password: z.string({ required_error: "Field is required." }),
-		confirmPassword: z.string({ required_error: "Field is required." }),
-	})
-	.superRefine(({ confirmPassword, password }, ctx) => {
-		if (confirmPassword !== password) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["confirmPassword"],
-			});
-		}
-	});
+import { changePasswordSchema } from "@/validations";
+
+import { changePassword } from "@/services/auth";
+import { useRouter } from "next/router";
 
 export default function ChangePasswordPage() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const router = useRouter();
+	const form = useForm({
+		resolver: zodResolver(changePasswordSchema),
+		mode: "onChange",
 	});
+	const [isPending, startTransition] = useTransition();
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// call api
-		console.log(values);
+	async function postChangePassword(e: FormData) {
+		await changePassword(e);
+		router.push("/");
 	}
 
 	return (
 		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
 			<Form {...form}>
 				<form
-					onSubmit={form.handleSubmit(onSubmit)}
+					action={(e) => startTransition(() => postChangePassword(e))}
 					className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
 				>
 					<p className="text-[20px] font-bold font-inconsolata">
@@ -57,7 +52,11 @@ export default function ChangePasswordPage() {
 									New Password*
 								</FormLabel>
 								<FormControl>
-									<Input type="password" {...field} />
+									<Input
+										type="password"
+										{...field}
+										placeholder="*************"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
@@ -71,7 +70,11 @@ export default function ChangePasswordPage() {
 									Confirm Password*
 								</FormLabel>
 								<FormControl>
-									<Input type="password" {...field} />
+									<Input
+										type="password"
+										{...field}
+										placeholder="*************"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
@@ -79,9 +82,13 @@ export default function ChangePasswordPage() {
 
 					<Button
 						type="submit"
-						className="bg-blue text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold"
+						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
-						Reset My Password
+						{isPending ? (
+							<Loader2 className="animate-spin" />
+						) : (
+							"Reset My Password"
+						)}
 					</Button>
 				</form>
 			</Form>

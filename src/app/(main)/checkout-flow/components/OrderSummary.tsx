@@ -1,6 +1,9 @@
-import OrderCard from "@/components/cards/OrderCard";
 import { Separator } from "@radix-ui/react-separator";
-import Image from "next/image";
+
+import RetailPrice from "@/components/RetailPrice";
+import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
+import OrderCard from "@/components/cards/OrderCard";
+import TotalPercentCard from "@/components/cards/TotalPercentCard";
 
 export default function OrderSummary({
 	activeStep,
@@ -13,28 +16,14 @@ export default function OrderSummary({
 				</h1>
 			)}
 
-			<div className="grid gap-[8px]">
-				<p className="text-[20px] leading-[24px] font-inconsolata text-grey4">
-					KANEKA CORPRATION
-				</p>
-				<div className="text-[24px] leading-[28px] font-hagerman">
-					Coenzyme Q10 Ubiquinol Kaneka TM
-				</div>
-				<div className="flex items-center gap-[8px]">
-					<Image
-						src="/images/icons/link-icon.svg"
-						alt="security-card-icon"
-						width={24}
-						height={24}
-					/>
-					<p className="text-[14px] leading-[16px] text-grey6">100mg</p>
-				</div>
-			</div>
+			<CorporationCardInfo />
+
 			{activeStep === 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 					FREE NEXT DAY DELIVERY
 				</p>
 			)}
+
 			{activeStep !== 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 					NEXT DAY DELIVERY
@@ -63,20 +52,7 @@ export default function OrderSummary({
 				name="Glass Bottle Container"
 				src="/images/ubiquinol.svg"
 			>
-				<div className="grid gap-[7px]">
-					<p className="text-[20px] leading-[21px] font-inconsolata line-through font-bold md:text-end">
-						£0.00
-					</p>
-					<div className="text-[20px] leading-[21px] font-inconsolata text-grey4 mb-[16px]">
-						RRP{" "}
-						<span className="text-[20px] leading-[21px] font-inconsolata line-through font-bold">
-							£18
-						</span>{" "}
-						<span className="text-[20px] leading-[21px] font-inconsolata font-bold text-blue">
-							FREE
-						</span>
-					</div>
-				</div>
+				<RetailPrice />
 			</OrderCard>
 
 			<Separator className="bg-grey13 h-[1px]" />
@@ -86,9 +62,10 @@ export default function OrderSummary({
 					Quarterly Subscription
 				</p>
 			)}
+
 			{activeStep !== 1 && (
 				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-					Subscription
+					Subscriptions
 				</p>
 			)}
 
@@ -112,7 +89,7 @@ export default function OrderSummary({
 				</div>
 			</OrderCard>
 
-			{activeStep < 4 && <Separator className="bg-grey13" />}
+			<Separator className="bg-grey13 h-[1px]" />
 
 			<div className="grid gap-[7px] md:gap-0 md:grid-cols-[84px_1fr]">
 				<div>
@@ -141,15 +118,7 @@ export default function OrderSummary({
 							</span>
 						</div>
 					)}
-					<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">
-						RRP{" "}
-						<span className="text-[24px] leading-[25px] font-inconsolata line-through font-bold">
-							£144
-						</span>{" "}
-						<span className="text-[24px] leading-[25px] font-inconsolata font-bold text-blue">
-							65% OFF
-						</span>
-					</div>
+					<TotalPercentCard price={144} percent={65} />
 				</div>
 			</div>
 		</div>

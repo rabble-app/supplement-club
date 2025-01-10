@@ -1,6 +1,8 @@
 import Image from "next/image";
+
+import ShareBox from "@/components/ShareBox";
+
 import DiscountBox from "./DiscountBox";
-import ShareBox from "./ShareBox";
 
 export default function ConfirmJoining() {
 	return (
