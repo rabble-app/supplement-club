@@ -20,8 +20,7 @@ export default function Subscriptions() {
 	const [step, setStep] = useState<number>(1);
 
 	function confirmAction(capsule: number) {
-		console.log(capsule);
-		setStep(2);
+		setStep(capsule);
 	}
 
 	return (

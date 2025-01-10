@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { shippingDetailsShema } from "@/validations";
 import { Separator } from "@radix-ui/react-separator";
 import ManageAccountCard from "./ManageAccountCard";
 
@@ -42,17 +43,9 @@ const AddressAutofill = dynamic(
 
 const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
-const formSchema = z.object({
-	address1: z.string({ required_error: "Field is required." }),
-	address2: z.string({ required_error: "Field is required." }),
-	city: z.string({ required_error: "Field is required." }),
-	postcode: z.string({ required_error: "Field is required." }),
-	country: z.string({ required_error: "Field is required." }),
-});
-
 export default function ShippingDetailsDialog() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof shippingDetailsShema>>({
+		resolver: zodResolver(shippingDetailsShema),
 		mode: "onChange",
 		defaultValues: {
 			address1: "Penthouse 4",
@@ -63,7 +56,7 @@ export default function ShippingDetailsDialog() {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof shippingDetailsShema>) {
 		// call api
 		console.log(values);
 	}

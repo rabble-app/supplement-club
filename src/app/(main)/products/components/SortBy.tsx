@@ -6,35 +6,24 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-import type { IFilterModel } from "@/utils/models/IFilterModel";
-
-const sortBy = [
-	{
-		id: 1,
-		value: "Highest",
-	},
-	{
-		id: 2,
-		value: "Lowest",
-	},
-	{
-		id: 3,
-		value: "Date",
-	},
-] as IFilterModel[];
-
-export default function SortBy() {
+export default function SortBy({
+	updateItems,
+	categories,
+}: Readonly<{
+	updateItems: (items: string) => void;
+	categories: string[];
+}>) {
 	return (
 		<div className="text-[16px] leading-[18px] font-[700] font-helvetica hidden md:flex gap-x-[16px] items-center pt-[25px]">
 			Sort by
-			<Select>
+			<Select onValueChange={(value) => updateItems(value)}>
 				<SelectTrigger className="w-[150px] border-none">
 					<SelectValue placeholder="Most Popular" />
 				</SelectTrigger>
 				<SelectContent className="bg-white">
-					{sortBy.map((el) => (
-						<SelectItem key={el.id} value={el.id.toString()}>
-							{el.value}
+					{categories.map((val) => (
+						<SelectItem key={val} value={val}>
+							{val}
 						</SelectItem>
 					))}
 				</SelectContent>

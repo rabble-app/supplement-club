@@ -7,22 +7,23 @@ import { Button } from "@/components/ui/button";
 
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 
-export default function ProductCard(product: Readonly<IProductCardModel>) {
+export default function ProductCard(model: Readonly<IProductCardModel>) {
+	const precentage = Number(model.price) / Number(model.rrp);
 	return (
 		<div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
 			<span className="text=[16px] leading-[18px] font-helvetica text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px] z-[1]">
 				3 Month Supply
 			</span>
-			{product.isComming && (
+			{model.isComming && (
 				<p className="text-[36px] leading-[37px]  bg-[#FBF89F] py-[6px] px-[10px] font-[400] absolute top-[200px] left-[0] right-[0] text-blue font-inconsolata text-center z-[1]">
 					Coming Soon
 				</p>
 			)}
-			<div className={`${product.isComming ? "blur-[4px] bg-black/25" : ""}`}>
+			<div className={`${model.isComming ? "blur-[4px] bg-black/25" : ""}`}>
 				<Image
-					className={`mx-auto ${product.isComming ? "rounded-[4p]x" : ""}`}
-					src={product.src}
-					alt={product.altSrc}
+					className={`mx-auto w-full ${model.isComming ? "rounded-[4px]" : ""}`}
+					src={model.imageUrl}
+					alt={model.imageKey}
 					width={165}
 					height={300}
 				/>
@@ -37,18 +38,18 @@ export default function ProductCard(product: Readonly<IProductCardModel>) {
 							width={18}
 							height={18}
 						/>
-						{product.subscribers > 0 && <span>{product.subscribers}</span>}
+						{model.subscribers > 0 && <span>{model.subscribers}</span>}
 					</div>
 				</div>
 
 				<div className="grid gap-y-[8px]">
 					<p className="leading-[18px] text-black font-inconsolata text-base font-normal uppercase">
-						{product.corporation}
+						{model.producer?.businessName}
 					</p>
 					<p className="text-[24px] leading-[23px] font-[400] text-black font-hagerman">
-						{product.name}
+						{model.name}
 					</p>
-					<p className="leading-[18px] text-grey5">{product.description}</p>
+					<p className="leading-[18px] text-grey5">{model.description}</p>
 				</div>
 
 				<div className="grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
@@ -59,30 +60,30 @@ export default function ProductCard(product: Readonly<IProductCardModel>) {
 						height={18}
 					/>
 					<p className="leading-[18px] text-black text-base">
-						{product.ingredient}
+						{model.formulationSummary ? model.formulationSummary[0] : null}
 					</p>
 				</div>
 
 				<div className="text-[20px] leading-[23px] text-grey4 font-inconsolata">
 					RRP{" "}
 					<span className="text-[20px] leading-[23px] font-bold line-through font-inconsolata">
-						£{product.rrpPrice}
+						£{model.wholesalePrice}
 					</span>{" "}
 					<span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
-						{product.rrpDiscount}% OFF
+						{precentage}% OFF
 					</span>
 				</div>
 
 				<Button className="bg-blue font-bold" asChild>
 					<Link
-						href="/products/1"
+						href={`/products/${model.id}`}
 						className="flex justify-between py-[16px] px-[24px] w-full"
 					>
 						<span className="leading-[18px] font-bold font-inconsolata text-lg">
 							Join Team{" "}
 						</span>
 						<span className="leading-[18px] font-bold font-inconsolata">
-							£{product.price.toFixed(2)}
+							£{Number(model.price).toFixed(2)}
 						</span>
 					</Link>
 				</Button>

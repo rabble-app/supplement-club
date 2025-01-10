@@ -45,11 +45,17 @@ const pro = localFont({
 	display: "block",
 });
 
+const poppins = localFont({
+	src: "./../../public/fonts/Poppins-Medium.ttf",
+	variable: "--poppins",
+	display: "block",
+});
+
 export const metadata: Metadata = {
 	title: "Supplement Club",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
@@ -57,7 +63,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} ${pro.variable} antialiased`}
+				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${poppins.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} ${pro.variable} antialiased`}
 			>
 				{children}
 

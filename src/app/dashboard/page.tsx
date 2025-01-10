@@ -47,12 +47,17 @@ const otherActions = [
 	},
 ] as IManagerOptionCardModel[];
 
+import { useUserStore } from "@/stores/userStore";
+
 export default function ManagerPage() {
+	const { user } = useUserStore((state) => state);
 	return (
 		<div>
 			<div className="grid gap-[32px] black max-w-[600px] mx-auto py-[46px]">
 				<h1 className="text-[24px] leading-[28px] font-bold font-hagerman">
-					Welcome Back Maxwell. 👋🏻
+					Welcome Back{" "}
+					{`${user?.firstName ?? ""} ${user?.lastName?.slice(0, 1) ?? ""}.`}{" "}
+					👋🏻
 				</h1>
 				<div className="grid gap-[16px]">
 					<p className="text-[18px] leading-[21px] font-bold font-inconsolata">

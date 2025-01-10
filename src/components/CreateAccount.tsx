@@ -1,8 +1,7 @@
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,13 +12,12 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-const step1FormSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-	password: z.string({ required_error: "Field is required." }),
-});
+import { register } from "@/services/auth";
+import { useUserStore } from "@/stores/userStore";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
+import { createAccountSchema } from "@/validations";
+import { toast } from "sonner";
+import Motify from "./notify";
 
 export default function CreateAccount({
 	step,
@@ -30,19 +28,32 @@ export default function CreateAccount({
 	updateStepAction: (newValue: number) => void;
 	children?: React.ReactNode;
 }>) {
-	const currentForm = useForm<z.infer<typeof step1FormSchema>>({
-		resolver: zodResolver(step1FormSchema),
+	const { setUser } = useUserStore((state) => state);
+	const currentForm = useForm({
+		resolver: zodResolver(createAccountSchema),
+		mode: "onChange",
 	});
-	const onSubmit: SubmitHandler<z.infer<typeof step1FormSchema>> = (data) => {
-		// call api
-		console.log(data);
-		updateStepAction(step + 1);
-	};
+
+	async function handleSubmit(e: FormData) {
+		const result = await register(e);
+		if (result.statusCode === 200) {
+			const userData = result.data as IUserResponse;
+			setUser(userData);
+			updateStepAction(step + 1);
+		} else {
+			toast.custom(
+				() => <Motify message={JSON.parse(result.error).message} />,
+				{
+					position: "top-right",
+				},
+			);
+		}
+	}
 
 	return (
 		<Form {...currentForm}>
 			<form
-				onSubmit={currentForm.handleSubmit(onSubmit)}
+				action={(e) => handleSubmit(e)}
 				className="flex flex-col gap-[24px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
 			>
 				{children}
@@ -80,7 +91,7 @@ export default function CreateAccount({
 					Have an account?
 					<Link
 						className="text-blue text-[16px] leading-[24px] font-roboto"
-						href="/login"
+						href="/auth/login"
 					>
 						Log in
 					</Link>

@@ -1,11 +1,11 @@
 import Image from "next/image";
-import React from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import type { ISubscriptionModel } from "@/utils/models/ISubscriptionModel";
+import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
+import { useState } from "react";
 
 const generateImage = (count: number) => (
 	<div
@@ -27,48 +27,9 @@ const generateImage = (count: number) => (
 		))}
 	</div>
 );
-
-const options = [
-	{
-		value: "1",
-		title: "1 Capsule per Day",
-		subtitle1: "General wellness",
-		description: "Heart health, energy, 40+.",
-		subtitle2: "Early Fertility",
-		description2: "Mitochondrial support for egg/sperm quality.",
-		image: generateImage(1),
-	},
-	{
-		value: "2",
-		title: "2 Capsules per Day",
-		subtitle1: "Mild fatigue",
-		description: "Energy, cardio boost, active individuals.",
-		subtitle2: "Anti-aging",
-		description2: "Mitochondrial function, antioxidant support.",
-		image: generateImage(2),
-	},
-	{
-		value: "3",
-		title: "3 Capsules per Day",
-		subtitle1: "Moderate fatigue",
-		description: "Recovery, athletes, physical training.",
-		subtitle2: "Advanced Fertility",
-		description2: "Energy support during IVF.",
-		image: generateImage(3),
-	},
-	{
-		value: "4",
-		title: "4 Capsules per Day",
-		subtitle1: "Therapeutic",
-		description: "Heart health, weightlifting recovery.",
-		subtitle2: "Advanced anti-aging",
-		description2: "High-dose longevity support.",
-		image: generateImage(4),
-	},
-] as ISubscriptionModel[];
 const descriptions = [
 	{
-		value: "1",
+		value: 1,
 		title: "3 Month Subscription (180 Capsules)",
 		price: 45,
 		rrp: 144,
@@ -78,7 +39,7 @@ const descriptions = [
 			"Boosts energy and cardiovascular health for active individuals, such as runners or those starting strength training. Enhances mitochondrial function and antioxidant protection, helping combat signs of aging for men and women.",
 	},
 	{
-		value: "2",
+		value: 2,
 		title: "3 Month Subscription (180 Capsules)",
 		price: 45,
 		rrp: 144,
@@ -88,7 +49,7 @@ const descriptions = [
 			"Boosts energy and cardiovascular health for active individuals, such as runners or those starting strength training. Enhances mitochondrial function and antioxidant protection, helping combat signs of aging for men and women.",
 	},
 	{
-		value: "3",
+		value: 3,
 		title: "3 Month Subscription (180 Capsules)",
 		price: 45,
 		rrp: 144,
@@ -98,7 +59,7 @@ const descriptions = [
 			"Boosts energy and cardiovascular health for active individuals, such as runners or those starting strength training. Enhances mitochondrial function and antioxidant protection, helping combat signs of aging for men and women.",
 	},
 	{
-		value: "4",
+		value: 4,
 		title: "3 Month Subscription (180 Capsules)",
 		price: 45,
 		rrp: 144,
@@ -109,65 +70,67 @@ const descriptions = [
 	},
 ] as const;
 
-export default function CapsuleBox() {
-	const [selected, setSelected] = React.useState("2");
+export default function CapsuleBox({
+	capsuleInfo,
+}: Readonly<{ capsuleInfo?: ICapsuleInfoModel[] }>) {
+	const [selected, setSelected] = useState(1);
 	const currentOption = descriptions.find((d) => d.value === selected);
 
 	return (
-		<div className="grid  gap-[5px]">
+		<div className="grid gap-[5px]">
 			<RadioGroup
-				value={selected}
-				onValueChange={setSelected}
+				value={selected.toString()}
+				onValueChange={(value) => setSelected(Number(value))}
 				className="md:grid-cols-4"
 			>
-				{options.map((option) => (
+				{capsuleInfo?.map((option, idx) => (
 					<label
-						key={option.value}
+						key={`capuse-${idx + 1}`}
 						className={`grid gap-[8px] p-[8px] relative cursor-pointer ${
-							selected === option.value
+							selected === option.capsuleCount
 								? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
 								: "border-[1px] border-grey18"
 						}`}
 					>
 						<input
 							type="radio"
-							value={option.value}
-							checked={selected === option.value}
-							onChange={() => setSelected(option.value.toString())}
+							value={option.capsuleCount}
+							checked={selected === option.capsuleCount}
+							onChange={() => setSelected(option.capsuleCount)}
 							className="sr-only" // Hide the input but keep it accessible
 						/>
 						<div className="grid gap-[8px] justify-center">
-							<RadioGroupItem value={option.value} className="mx-auto" />
-							{option.image}
+							<RadioGroupItem
+								value={option.capsuleCount.toString()}
+								className="mx-auto"
+							/>
+							{generateImage(option.capsuleCount)}
 						</div>
 						<p className="text-[12px] leading-[13px] font-bold font-helvetica text-center">
-							{option.title}
+							{option.title1}
 						</p>
 						<Separator className="bg-grey13 h-[1px]" />
 						<div className="grid gap-[4px]">
 							<p className="text-grey6 text-[14px] leading-[16px]">
-								{option.subtitle1}
+								{option.title1}
 							</p>
 							<p className="text-grey7 text-[12px] leading-[14px]">
-								{option.description}
+								{option.description1}
 							</p>
 						</div>
-						{currentOption?.value === option.value.toString() && (
-							<div className="hidden md:flex absolute bottom-[-10px] w-full h-[20px] bg-white" />
-						)}
 						<Separator className="bg-grey13 h-[1px]" />
 						<div className="grid gap-[4px]">
-							<p className="text-grey6 text-[14px] leading-[16px] font-helvetica">
-								{option.subtitle2}
+							<p className="text-grey6 text-[14px] leading-[16px]">
+								{option.title2}
 							</p>
-							<p className="text-grey7 text-[12px] leading-[13px]">
+							<p className="text-grey7 text-[12px] leading-[14px]">
 								{option.description2}
 							</p>
 						</div>
-						{currentOption?.value === option.value.toString() && (
-							<Separator className="md:hidden bg-grey13 h-[1px]" />
+						{currentOption?.value === option.capsuleCount && (
+							<div className="hidden md:flex absolute bottom-[-10px] w-full h-[20px] bg-white" />
 						)}
-						{currentOption?.value === option.value.toString() && (
+						{currentOption?.value === option.capsuleCount && (
 							<div
 								key={currentOption?.option}
 								className="grid md:hidden gap-[8px]"
@@ -238,10 +201,16 @@ export default function CapsuleBox() {
 					</div>
 					<div className="flex flex-col gap-[2px]">
 						<p className="text-grey7 text-[12px] leading-[13px]">
-							{currentOption.option}
+							{capsuleInfo && currentOption.value < capsuleInfo.length
+								? capsuleInfo[currentOption.value].title3
+								: "Description not available"}{" "}
+							{/* Fallback text if undefined */}
 						</p>
 						<p className="text-[12px] leading-[13px]">
-							{currentOption.description}
+							{capsuleInfo && currentOption.value < capsuleInfo.length
+								? capsuleInfo[currentOption.value].description3
+								: "Description not available"}{" "}
+							{/* Fallback text if undefined */}
 						</p>
 					</div>
 				</div>

@@ -4,8 +4,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +15,9 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { deliveryAddress } from "@/services/users";
+import { useUserStore } from "@/stores/userStore";
+import { deliveryAddressSchema } from "@/validations";
 
 type AddressAutofillProps = {
 	accessToken: string;
@@ -33,17 +35,6 @@ const AddressAutofill = dynamic(
 
 const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
-const step2FormSchema = z.object({
-	firstName: z.string({ required_error: "Field is required." }),
-	lastName: z.string({ required_error: "Field is required." }),
-	address1: z.string({ required_error: "Field is required." }),
-	address2: z.string({ required_error: "Field is required." }),
-	city: z.string({ required_error: "Field is required." }),
-	postcode: z.string({ required_error: "Field is required." }),
-	country: z.string({ required_error: "Field is required." }),
-	mobileNumber: z.number({ required_error: "Field is required." }).optional(),
-});
-
 export default function DeliveryAddress({
 	step,
 	updateStepAction,
@@ -53,15 +44,28 @@ export default function DeliveryAddress({
 	updateStepAction: (newValue: number) => void;
 	children?: React.ReactNode;
 }>) {
-	const currentForm = useForm<z.infer<typeof step2FormSchema>>({
-		resolver: zodResolver(step2FormSchema),
+	const currentForm = useForm({
+		resolver: zodResolver(deliveryAddressSchema),
+		mode: "onChange",
 	});
 
-	const onSubmit: SubmitHandler<z.infer<typeof step2FormSchema>> = (data) => {
-		// call api
-		console.log(data);
+	const { user } = useUserStore((state) => state);
+
+	if (user) {
+		currentForm.setValue("userId", user.id);
+	}
+
+	async function onSubmit() {
+		const values = currentForm.getValues();
+		const formData = new FormData();
+		// Append each value to the FormData object
+		for (const key in values) {
+			formData.append(key, values[key]);
+		}
+
+		await deliveryAddress(formData); // Pass the FormData object
 		updateStepAction(step + 1);
-	};
+	}
 	return (
 		<Form {...currentForm}>
 			<form

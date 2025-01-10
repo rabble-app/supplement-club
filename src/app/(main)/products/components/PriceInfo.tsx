@@ -1,37 +1,19 @@
 import Image from "next/image";
 
+import type IPriceInfoModel from "@/utils/models/api/IPriceInfoModel";
 import { Separator } from "@radix-ui/react-separator";
 
-import type IUnlockTeamPriceMode from "@/utils/models/IUnlockTeamPriceMode";
-
-const teamsItems = [
-	{
-		id: 1,
-		price: 45,
-		percent: 28,
-		members: 50,
-	},
-	{
-		id: 2,
-		price: 41,
-		percent: 33,
-		members: 100,
-	},
-	{
-		id: 3,
-		price: 37,
-		percent: 38,
-		members: 300,
-	},
-	{
-		id: 4,
-		price: 35,
-		percent: 42,
-		members: 500,
-	},
-] as IUnlockTeamPriceMode[];
-
-export default function TeamPrice({ members }: Readonly<{ members: number }>) {
+export default function PriceInfo({
+	members,
+	price,
+	wholesalePrice,
+	priceInfo,
+}: Readonly<{
+	members: number;
+	price: number;
+	wholesalePrice: number;
+	priceInfo: IPriceInfoModel[];
+}>) {
 	function getCurrentClasses(index: number) {
 		let classes = " bg-grey19 my-[15px]";
 
@@ -53,7 +35,12 @@ export default function TeamPrice({ members }: Readonly<{ members: number }>) {
 	} else if (members > 50 && members <= 300) {
 		currentIndex = 1;
 	}
-	const teamPrice = teamsItems[currentIndex];
+	const teamPrice = priceInfo.find(
+		(p) =>
+			(price - price * (p.percentageDiscount / 100)).toString() ===
+			wholesalePrice.toString(),
+	);
+
 	return (
 		<div>
 			<p className="text-[24px] leading-[28px] font-bold font-inconsolata pt-[32px] md:pt-[0]">
@@ -77,7 +64,7 @@ export default function TeamPrice({ members }: Readonly<{ members: number }>) {
 				</div>
 				<div className="grid gap-[8px]">
 					<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
-						£{teamPrice.price}.00{" "}
+						£{wholesalePrice}.00{" "}
 						<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
 							(£0.25 / capsule)
 						</span>
@@ -88,14 +75,18 @@ export default function TeamPrice({ members }: Readonly<{ members: number }>) {
 							£144
 						</span>{" "}
 						<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
-							{teamPrice.percent}% OFF
+							0% OFF
 						</span>
 					</div>
 				</div>
 			</div>
 
-			<div className="grid grid-cols-4 mb-[46px] relative mx-[-16px] md:mx-[0]">
-				<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 h-[16px] w-[calc(100%-80px)] bg-grey19 z-[2] flex items-center gap-[4px] shadow-progress rounded-[20px]">
+			<div className="flex justify-center mb-[46px] relative mx-auto gap-[0]">
+				<div
+					key={priceInfo.length}
+					className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 overflow-hidden -translate-y-1/2 h-[16px] 
+					w-[calc(${priceInfo.length * 146}px-80px)] bg-grey19 z-[2] flex items-center gap-[4px] shadow-progress rounded-[20px]`}
+				>
 					{Array.from({ length: 35 }, (_, i) => i + 1).map((i, index) => (
 						<div
 							key={i}
@@ -106,8 +97,8 @@ export default function TeamPrice({ members }: Readonly<{ members: number }>) {
 					))}
 				</div>
 
-				{teamsItems.map((item, index) => (
-					<div key={item.id} className="relative">
+				{priceInfo.map((item, index) => (
+					<div key={`info-${index + 1}`} className="relative mx-[0] grid">
 						{index === currentIndex && (
 							<Image
 								src="/images/icons/check-blue-icon.svg"
@@ -137,21 +128,21 @@ export default function TeamPrice({ members }: Readonly<{ members: number }>) {
 						)}
 
 						<div
-							className={`p-[10px] border-[1px] border-grey20 grid gap-[8px] z-[1] h-[192px] relative
-								 ${getCurrentClasses(index)}`}
+							className={`p-[10px] border-[1px] border-grey20 grid gap-[8px] z-[1] h-[192px] relative w-[146px]
+									${getCurrentClasses(index)}`}
 						>
 							<div className="grid gap-[4px] mx-auto">
 								<p
 									className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${item === teamPrice ? "text-[24px] leading-[25px]" : ""}`}
 								>
-									£{item.price}.00{" "}
+									£{price - price * (item.percentageDiscount / 100)}.00{" "}
 								</p>
 								<p
 									className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center
-										 ${index === currentIndex ? "text-[16px] leading-[16px]" : ""}
-										  ${index < currentIndex || index === currentIndex ? "text-blue" : "text-grey6"}`}
+											${index === currentIndex ? "text-[16px] leading-[16px]" : ""}
+											${index < currentIndex || index === currentIndex ? "text-blue" : "text-grey6"}`}
 								>
-									{item.percent}% OFF
+									{item.percentageDiscount}% OFF
 								</p>
 							</div>
 
@@ -180,7 +171,7 @@ export default function TeamPrice({ members }: Readonly<{ members: number }>) {
 							)}
 
 							<p className="text-[12px] leading-[13px] font-bold font-inconsolata text-grey6 text-center">
-								{item.members}+
+								{item.teamMemberCount}+
 							</p>
 						</div>
 					</div>

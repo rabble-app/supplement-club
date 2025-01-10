@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function SubscriptionPlan({
 	confirmAction,
@@ -11,8 +11,8 @@ export default function SubscriptionPlan({
 	confirmAction: (val: number) => void;
 }>) {
 	const capsule = 1;
-	const [changePlan, setChangePlan] = React.useState(false);
-	const [initCapsule, setInitCapsule] = React.useState(capsule);
+	const [changePlan, setChangePlan] = useState(false);
+	const [initCapsule, setInitCapsule] = useState(capsule);
 
 	function getBoxClasses(idx: number) {
 		const isFirst = idx === 0;

@@ -1,30 +1,18 @@
-"use client";
-import { useEffect } from "react";
-
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { cookies } from "next/headers";
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	useEffect(() => {
-		if (typeof document !== "undefined") {
-			// Create a target div for portals
-			const portalRoot = document.createElement("div");
-			portalRoot.setAttribute("id", "portal-root");
-			document.body.appendChild(portalRoot);
+	const cookiesStore = (await cookies()).get("session");
+	const state = cookiesStore ? JSON.parse(cookiesStore.value).state : null;
 
-			return () => {
-				// Clean up on unmount
-				document.body.removeChild(portalRoot);
-			};
-		}
-	}, []);
 	return (
 		<div>
-			<Header />
+			<Header user={state?.user} />
 
 			{children}
 

@@ -1,59 +1,18 @@
-/** @format */
-
-import Image from "next/image";
-import Link from "next/link";
-
 import Faqs from "@/components/Faqs";
 import ProductInfo from "@/components/ProductInfo";
 import HomeCardComponent from "@/components/cards/HomeCard";
 import ProductCardComponent from "@/components/cards/ProductCard";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
 
+import { getProduct, getProductsLimit } from "@/services/products";
+import { mapProductModel, mapSingleProductModel } from "@/utils/helpers";
 import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-
-const products = [
-	{
-		id: 1,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement ",
-		corporation: "Balchem Corporation ",
-		name: "Magnesium Bisglycinate TRAACS ",
-		description: "Supports Muscle Function & Relaxation ",
-		ingredient: "70% Magnesium Bisglycinate TRAACS ",
-		subscribers: 1034,
-		rrpPrice: 76.32,
-		rrpDiscount: 45,
-		price: 42.0,
-	},
-	{
-		id: 2,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "Kaneka Corporation ",
-		name: "COENZYME Q10 UBIQUINO L",
-		description: "Supports Cellular Energy & Heart Health ",
-		ingredient: "100% Kaneka Ubiquinol ",
-		subscribers: 678,
-		rrpPrice: 76.33,
-		rrpDiscount: 45,
-		price: 42.5,
-	},
-	{
-		id: 3,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "ASTAREAL1",
-		name: "ASTAREAL ASTAXANTHIN1",
-		description: "Powerful Antioxidant for Skin & Muscle Health1",
-		ingredient: "100% AstaReal Astaxanthin1",
-		subscribers: 0,
-		rrpPrice: 63.71,
-		rrpDiscount: 38,
-		price: 41,
-		isComming: true,
-	},
-] as IProductCardModel[];
+import type { IProductModel } from "@/utils/models/api/IProductModel";
+import type IProductResponse from "@/utils/models/api/response/IProductResponse";
+import { dropNextDelivery } from "@/utils/utils";
 
 const homeCards = [
 	{
@@ -172,7 +131,30 @@ const images = [
 	},
 ];
 
-export default function Home() {
+export default async function Home() {
+	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID!;
+
+	const fetchProduct = async () => {
+		const response = (await getProduct(productId)) as {
+			data: IProductModel;
+		};
+
+		const model = mapSingleProductModel(response.data);
+		return model;
+	};
+
+	const fetchProducts = async () => {
+		const response = (await getProductsLimit(3)) as {
+			data: IProductResponse[];
+		};
+		return response.data.map((r) => mapProductModel(r));
+	};
+
+	const [productModel, products] = await Promise.all([
+		fetchProduct(),
+		fetchProducts(),
+	]);
+
 	return (
 		<div className="min-h-screen container-width grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
 			<div className="relative mx-[-16px] lg:mx-[0] flex flex-col lg:flex-row justify-between w-full">
@@ -225,8 +207,8 @@ export default function Home() {
 					<div className="bg-blue h-[350px] lg:h-[453px] relative">
 						<Image
 							className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto  h-[420px] lg:h-[533px]"
-							src="/images/supplement2.png"
-							alt="Supplement"
+							src={productModel?.imageUrl}
+							alt={productModel?.imageKey || "main product"}
 							width={308}
 							height={533}
 						/>
@@ -236,16 +218,19 @@ export default function Home() {
 									<div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
 										Ubiquinol{" "}
 										<span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
-											£45.00
+											£{Number(productModel?.price).toFixed(2)}{" "}
 										</span>
 									</div>
 									<div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-										BY KANEKA CORPRATION
+										{productModel.producer?.businessName}
 										<p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
 											<span className="text-[20px] leading-[23px] text-grey2 line-through">
-												£144
+												£{productModel?.wholesalePrice}
 											</span>{" "}
-											65% OFF
+											{productModel
+												? Number(productModel.price) / Number(productModel.rrp)
+												: 0}
+											% OFF
 										</p>
 									</div>
 								</div>
@@ -394,12 +379,13 @@ export default function Home() {
 							Products
 						</p>
 						<p className="bg-white leading-[18px] text-grey1 py-[4px] px-[10px]">
-							Next Drop: <span className="font-[700] ">January 1st 2025</span>
+							Next Drop:{" "}
+							<span className="font-[700] ">{dropNextDelivery()}</span>
 						</p>
 					</div>
 
 					<Link
-						href="#"
+						href="/products/"
 						className="underline text-[18px] leading-[20px] text-black font-inconsolata"
 					>
 						View All
@@ -407,8 +393,8 @@ export default function Home() {
 				</div>
 
 				<div className="grid lg:grid-cols-3 gap-[16px]">
-					{products.map((product) => (
-						<ProductCardComponent key={product.id} {...product} />
+					{products.map((item: IProductCardModel) => (
+						<ProductCardComponent key={item.id} {...item} />
 					))}
 				</div>
 			</div>
@@ -429,7 +415,7 @@ export default function Home() {
 				))}
 			</div>
 
-			<ProductInfo />
+			<ProductInfo product={productModel} />
 
 			<div className="pt-[48px] lg:pt-[0]">
 				<Faqs />

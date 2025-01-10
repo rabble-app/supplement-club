@@ -5,7 +5,7 @@ import InputMask from "@mona-health/react-input-mask";
 import Image from "next/image";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,13 +17,7 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-
-const step3FormSchema = z.object({
-	cardNumber: z
-		.string()
-		.regex(/^\d{16}$/, "Card number must be exactly 16 digits"),
-	terms: z.boolean(),
-});
+import { paymentCardSchema } from "@/validations/schemas/payment";
 
 export default function PaymentDetails({
 	step,
@@ -34,8 +28,9 @@ export default function PaymentDetails({
 	updateStepAction: (newValue: number) => void;
 	children: React.ReactNode;
 }>) {
-	const currentForm = useForm<z.infer<typeof step3FormSchema>>({
-		resolver: zodResolver(step3FormSchema),
+	const currentForm = useForm<z.infer<typeof paymentCardSchema>>({
+		resolver: zodResolver(paymentCardSchema),
+		mode: "onChange",
 	});
 
 	const autoFillCardNumber = async () => {
@@ -46,11 +41,10 @@ export default function PaymentDetails({
 	};
 
 	const updateCardNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.value);
 		currentForm.setValue("cardNumber", e.target.value.replaceAll(" ", ""));
 	};
 
-	const onSubmit: SubmitHandler<z.infer<typeof step3FormSchema>> = (data) => {
+	const onSubmit: SubmitHandler<z.infer<typeof paymentCardSchema>> = (data) => {
 		// call api
 		console.log(data);
 		updateStepAction(step + 1);

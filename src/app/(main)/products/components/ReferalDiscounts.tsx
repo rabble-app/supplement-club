@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
-
 import type { IReferalDiscountModel } from "@/utils/models/IReferalDiscountModel";
 import ReferalDiscountCard from "./ReferalDiscountCard";
+import { useState } from "react";
 
 export default function ReferalDiscounts() {
-	const [activeRefer] = React.useState<number>(1);
+	const [activeRefer] = useState<number>(1);
 	const discountCards = [
 		{
 			id: 1,

@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import {
 	Form,
@@ -25,18 +25,11 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@radix-ui/react-separator";
-
-const formSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-	firstName: z.string({ required_error: "Field is required." }),
-	lastName: z.string({ required_error: "Field is required." }),
-});
+import { emailChangeDialogSchema } from "@/validations";
 
 export default function EmailChangeDialog() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof emailChangeDialogSchema>>({
+		resolver: zodResolver(emailChangeDialogSchema),
 		mode: "onChange",
 		defaultValues: {
 			firstName: "kate",
@@ -45,7 +38,7 @@ export default function EmailChangeDialog() {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof emailChangeDialogSchema>) {
 		// call api
 		console.log(values);
 	}

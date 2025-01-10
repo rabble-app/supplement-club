@@ -1,10 +1,13 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import Link from "next/link";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,50 +19,62 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { toast } from "sonner";
-
-const formSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-	password: z.string({ required_error: "Field is required." }),
-});
+import Motify from "@/components/notify";
+import { login } from "@/services/auth";
+import { useUserStore } from "@/stores/userStore";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
+import { loginSchema } from "@/validations";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const router = useRouter();
+	const [redirect, setRedirect] = useState("/dashboard");
+	const form = useForm({
+		resolver: zodResolver(loginSchema),
 		mode: "onChange",
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// call api
-		console.log(values);
-		toast.custom(
-			(t) => (
-				<div className="grid grid-cols-[16px_228px_16px] gap-[10px] items-center text-red bg-red2 py-[8px] px-[16px]">
-					<Image
-						src="/images/icons/error-icon.svg"
-						alt="error icon"
-						width={16}
-						height={16}
+	const [isPending, startTransition] = useTransition();
+	const { setUser } = useUserStore((state) => state);
+
+	const searchParams = useSearchParams();
+
+	// included redirected url after user is loggin
+	useEffect(() => {
+		const searchRedirect = searchParams.get("redirect"); // Extract the redirect URL
+		if (searchRedirect) {
+			setRedirect(searchRedirect); // Set the redirect state
+		}
+	}, [searchParams]);
+
+	async function handleSubmit(e: FormData) {
+		const result = await login(e);
+
+		if (result.statusCode === 200) {
+			const userData = result.data as IUserResponse;
+			setUser(userData);
+			router.push(redirect);
+		} else {
+			toast.custom(
+				() => (
+					<Motify
+						message={
+							JSON.parse(result.error || "Incorrect email/password").message
+						}
 					/>
-					<div>Invalid email or password</div>
-					<Button className="text-red p-[0]" onClick={() => toast.dismiss(t)}>
-						x
-					</Button>
-				</div>
-			),
-			{
-				position: "top-right",
-			},
-		);
+				),
+				{
+					position: "top-right",
+				},
+			);
+		}
 	}
 
 	return (
 		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
 			<Form {...form}>
 				<form
-					onSubmit={form.handleSubmit(onSubmit)}
+					action={(e) => startTransition(() => handleSubmit(e))}
 					className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
 				>
 					<div className="grid gap-[16px]">
@@ -113,7 +128,7 @@ export default function LoginPage() {
 						type="submit"
 						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
-						Login
+						{isPending ? <Loader2 className="animate-spin" /> : "Login"}
 					</Button>
 				</form>
 			</Form>

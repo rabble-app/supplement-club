@@ -1,8 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,28 +15,28 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-});
+import { resetPassword } from "@/services/auth";
+import { forgotPasswordSchema } from "@/validations";
+import { useRouter } from "next/navigation";
 
 export default function ForgotPasswordPage() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const router = useRouter();
+	const form = useForm({
+		resolver: zodResolver(forgotPasswordSchema),
 		mode: "onChange",
 	});
+	const [isPending, startTransition] = useTransition();
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// call api
-		console.log(values);
+	async function postResetPassword(e: FormData) {
+		await resetPassword(e);
+		router.push("/auth/reset-password");
 	}
 
 	return (
 		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
 			<Form {...form}>
 				<form
-					onSubmit={form.handleSubmit(onSubmit)}
+					action={(e) => startTransition(() => postResetPassword(e))}
 					className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
 				>
 					<div className="grid gap-[16px]">
@@ -65,7 +66,11 @@ export default function ForgotPasswordPage() {
 						type="submit"
 						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
-						Send a Link to Reset My Password
+						{isPending ? (
+							<Loader2 className="animate-spin" />
+						) : (
+							"Send a Link to Reset My Password"
+						)}
 					</Button>
 				</form>
 			</Form>

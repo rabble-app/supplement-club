@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import * as React from "react";
 
 import { Progress } from "@/components/ui/progress";
+import { useEffect, useState } from "react";
 
 export default function ReferralProgress() {
-	const [progress, setProgress] = React.useState(0);
+	const [progress, setProgress] = useState(0);
 
 	const items = [
 		{
@@ -31,7 +31,7 @@ export default function ReferralProgress() {
 		},
 	];
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const timer = setTimeout(() => setProgress(25), 500);
 		return () => clearTimeout(timer);
 	}, []);

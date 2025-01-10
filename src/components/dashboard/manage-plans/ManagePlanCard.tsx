@@ -1,17 +1,24 @@
+"use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { ChevronRight } from "lucide-react";
 
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 
 export default function ManagePlanCard(model: Readonly<IManagePlanModel>) {
-	let buttonTitle = "Opt Back in";
-	let label = "You've opted to skip the Jan 1 2025 Drop";
+	const [buttonTitle, setButtonTitle] = useState("Opt Back in");
+	const [label, setLabel] = useState(
+		"You've opted to skip the Jan 1 2025 Drop",
+	);
 
-	if (model.isSkipped) {
-		buttonTitle = "Re-Activate Plan";
-		label = "You’ve cancelled this plan";
-	}
+	useEffect(() => {
+		if (model.isSkipped) {
+			setButtonTitle("Re-Activate Plan");
+			setLabel("You’ve cancelled this plan");
+		}
+	}, [model.isSkipped]);
+
 	return (
 		<div className="py-[16px] px-[12px] bg-white rounded-[12px] shadow-card grid gap-[10px]">
 			<div className="flex justify-between items-center h-[69px]">

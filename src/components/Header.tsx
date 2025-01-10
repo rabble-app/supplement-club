@@ -1,9 +1,9 @@
 /** @format */
 
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -13,15 +13,30 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUserStore } from "@/stores/userStore";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
+import { dropNextDelivery } from "@/utils/utils";
+import { useEffect } from "react";
+import DesktopHeaderButtons from "./DesktopHeaderButtons";
+import UserLoggedIn from "./UserLoggedIn";
+import UserLoggedOut from "./UserLoggedOut";
 
-export default function Header() {
+export default function Header({ user }: Readonly<{ user?: IUserResponse }>) {
+	const { setUser } = useUserStore((state) => state);
+
+	useEffect(() => {
+		if (user) {
+			setUser(user);
+		}
+	}, [user, setUser]);
+
 	return (
 		<header>
 			<div className="flex justify-center items-center h-[40px] bg-blue2">
 				<div className="text-blue3 underline">
 					<span className="hidden lg:block font-inconsolata font-bold">
 						Next Day Delivery on all Subscription start up packs. Getting you to
-						the next drop on January 1st 2025
+						the next drop on {dropNextDelivery()}
 					</span>
 					<span className="block lg:hidden">
 						Refer a friend and get £5 reward
@@ -31,7 +46,7 @@ export default function Header() {
 
 			<div className="flex items-center h-[70px] lg:px-[16px] lg:h-[90px] bg-blue">
 				<div className="flex justify-between items-center container-width">
-					<div className="grid gap-[51px] w-full text-white lg:max-w-[813px] lg:grid-cols-[1fr_123px]">
+					<div className="grid gap-[51px] w-max text-white md:grid-cols-[auto_123px]">
 						<Link
 							className="font-normal lg:text-[64px] text-[48px] font-hagerman"
 							href="/"
@@ -54,36 +69,7 @@ export default function Header() {
 						</div>
 					</div>
 
-					<div className="hidden lg:flex lg:gap-x-[24px] lg:items-center">
-						<div className="flex gap-x-[8px] text-white">
-							<Image
-								src="/images/user-profile.svg"
-								alt="User profile icon"
-								width={16}
-								height={16}
-							/>
-							<Link
-								href="/auth/login"
-								className="font-inconsolata font-bold text-base"
-							>
-								Login
-							</Link>
-						</div>
-						<Button className="bg-yellow text-blue" asChild>
-							<Link href="#" className="font-inconsolata font-bold text-base">
-								Buy Now
-							</Link>
-						</Button>
-
-						<Link href="#">
-							<Image
-								src="/images/bag.svg"
-								alt="User profile bag"
-								width={19}
-								height={19}
-							/>
-						</Link>
-					</div>
+					<DesktopHeaderButtons user={user} />
 
 					<Dialog>
 						<DialogTrigger asChild>
@@ -121,35 +107,8 @@ export default function Header() {
 								</DialogClose>
 							</div>
 							<DialogFooter className="grid gap-[16px]">
-								<DialogClose asChild>
-									<Link href="/auth/login">
-										<div className="flex gap-x-[8px] text-white items-center justify-center border-[1px] border-blue5 h-[38px]">
-											<Image
-												src="/images/user-profile.svg"
-												alt="User profile icon"
-												width={16}
-												height={16}
-											/>
-											Login
-										</div>
-									</Link>
-								</DialogClose>
-
-								<div className="grid grid-cols-[1fr_24px] gap-x-[16px] items-center h-[38px]">
-									<DialogClose asChild>
-										<Button className="bg-yellow text-blue h-[38px]" asChild>
-											<Link href="/buy">Buy Now</Link>
-										</Button>
-									</DialogClose>
-									<Link href="/buy">
-										<Image
-											src="/images/bag.svg"
-											alt="User profile bag"
-											width={24}
-											height={24}
-										/>
-									</Link>
-								</div>
+								{!user && <UserLoggedOut />}
+								{user && <UserLoggedIn user={user} />}
 							</DialogFooter>
 						</DialogContent>
 					</Dialog>

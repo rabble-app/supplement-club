@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import {
 	Form,
@@ -23,19 +23,13 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { paymentCardSchema } from "@/validations/schemas/payment";
 import InputMask from "@mona-health/react-input-mask";
 import { Separator } from "@radix-ui/react-separator";
 
-const formSchema = z.object({
-	cardNumber: z
-		.string()
-		.regex(/^\d{16}$/, "Card number must be exactly 16 digits"),
-	terms: z.boolean(),
-});
-
 export default function PaymentCardDialog() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof paymentCardSchema>>({
+		resolver: zodResolver(paymentCardSchema),
 		mode: "onChange",
 		defaultValues: {
 			cardNumber: "9084000011112222",
@@ -53,7 +47,7 @@ export default function PaymentCardDialog() {
 		form.setValue("cardNumber", e.target.value.replaceAll(" ", ""));
 	};
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof paymentCardSchema>) {
 		// call api
 		console.log(values);
 	}

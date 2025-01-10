@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import * as React from "react";
 
 import { Progress } from "@/components/ui/progress";
+import { useState, useEffect } from "react";
 
 export default function ReferralCard() {
-	const [progress, setProgress] = React.useState(0);
+	const [progress, setProgress] = useState(0);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const timer = setTimeout(() => setProgress(25), 500);
 		return () => clearTimeout(timer);
 	}, []);

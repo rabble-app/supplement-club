@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
@@ -27,71 +27,53 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
+import { getProduct } from "@/services/products";
+import { useUserStore } from "@/stores/userStore";
+import { mapSingleProductModel } from "@/utils/helpers";
+import type ISingleProductModel from "@/utils/models/ISingleProductModel";
+import type { IProductModel } from "@/utils/models/api/IProductModel";
 import CorporationBox from "../../pre-order/components/CorporationBox";
 import PreOrderInfo from "../../pre-order/components/PreOrderInfo";
 import Subscription from "../components/CapsuleBox";
+import PriceInfo from "../components/PriceInfo";
 import ProfuctTable from "../components/ProductTable";
 import ReferalDiscounts from "../components/ReferalDiscounts";
-import TeamPrice from "../components/TeamPrice";
-
-const productImages = [
-	{
-		id: 1,
-		image: "/images/supplement1.png",
-		imageAlt: "Supplement image",
-	},
-	{
-		id: 2,
-		image: "/images/supplement1.png",
-		imageAlt: "Supplement image",
-	},
-	{
-		id: 3,
-		image: "/images/supplement1.png",
-		imageAlt: "Supplement image",
-	},
-	{
-		id: 4,
-		image: "/images/supplement1.png",
-		imageAlt: "Supplement image",
-	},
-	{
-		id: 5,
-		image: "/images/supplement1.png",
-		imageAlt: "Supplement image",
-	},
-	{
-		id: 6,
-		image: "/images/supplement1.png",
-		imageAlt: "Supplement image",
-	},
-];
 
 interface ProductDetailsProps {
-	params: { productID: string };
+	productID: string;
 }
 
 export default function ProductDetails({
 	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {
-	const [api, setApi] = React.useState<CarouselApi>();
-	const [current, setCurrent] = React.useState(0);
-	const [count, setCount] = React.useState(0);
-	console.log(params);
+	const [api, setApi] = useState<CarouselApi>();
+	const [current, setCurrent] = useState(0);
+	const [product, setProduct] = useState<ISingleProductModel>();
+	const { user } = useUserStore((state) => state);
 
-	React.useEffect(() => {
+	useEffect(() => {
+		const fetchProductId = async () => {
+			const { productID } = await params;
+			const response = (await getProduct(productID)) as {
+				data: IProductModel;
+			};
+			const model = mapSingleProductModel(response.data);
+			setProduct(model);
+		};
+		fetchProductId();
+	}, [params]);
+
+	useEffect(() => {
 		if (!api) {
 			return;
 		}
 
-		setCount(api.scrollSnapList().length);
 		setCurrent(api.selectedScrollSnap() + 1);
 
 		api.on("select", () => {
 			setCurrent(api.selectedScrollSnap() + 1);
 		});
 	}, [api]);
-	const [loggedIn] = React.useState(true);
 
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">
@@ -101,11 +83,12 @@ export default function ProductDetails({
 					className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0]"
 				>
 					<CarouselContent>
-						{productImages.map((i) => (
-							<CarouselItem key={i.id}>
+						{product?.gallery.map((item, idx) => (
+							<CarouselItem key={`img-${idx + 1}`} className="flex">
 								<Image
-									src={i.image}
-									alt={i.imageAlt}
+									className="object-cover"
+									src={item}
+									alt={item}
 									width={700}
 									height={700}
 								/>
@@ -117,7 +100,7 @@ export default function ProductDetails({
 
 					<div className="hidden md:flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
 						<div className="flex gap-[8px]">
-							{Array.from({ length: count }, (_, idx) => (
+							{product?.gallery.map((_, idx) => (
 								<div
 									key={`dot-${idx + 1}`}
 									className={`h-[8px] w-[8px] rounded-[50%] ${
@@ -146,7 +129,14 @@ export default function ProductDetails({
 				</Carousel>
 
 				<div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
-					<TeamPrice members={175} />
+					{product && (
+						<PriceInfo
+							members={200}
+							wholesalePrice={product.wholesalePrice}
+							price={product.price}
+							priceInfo={product?.priceInfo ?? []}
+						/>
+					)}
 
 					<div className="grid gap-[60px] mt-[51px] md:mt-[0]">
 						<PreOrderInfo />
@@ -176,17 +166,22 @@ export default function ProductDetails({
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
 							<BreadcrumbPage className="text-[14px] leading-[21px] font-[600] font-roboto">
-								Coenzyme Q10 Ubiquinol Kaneka TM
+								{product?.name}
 							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
 
-				<CorporationBox />
+				<CorporationBox
+					tags={product?.tags}
+					businessName={product?.producer?.businessName}
+					description={product?.description}
+					name={product?.name}
+				/>
 
-				{!loggedIn && (
+				{!user && (
 					<div className="flex flex-col gap-[24px]">
-						<Subscription />
+						<Subscription capsuleInfo={product?.capsuleInfo} />
 
 						<OrderCard
 							id={2}
@@ -271,7 +266,7 @@ export default function ProductDetails({
 					</div>
 				)}
 
-				{loggedIn && (
+				{user && (
 					<div className="grid gap-[28px]">
 						<div className="grid gap-[10px] p-[24px] bg-grey12">
 							<OrderCard
@@ -314,9 +309,7 @@ export default function ProductDetails({
 							/>
 						</div>
 
-						<div className="fixed bottom-[0] left-[0] right-[0] md:relative z-[100]">
-							<ReferFriends />
-						</div>
+						<ReferFriends />
 
 						<div className="bg-grey11 md:hidden h-[16px] mx-[-16px] my-[-10px]" />
 
