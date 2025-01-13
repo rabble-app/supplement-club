@@ -31,6 +31,7 @@ const formSchema = z
 export default function ChangePasswordPage() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
+		mode: "onChange",
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
@@ -57,7 +58,11 @@ export default function ChangePasswordPage() {
 									New Password*
 								</FormLabel>
 								<FormControl>
-									<Input type="password" {...field} />
+									<Input
+										type="password"
+										{...field}
+										placeholder="*************"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
@@ -71,7 +76,11 @@ export default function ChangePasswordPage() {
 									Confirm Password*
 								</FormLabel>
 								<FormControl>
-									<Input type="password" {...field} />
+									<Input
+										type="password"
+										{...field}
+										placeholder="*************"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
@@ -79,7 +88,7 @@ export default function ChangePasswordPage() {
 
 					<Button
 						type="submit"
-						className="bg-blue text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold"
+						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
 						Reset My Password
 					</Button>

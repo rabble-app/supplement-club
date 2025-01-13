@@ -23,6 +23,7 @@ const formSchema = z.object({
 export default function ForgotPasswordPage() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
+		mode: "onChange",
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
@@ -51,10 +52,10 @@ export default function ForgotPasswordPage() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel className="text-[16px] font-bold font-inconsolata">
-									Email
+									Email*
 								</FormLabel>
 								<FormControl>
-									<Input {...field} />
+									<Input {...field} placeholder="e.g. newton@mail.com" />
 								</FormControl>
 							</FormItem>
 						)}
@@ -62,7 +63,7 @@ export default function ForgotPasswordPage() {
 
 					<Button
 						type="submit"
-						className="bg-blue text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold"
+						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
 						Send a Link to Reset My Password
 					</Button>

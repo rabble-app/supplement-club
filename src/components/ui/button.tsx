@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "@/utils/utils";
 
 const buttonVariants = cva(
-	"text-[16px] leading-[24px] font-roboto inline-flex items-center justify-center",
+	"text-[16px] leading-[24px] font-roboto inline-flex items-center justify-center outline-none",
 	{
 		variants: {
 			variant: {

@@ -4,8 +4,12 @@ import type IOrderCardModel from "@/utils//models/IOrderCardModel";
 
 export default function OrderCard(model: Readonly<IOrderCardModel>) {
 	return (
-		<div className="grid grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px] gap-[8px] items-center">
-			<Image src={model.src} alt={model.alt} width={61} height={61} />
+		<div
+			className={`grid gap-[8px] items-center ${model.src ? "grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px]" : "md:grid-cols-[1fr_210px]"}`}
+		>
+			{model.src && (
+				<Image src={model.src} alt={model.alt} width={61} height={61} />
+			)}
 			<div className="grid gap-[8px]">
 				<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 					{model.description}
