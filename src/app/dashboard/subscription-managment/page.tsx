@@ -15,6 +15,7 @@ import SubscriptionCard from "@/components/dashboard/subscription-managment/Subs
 import SubscriptionPlan from "@/components/dashboard/subscription-managment/SubscriptionPlan";
 import SubscriptionSkipDialog from "@/components/dashboard/subscription-managment/SubscriptionSkipDialog";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Subscriptions() {
 	const [step, setStep] = useState<number>(1);
@@ -49,10 +50,12 @@ export default function Subscriptions() {
 						imageAlt="Truck icon"
 					>
 						<Button
-							type="submit"
+							asChild
 							className="bg-blue13 w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-blue rounded-[2px] h-[50px]"
 						>
-							Order Top Up Capsules
+							<Link href="/dashboard/top-up-checkout/">
+								Order Top Up Capsules
+							</Link>
 						</Button>
 					</SubscriptionCard>
 
