@@ -4,6 +4,7 @@
 
 import { ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 const ShowTextBasedOnRoute = () => {
   const pathname = usePathname();
@@ -39,12 +40,12 @@ const ShowTextBasedOnRoute = () => {
 
   return (
     <div className="text-[16px] leading-[18px] md:text-[24px] md:leading-[27px] font-[400] font-hagerman flex items-center justify-center h-[62px] border-b-[1px] border-grey30 relative">
-      <div
+      <Button
         onClick={() => router.back()}
         className="absolute top-1/2 left-[16px] md:left-[32px] cursor-pointer transform -translate-y-1/2 flex items-center gap-[8px] text-blue font-bold  text-[16px] leading-[18px] font-helvetica"
       >
         <ChevronLeft className="text-blue w-[20px] h-[20px]" /> Back
-      </div>
+      </Button>
       {getTextForRoute()}
     </div>
   );
