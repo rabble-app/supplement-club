@@ -41,7 +41,7 @@ const step2FormSchema = z.object({
 	city: z.string({ required_error: "Field is required." }),
 	postcode: z.string({ required_error: "Field is required." }),
 	country: z.string({ required_error: "Field is required." }),
-	mobileNumber: z.number({ required_error: "Field is required." }).optional(),
+	mobileNumber: z.string().optional(),
 });
 
 export default function DeliveryAddress({

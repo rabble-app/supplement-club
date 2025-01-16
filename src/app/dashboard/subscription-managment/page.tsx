@@ -2,6 +2,7 @@
 
 import { Separator } from "@radix-ui/react-separator";
 import { useState } from "react";
+import Link from "next/link";
 
 import AvailablePayment from "@/components/AvailablePayment";
 import BillingAddress from "@/components/BillingAddress";
@@ -49,12 +50,14 @@ export default function Subscriptions() {
 						imageSrc="/images/icons/truck-icon.svg"
 						imageAlt="Truck icon"
 					>
+						<Link href="/dashboard/top-up-checkout">
 						<Button
 							type="submit"
 							className="bg-blue13 w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-blue rounded-[2px] h-[50px]"
 						>
 							Order Top Up Capsules
 						</Button>
+						</Link>
 					</SubscriptionCard>
 
 					<div className="grid gap-[10px] p-[24px] bg-grey12">

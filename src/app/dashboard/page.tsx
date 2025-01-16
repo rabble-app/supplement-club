@@ -25,7 +25,7 @@ const yourAccount = [
 		id: 3,
 		image: "/images/icons/user-profile-icon.svg",
 		imageAlt: "User profile icon",
-		link: "/dashboard/account",
+		link: "#",
 		title: "Manage Account",
 	},
 ] as IManagerOptionCardModel[];

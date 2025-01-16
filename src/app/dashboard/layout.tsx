@@ -15,7 +15,7 @@ export default function RootLayout({
 			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-between md:justify-center items-center m-auto px-[16px]">
 				<Link
 					className="text-[16px] md:text-[24px] leading-[18px] text-blue12 md:hidden flex items-center font-helvetica gap-[8px]"
-					href="/"
+					href="/dashboard"
 				>
 					<Image
 						src="/images/icons/home-icon.svg"
@@ -25,9 +25,11 @@ export default function RootLayout({
 					/>
 					Home
 				</Link>
+				<Link href="/dashboard">
 				<div className=" text-[24px] leading-[27px] font-hagerman">
 					Supplement Club
 				</div>
+				</Link>
 			</header>
 			<ShowTextBasedOnRoute />
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const formSchema = z.object({
 	email: z
@@ -34,25 +34,25 @@ export default function LoginPage() {
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// call api
 		console.log(values);
-		toast.custom(
-			(t) => (
-				<div className="grid grid-cols-[16px_228px_16px] gap-[10px] items-center text-red bg-red2 py-[8px] px-[16px]">
-					<Image
-						src="/images/icons/error-icon.svg"
-						alt="error icon"
-						width={16}
-						height={16}
-					/>
-					<div>Invalid email or password</div>
-					<Button className="text-red p-[0]" onClick={() => toast.dismiss(t)}>
-						x
-					</Button>
-				</div>
-			),
-			{
-				position: "top-right",
-			},
-		);
+		// toast.custom(
+		// 	(t) => (
+		// 		<div className="grid grid-cols-[16px_228px_16px] gap-[10px] items-center text-red bg-red2 py-[8px] px-[16px]">
+		// 			<Image
+		// 				src="/images/icons/error-icon.svg"
+		// 				alt="error icon"
+		// 				width={16}
+		// 				height={16}
+		// 			/>
+		// 			<div>Invalid email or password</div>
+		// 			<Button className="text-red p-[0]" onClick={() => toast.dismiss(t)}>
+		// 				x
+		// 			</Button>
+		// 		</div>
+		// 	),
+		// 	{
+		// 		position: "top-right",
+		// 	},
+		// );
 	}
 
 	return (
@@ -109,12 +109,14 @@ export default function LoginPage() {
 						)}
 					/>
 
+<Link href="/dashboard">
 					<Button
 						type="submit"
 						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
 						Login
 					</Button>
+					</Link>
 				</form>
 			</Form>
 		</div>

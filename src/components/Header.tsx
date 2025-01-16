@@ -138,10 +138,10 @@ export default function Header() {
 								<div className="grid grid-cols-[1fr_24px] gap-x-[16px] items-center h-[38px]">
 									<DialogClose asChild>
 										<Button className="bg-yellow text-blue h-[38px]" asChild>
-											<Link href="/buy">Buy Now</Link>
+											<Link href="#">Buy Now</Link>
 										</Button>
 									</DialogClose>
-									<Link href="/buy">
+									<Link href="#">
 										<Image
 											src="/images/bag.svg"
 											alt="User profile bag"
