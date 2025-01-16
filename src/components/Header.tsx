@@ -49,7 +49,7 @@ export default function Header({ user }: Readonly<{ user?: IUserResponse }>) {
 					<div className="grid gap-[51px] w-max text-white md:grid-cols-[auto_123px]">
 						<Link
 							className="font-normal lg:text-[64px] text-[48px] font-hagerman"
-							href="/"
+							href={user ? "/dashboard" : "/"}
 						>
 							Supplement Club
 						</Link>
