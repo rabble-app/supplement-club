@@ -1,8 +1,17 @@
 "use client";
 import PaymentCard from "@/components/PaymentCard";
 import type ICardModel from "@/utils/models/ICardModel";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
+import Image from "next/image";
 import { useState } from "react";
 
 const yourcards = [
@@ -62,7 +71,47 @@ export default function AccountPaymentDetails() {
 								value={defaultCard.toString()}
 								onValueChange={(value) => setDefaultCard(Number(value))}
 							>
-								<PaymentCard model={card} />
+								<PaymentCard model={card}>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Image
+												src="/images/icons/dots-black-icon.svg"
+												alt="Trash icon"
+												className="cursor-pointer"
+												width={24}
+												height={24}
+											/>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent
+											align="end"
+											className="bg-white rounded-[8px] shadow-3 px-[16px]"
+										>
+											<DropdownMenuLabel className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none">
+												<Image
+													src="/images/icons/favorite-black-icon.svg"
+													alt="Trash icon"
+													width={24}
+													height={24}
+												/>
+												<div className=" text-[18px] leading-[27px] font-bold font-inconsolata">
+													Use as Default
+												</div>
+											</DropdownMenuLabel>
+											<DropdownMenuSeparator className="h-[1px] bg-grey18" />
+											<DropdownMenuItem className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none">
+												<Image
+													src="/images/icons/trash-red-icon.svg"
+													alt="Trash icon"
+													width={24}
+													height={24}
+												/>
+												<div className="text-red text-[18px] leading-[27px] font-bold font-inconsolata">
+													Delete Card
+												</div>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</PaymentCard>
 							</RadioGroup>
 							{idx !== yourcards.length - 1 && (
 								<Separator key={card.last4} className="bg-grey37 h-[1px]" />
