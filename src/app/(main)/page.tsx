@@ -6,13 +6,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getProduct, getProductsLimit } from "@/services/products";
-import { mapProductModel, mapSingleProductModel } from "@/utils/helpers";
+import { productService } from "@/services/productService";
 import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import type { IProductModel } from "@/utils/models/api/IProductModel";
-import type IProductResponse from "@/utils/models/api/response/IProductResponse";
-import { dropNextDelivery } from "@/utils/utils";
+import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
 
 const homeCards = [
 	{
@@ -134,21 +131,13 @@ const images = [
 export default async function Home() {
 	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID!;
 
-	const fetchProduct = async () => {
-		const response = (await getProduct(productId)) as {
-			data: IProductModel;
-		};
+	const fetchProduct = async () => await productService.product(productId);
 
-		const model = mapSingleProductModel(response.data);
-		return model;
-	};
+	const fetchProducts = async () => await productService.productsLimit(3);
 
-	const fetchProducts = async () => {
-		const response = (await getProductsLimit(3)) as {
-			data: IProductResponse[];
-		};
-		return response.data.map((r) => mapProductModel(r));
-	};
+	const { currentQuarter, year } = getQuarterInfo(new Date());
+	const { endDate } = getQuarterDates(year, currentQuarter);
+	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 
 	const [productModel, products] = await Promise.all([
 		fetchProduct(),
@@ -192,7 +181,7 @@ export default async function Home() {
 				/>
 			</div>
 
-			<div className="grid lg:grid-cols-[632px_1fr] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
+			<div className="grid lg:grid-cols-[1fr_575px] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
 				<div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
 					<div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[73px] font-[400] font-hagerman text-blue">
 						How does it work?
@@ -202,7 +191,7 @@ export default async function Home() {
 					))}
 				</div>
 
-				<div className="h-[700px] lg:h-[833px] bg-white">
+				<div className="md:w-[574px] h-[700px] lg:h-[833px] bg-white mx-auto">
 					<div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent" />
 					<div className="bg-blue h-[350px] lg:h-[453px] relative">
 						<Image
@@ -379,8 +368,7 @@ export default async function Home() {
 							Products
 						</p>
 						<p className="bg-white leading-[18px] text-grey1 py-[4px] px-[10px]">
-							Next Drop:{" "}
-							<span className="font-[700] ">{dropNextDelivery()}</span>
+							Next Drop: <span className="font-[700] ">{nextDeliveryText}</span>
 						</p>
 					</div>
 

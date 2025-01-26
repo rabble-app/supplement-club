@@ -27,7 +27,8 @@ export const useUserStore = create(
 				getItem: (key) => {
 					const cookie = Cookies.get(key);
 					if (!cookie) return null;
-					return JSON.parse(cookie).state;
+					const result = JSON.parse(cookie).state;
+					return result;
 				},
 				setItem: (key, value) => {
 					const jsonString = JSON.stringify(value);

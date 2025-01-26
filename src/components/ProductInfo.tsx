@@ -26,7 +26,7 @@ export default function ProductInfo({
 					<Image
 						className="block lg:hidden order-3 mx-auto"
 						src={product.imageUrl}
-						alt={product.imageKey}
+						alt={product.imageKey ?? product.name}
 						width={250}
 						height={541}
 					/>
@@ -88,7 +88,7 @@ export default function ProductInfo({
 				<Image
 					className="hidden lg:block lg:absolute lg:top-[50%] lg:left-[50%] lg:translate-y-[-50%] lg:translate-x-[50%] order-3"
 					src={product.imageUrl}
-					alt={product.imageKey}
+					alt={product.imageKey ?? product.name}
 					width={380}
 					height={541}
 				/>

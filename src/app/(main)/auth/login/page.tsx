@@ -20,7 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 
 import Motify from "@/components/notify";
-import { login } from "@/services/auth";
+import { useUser } from "@/contexts/UserContext";
+import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { loginSchema } from "@/validations";
@@ -36,6 +37,7 @@ export default function LoginPage() {
 
 	const [isPending, startTransition] = useTransition();
 	const { setUser } = useUserStore((state) => state);
+	const context = useUser();
 
 	const searchParams = useSearchParams();
 
@@ -48,11 +50,16 @@ export default function LoginPage() {
 	}, [searchParams]);
 
 	async function handleSubmit(e: FormData) {
-		const result = await login(e);
+		const result = await authService.login(
+			e.get("email")?.toString() ?? "",
+			e.get("password")?.toString() ?? "",
+			e.get("role")?.toString() ?? "USER",
+		);
 
 		if (result.statusCode === 200) {
 			const userData = result.data as IUserResponse;
 			setUser(userData);
+			context?.setNewUser(userData);
 			router.push(redirect);
 		} else {
 			toast.custom(

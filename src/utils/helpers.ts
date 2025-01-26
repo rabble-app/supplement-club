@@ -1,57 +1,10 @@
 import Cookies from "js-cookie";
-import type IProductCardModel from "./models/IProductCardModel";
-import type ISingleProductModel from "./models/ISingleProductModel";
-import type { IProductModel } from "./models/api/IProductModel";
-import type IProductResponse from "./models/api/response/IProductResponse";
 
 export const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-export const mapProductModel = (model: IProductResponse): IProductCardModel => {
-	return {
-		id: model.product?.id,
-		isComming: model.status === "PREORDER",
-		status: model.status,
-		name: model.product?.name,
-		teamName: model.team?.name,
-		subscribers: model.team?._count.members,
-		description: model.product?.description,
-		wholesalePrice: model.product?.wholesalePrice,
-		imageUrl: model.product?.imageUrl,
-		price: model.product?.price,
-		imageKey: model.product.imageKey,
-		rrp: model.product?.rrp,
-		tags: model.product?.tags,
-		producer: model.product?.producer,
-		formulationSummary: model.product?.formulationSummary,
-	};
-};
-
-export const mapSingleProductModel = (
-	model: IProductModel,
-): ISingleProductModel => {
-	return {
-		id: model.id,
-		isComming: model.supplementTeamProducts.status === "PREORDER",
-		status: model.status,
-		imageKey: model.imageKey,
-		name: model.name,
-		teamName: model.producer?.businessName,
-		description: model.description,
-		wholesalePrice: model.wholesalePrice,
-		capsuleInfo: model.capsuleInfo,
-		imageUrl: model.imageUrl,
-		price: model.price,
-		rrp: model.rrp,
-		tags: model.tags,
-		producer: model.producer,
-		formulationSummary: model.formulationSummary,
-		gallery: [model.imageUrl, model.producer.imageUrl],
-	};
-};
-
-export const apiRequest = async <T>(
+export const apiRequest = async <IResponseModel>(
 	endpoint: string,
-	method: "GET" | "POST" | "PUT" | "DELETE",
+	method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
 	data?: Record<string, string | unknown[] | boolean | number>,
 ): Promise<T | { error: string }> => {
 	const headers: { "Content-Type": string; Authorization?: string } = {
@@ -61,7 +14,9 @@ export const apiRequest = async <T>(
 	const session = Cookies.get("session") || null;
 	if (session) {
 		const obj = JSON.parse(session);
-		headers.Authorization = `Bearer ${obj.state.user.token}`;
+		if (obj.state?.user?.token) {
+			headers.Authorization = `Bearer ${obj.state.user.token}`;
+		}
 	}
 	try {
 		const res = await fetch(`${API_ENDPOINT}/${endpoint}`, {
@@ -75,7 +30,7 @@ export const apiRequest = async <T>(
 			throw new Error(JSON.stringify(errorData));
 		}
 
-		return await res.json();
+		return (await res.json()) as IResponseModel;
 	} catch (e) {
 		return {
 			error: e instanceof Error ? e.message : "An unknown error occurred",
@@ -87,15 +42,44 @@ export function mapTagsToValues(tags: string[]) {
 	const tagValueMap: { [key: string]: string } = {
 		"Improve Cellular Health": "/images/icons/water-drop-icon.svg",
 		"Cognitive function": "/images/icons/brain-icon.svg",
-		Longevity: "/images/icons/tree-icon.svg",
-		"Women’s Health": "/images/icons/hourglass-icon.svg",
-		"Weight Training": "/images/icons/dumbell-icon.svg",
 		"Most Popular": "/images/icons/shield-icon.svg",
-		"Heart Health": "/images/icons/heart-pulse-icon.svg",
+		"Strengthen Immunity and Resilience": "/images/icons/heart-pulse-icon.svg",
+		"Women’s Health": "/images/icons/hourglass-icon.svg",
+		"Reduce Oxidative Stress": "/images/icons/heart-pulse-icon.svg",
+		"Improve Digestion": "/images/icons/heart-pulse-icon.svg",
+		"Athletes & Weight Trainers": "/images/icons/heart-pulse-icon.svg",
+		"Enhance Recovery": "/images/icons/heart-pulse-icon.svg",
+		"Build Strength and Endurance": "/images/icons/heart-pulse-icon.svg",
+		"North East": "/images/icons/heart-pulse-icon.svg",
+		"Age Gracefully and Healthily": "/images/icons/heart-pulse-icon.svg",
+		"Strengthen Joints and Skin": "/images/icons/heart-pulse-icon.svg",
+		"Improve Physical Performance and Recovery":
+			"/images/icons/heart-pulse-icon.svg",
+		"Improve Emotional Regulation": "/images/icons/heart-pulse-icon.svg",
+		Fetility: "/images/icons/heart-pulse-icon.svg",
+		"Boost Focus and Memory": "/images/icons/heart-pulse-icon.svg",
+		"Support Daily Wellness": "/images/icons/heart-pulse-icon.svg",
+		"Neurodivergent Support": "/images/icons/heart-pulse-icon.svg",
+		"Reduce Anxiety and Stress": "/images/icons/heart-pulse-icon.svg",
+		"Boost Mitochondrial Function": "/images/icons/heart-pulse-icon.svg",
+		"Support Hormonal Health": "/images/icons/heart-pulse-icon.svg",
 
-		Athletics: "/images/icons/athletes-icon.svg",
 		Fertility: "/images/icons/baby-icon.svg",
+		"Enhance Energy and Vitality": "/images/icons/energy-icon.svg",
+		"Healthy Aging": "/images/icons/hourglass-icon.svg",
+		Longevity: "/images/icons/tree-icon.svg",
+		"Longevity Enthusiasts": "/images/icons/tree-icon.svg",
+		"Weight Training": "/images/icons/dumbell-icon.svg",
+		Athletics: "/images/icons/athletes-icon.svg",
+		Immunity: "/images/icons/shield-icon.svg",
+		"Cognitive Function": "/images/icons/brain-icon.svg",
+		"Skin Health": "/images/icons/water-drop-icon.svg",
+		"Mood and Anxiety": "/images/icons/flower-icon.svg",
+		"Gut Health": "/images/icons/intensine-icon.svg",
+		"Joint Health": "/images/icons/bones-icon.svg",
+		"Promote Relaxation and Sleep": "/images/icons/bed-icon.svg",
 		Sleep: "/images/icons/bed-icon.svg",
+		"Heart Health": "/images/icons/heart-pulse-icon.svg",
 	};
 
 	type TagKeys = keyof typeof tagValueMap;
@@ -105,3 +89,17 @@ export function mapTagsToValues(tags: string[]) {
 		return acc;
 	}, []);
 }
+
+export const mapFormDataToDeliveryRequest = (formData: FormData) => ({
+	userId: formData.get("userId")?.toString() ?? "",
+	channel: "SUPPLEMENT",
+	firstName: formData.get("firstName")?.toString() ?? "",
+	lastName: formData.get("lastName")?.toString() ?? "",
+	address: `${formData.get("address1")?.toString() ?? ""} ${
+		formData.get("address2")?.toString() ?? ""
+	}`.trim(),
+	city: formData.get("city")?.toString() ?? "",
+	postalCode: formData.get("postcode")?.toString() ?? "",
+	country: formData.get("country")?.toString() ?? "",
+	phone: formData.get("mobileNumber")?.toString() ?? "",
+});

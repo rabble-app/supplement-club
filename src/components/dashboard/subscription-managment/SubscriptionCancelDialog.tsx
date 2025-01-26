@@ -11,7 +11,11 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 
-export default function SubscriptionCancelDialog() {
+export default function SubscriptionCancelDialog({
+	confirmAction,
+}: Readonly<{
+	confirmAction: () => void;
+}>) {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -40,6 +44,7 @@ export default function SubscriptionCancelDialog() {
 				<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
 
 				<Button
+					onClick={confirmAction}
 					className="text-white bg-red4 h-[46px] flex justify-center items-center mx-auto text-[17px] leading-[22px] font-bold font-inconsolata mb-[16px]"
 					type="submit"
 				>

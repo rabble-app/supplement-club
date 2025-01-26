@@ -12,11 +12,9 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 
-import { getProduct } from "@/services/products";
-import { mapSingleProductModel } from "@/utils/helpers";
+import { productService } from "@/services/productService";
 import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
-import type { IProductModel } from "@/utils/models/api/IProductModel";
 
 export default async function Labs() {
 	const laboratories = [
@@ -115,18 +113,9 @@ export default async function Labs() {
 		},
 	] as IGoalCardModel[];
 
-	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID!;
-
-	const fetchProduct = async () => {
-		const response = (await getProduct(productId)) as {
-			data: IProductModel;
-		};
-
-		const model = mapSingleProductModel(response.data);
-		return [model];
-	};
-
-	const [product] = await fetchProduct();
+	const product = await productService.product(
+		process.env.NEXT_PUBLIC_PRODUCT_ID,
+	);
 
 	return (
 		<div className="container-width md:pt-[57px] bg-grey11 md:bg-transparent grid gap-[80px] md:gap-[140px]">

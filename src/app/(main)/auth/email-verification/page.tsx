@@ -2,9 +2,8 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { resendEmailVerification, verifyEmail } from "@/services/auth";
+import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
-import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -16,8 +15,7 @@ export default function EmailVerifyPage() {
 	useEffect(() => {
 		const fetchToken = async () => {
 			if (token) {
-				const response = await verifyEmail(token);
-				const { data } = response as { data: IUserResponse };
+				const { data } = await authService.emailVerify(token);
 				setUser(data);
 			}
 		};
@@ -49,7 +47,9 @@ export default function EmailVerifyPage() {
 			</div>
 			<Button
 				onClick={() =>
-					user?.email != null ? resendEmailVerification(user.email) : undefined
+					user?.email != null
+						? authService.resendEmailVerify(user.email)
+						: undefined
 				}
 				className=" text-white w-[280px] text[16px] leading-[24px] mx-auto font-inconsolata font-bold bg-blue"
 			>

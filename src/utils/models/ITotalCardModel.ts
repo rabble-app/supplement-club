@@ -1,8 +1,7 @@
-
 export interface ITotalCardModel {
-    capsules: number;
+	capsules: number;
 	price: number;
-	rrp: number;
+	rrp?: number;
 	percent: number;
 	capsulePrice: number;
 }

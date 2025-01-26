@@ -2,14 +2,24 @@
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { Separator } from "@radix-ui/react-separator";
 
-import BottomSection from "@/components/BottomSection";
-import ProductFaqs from "@/components/ProductFaqs";
-import ReferFriends from "@/components/ReferFriends";
 import OrderCard from "@/components/cards/OrderCard";
 import TotalCard from "@/components/cards/TotalCard";
+import CoinCard from "@/components/dashboard/refer/CoinCard";
+import MilestoneCard from "@/components/dashboard/refer/MilestoneCard";
+import ReferalLinkCard from "@/components/dashboard/refer/ReferalLinkCard";
+import BottomSection from "@/components/products/BottomSection";
+import Subscription from "@/components/products/CapsuleBox";
+import CorporationBox from "@/components/products/CorporationBox";
+import MemberCard from "@/components/products/MemberCard";
+import MembersBox from "@/components/products/MembersBox";
+import PreOrderInfo from "@/components/products/PreOrderInfo";
+import ProductFaqs from "@/components/products/ProductFaqs";
+import ProfuctTable from "@/components/products/ProductTable";
+import TeamPrice from "@/components/products/TeamPrice";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -27,40 +37,114 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import { getProduct } from "@/services/products";
-import { useUserStore } from "@/stores/userStore";
-import { mapSingleProductModel } from "@/utils/helpers";
+import { useUser } from "@/contexts/UserContext";
+import { productService } from "@/services/productService";
+import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
+import type { IReferCoinModel } from "@/utils/models/IReferCoinModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
-import type { IProductModel } from "@/utils/models/api/IProductModel";
-import CorporationBox from "../../pre-order/components/CorporationBox";
-import PreOrderInfo from "../../pre-order/components/PreOrderInfo";
-import Subscription from "../components/CapsuleBox";
-import PriceInfo from "../components/PriceInfo";
-import ProfuctTable from "../components/ProductTable";
-import ReferalDiscounts from "../components/ReferalDiscounts";
+import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
 
 interface ProductDetailsProps {
 	productID: string;
 }
+
+const milestones = [
+	{
+		isActive: true,
+		isQuickWin: true,
+		rate: 1000,
+		requires: 50000,
+		credit: 5,
+	},
+	{
+		isActive: true,
+		isQuickWin: false,
+		rate: 980,
+		requires: 98000,
+		credit: 10,
+	},
+	{
+		isActive: false,
+		rate: 960,
+		requires: 192000,
+		credit: 20,
+	},
+	{
+		isActive: false,
+		rate: 950,
+		requires: 475000,
+		credit: 50,
+		isBestValue: true,
+	},
+] as IReferCoinModel[];
+
+const itemsMembers = [
+	{
+		id: 1,
+		doseTitle: "180 Capsules Every 3 months",
+		name: "FOUNDING MEMBER",
+		discountTitle: "10% OFF TEAM PRICE",
+		doseValue: "First 50 Spots",
+		price: 40.5,
+		capsulePrice: 0.22,
+		spotsRemainds: 4,
+		forever: true,
+		isActive: true,
+	},
+	{
+		id: 2,
+		doseTitle: "180 Capsules Every 3 months",
+		name: "EARLY MEMBER",
+		doseValue: "Next 200 Spots",
+		discountTitle: "5% Off Team Price",
+		price: 43,
+		capsulePrice: 0.23,
+		forever: true,
+	},
+	{
+		id: 3,
+		doseTitle: "180 Capsules Every 3 months",
+		name: "MEMBER",
+		capsulePrice: 0.25,
+		discountTitle: "Standard Team Price",
+		price: 45,
+	},
+] as IMemberCardModel[];
 
 export default function ProductDetails({
 	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {
 	const [api, setApi] = useState<CarouselApi>();
 	const [current, setCurrent] = useState(0);
+	const [capsulePerDay, setCapsulePerDay] = useState(2);
 	const [product, setProduct] = useState<ISingleProductModel>();
-	const { user } = useUserStore((state) => state);
+	const context = useUser();
+	const [balance] = useState(99000);
+
+	const { currentQuarter, year } = getQuarterInfo(new Date());
+	const { endDate } = getQuarterDates(year, currentQuarter);
+	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+
+	const [nextMilestone, setNextMilestone] = useState<
+		IReferCoinModel | undefined
+	>();
 
 	useEffect(() => {
-		const fetchProductId = async () => {
+		milestones.map((item) => {
+			item.percentage = Math.round((balance * 100) / item.requires);
+		});
+		const next = milestones.find((i) => i.requires > balance);
+		setNextMilestone(next);
+	}, [balance]);
+
+	useEffect(() => {
+		const fetchProduct = async () => {
 			const { productID } = await params;
-			const response = (await getProduct(productID)) as {
-				data: IProductModel;
-			};
-			const model = mapSingleProductModel(response.data);
+			const model = await productService.product(productID);
+			console.log(model);
 			setProduct(model);
 		};
-		fetchProductId();
+		fetchProduct();
 	}, [params]);
 
 	useEffect(() => {
@@ -75,18 +159,24 @@ export default function ProductDetails({
 		});
 	}, [api]);
 
+	function selectCapsuleAction(value: number) {
+		setCapsulePerDay(value);
+	}
+
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">
 			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
-					className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0]"
+					className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0] h-[430px] md:h-auto"
 				>
-					<CarouselContent>
+					<CarouselContent
+						className={`${product?.isComming ? "opacity-[40%]" : ""}`}
+					>
 						{product?.gallery.map((item, idx) => (
 							<CarouselItem key={`img-${idx + 1}`} className="flex">
 								<Image
-									className="object-cover"
+									className="w-auto md:w-full object-cover"
 									src={item}
 									alt={item}
 									width={700}
@@ -111,7 +201,15 @@ export default function ProductDetails({
 						</div>
 					</div>
 
-					<div className="flex justify-between items-center md:hidden">
+					{product?.isComming && (
+						<div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-blue py-[12px] h-[72px]">
+							<div className="text-white text-[16px] leading-[24px] font-helvetica flex text-center max-w-[300px] mx-auto">
+								PRE-ORDER TO BECOME FOUNDING MEMBER AND GET 10%OFF - FOREVER
+							</div>
+						</div>
+					)}
+
+					<div className="flex justify-between items-center md:hidden pt-[24px]">
 						<p className="leading-[18px] text-grey4 mb-[2px]">
 							Quarterly Subscription
 						</p>
@@ -129,13 +227,19 @@ export default function ProductDetails({
 				</Carousel>
 
 				<div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
-					{product && (
-						<PriceInfo
-							members={200}
+					{product && !product.isComming && (
+						<TeamPrice
+							rrp={product.rrp}
+							members={product.members}
 							wholesalePrice={product.wholesalePrice}
 							price={product.price}
 							priceInfo={product?.priceInfo ?? []}
 						/>
+					)}
+					{product?.isComming && (
+						<div className="order-4 md:order-none">
+							<MembersBox />
+						</div>
 					)}
 
 					<div className="grid gap-[60px] mt-[51px] md:mt-[0]">
@@ -171,17 +275,32 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
-
+				s
 				<CorporationBox
 					tags={product?.tags}
 					businessName={product?.producer?.businessName}
 					description={product?.description}
 					name={product?.name}
 				/>
-
-				{!user && (
+				{context?.user && product?.isComming && (
+					<div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
+						<Image
+							src="/images/icons/user-badge-icon.svg"
+							alt="User badge"
+							width={15}
+							height={15}
+						/>
+						YOU’RE A FOUNDING MEMBER!
+					</div>
+				)}
+				{!context?.user && !product?.isComming && (
 					<div className="flex flex-col gap-[24px]">
-						<Subscription capsuleInfo={product?.capsuleInfo} />
+						<Subscription
+							capsuleInfo={product?.capsuleInfo}
+							price={product?.price}
+							rrp={product?.rrp}
+							selectCapsuleAction={selectCapsuleAction}
+						/>
 
 						<OrderCard
 							id={2}
@@ -206,7 +325,7 @@ export default function ProductDetails({
 							alt="supplement mockup"
 							description="180 Capsules Every 3 months"
 							name="Quarterly Subscription"
-							delivery="Next Drop Delivered: January 1st 2025"
+							delivery={nextDeliveryProductText}
 							src="/images/supplement-mockup.svg"
 						>
 							<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
@@ -220,15 +339,17 @@ export default function ProductDetails({
 						<Separator className="bg-grey13 h-[1px]" />
 
 						<TotalCard
-							capsules={266}
+							capsules={90 * capsulePerDay}
 							price={68.2}
-							rrp={144}
+							rrp={product?.rrp}
 							percent={65}
 							capsulePrice={0.25}
 						/>
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-							Start My Subscription
+							<Link href={`/products/${product?.id}/checkout`}>
+								Start My Subscription
+							</Link>
 						</Button>
 
 						<div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
@@ -265,8 +386,33 @@ export default function ProductDetails({
 						</div>
 					</div>
 				)}
+				{!context?.user && product?.isComming && (
+					<div className="flex flex-col gap-[24px]">
+						<Subscription capsuleInfo={product?.capsuleInfo} />
 
-				{user && (
+						<div className="grid gap-[16px] bg-white">
+							{itemsMembers.map((item) => (
+								<MemberCard key={item.id} {...item} />
+							))}
+						</div>
+
+						<TotalCard
+							capsules={180}
+							price={40.5}
+							rrp={144}
+							percent={65}
+							capsulePrice={0.25}
+						/>
+
+						<Button className="bg-blue text-white w-full font-bold">
+							<Link href={`/products/${product?.id}/checkout`}>
+								{" "}
+								REGISTER PRE-ORDER
+							</Link>
+						</Button>
+					</div>
+				)}
+				{context?.user && (
 					<div className="grid gap-[28px]">
 						<div className="grid gap-[10px] p-[24px] bg-grey12">
 							<OrderCard
@@ -309,11 +455,21 @@ export default function ProductDetails({
 							/>
 						</div>
 
-						<ReferFriends />
+						<div className="p-[24px] border-[1px] border-grey12 grid gap-[24px]">
+							<ReferalLinkCard>
+								<Button className="bg-blue text-white text[17px] font-inconsolata w-[146px">
+									Track Your Referral Rewards Here
+								</Button>
+							</ReferalLinkCard>
 
-						<div className="bg-grey11 md:hidden h-[16px] mx-[-16px] my-[-10px]" />
+							<MilestoneCard balance={balance} nextMilestone={nextMilestone} />
 
-						<ReferalDiscounts />
+							<div className="bg-grey11 md:hidden h-[16px] mx-[-16px] my-[-10px]" />
+
+							{milestones.map((milestone, idx) => (
+								<CoinCard key={`coin-${idx + 1}`} model={milestone} />
+							))}
+						</div>
 					</div>
 				)}
 			</div>

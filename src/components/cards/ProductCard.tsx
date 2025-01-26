@@ -9,6 +9,7 @@ import type IProductCardModel from "@/utils/models/IProductCardModel";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
 	const precentage = Number(model.price) / Number(model.rrp);
+	const titleButton = model.isComming ? "Pre - Join Team" : "Join Team";
 	return (
 		<div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
 			<span className="text=[16px] leading-[18px] font-helvetica text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px] z-[1]">
@@ -23,7 +24,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 				<Image
 					className={`mx-auto w-full ${model.isComming ? "rounded-[4px]" : ""}`}
 					src={model.imageUrl}
-					alt={model.imageKey}
+					alt={model.imageKey ?? model.name}
 					width={165}
 					height={300}
 				/>
@@ -80,7 +81,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 						className="flex justify-between py-[16px] px-[24px] w-full"
 					>
 						<span className="leading-[18px] font-bold font-inconsolata text-lg">
-							Join Team{" "}
+							{titleButton}{" "}
 						</span>
 						<span className="leading-[18px] font-bold font-inconsolata">
 							£{Number(model.price).toFixed(2)}

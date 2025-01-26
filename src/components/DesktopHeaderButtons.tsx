@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores/userStore";
+import { useUser } from "@/contexts/UserContext";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,18 +22,13 @@ const UserProfile = ({ user }: { user?: IUserResponse }) => (
 	</div>
 );
 
-export default function DesktopHeaderButtons({
-	user,
-}: Readonly<{ user?: IUserResponse }>) {
-	const logout = useUserStore((state) => state.logout);
-
-	console.log(user);
-
+export default function DesktopHeaderButtons() {
+	const context = useUser();
 	return (
 		<div className="hidden lg:flex lg:gap-x-[24px] lg:items-center">
-			<UserProfile user={user} />
-			{user && (
-				<Button onClick={() => logout()}>
+			<UserProfile user={context?.user} />
+			{context?.user && (
+				<Button onClick={() => context?.logout()}>
 					<Image
 						src="/images/logout.svg"
 						alt="Logout icon"

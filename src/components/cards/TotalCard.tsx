@@ -22,7 +22,7 @@ export default function TotalCard(model: Readonly<ITotalCardModel>) {
 					</span>
 				</div>
 
-				<TotalPercentCard price={model.rrp} percent={model.percent} />
+				<TotalPercentCard price={model.price} percent={model.percent} />
 			</div>
 		</div>
 	);

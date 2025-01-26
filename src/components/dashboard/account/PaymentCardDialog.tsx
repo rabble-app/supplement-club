@@ -55,6 +55,8 @@ export default function PaymentCardDialog() {
 	return (
 		<Dialog>
 			<DialogTrigger>
+				{" "}
+				2
 				<ManageAccountCard
 					title="Payment card"
 					value="9084 **** **** ****    11/2026"

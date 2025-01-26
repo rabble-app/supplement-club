@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { resetPassword } from "@/services/auth";
+import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
 
 export default function ResetPasswordPage() {
@@ -27,7 +27,9 @@ export default function ResetPasswordPage() {
 			</div>
 			<Button
 				onClick={() =>
-					user?.email != null ? resetPassword(user.email) : undefined
+					user?.email != null
+						? authService.resetPassword(user.email)
+						: undefined
 				}
 				className=" text-white w-[280px] text[16px] leading-[24px] mx-auto font-inconsolata font-bold bg-blue"
 			>

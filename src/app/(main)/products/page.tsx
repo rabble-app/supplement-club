@@ -1,6 +1,7 @@
 "use client";
-import ExpansionSelector from "@/components/ExpansionSelector";
 import ProductCard from "@/components/cards/ProductCard";
+import ExpansionSelector from "@/components/products/ExpansionSelector";
+import SortBy from "@/components/products/SortBy";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -11,12 +12,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
-import SortBy from "./components/SortBy";
 
-import { getProducts, getProductsTags } from "@/services/products";
-import { mapProductModel } from "@/utils/helpers";
+import { productService } from "@/services/productService";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import type IProductResponse from "@/utils/models/api/response/IProductResponse";
 import type { IProductTagResponse } from "@/utils/models/api/response/IProductTagResponse";
 
 export default function Products() {
@@ -43,14 +41,11 @@ export default function Products() {
 			setGoals: (goals: string[]) => void,
 			setSortItems: (sortItems: string[]) => void,
 		) => {
-			const response = (await getProductsTags()) as {
-				data: IProductTagResponse[];
-			};
-			const { data } = response;
+			const response = await productService.productTags();
 
-			setCategories(processTags(data, "CATEGORY"));
-			setGoals(processTags(data, "GOALS"));
-			setSortItems(processTags(data, "SORT"));
+			setCategories(processTags(response, "CATEGORY"));
+			setGoals(processTags(response, "GOALS"));
+			setSortItems(processTags(response, "SORT"));
 		},
 		[processTags],
 	);
@@ -62,11 +57,7 @@ export default function Products() {
 	// Fetch and initialize products
 	useEffect(() => {
 		(async () => {
-			const response = (await getProducts()) as {
-				data: IProductResponse[];
-			}; // Type assertion
-			const { data } = response;
-			const products = data.map(mapProductModel);
+			const products = await productService.products();
 			setProducts(products);
 			setInitProducts(products);
 		})();

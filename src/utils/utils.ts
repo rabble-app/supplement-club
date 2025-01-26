@@ -1,8 +1,51 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type IManagePlanModel from "./models/IManagePlanModel";
+import type IProductCardModel from "./models/IProductCardModel";
+import type ISingleProductModel from "./models/ISingleProductModel";
+import type { IProductModel } from "./models/api/IProductModel";
+import type IUpcomingDeliveryModel from "./models/api/IUpcomingDeliveryModel";
+import type IProductResponse from "./models/api/response/IProductResponse";
+import type { IUpcomingDeliveryResponse } from "./models/api/response/IUpcomingDeliveryResponse";
+import type IUserPlanReponse from "./models/api/response/IUserPlanResponse";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
+}
+
+export function getQuarterInfo(date) {
+	const month = date.getMonth();
+	const currentQuarter = Math.floor(month / 3) + 1;
+
+	// Determine the start of the next quarter
+	const nextQuarterMonth = (Math.floor(month / 3) + 1) * 3;
+	const year =
+		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;
+	const nextQuarterStart = new Date(year, nextQuarterMonth % 12, 1);
+
+	// Calculate days remaining
+	const diffTime = nextQuarterStart - date;
+	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+	return {
+		currentQuarter,
+		daysToNextQuarter: diffDays,
+		year,
+		nextQuarterMonth,
+	};
+}
+
+export function getQuarterDates(year: number, quarterNumber: number) {
+	// Define the start month for each quarter (0-based for JavaScript Date)
+	const startMonth = (quarterNumber - 1) * 3;
+
+	// Create the start date of the quarter
+	const startDate = new Date(year, startMonth, 1);
+
+	// Create the end date of the quarter (last day of the last month in the quarter)
+	const endDate = new Date(year, startMonth + 3, 0);
+
+	return { startDate, endDate };
 }
 
 export function dropNextDelivery() {
@@ -21,3 +64,125 @@ export function dropNextDelivery() {
 
 	return `${quater} 1st ${new Date().getFullYear()}`;
 }
+
+export function getCardImage(brand: string) {
+	const value = brand.toLowerCase();
+	if (value === "visa") {
+		return "/images/payment-cards/visa.svg";
+	}
+
+	if (value === "mastercard") {
+		return "/images/payment-cards/mastercard.svg";
+	}
+
+	if (value === "jbc") {
+		return "/images/payment-cards/jbc.svg";
+	}
+
+	if (value === "american express" || value === "american-express") {
+		return "/images/payment-cards/american-express.svg";
+	}
+
+	if (value === "unionpay") {
+		return "/images/payment-cards/unionpay.svg";
+	}
+
+	if (value === "discover") {
+		return "/images/payment-cards/discover.svg";
+	}
+}
+
+export function formatDate(value: string) {
+	const date = new Date(value);
+	const options = { month: "long", year: "numeric" };
+	const monthYear = date.toLocaleDateString("en-US", options);
+	const day = date.getDate();
+
+	// Determine the correct ordinal suffix
+	const suffix =
+		day % 10 === 1 && day !== 11
+			? "st"
+			: day % 10 === 2 && day !== 12
+				? "nd"
+				: day % 10 === 3 && day !== 13
+					? "rd"
+					: "th";
+
+	return `${monthYear.split(" ")[0]} ${day}${suffix} ${monthYear.split(" ")[1]}`;
+}
+export const mapProductModel = (model: IProductResponse): IProductCardModel => {
+	return {
+		id: model.productId || "",
+		isComming: model.status === "PREORDER",
+		status: model.status,
+		name: model.product.name,
+		teamName: model.product.producer?.businessName,
+		imageUrl: model.product.imageUrl || "",
+		imageKey: model.product.imageKey || "",
+		price: model.product.price,
+		rrp: model.product.rrp,
+		wholesalePrice: model.product.wholesalePrice,
+		subscribers: model.team._count.members,
+		producer: model.team.producer,
+		formulationSummary: model.product.formulationSummary,
+	};
+};
+
+export const mapSingleProductModel = (
+	model: IProductModel,
+): ISingleProductModel => {
+	return {
+		id: model.id,
+		isComming: model.supplementTeamProducts.status === "PREORDER",
+		status: model.status,
+		imageKey: model.imageKey,
+		name: model.name,
+		teamName: model.producer?.businessName,
+		description: model.description,
+		wholesalePrice: model.wholesalePrice,
+		capsuleInfo: model.capsuleInfo,
+		imageUrl: model.imageUrl,
+		price: model.price,
+		rrp: model.rrp,
+		members: model.supplementTeamProducts.team._count.members,
+		tags: model.tags,
+		priceInfo: model.priceInfo,
+		producer: model.producer,
+		formulationSummary: model.formulationSummary,
+		gallery: [model.imageUrl, model.producer.imageUrl],
+	};
+};
+
+export const mapUpcomingDelivery = (
+	model: IUpcomingDeliveryResponse,
+): IUpcomingDeliveryModel => {
+	return {
+		id: model.id,
+		deliveryDate: model.deliveryDate,
+		businessName: model.team.producer.businessName,
+		name: model.team.name,
+		quantity: model.basket[0]?.quantity || 0,
+		address: model.team.members[0].user.shipping.address,
+		city: model.team.members[0].user.shipping.city,
+		country: model.team.members[0].user.shipping.country,
+		postalCode: model.team.members[0].user.postalCode,
+		buildingNo: model.team.members[0].user.shipping.buildingNo,
+	};
+};
+
+export const mapSubscriptionModel = (
+	model: IUserPlanReponse,
+): IManagePlanModel => {
+	return {
+		id: model.id,
+		name: model.team.basket[0].product.producer.businessName,
+		subscriptionStatus: model.subscriptionStatus,
+		price: model.team.basket[0].product.price,
+		percent:
+			Number(model.team.basket[0].product.price) /
+			Number(model.team.basket[0].product.rrp),
+		capsulePerDay: +model.team.basket[0].capsulePerDay,
+		isSkipped: model.skipNextDelivery,
+		quantity: model.team.basket[0].quantity,
+	};
+};

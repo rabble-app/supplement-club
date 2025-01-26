@@ -3,7 +3,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -15,25 +14,11 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { deliveryAddress } from "@/services/users";
-import { useUserStore } from "@/stores/userStore";
+import { useUser } from "@/contexts/UserContext";
 import { deliveryAddressSchema } from "@/validations";
 
-type AddressAutofillProps = {
-	accessToken: string;
-	children: React.ReactNode;
-};
-const AddressAutofill = dynamic(
-	() =>
-		import("@mapbox/search-js-react").then(
-			(r) => r.AddressAutofill as React.ComponentType<AddressAutofillProps>,
-		),
-	{
-		ssr: false,
-	},
-);
-
-const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
+import { usersService } from "@/services/usersService";
+import { useEffect } from "react";
 
 export default function DeliveryAddress({
 	step,
@@ -49,10 +34,43 @@ export default function DeliveryAddress({
 		mode: "onChange",
 	});
 
-	const { user } = useUserStore((state) => state);
+	useEffect(() => {
+		// Dynamically import the library to avoid SSR issues
+		import("getaddress-autocomplete").then((getAddress) => {
+			getAddress
+				.autocomplete("address1", process.env.NEXT_PUBLIC_GETADDRESS_API_KEY)
+				.then((autocomplete) => {
+					// Handle the promise here
+					autocomplete?.addEventListener(
+						"getaddress-autocomplete-address-selected",
+						(e) => {
+							currentForm.setValue(
+								"address1",
+								e.address.formatted_address[0] || "",
+							);
+							currentForm.setValue(
+								"address2",
+								e.address.formatted_address[1] || "",
+							);
+							currentForm.setValue(
+								"city",
+								e.address.formatted_address[3] || "",
+							);
+							currentForm.setValue(
+								"county",
+								e.address.formatted_address[4] || "",
+							);
+							currentForm.setValue("postcode", e.address.postcode || "");
+						},
+					);
+				});
+		});
+	}, [currentForm.setValue]);
 
-	if (user) {
-		currentForm.setValue("userId", user.id);
+	const context = useUser();
+
+	if (context?.user) {
+		currentForm.setValue("userId", context?.user.id);
 	}
 
 	async function onSubmit() {
@@ -63,7 +81,17 @@ export default function DeliveryAddress({
 			formData.append(key, values[key]);
 		}
 
-		await deliveryAddress(formData); // Pass the FormData object
+		await usersService.updateDeliveryAddress(
+			formData.get("userId")?.toString() ?? "",
+			"SUPPLEMENT",
+			formData.get("firstName")?.toString() ?? "",
+			formData.get("lastName")?.toString() ?? "",
+			`${formData.get("address1")?.toString()} ${formData.get("address2")?.toString()}`,
+			formData.get("city")?.toString() ?? "",
+			formData.get("postcode")?.toString() ?? "",
+			formData.get("country")?.toString() ?? "",
+			formData.get("mobileNumber")?.toString() ?? "",
+		);
 		updateStepAction(step + 1);
 	}
 	return (
@@ -100,54 +128,31 @@ export default function DeliveryAddress({
 						)}
 					/>
 				</div>
-
 				<FormField
 					control={currentForm.control}
-					name="postcode"
+					name="address1"
 					render={({ field }) => (
-						<FormItem className="grid">
-							<FormLabel>Postcode*</FormLabel>
+						<FormItem>
+							<FormLabel>Address Line 1*</FormLabel>
 							<FormControl>
 								<Input
 									{...field}
-									autoComplete="postal-code"
-									placeholder="SE167NX"
+									id="address1"
+									placeholder="Somewhere around"
 								/>
 							</FormControl>
 						</FormItem>
 					)}
 				/>
-				<AddressAutofill accessToken={MAPBOX_ACCESS_TOKEN}>
-					<FormField
-						control={currentForm.control}
-						name="address1"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Address Line 1*</FormLabel>
-								<FormControl>
-									<Input
-										{...field}
-										autoComplete="address-line1"
-										placeholder="Somewhere around"
-									/>
-								</FormControl>
-							</FormItem>
-						)}
-					/>
-				</AddressAutofill>
 
 				<FormField
 					control={currentForm.control}
 					name="address2"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Address Line 2*</FormLabel>
+							<FormLabel>Address Line 2</FormLabel>
 							<FormControl>
-								<Input
-									{...field}
-									placeholder="Near somewhere"
-									autoComplete="address-line2"
-								/>
+								<Input {...field} placeholder="Near somewhere" id="address2" />
 							</FormControl>
 						</FormItem>
 					)}
@@ -160,11 +165,7 @@ export default function DeliveryAddress({
 						<FormItem>
 							<FormLabel>City*</FormLabel>
 							<FormControl>
-								<Input
-									{...field}
-									placeholder="London"
-									autoComplete="address-level2"
-								/>
+								<Input {...field} placeholder="London" id="city" />
 							</FormControl>
 						</FormItem>
 					)}
@@ -177,11 +178,20 @@ export default function DeliveryAddress({
 						<FormItem>
 							<FormLabel>Country*</FormLabel>
 							<FormControl>
-								<Input
-									{...field}
-									placeholder="United Kingdom"
-									autoComplete="address-level1"
-								/>
+								<Input {...field} placeholder="United Kingdom" id="county" />
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={currentForm.control}
+					name="postcode"
+					render={({ field }) => (
+						<FormItem className="grid">
+							<FormLabel>Postcode*</FormLabel>
+							<FormControl>
+								<Input {...field} id="postcode" placeholder="SE167NX" />
 							</FormControl>
 						</FormItem>
 					)}

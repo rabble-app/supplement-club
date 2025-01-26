@@ -1,7 +1,7 @@
 import EmailChangeDialog from "@/components/dashboard/account/EmailChangeDialog";
 import ManageAccountCard from "@/components/dashboard/account/ManageAccountCard";
-import PaymentCardDialog from "@/components/dashboard/account/PaymentCardDialog";
 import ShippingDetailsDialog from "@/components/dashboard/account/ShippingDetailsDialog";
+import Link from "next/link";
 
 export default function Account() {
 	return (
@@ -27,7 +27,14 @@ export default function Account() {
 					Payment Details
 				</p>
 
-				<PaymentCardDialog />
+				<Link href="/dashboard/account/payment-details/">
+					<ManageAccountCard
+						title="Payment card"
+						value="9084 **** **** ****  11/2026"
+						imageAlt="Card icon"
+						imageSrc="/images/icons/card-blue-icon.svg"
+					/>
+				</Link>
 
 				<ManageAccountCard
 					title="Billing address"

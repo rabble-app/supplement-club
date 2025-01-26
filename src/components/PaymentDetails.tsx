@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import InputMask from "@mona-health/react-input-mask";
 import Image from "next/image";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -23,26 +22,17 @@ export default function PaymentDetails({
 	step,
 	updateStepAction,
 	children,
+	isComming,
 }: Readonly<{
 	step: number;
 	updateStepAction: (newValue: number) => void;
-	children: React.ReactNode;
+	isComming?: boolean;
+	children?: React.ReactNode;
 }>) {
 	const currentForm = useForm<z.infer<typeof paymentCardSchema>>({
 		resolver: zodResolver(paymentCardSchema),
 		mode: "onChange",
 	});
-
-	const autoFillCardNumber = async () => {
-		const clipboardCardNumber = await navigator.clipboard.readText();
-		if (clipboardCardNumber !== "" && clipboardCardNumber.length === 16) {
-			currentForm.setValue("cardNumber", clipboardCardNumber);
-		}
-	};
-
-	const updateCardNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-		currentForm.setValue("cardNumber", e.target.value.replaceAll(" ", ""));
-	};
 
 	const onSubmit: SubmitHandler<z.infer<typeof paymentCardSchema>> = (data) => {
 		// call api
@@ -57,56 +47,6 @@ export default function PaymentDetails({
 			>
 				<div className="grid gap-[24px]">
 					{children}
-
-					<Separator className="bg-grey13" />
-
-					<div>
-						<FormField
-							control={currentForm.control}
-							name="cardNumber"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Card Number</FormLabel>
-									<FormControl>
-										<div className="grid grid-cols-[24px_1fr_92px] items-center gap-[12px] h-[48px] border-[1px] border-black px-[12px] py-[8px]">
-											<Image
-												src="/images/icons/card-icon.svg"
-												alt="Card icon"
-												width={24}
-												height={24}
-											/>
-											<InputMask
-												{...field}
-												value={field.value ?? ""}
-												mask="9999 9999 9999 9999"
-												alwaysShowMask="true"
-												maskPlaceholder={
-													!field?.value || field.value === ""
-														? "0000 0000 0000 0000"
-														: ""
-												}
-												className="h-[24px] outline-none font-roboto text-grey16"
-												onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-													updateCardNumber(e)
-												}
-											/>
-											<Button
-												onClick={(e) => {
-													e.preventDefault();
-													autoFillCardNumber();
-												}}
-												className="bg-black text-white font-roboto cursor-pointer h-[32px]"
-											>
-												<div className="flex items-center gap-[2px]">
-													Autofill <span className="text-green">link</span>
-												</div>
-											</Button>
-										</div>
-									</FormControl>
-								</FormItem>
-							)}
-						/>
-					</div>
 
 					<Separator className="bg-grey13" />
 
@@ -139,7 +79,8 @@ export default function PaymentDetails({
 				</div>
 
 				<Button type="submit" className="bg-blue text-white w-full font-bold">
-					Place Order - £68.20
+					{isComming ? "Register" : "Place Order - £68.20"}{" "}
+					{/* Use a regular string */}
 				</Button>
 
 				<div className="grid gap-[11px]">

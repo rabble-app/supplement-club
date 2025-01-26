@@ -13,30 +13,25 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { useUserStore } from "@/stores/userStore";
-import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
-import { dropNextDelivery } from "@/utils/utils";
-import { useEffect } from "react";
+import { useUser } from "@/contexts/UserContext";
+import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
 import DesktopHeaderButtons from "./DesktopHeaderButtons";
 import UserLoggedIn from "./UserLoggedIn";
 import UserLoggedOut from "./UserLoggedOut";
 
-export default function Header({ user }: Readonly<{ user?: IUserResponse }>) {
-	const { setUser } = useUserStore((state) => state);
+export default function Header() {
+	const context = useUser();
 
-	useEffect(() => {
-		if (user) {
-			setUser(user);
-		}
-	}, [user, setUser]);
-
+	const { currentQuarter, year } = getQuarterInfo(new Date());
+	const { endDate } = getQuarterDates(year, currentQuarter);
+	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	return (
 		<header>
 			<div className="flex justify-center items-center h-[40px] bg-blue2">
 				<div className="text-blue3 underline">
 					<span className="hidden lg:block font-inconsolata font-bold">
 						Next Day Delivery on all Subscription start up packs. Getting you to
-						the next drop on {dropNextDelivery()}
+						the next drop on {nextDeliveryText}
 					</span>
 					<span className="block lg:hidden">
 						Refer a friend and get £5 reward
@@ -49,7 +44,7 @@ export default function Header({ user }: Readonly<{ user?: IUserResponse }>) {
 					<div className="grid gap-[51px] w-max text-white md:grid-cols-[auto_123px]">
 						<Link
 							className="font-normal lg:text-[64px] text-[48px] font-hagerman"
-							href={user ? "/dashboard" : "/"}
+							href={context?.user ? "/dashboard" : "/"}
 						>
 							Supplement Club
 						</Link>
@@ -69,7 +64,7 @@ export default function Header({ user }: Readonly<{ user?: IUserResponse }>) {
 						</div>
 					</div>
 
-					<DesktopHeaderButtons user={user} />
+					<DesktopHeaderButtons />
 
 					<Dialog>
 						<DialogTrigger asChild>
@@ -107,8 +102,8 @@ export default function Header({ user }: Readonly<{ user?: IUserResponse }>) {
 								</DialogClose>
 							</div>
 							<DialogFooter className="grid gap-[16px]">
-								{!user && <UserLoggedOut />}
-								{user && <UserLoggedIn user={user} />}
+								{!context?.user && <UserLoggedOut />}
+								{context?.user && <UserLoggedIn user={context?.user} />}
 							</DialogFooter>
 						</DialogContent>
 					</Dialog>

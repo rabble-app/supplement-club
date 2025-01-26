@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -17,19 +17,37 @@ import { Input } from "@/components/ui/input";
 
 import { changePasswordSchema } from "@/validations";
 
-import { changePassword } from "@/services/auth";
-import { useRouter } from "next/router";
+import { authService } from "@/services/authService";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ChangePasswordPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
+
+	useEffect(() => {
+		const fetchToken = async () => {
+			if (token) {
+				await authService.emailVerify(token);
+			}
+		};
+		if (token) {
+			fetchToken();
+		}
+	}, [token]);
+
 	const form = useForm({
 		resolver: zodResolver(changePasswordSchema),
 		mode: "onChange",
 	});
+
 	const [isPending, startTransition] = useTransition();
 
 	async function postChangePassword(e: FormData) {
-		await changePassword(e);
+		await authService.changePassword(
+			e.get("password")?.toString() || "",
+			token ?? "",
+		);
 		router.push("/");
 	}
 

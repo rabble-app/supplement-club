@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import ConfirmNewSubscriptionQuantityDialog from "../manage-plans/ConfirmNewSubscriptionQuantityDialog";
 
 export default function SubscriptionPlan({
 	confirmAction,
@@ -29,6 +30,11 @@ export default function SubscriptionPlan({
 			.join(" ");
 	}
 
+	function confirmChangeCapsule(val: number) {
+		setChangePlan(false);
+		confirmAction(val);
+	}
+
 	return (
 		<div className="py-[16px] px-[12px] bg-white shadow-card rounded-[12px] grid gap-[16px]">
 			<div className="grid gap-[4px]">
@@ -52,7 +58,9 @@ export default function SubscriptionPlan({
 						Daily Capsule Quantity
 					</p>
 					<p className="text-[12px] leading-[13px] font-helvetica">
-						2 Capsules per day is good for test
+						{initCapsule === 1 && "1 Capsule per day is good for test"}
+						{initCapsule !== 1 &&
+							`${initCapsule} Capsules per day is good for test`}
 					</p>
 				</div>
 			</div>
@@ -89,12 +97,11 @@ export default function SubscriptionPlan({
 			)}
 
 			{changePlan && capsule !== initCapsule && (
-				<Button
-					onClick={() => confirmAction(initCapsule)}
-					className="bg-blue w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-white rounded-[2px] h-[46px]"
-				>
-					Confirm New Subscription Quantity
-				</Button>
+				<ConfirmNewSubscriptionQuantityDialog
+					confirmAction={confirmChangeCapsule}
+					capsule={capsule}
+					changedCapsule={initCapsule}
+				/>
 			)}
 		</div>
 	);

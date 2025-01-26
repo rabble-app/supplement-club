@@ -1,7 +1,7 @@
 export default function TotalPercentCard({
 	price,
 	percent,
-}: Readonly<{ price: number; percent: number }>) {
+}: Readonly<{ price?: number; percent: number }>) {
 	return (
 		<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">
 			RRP{" "}

@@ -1,34 +1,59 @@
 "use client";
+import Cookies from "js-cookie";
 
-import { useUserStore } from "@/stores/userStore";
+import { type UserState, useUserStore } from "@/stores/userStore";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
-import { type ReactNode, createContext, useContext, useMemo } from "react";
+import { type ReactNode, createContext, useContext, useState } from "react";
 
 interface UserContextType {
 	user: IUserResponse | null;
 	setUser: (user: IUserResponse) => void;
 	logout: () => void;
+	setNewUser: (user: IUserResponse) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {
 	children: ReactNode;
+	state: UserState;
 }
 
-export function UserProvider({ children }: Readonly<UserProviderProps>) {
-	const { setUser, user, logout } = useUserStore((state) => state);
-	const obj = useMemo(
-		() => ({ user, setUser, logout }),
-		[user, setUser, logout],
+export function UserProvider({ children, state }: Readonly<UserProviderProps>) {
+	const storeState = useUserStore((store) => store);
+
+	// Initialize state with `state` prop or default values
+	const [user, setUser] = useState<IUserResponse | null>(state?.user || null);
+	const setNewUser = (user) => {
+		setUser(user);
+	};
+
+	// Logout function to clear user data
+	const logout = () => {
+		setUser(null);
+		Cookies.remove("session");
+	};
+
+	// Consolidate the new state
+	const contextValue: UserContextType = {
+		...storeState,
+		user,
+		setUser,
+		logout,
+		setNewUser,
+	};
+
+	return (
+		<UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
 	);
-	return <UserContext.Provider value={obj}>{children}</UserContext.Provider>;
 }
 
-export function useUser(): UserContextType {
+export function useUser() {
 	const context = useContext(UserContext);
+
 	if (!context) {
-		throw new Error("useUser must be used within a UserProvider");
+		return undefined;
 	}
+
 	return context;
 }

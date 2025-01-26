@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import ShowTextBasedOnRoute from "@/components/dashboard/ShowTextBasedOnRoute";
 import { Button } from "@/components/ui/button";
-import { useUserStore } from "@/stores/userStore";
+import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
 
 export default function RootLayout({
@@ -14,15 +14,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const router = useRouter();
-	const { logout } = useUserStore((state) => state);
+	const context = useUser();
 
 	function handleLogout() {
-		logout();
+		context?.logout();
 		router.push("/");
 	}
 	return (
 		<div>
-			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px] relative">
+			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px] sticky top-[0] z-[1]">
 				<Link
 					href="/"
 					className="font-helvetica text-[16px] leading-[18px] font-bold text-base md:hidden flex gap-[8px] items-center absolute left-[16px]"
