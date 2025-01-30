@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Separator } from "@radix-ui/react-separator";
-
-import OrderCard from "@/components/cards/OrderCard";
+import SummaryProduct from "@/components/SummaryProduct";
 import TotalCard from "@/components/cards/TotalCard";
 import CoinCard from "@/components/dashboard/refer/CoinCard";
 import MilestoneCard from "@/components/dashboard/refer/MilestoneCard";
@@ -40,9 +38,12 @@ import {
 import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
+import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type { IReferCoinModel } from "@/utils/models/IReferCoinModel";
+import type IReferalSummaryModel from "@/utils/models/IReferalSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
-import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
+import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
+import { getQuarterInfo } from "@/utils/utils";
 
 interface ProductDetailsProps {
 	productID: string;
@@ -120,10 +121,16 @@ export default function ProductDetails({
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const context = useUser();
 	const [balance] = useState(99000);
+	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
+		getQuarterInfo();
 
-	const { currentQuarter, year } = getQuarterInfo(new Date());
-	const { endDate } = getQuarterDates(year, currentQuarter);
 	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+	const [nextQuater] = useState(
+		currentQuarter + 1 > 4 ? 1 : currentQuarter + 1,
+	);
+	const [capsulesPackage, setCapsulesPackage] = useState(
+		remainsDaysToNextQuater * 2,
+	);
 
 	const [nextMilestone, setNextMilestone] = useState<
 		IReferCoinModel | undefined
@@ -141,7 +148,6 @@ export default function ProductDetails({
 		const fetchProduct = async () => {
 			const { productID } = await params;
 			const model = await productService.product(productID);
-			console.log(model);
 			setProduct(model);
 		};
 		fetchProduct();
@@ -161,7 +167,40 @@ export default function ProductDetails({
 
 	function selectCapsuleAction(value: number) {
 		setCapsulePerDay(value);
+
+		setCapsulesPackage(remainsDaysToNextQuater * value);
 	}
+
+	const summaryProductModel = {
+		orders: [
+			{
+				id: 1,
+				alt: "",
+				description: `${capsulesPackage} Capsules to see you to Q${nextQuater}`,
+				name: "One time Alignment Package",
+				delivery: "Delivered Tomorrow ",
+				src: "/images/ubiquinol.svg",
+				capsules: capsulesPackage,
+				price: product?.price,
+			},
+			{
+				id: 1,
+				alt: "supplement mockup",
+				description: `${capsulePerDay * 90} Capsules Every 3 months`,
+				name: "Quarterly Subscription",
+				delivery: nextDeliveryProductText,
+				src: "/images/supplement-mockup.svg",
+				capsules: capsulePerDay * 90,
+				price: product?.price,
+			},
+		] as IOrderSummaryModel[],
+		referals: [
+			{
+				price: -5,
+				count: 1,
+			},
+		] as IReferalSummaryModel[],
+	} as ISummaryProductModel;
 
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">
@@ -275,7 +314,7 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
-				s
+
 				<CorporationBox
 					tags={product?.tags}
 					businessName={product?.producer?.businessName}
@@ -302,49 +341,7 @@ export default function ProductDetails({
 							selectCapsuleAction={selectCapsuleAction}
 						/>
 
-						<OrderCard
-							id={2}
-							alt="ubiquinol"
-							description="86 Capsules to see you to Q1 "
-							name="One time Alignment Package"
-							delivery="Delivered Tomorrow "
-							src="/images/ubiquinol.svg"
-						>
-							<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
-								£23.20{" "}
-								<span className="text-[12px] leading-[16px] md:leading-[12px] text-grey1 font-inconsolata">
-									(£0.25 / capsule)
-								</span>
-							</div>
-						</OrderCard>
-
-						<Separator className="bg-grey13 h-[1px]" />
-
-						<OrderCard
-							id={1}
-							alt="supplement mockup"
-							description="180 Capsules Every 3 months"
-							name="Quarterly Subscription"
-							delivery={nextDeliveryProductText}
-							src="/images/supplement-mockup.svg"
-						>
-							<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
-								£45.00{" "}
-								<span className="text-[12px] leading-[16px] md:leading-[12px] text-grey1 font-inconsolata">
-									(£0.25 / capsule)
-								</span>
-							</div>
-						</OrderCard>
-
-						<Separator className="bg-grey13 h-[1px]" />
-
-						<TotalCard
-							capsules={90 * capsulePerDay}
-							price={68.2}
-							rrp={product?.rrp}
-							percent={65}
-							capsulePrice={0.25}
-						/>
+						<SummaryProduct className="bg-white" model={summaryProductModel} />
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
 							<Link href={`/products/${product?.id}/checkout`}>
@@ -414,46 +411,7 @@ export default function ProductDetails({
 				)}
 				{context?.user && (
 					<div className="grid gap-[28px]">
-						<div className="grid gap-[10px] p-[24px] bg-grey12">
-							<OrderCard
-								id={1}
-								alt="supplement mockup"
-								description="180 Capsules Every 3 months"
-								name="Quarterly Subscription"
-								delivery="Triggered when 50 pre-orders Complete"
-								src="/images/supplement-mockup.svg"
-							>
-								<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
-									£41.00{" "}
-									<span className="text-[12px] leading-[13px] md:leading-[12px] text-grey1 font-inconsolata font-bold">
-										(£0.25 / capsule)
-									</span>
-								</div>
-							</OrderCard>
-
-							<Separator className="bg-grey13 h-[1px]" />
-
-							<OrderCard
-								id={1}
-								alt="supplement mockup"
-								delivery="This Quarter"
-								name="Succesful Referal x 1"
-							>
-								<div className="text-[20px] font-bold text-black flex items-center gap-[5px] font-inconsolata">
-									£-5.00{" "}
-								</div>
-							</OrderCard>
-
-							<Separator className="bg-grey13 h-[1px]" />
-
-							<TotalCard
-								capsules={180}
-								price={36}
-								rrp={144}
-								percent={75}
-								capsulePrice={0.21}
-							/>
-						</div>
+						<SummaryProduct model={summaryProductModel} />
 
 						<div className="p-[24px] border-[1px] border-grey12 grid gap-[24px]">
 							<ReferalLinkCard>

@@ -13,7 +13,8 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export function getQuarterInfo(date) {
+export function getQuarterInfo() {
+	const date = new Date();
 	const month = date.getMonth();
 	const currentQuarter = Math.floor(month / 3) + 1;
 
@@ -27,11 +28,21 @@ export function getQuarterInfo(date) {
 	const diffTime = nextQuarterStart - date;
 	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+	const { startDate, endDate } = getQuarterDates(year, currentQuarter);
+
+	const remainsDaysToNextQuater = getDifferenceInDays(
+		new Date(year, endDate.getMonth(), 1),
+		new Date(),
+	);
+
 	return {
 		currentQuarter,
 		daysToNextQuarter: diffDays,
 		year,
 		nextQuarterMonth,
+		startDate,
+		endDate,
+		remainsDaysToNextQuater,
 	};
 }
 
@@ -46,6 +57,20 @@ export function getQuarterDates(year: number, quarterNumber: number) {
 	const endDate = new Date(year, startMonth + 3, 0);
 
 	return { startDate, endDate };
+}
+
+export function getDifferenceInDays(date1, date2) {
+	// Ensure the input is converted to Date objects
+	const d1 = new Date(date1);
+	const d2 = new Date(date2);
+
+	// Calculate the difference in time (milliseconds)
+	const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+
+	// Convert milliseconds to days
+	const diffInDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+	return diffInDays;
 }
 
 export function dropNextDelivery() {

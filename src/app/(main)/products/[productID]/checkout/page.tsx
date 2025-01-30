@@ -7,14 +7,17 @@ import BillingAddress from "@/components/BillingAddress";
 import DeliveryAddress from "@/components/DeliveryAddress";
 import PaymentDetails from "@/components/PaymentDetails";
 import Steps from "@/components/Steps";
+import SummaryProduct from "@/components/SummaryProduct";
 import CreditCards from "@/components/products/CreditCards";
 import ConfirmJoining from "@/components/products/checkout/ConfirmJoining";
 import CreateAccount from "@/components/products/checkout/CreateAccount";
 import Delivery from "@/components/products/checkout/Delivery";
-import OrderSummary from "@/components/products/checkout/OrderSummary";
 import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
+import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
+import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
+import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -28,6 +31,47 @@ export default function Checkout({
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const [step, setStep] = useState<number>(3);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
+
+	const summaryProductModel = {
+		title: "Order Summary",
+		corporation: "KANEKA CORPRATION",
+		name: "Coenzyme Q10 Ubiquinol Kaneka TM",
+		deliveryText: "NEXT DAY DELIVERY",
+		orders: [
+			{
+				id: 1,
+				alt: "",
+				description: "$100 Capsules to see you to Q1",
+				name: "One time Alignment Package",
+				delivery: "Delivered Tomorrow ",
+				src: "/images/ubiquinol.svg",
+				capsules: 100,
+				price: 200,
+			},
+			{
+				id: 1,
+				alt: "supplement mockup",
+				description: "300 Capsules Every 3 months",
+				name: "Quarterly Subscription",
+				delivery: "text",
+				src: "/images/supplement-mockup.svg",
+				capsules: 300,
+				price: 250,
+			},
+		] as IOrderSummaryModel[],
+		subscriptions: [
+			{
+				id: 4,
+				alt: "supplement mockup",
+				description: "300 Capsules Every 3 months",
+				name: "Quarterly Subscription",
+				delivery: "text",
+				src: "/images/supplement-mockup.svg",
+				capsules: 300,
+				price: 250,
+			},
+		] as ISubscriptionSummaryModel[],
+	} as ISummaryProductModel;
 
 	const context = useUser();
 
@@ -148,7 +192,7 @@ export default function Checkout({
 			</div>
 
 			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<OrderSummary activeStep={step} />
+				<SummaryProduct model={summaryProductModel} />
 				{step === 4 && <Delivery />}
 				{step < 4 && <AvailablePayment />}
 			</div>

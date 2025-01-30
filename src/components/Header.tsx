@@ -22,7 +22,7 @@ import UserLoggedOut from "./UserLoggedOut";
 export default function Header() {
 	const context = useUser();
 
-	const { currentQuarter, year } = getQuarterInfo(new Date());
+	const { currentQuarter, year } = getQuarterInfo();
 	const { endDate } = getQuarterDates(year, currentQuarter);
 	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	return (

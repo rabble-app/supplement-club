@@ -43,9 +43,7 @@ export default function CapsuleBox({
 	const [selectedState, setSelectedState] = useState(2);
 	const [capsules, setCapsules] = useState(selectedState * days);
 
-	const [pricePerCapsule] = useState(
-		(Number(price) / Number(capsules)).toFixed(2),
-	);
+	const [pricePerCapsule] = useState(Number(price) / Number(capsules));
 
 	function selectCapsulte(value: number) {
 		setSelectedState(value);
@@ -117,7 +115,7 @@ export default function CapsuleBox({
 										<div className="flex flex-col gap-[7px] text-[16px] leading-[18px] font-bold">
 											£{(capsules * Number(pricePerCapsule))?.toFixed(0)}
 											<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-												(£{pricePerCapsule}/capsule)
+												(£{pricePerCapsule.toFixed(2)}/capsule)
 											</span>
 										</div>
 										<div>
@@ -154,7 +152,7 @@ export default function CapsuleBox({
 					<div className="flex items-center gap-[2px] text-[16px] leading-[18px] font-bold">
 						£{(capsules * Number(pricePerCapsule))?.toFixed(0)}{" "}
 						<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-							(£{pricePerCapsule}/capsule)
+							(£{pricePerCapsule.toFixed(2)}/capsule)
 						</span>
 					</div>
 					<div>

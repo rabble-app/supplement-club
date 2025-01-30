@@ -71,7 +71,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 						£{model.wholesalePrice}
 					</span>{" "}
 					<span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
-						{precentage}% OFF
+						{precentage.toFixed(2)}% OFF
 					</span>
 				</div>
 
