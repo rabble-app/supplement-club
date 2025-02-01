@@ -2,28 +2,54 @@
 
 import { useState } from "react";
 
-import AvailablePayment from "@/components/AvailablePayment";
-import BillingAddress from "@/components/BillingAddress";
 import PaymentDetails from "@/components/PaymentDetails";
-import Steps from "@/components/Steps";
-import SuccessDialog from "@/components/dashboard/manage-plans/SuccessDialog";
 import TopUpCapsuleHeading from "@/components/dashboard/manage-plans/TopUpCapsuleHeading";
-import TopUpOrderSummary from "@/components/dashboard/manage-plans/TopUpOrderSummary";
-import CreditCards from "@/components/products/CreditCards";
+import AvailablePayment from "@/components/shared/AvailablePayment";
+import BillingAddress from "@/components/shared/BillingAddress";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import Steps from "@/components/shared/Steps";
+import SummaryProduct from "@/components/shared/SummaryProduct";
+import { useUser } from "@/contexts/UserContext";
+import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
+import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export default function TopUpCheckout() {
 	const [step, setStep] = useState<number>(1);
+	const context = useUser();
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 	const steps = ["Top Up Capsules", "Payment Details"];
 
-	const [isDialogOpen, setIsDialogOpen] = useState(true);
+	const summaryProductModel = {
+		title: "Top Up Order Summary",
+		corporation: "KANEKA CORPRATION",
+		name: "Coenzyme Q10 Ubiquinol Kaneka TM",
+		deliveryText: "NEXT DAY DELIVERY",
+		orders: [
+			{
+				alt: "supplement mockup",
+				description: "86 Capsules to see you to Q1",
+				capsules: 86,
+				name: "Alignment Capsules",
+				delivery: "Delivered Tomorrow",
+				src: "/images/supplement-mockup.svg",
+				price: 23.2,
+				pricePerCapsule: 0.25,
+			},
+		] as IOrderSummaryModel[],
+	} as ISummaryProductModel;
 
-	function onOpenChange(open: boolean) {
-		console.log(open);
-		setIsDialogOpen(false);
+	function updateStep(val: number) {
+		setStep(val);
+		// on success payment
+		if (val === 3) {
+			setIsDialogOpen(true);
+		}
+	}
+
+	function onOpenChange(val: boolean) {
+		setIsDialogOpen(val);
 	}
 
 	return (
@@ -31,33 +57,31 @@ export default function TopUpCheckout() {
 			<div className="grid gap-[37px]">
 				<Steps activeStep={step} alignStart steps={steps} />
 				{step === 1 && (
-					<TopUpCapsuleHeading step={step} updateStepAction={setStep} />
+					<TopUpCapsuleHeading step={step} updateStepAction={updateStep} />
 				)}
 				{step !== 1 && (
 					<PaymentDetails
 						step={step}
-						updateStepAction={setStep}
+						updateStepAction={updateStep}
 						isComming={false}
 					>
 						<BillingAddress />
 
 						<Separator className="bg-grey13" />
-
-						<Elements stripe={stripePromise}>
-							<CreditCards />
-						</Elements>
 					</PaymentDetails>
 				)}
-				{step === 3 && (
-					<SuccessDialog
-						isDialogOpen={isDialogOpen}
-						onOpenChange={onOpenChange}
-					/>
-				)}
+
+				<ConfirmDialog
+					isDialogOpen={isDialogOpen}
+					onOpenChange={onOpenChange}
+					title="Top Up Capsules Order Received"
+					description={`A confirmation email has been sent to ${context?.user?.email}`}
+				/>
 			</div>
 
 			<div className="grid gap-[73px]">
-				<TopUpOrderSummary />
+				<SummaryProduct model={summaryProductModel} />
+
 				<AvailablePayment />
 			</div>
 		</div>

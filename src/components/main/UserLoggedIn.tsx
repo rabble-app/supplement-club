@@ -1,7 +1,7 @@
 import { DialogClose } from "@radix-ui/react-dialog";
 
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 import { useUser } from "@/contexts/UserContext";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";

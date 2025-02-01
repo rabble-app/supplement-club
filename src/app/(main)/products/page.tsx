@@ -1,7 +1,7 @@
 "use client";
-import ProductCard from "@/components/cards/ProductCard";
-import ExpansionSelector from "@/components/products/ExpansionSelector";
-import SortBy from "@/components/products/SortBy";
+import ExpansionSelector from "@/components/main/products/ExpansionSelector";
+import SortBy from "@/components/main/products/SortBy";
+import ProductCard from "@/components/shared/ProductCard";
 import {
 	Breadcrumb,
 	BreadcrumbItem,

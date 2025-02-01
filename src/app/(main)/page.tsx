@@ -1,7 +1,7 @@
-import Faqs from "@/components/Faqs";
-import ProductInfo from "@/components/ProductInfo";
-import HomeCardComponent from "@/components/cards/HomeCard";
-import ProductCardComponent from "@/components/cards/ProductCard";
+import Faqs from "@/components/main/Faqs";
+import HomeCardComponent from "@/components/main/HomeCard";
+import ProductInfo from "@/components/main/ProductInfo";
+import ProductCardComponent from "@/components/shared/ProductCard";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";

@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 
-import AvailablePayment from "@/components/AvailablePayment";
-import BillingAddress from "@/components/BillingAddress";
-import DeliveryAddress from "@/components/DeliveryAddress";
 import PaymentDetails from "@/components/PaymentDetails";
-import Steps from "@/components/Steps";
-import SummaryProduct from "@/components/SummaryProduct";
-import CreditCards from "@/components/products/CreditCards";
-import ConfirmJoining from "@/components/products/checkout/ConfirmJoining";
-import CreateAccount from "@/components/products/checkout/CreateAccount";
-import Delivery from "@/components/products/checkout/Delivery";
+import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
+import CreateAccount from "@/components/main/products/[productID]/checkout/CreateAccount";
+import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
+import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
+import AvailablePayment from "@/components/shared/AvailablePayment";
+import BillingAddress from "@/components/shared/BillingAddress";
+import Steps from "@/components/shared/Steps";
+import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
@@ -19,11 +18,8 @@ import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 export default function Checkout({
 	params,
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
@@ -182,10 +178,6 @@ export default function Checkout({
 						)}
 
 						<Separator className="bg-grey13 h-[1px]" />
-
-						<Elements stripe={stripePromise}>
-							<CreditCards />
-						</Elements>
 					</PaymentDetails>
 				)}
 				{step === 4 && <ConfirmJoining />}

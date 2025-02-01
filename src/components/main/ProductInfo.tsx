@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 export default function ProductInfo({
 	product,

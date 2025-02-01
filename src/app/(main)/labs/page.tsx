@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-import Faqs from "@/components/Faqs";
-import ProductInfo from "@/components/ProductInfo";
-import GoalCardComponent from "@/components/cards/GoalCard";
-import LaboratoryCard from "@/components/cards/LaboratoryCard";
+import Faqs from "@/components/main/Faqs";
+import ProductInfo from "@/components/main/ProductInfo";
+import GoalCardComponent from "@/components/main/labs/GoalCard";
+import LaboratoryCard from "@/components/main/labs/LaboratoryCard";
 import {
 	Carousel,
 	CarouselContent,
@@ -114,7 +114,7 @@ export default async function Labs() {
 	] as IGoalCardModel[];
 
 	const product = await productService.product(
-		process.env.NEXT_PUBLIC_PRODUCT_ID,
+		process.env.NEXT_PUBLIC_PRODUCT_ID || "",
 	);
 
 	return (

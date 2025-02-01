@@ -3,7 +3,7 @@ import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import { useState } from "react";
-import OrderSummaryCard from "./cards/OrderSummaryCard";
+import OrderSummaryCard from "./OrderSummaryCard";
 
 export default function SummaryProduct({
 	model,

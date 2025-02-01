@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import SummaryProduct from "@/components/SummaryProduct";
 import SubscriptionCancelDialog from "@/components/dashboard/subscription-managment/SubscriptionCancelDialog";
 import SubscriptionCard from "@/components/dashboard/subscription-managment/SubscriptionCard";
 import SubscriptionPlan from "@/components/dashboard/subscription-managment/SubscriptionPlan";
 import SubscriptionSkipDialog from "@/components/dashboard/subscription-managment/SubscriptionSkipDialog";
+import SummaryProduct from "@/components/shared/SummaryProduct";
 import { Button } from "@/components/ui/button";
 import { paymentService } from "@/services/paymentService";
 import { teamsService } from "@/services/teamService";
@@ -24,7 +24,7 @@ interface SubscriptionProps {
 export default function Subscription({
 	params,
 }: Readonly<{ params: Promise<SubscriptionProps> }>) {
-	const [capsule, setCapsule] = useState<number>(1);
+	const [setCapsule] = useState<number>(1);
 	const [subscriptionID, setSubscriptionID] = useState<string>();
 	const { currentQuarter, daysToNextQuarter, year } = getQuarterInfo();
 	const { startDate } = getQuarterDates(year, currentQuarter);

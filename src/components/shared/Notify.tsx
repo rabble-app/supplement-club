@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
-export default function Motify({ message }: Readonly<{ message: string }>) {
+export default function Notify({ message }: Readonly<{ message: string }>) {
 	const toastId = toast(message);
 	return (
 		<div className="grid grid-cols-[16px_228px_16px] gap-[10px] items-center text-red bg-red2 px-[16px] h-[32px]">

@@ -5,9 +5,10 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { teamsService } from "@/services/teamService";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type { ReactNode } from "react";
+import OptBackInDialog from "../subscription-managment/OptBackInDialog";
+import ReactivatePlanDialog from "../subscription-managment/ReactivatePlanDialog";
 
 const ConditionalLink = ({
 	href,
@@ -23,26 +24,13 @@ const ConditionalLink = ({
 
 export default function ManagePlanCard({
 	model,
-	reactivateSubscriptionAction,
-	optBackInForNextDeliveryAction,
 }: Readonly<{
 	model: IManagePlanModel;
-	reactivateSubscriptionAction: (id: string) => void;
-	optBackInForNextDeliveryAction: (id: string) => void;
 }>) {
-	async function reactivateSubscriptionPlan() {
-		await teamsService.reactivateSubscriptionPlan(model.id);
-		reactivateSubscriptionAction(model.id);
-	}
-
-	async function optBackInSubscriptionPlan() {
-		await teamsService.optBackInForNextDelivery(model.id);
-		optBackInForNextDeliveryAction(model.id);
-	}
 	return (
 		<ConditionalLink
 			href={`/dashboard/manage-plans/${model.id}`}
-			condition={model.subscriptionStatus === "ACTIVE"}
+			condition={model.subscriptionStatus === "ACTIVE" && !model.isSkipped}
 		>
 			<div className="py-[16px] px-[12px] bg-white rounded-[12px] shadow-card grid gap-[10px]">
 				<div className="flex justify-between items-center h-[69px]">
@@ -92,24 +80,21 @@ export default function ManagePlanCard({
 					<ChevronRight className="text-blue" />
 				</div>
 				{model.isSkipped && model.subscriptionStatus === "ACTIVE" && (
-					<Button className="contents" onClick={optBackInSubscriptionPlan}>
+					<Button className="contents">
 						<div className="h-[30px] rounded-[17px]  flex justify-center items-center text-center text-[16px] leading-[20px] font-hagerman text-blue bg-blue11/10">
 							You&apos;ve opted to skip the Jan 1 2025 Drop
 						</div>
-						<div className="text-blue flex justify-center items-center text-center h-[50px] rounded-[2px] bg-grey27/[12%] text-[17px] leading-[22px] font-bold font-inconsolata">
-							Opt Back in
-						</div>
+
+						<OptBackInDialog id={model.id} />
 					</Button>
 				)}
 				{model.subscriptionStatus !== "ACTIVE" && (
-					<Button className="contents" onClick={reactivateSubscriptionPlan}>
+					<>
 						<div className="h-[30px] rounded-[17px]  flex justify-center items-center text-center text-[16px] leading-[20px] font-hagerman bg-[#FF3B301A] text-red3">
 							You&apos;ve cancelled this plan
 						</div>
-						<div className="text-blue flex justify-center items-center text-center h-[50px] rounded-[2px] bg-grey27/[12%] text-[17px] leading-[22px] font-bold font-inconsolata">
-							Re-Activate Plan
-						</div>
-					</Button>
+						<ReactivatePlanDialog id={model.id} />
+					</>
 				)}
 			</div>
 		</ConditionalLink>

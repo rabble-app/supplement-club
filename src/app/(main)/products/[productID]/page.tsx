@@ -4,20 +4,20 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import SummaryProduct from "@/components/SummaryProduct";
-import TotalCard from "@/components/cards/TotalCard";
 import CoinCard from "@/components/dashboard/refer/CoinCard";
 import MilestoneCard from "@/components/dashboard/refer/MilestoneCard";
 import ReferalLinkCard from "@/components/dashboard/refer/ReferalLinkCard";
-import BottomSection from "@/components/products/BottomSection";
-import Subscription from "@/components/products/CapsuleBox";
-import CorporationBox from "@/components/products/CorporationBox";
-import MemberCard from "@/components/products/MemberCard";
-import MembersBox from "@/components/products/MembersBox";
-import PreOrderInfo from "@/components/products/PreOrderInfo";
-import ProductFaqs from "@/components/products/ProductFaqs";
-import ProfuctTable from "@/components/products/ProductTable";
-import TeamPrice from "@/components/products/TeamPrice";
+import BottomSection from "@/components/main/products/BottomSection";
+import Subscription from "@/components/main/products/CapsuleBox";
+import CorporationBox from "@/components/main/products/CorporationBox";
+import MemberCard from "@/components/main/products/MemberCard";
+import MembersBox from "@/components/main/products/MembersBox";
+import PreOrderInfo from "@/components/main/products/PreOrderInfo";
+import ProductFaqs from "@/components/main/products/ProductFaqs";
+import ProfuctTable from "@/components/main/products/ProductTable";
+import TeamPrice from "@/components/main/products/TeamPrice";
+import TotalCard from "@/components/main/products/[productID]/TotalCard";
+import SummaryProduct from "@/components/shared/SummaryProduct";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -49,7 +49,7 @@ interface ProductDetailsProps {
 	productID: string;
 }
 
-const milestones = [
+const milestones: IReferCoinModel[] = [
 	{
 		isActive: true,
 		isQuickWin: true,
@@ -77,7 +77,7 @@ const milestones = [
 		credit: 50,
 		isBestValue: true,
 	},
-] as IReferCoinModel[];
+];
 
 const itemsMembers = [
 	{

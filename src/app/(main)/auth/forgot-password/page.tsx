@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
 	});
 	const [isPending, startTransition] = useTransition();
 	const [isResend, setResend] = useState(false);
-	const [email, setEmail] = useState<string>();
+	const [email, setEmail] = useState<string>("");
 
 	async function postResetPassword(e: FormData) {
 		const email = e.get("email")?.toString() ?? "";

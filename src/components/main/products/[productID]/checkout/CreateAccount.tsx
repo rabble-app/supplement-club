@@ -3,6 +3,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import Notify from "@/components/shared/Notify";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -19,7 +20,6 @@ import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import Motify from "../../notify";
 
 export default function CreateAccount({
 	step,
@@ -62,7 +62,7 @@ export default function CreateAccount({
 			updateStepAction(step + 1);
 		} else {
 			toast.custom(
-				() => <Motify message={JSON.parse(result.error).message} />,
+				() => <Notify message={JSON.parse(result.error).message} />,
 				{
 					position: "top-right",
 				},

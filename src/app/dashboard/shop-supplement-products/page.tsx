@@ -1,6 +1,6 @@
 "use client";
 
-import ProductCard from "@/components/cards/ProductCard";
+import ProductCard from "@/components/shared/ProductCard";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 
 const commonProperties = {

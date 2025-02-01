@@ -1,5 +1,5 @@
-import CorporationCardInfo from "@/components/cards/CorporationCardInfo";
-import ImageBox from "@/components/products/ImageBox";
+import CorporationCardInfo from "@/components/main/products/CorporationCardInfo";
+import ImageBox from "@/components/main/products/ImageBox";
 
 export default function CorporationBox({
 	tags,

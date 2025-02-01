@@ -1,6 +1,6 @@
 "use client";
 
-import ManagerCard from "@/components/cards/ManagerOptionCard";
+import ManagerCard from "@/components/dashboard/ManagerOptionCard";
 
 import type IManagerOptionCardModel from "@/utils/models/IManagerOptionCardModel";
 

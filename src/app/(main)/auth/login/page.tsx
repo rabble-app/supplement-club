@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import Motify from "@/components/notify";
+import Notify from "@/components/shared/Notify";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
@@ -64,7 +64,7 @@ export default function LoginPage() {
 		} else {
 			toast.custom(
 				() => (
-					<Motify
+					<Notify
 						message={
 							JSON.parse(result.error || "Incorrect email/password").message
 						}

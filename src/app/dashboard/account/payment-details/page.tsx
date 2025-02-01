@@ -1,5 +1,5 @@
 "use client";
-import PaymentCard from "@/components/PaymentCard";
+import PaymentCard from "@/components/dashboard/account/payment-details/PaymentCard";
 import type ICardModel from "@/utils/models/ICardModel";
 import {
 	DropdownMenu,

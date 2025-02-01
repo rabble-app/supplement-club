@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import ShareBox from "@/components/products/checkout/ShareBox";
+import ShareBox from "@/components/main/products/[productID]/checkout/ShareBox";
 
 import DiscountBox from "./DiscountBox";
 

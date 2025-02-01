@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import ConfirmNewSubscriptionQuantityDialog from "../manage-plans/ConfirmNewSubscriptionQuantityDialog";
 
 export default function SubscriptionPlan({
 	confirmAction,
@@ -97,10 +97,13 @@ export default function SubscriptionPlan({
 			)}
 
 			{changePlan && capsule !== initCapsule && (
-				<ConfirmNewSubscriptionQuantityDialog
-					confirmAction={confirmChangeCapsule}
-					capsule={capsule}
-					changedCapsule={initCapsule}
+				<ConfirmDialog
+					onOpenChange={() => confirmChangeCapsule}
+					title="Subscription Quantity updated"
+					description={`You have changed your subscription quantity from ${capsule} capsule
+							to ${initCapsule} capsules per day, the next delivery is on X
+							date.`}
+					topContent="Confirm New Subscription Quantity"
 				/>
 			)}
 		</div>

@@ -2,7 +2,7 @@ import { useUser } from "@/contexts/UserContext";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 const UserProfile = ({ user }: { user?: IUserResponse }) => (
 	<div className="flex gap-x-[8px] text-white px-[24px]">
