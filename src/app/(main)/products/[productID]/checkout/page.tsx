@@ -25,7 +25,7 @@ export default function Checkout({
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
 	const router = useRouter();
 	const [product, setProduct] = useState<ISingleProductModel>();
-	const [step, setStep] = useState<number>(3);
+	const [step, setStep] = useState<number>(2);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
 	const summaryProductModel = {
@@ -83,7 +83,7 @@ export default function Checkout({
 	useEffect(() => {
 		if (context?.user) {
 			if (context?.user.isVerified) {
-				setStep(3);
+				setStep(2);
 			} else {
 				router.push("/auth/email-verification");
 			}

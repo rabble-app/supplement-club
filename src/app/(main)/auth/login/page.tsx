@@ -10,15 +10,9 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 
+import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import Notify from "@/components/shared/Notify";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
@@ -43,9 +37,9 @@ export default function LoginPage() {
 
 	// included redirected url after user is loggin
 	useEffect(() => {
-		const searchRedirect = searchParams.get("redirect"); // Extract the redirect URL
+		const searchRedirect = searchParams.get("redirect");
 		if (searchRedirect) {
-			setRedirect(searchRedirect); // Set the redirect state
+			setRedirect(searchRedirect);
 		}
 	}, [searchParams]);
 
@@ -77,6 +71,18 @@ export default function LoginPage() {
 		}
 	}
 
+	const passwordLabelContent = () => (
+		<>
+			<span>Password*</span>
+			<Link
+				className="text-blue font-roboto font-[400] underline"
+				href="/auth/forgot-password/"
+			>
+				Forgot password?
+			</Link>
+		</>
+	);
+
 	return (
 		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
 			<Form {...form}>
@@ -92,43 +98,22 @@ export default function LoginPage() {
 							Welcome back! Please enter your details.
 						</p>
 					</div>
-					<FormField
-						control={form.control}
+
+					<FormFieldComponent
+						form={form}
+						label="Email*"
+						placeholder="e.g. newton@mail.com"
+						id="email"
 						name="email"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-[16px] font-bold font-inconsolata">
-									Email*
-								</FormLabel>
-								<FormControl>
-									<Input {...field} placeholder="e.g. newton@mail.com" />
-								</FormControl>
-							</FormItem>
-						)}
 					/>
-					<FormField
-						control={form.control}
+
+					<FormFieldComponent
+						form={form}
+						placeholder="e.g. newton@mail.com"
+						id="password"
 						name="password"
-						render={({ field, fieldState }) => (
-							<FormItem className={`${fieldState.invalid ? "error" : ""}`}>
-								<FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
-									Password*{" "}
-									<Link
-										className="text-blue font-roboto font-[400] underline"
-										href="/auth/forgot-password/"
-									>
-										Forgot password?
-									</Link>
-								</FormLabel>
-								<FormControl>
-									<Input
-										type="password"
-										{...field}
-										placeholder="*************"
-									/>
-								</FormControl>
-							</FormItem>
-						)}
+						type="password"
+						labelContent={passwordLabelContent()}
 					/>
 
 					<Button

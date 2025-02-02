@@ -125,6 +125,7 @@ const DialogDescription = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
 	<DialogPrimitive.Description
+		aria-describedby="_"
 		ref={ref}
 		className={cn("text-sm text-neutral-500 dark:text-neutral-400", className)}
 		{...props}

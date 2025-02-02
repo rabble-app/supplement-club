@@ -3,16 +3,10 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import Notify from "@/components/shared/Notify";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
@@ -78,29 +72,21 @@ export default function CreateAccount({
 			>
 				{children}
 
-				<FormField
-					control={currentForm.control}
+				<FormFieldComponent
+					form={currentForm}
+					label="Email*"
+					placeholder="e.g. newton@mail.com"
+					id="email"
 					name="email"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Email*</FormLabel>
-							<FormControl>
-								<Input {...field} placeholder="e.g. newton@mail.com" />
-							</FormControl>
-						</FormItem>
-					)}
 				/>
-				<FormField
-					control={currentForm.control}
+
+				<FormFieldComponent
+					form={currentForm}
+					label="Password*"
+					placeholder="*************"
+					id="password"
 					name="password"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Password*</FormLabel>
-							<FormControl>
-								<Input {...field} type="password" placeholder="*************" />
-							</FormControl>
-						</FormItem>
-					)}
+					type="password"
 				/>
 
 				<Button type="submit" className="bg-blue text-white w-full font-bold">

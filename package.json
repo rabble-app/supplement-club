@@ -10,6 +10,7 @@
     "dev:mobile": "next dev -H 192.168.0.3"
   },
   "dependencies": {
+    "@getaddress/autocomplete": "^3.0.3",
     "@hookform/resolvers": "^3.9.1",
     "@lottiefiles/dotlottie-react": "^0.12.0",
     "@mapbox/search-js-react": "^1.0.0-beta.24",

@@ -1,7 +1,6 @@
-import type { IBaseTimestamps } from "../IBaseTimestamps";
-import type IShippingResponse from "./IShippingResponse";
+import type IShippingResponse from "./response/IShippingResponse";
 
-export interface IUserResponse extends IBaseTimestamps {
+export default interface IUserModel {
 	id?: string;
 	phone?: string;
 	email: string;

@@ -1,6 +1,9 @@
 import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
+import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type { IBasketRequest } from "@/utils/models/api/request/IBasketRequest";
+import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
+import { mapUserPaymentOptionModel } from "@/utils/utils";
 
 export const paymentService = {
 	addCard: async (paymentMethodId: string, stripeCustomerId: string) =>
@@ -149,19 +152,24 @@ export const paymentService = {
 			teamId,
 		}),
 
-	createPaymentIntent: async (
-		amount: string,
-		currency: string,
-		customerId: string,
+	makeCardDefault: async (
+		lastFourDigits: string,
 		paymentMethodId: string,
+		stripeCustomerId: string,
 	) =>
-		apiRequest(PAYMENT_ENDPOINTS.CREATE_PAYMENT_INTENT, "POST", {
-			amount,
-			currency,
-			customerId,
+		apiRequest(PAYMENT_ENDPOINTS.MAKE_CARD_DEFAULT, "POST", {
+			lastFourDigits,
 			paymentMethodId,
+			stripeCustomerId,
 		}),
 
-	getUsersPaymentOptions: async (id: string) =>
-		apiRequest(PAYMENT_ENDPOINTS.GET_PAYMENT_OPTIONS(id), "GET"),
+	async getUserPaymentOptions(id: string) {
+		const { data } = await apiRequest(
+			PAYMENT_ENDPOINTS.GET_PAYMENT_OPTIONS(id),
+			"GET",
+		);
+		return data?.map<IUserPaymentOptionModel>((r: IUserPaymentOptionResponse) =>
+			mapUserPaymentOptionModel(r),
+		);
+	},
 };

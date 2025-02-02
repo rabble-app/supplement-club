@@ -8,15 +8,9 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 
+import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { authService } from "@/services/authService";
 import { forgotPasswordSchema } from "@/validations";
 
@@ -52,19 +46,13 @@ export default function ForgotPasswordPage() {
 								Enter your email and we’ll send a link to reset.
 							</p>
 						</div>
-						<FormField
-							control={form.control}
+
+						<FormFieldComponent
+							form={form}
+							label="Email*"
+							placeholder="e.g. newton@mail.com"
+							id="email"
 							name="email"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="text-[16px] font-bold font-inconsolata">
-										Email*
-									</FormLabel>
-									<FormControl>
-										<Input {...field} placeholder="e.g. newton@mail.com" />
-									</FormControl>
-								</FormItem>
-							)}
 						/>
 
 						<Button

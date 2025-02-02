@@ -2,10 +2,17 @@ import { USER_ENDPOINTS } from "@/utils/endpoints";
 
 import { apiRequest } from "@/utils/helpers";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
+import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
 import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
 import type { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
+import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import type IUserPlanReponse from "@/utils/models/api/response/IUserPlanResponse";
-import { mapSubscriptionModel, mapUpcomingDelivery } from "@/utils/utils";
+import {
+	mapSubscriptionModel,
+	mapUpcomingDelivery,
+	mapUserInfoModel,
+	mapUserPastOrder,
+} from "@/utils/utils";
 
 export const usersService = {
 	getUpcomingDeliveries: async (
@@ -54,4 +61,42 @@ export const usersService = {
 			mapSubscriptionModel(r),
 		);
 	},
+
+	async getUserInfo(userId: string) {
+		const { data } = await apiRequest(USER_ENDPOINTS.INFO(userId), "GET");
+		return mapUserInfoModel(data);
+	},
+
+	async getPastOrders(userId: string) {
+		const { data } = await apiRequest(
+			USER_ENDPOINTS.PAST_ORDERS(userId),
+			"GET",
+		);
+		return data?.map<IUserPastOrderModel>((r: IUserPastOrderReponse) =>
+			mapUserPastOrder(r),
+		);
+	},
+
+	updateUserInfo: async (firstName: string, lastName: string, email: string) =>
+		apiRequest(USER_ENDPOINTS.UPDATE_INFO, "PATCH", {
+			firstName,
+			lastName,
+			email,
+		}),
+
+	updateShippingInfo: async (
+		userId: string,
+		address: string,
+		buildingNo: string,
+		city: string,
+		country: string,
+		postCode: string,
+	) =>
+		apiRequest(USER_ENDPOINTS.UPDATE_SHIPPING(userId), "PATCH", {
+			address,
+			buildingNo,
+			city,
+			country,
+			postCode,
+		}),
 };

@@ -10,9 +10,13 @@ import {
 } from "@radix-ui/react-collapsible";
 import { Separator } from "@radix-ui/react-separator";
 
+import { useUser } from "@/contexts/UserContext";
+import { usersService } from "@/services/usersService";
 import type { IPastOrderModel } from "@/utils/models/IPastOrderModel";
+import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
+import { useEffect, useState } from "react";
 
-const orders = [
+const orders2 = [
 	{
 		id: 1,
 		name: "CoQ10",
@@ -60,9 +64,23 @@ const orders = [
 ] as IPastOrderModel[];
 
 export default function Orders() {
+	const [orders, setOrders] = useState<IUserPastOrderModel[]>([]);
+	const context = useUser();
+
+	useEffect(() => {
+		const fetchUserPastOrders = async () => {
+			const model = await usersService.getPastOrders(
+				context?.user?.id || "03efdd19-9e61-468d-ad89-66ce7ff6dc02",
+			);
+			setOrders(model);
+			console.log(model);
+		};
+		fetchUserPastOrders();
+	}, [context?.user?.id]);
+
 	return (
 		<div className="grid gap-[16px] max-w-[600px] mx-auto py-[10px] md:py-[30px]">
-			{orders.map((order) => (
+			{orders2.map((order) => (
 				<Collapsible
 					key={order.id}
 					className="bg-white rounded-[12px] shadow-card py-[16px] px-[12px] "

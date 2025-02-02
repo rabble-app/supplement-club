@@ -1,9 +1,28 @@
+"use client";
 import EmailChangeDialog from "@/components/dashboard/account/EmailChangeDialog";
 import ManageAccountCard from "@/components/dashboard/account/ManageAccountCard";
 import ShippingDetailsDialog from "@/components/dashboard/account/ShippingDetailsDialog";
+import { useUser } from "@/contexts/UserContext";
+import { usersService } from "@/services/usersService";
+import type IUserModel from "@/utils/models/api/IUserModel";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Account() {
+	const [userInfo, setUserInfo] = useState<IUserModel>();
+	const context = useUser();
+
+	useEffect(() => {
+		const fetchUserInfo = async () => {
+			console.log(context?.user?.id);
+			const model = await usersService.getUserInfo(
+				"03efdd19-9e61-468d-ad89-66ce7ff6dc02",
+			);
+			setUserInfo(model);
+		};
+		fetchUserInfo();
+	}, [context?.user?.id]);
+
 	return (
 		<div className="mx-auto max-w-[600px] py-[16px] md:py-[46px] flex flex-col gap-[32px] min-h-screen justify-start">
 			<div className="grid gap-[16px]">
@@ -11,7 +30,9 @@ export default function Account() {
 					Your Account
 				</p>
 
-				<EmailChangeDialog />
+				{userInfo && (
+					<EmailChangeDialog user={userInfo} updateUserAction={setUserInfo} />
+				)}
 			</div>
 
 			<div className="grid gap-[16px]">
@@ -19,7 +40,12 @@ export default function Account() {
 					Shipping Details
 				</p>
 
-				<ShippingDetailsDialog />
+				{userInfo && (
+					<ShippingDetailsDialog
+						user={userInfo}
+						updateUserAction={setUserInfo}
+					/>
+				)}
 			</div>
 
 			<div className="grid gap-[16px]">

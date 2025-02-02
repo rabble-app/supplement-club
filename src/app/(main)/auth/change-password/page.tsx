@@ -6,17 +6,11 @@ import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 
 import { changePasswordSchema } from "@/validations";
 
+import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { authService } from "@/services/authService";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -61,41 +55,23 @@ export default function ChangePasswordPage() {
 					<p className="text-[20px] font-bold font-inconsolata">
 						Reset Your Password.
 					</p>
-					<FormField
-						control={form.control}
+
+					<FormFieldComponent
+						form={form}
+						label="New Password*"
+						placeholder="*************"
+						id="password"
 						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-[16px] font-bold font-inconsolata">
-									New Password*
-								</FormLabel>
-								<FormControl>
-									<Input
-										type="password"
-										{...field}
-										placeholder="*************"
-									/>
-								</FormControl>
-							</FormItem>
-						)}
+						type="password"
 					/>
-					<FormField
-						control={form.control}
+
+					<FormFieldComponent
+						form={form}
+						label="Confirm Password*"
+						placeholder="*************"
+						id="confirmPassword"
 						name="confirmPassword"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-[16px] font-bold font-inconsolata">
-									Confirm Password*
-								</FormLabel>
-								<FormControl>
-									<Input
-										type="password"
-										{...field}
-										placeholder="*************"
-									/>
-								</FormControl>
-							</FormItem>
-						)}
+						type="password"
 					/>
 
 					<Button

@@ -3,11 +3,17 @@ import { twMerge } from "tailwind-merge";
 import type IManagePlanModel from "./models/IManagePlanModel";
 import type IProductCardModel from "./models/IProductCardModel";
 import type ISingleProductModel from "./models/ISingleProductModel";
+import type IUserPastOrderModel from "./models/IUserPastOrderModel";
 import type { IProductModel } from "./models/api/IProductModel";
 import type IUpcomingDeliveryModel from "./models/api/IUpcomingDeliveryModel";
+import type IUserModel from "./models/api/IUserModel";
+import type IUserPaymentOptionModel from "./models/api/IUserPaymentOptionModel";
 import type IProductResponse from "./models/api/response/IProductResponse";
 import type { IUpcomingDeliveryResponse } from "./models/api/response/IUpcomingDeliveryResponse";
+import type IUserPastOrderReponse from "./models/api/response/IUserPastOrderReponse";
+import type IUserPaymentOptionResponse from "./models/api/response/IUserPaymentOptionResponse";
 import type IUserPlanReponse from "./models/api/response/IUserPlanResponse";
+import type { IUserResponse } from "./models/api/response/IUserResponse";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -209,5 +215,46 @@ export const mapSubscriptionModel = (
 		capsulePerDay: +model.team.basket[0].capsulePerDay,
 		isSkipped: model.skipNextDelivery,
 		quantity: model.team.basket[0].quantity,
+	};
+};
+
+export const mapUserInfoModel = (model: IUserResponse): IUserModel => {
+	return {
+		id: model.id,
+		email: model.email,
+		cardLastFourDigits: model.cardLastFourDigits,
+		firstName: model.firstName,
+		lastName: model.lastName,
+		isVerified: model.isVerified,
+		phone: model.phone,
+		postalCode: model.postalCode,
+		refCode: model.refCode,
+		referrerId: model.referrerId,
+		shipping: model.shipping,
+	};
+};
+
+export const mapUserPaymentOptionModel = (
+	model: IUserPaymentOptionResponse,
+): IUserPaymentOptionModel => {
+	return {
+		id: model.id,
+		card: model.card,
+		billingDetails: model.billing_details,
+		livemode: model.livemode,
+		type: model.type,
+		created: model.created,
+	};
+};
+
+export const mapUserPastOrder = (
+	model: IUserPastOrderReponse,
+): IUserPastOrderModel => {
+	return {
+		id: model.id,
+		amount: model.amount,
+		order: model.order,
+		status: model.status,
+		createdAt: model.createdAt,
 	};
 };
