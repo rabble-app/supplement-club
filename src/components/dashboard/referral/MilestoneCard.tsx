@@ -3,18 +3,19 @@
 import { useEffect, useState } from "react";
 
 import { Progress } from "@/components/ui/progress";
-
-import type { IReferCoinModel } from "@/utils/models/IReferCoinModel";
+import type IReferalModel from "@/utils/models/api/IReferalModel";
 
 export default function MilestoneCard({
 	balance,
 	nextMilestone,
-}: Readonly<{ balance: number; nextMilestone?: IReferCoinModel }>) {
+}: Readonly<{ balance: number; nextMilestone?: IReferalModel }>) {
 	const [progress, setProgress] = useState(0);
 
 	useEffect(() => {
 		if (nextMilestone) {
-			const precentage = (100 * balance) / nextMilestone?.requires;
+			const precentage = nextMilestone
+				? (100 * balance) / nextMilestone?.amount
+				: 100;
 			const timer = setTimeout(() => setProgress(precentage), 100);
 			return () => clearTimeout(timer);
 		}
@@ -28,8 +29,8 @@ export default function MilestoneCard({
 
 			{nextMilestone && (
 				<span className="text-[12px] leading-[13px] font-helvetica text-grey15">
-					Earn {(nextMilestone.requires - balance).toLocaleString()} more Club
-					Coins to Unlock £{nextMilestone.credit} Credit
+					Earn {(nextMilestone.amount - balance).toLocaleString()} more Club
+					Coins to Unlock £{nextMilestone.amount} Credit
 				</span>
 			)}
 

@@ -22,7 +22,7 @@ const ShowTextBasedOnRoute = () => {
 				return "Manage Plans";
 			case "/dashboard/view-past-orders":
 				return "View Past Orders";
-			case "/dashboard/refer":
+			case "/dashboard/referral":
 				return "Refer a Friend & You BOTH Save";
 			case "/dashboard/shop-supplement-products":
 				return "Shop Supplement Products";

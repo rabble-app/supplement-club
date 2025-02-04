@@ -12,56 +12,8 @@ import { Separator } from "@radix-ui/react-separator";
 
 import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
-import type { IPastOrderModel } from "@/utils/models/IPastOrderModel";
 import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
 import { useEffect, useState } from "react";
-
-const orders2 = [
-	{
-		id: 1,
-		name: "CoQ10",
-		capsules: 180,
-		number: 23355239,
-		price: 5.8,
-		pricePerCapsule: 0.25,
-		date: "20 June 2024",
-		imageSrc: "",
-		imageAlt: "",
-	},
-	{
-		id: 2,
-		name: "CoQ10",
-		capsules: 180,
-		number: 23355239,
-		price: 5.8,
-		pricePerCapsule: 0.25,
-		date: "20 June 2024",
-		imageSrc: "",
-		imageAlt: "",
-	},
-	{
-		id: 3,
-		name: "CoQ10",
-		capsules: 180,
-		number: 23355239,
-		price: 5.8,
-		pricePerCapsule: 0.25,
-		date: "20 June 2024",
-		imageSrc: "",
-		imageAlt: "",
-	},
-	{
-		id: 4,
-		name: "CoQ10",
-		capsules: 180,
-		number: 23355239,
-		price: 5.8,
-		pricePerCapsule: 0.25,
-		date: "20 June 2024",
-		imageSrc: "",
-		imageAlt: "",
-	},
-] as IPastOrderModel[];
 
 export default function Orders() {
 	const [orders, setOrders] = useState<IUserPastOrderModel[]>([]);
@@ -69,20 +21,17 @@ export default function Orders() {
 
 	useEffect(() => {
 		const fetchUserPastOrders = async () => {
-			const model = await usersService.getPastOrders(
-				context?.user?.id || "03efdd19-9e61-468d-ad89-66ce7ff6dc02",
-			);
+			const model = await usersService.getPastOrders(context?.user?.id || "");
 			setOrders(model);
-			console.log(model);
 		};
 		fetchUserPastOrders();
 	}, [context?.user?.id]);
 
 	return (
 		<div className="grid gap-[16px] max-w-[600px] mx-auto py-[10px] md:py-[30px]">
-			{orders2.map((order) => (
+			{orders.map((item) => (
 				<Collapsible
-					key={order.id}
+					key={item.id}
 					className="bg-white rounded-[12px] shadow-card py-[16px] px-[12px] "
 				>
 					{" "}
@@ -93,7 +42,7 @@ export default function Orders() {
 						<div className="grid grid-cols-[69px_1fr] gap-[8px]">
 							<div className="rounded-[8px] border-[1px] border-grey28 w-[69px] p-[4px]">
 								<Image
-									src="/images/supplement-mockup.svg"
+									src={item.order.basket[0].product.imageUrl}
 									alt="supplement icon"
 									width={61}
 									height={61}
@@ -102,27 +51,31 @@ export default function Orders() {
 							<div className="flex flex-col gap-[6px]">
 								<div className="flex items-center gap-[2px]">
 									<span className="text-[12px] leading-[13px] font-hagerman text-grey4">
-										{order.name}
-										{"-"}
+										{item.order.team.producer.businessName}
+										{" -"}
 									</span>
 									<span className="text-[12px] leading-[13px] font-inconsolata text-grey4">
-										{order.capsules} Capsules
+										{Number(item.order.basket[0].capsulePerDay) * 90} Capsules
 									</span>
 								</div>
 
-								<div className="text-[12px] leading-[13px] text-grey4 font-helvetica">
-									Order Number: {order.number}
+								<div className="flex text-[12px] leading-[13px] text-grey4 font-helvetica">
+									Order Number: {item.order.accumulatedAmount}
 								</div>
 
 								<div className="text-[16px] leading-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
-									£{order.price?.toFixed(2)}{" "}
+									£{item.order.basket[0].price}{" "}
 									<span className="text-[10px] leading-[11px] text-grey1 font-[800] font-inconsolata">
-										(£{order.pricePerCapsule} / capsule)
+										(£{item.order.basket[0].price} / capsule)
 									</span>
 								</div>
 
 								<div className="text-[12px] leading-[13px] text-grey4 font-helvetica text-left">
-									{order.date}
+									{new Intl.DateTimeFormat("en-GB", {
+										day: "numeric",
+										month: "long",
+										year: "numeric",
+									}).format(new Date(item.order.deadline))}
 								</div>
 							</div>
 						</div>
@@ -133,7 +86,7 @@ export default function Orders() {
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4 pt-[16px]">
 							smol plan non-bio{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£5.80
+								£0.00
 							</span>
 						</p>
 
@@ -142,14 +95,14 @@ export default function Orders() {
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
 							Subtotal{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£5.80
+								£0.00
 							</span>
 						</p>
 
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
 							Referral discounts{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£0.00
+								£{Number(item.discount).toFixed(2)}
 							</span>
 						</p>
 
@@ -163,7 +116,7 @@ export default function Orders() {
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
 							Total{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£5.80
+								£{item.order.basket[0].price}
 							</span>
 						</p>
 					</CollapsibleContent>

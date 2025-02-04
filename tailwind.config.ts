@@ -16,7 +16,6 @@ export default {
 				red4: "#8F0002",
 				blue: "#00038F",
 				blue2: "#DFDFFF",
-				blue3: "#00038F",
 				blue4: "#007AFF",
 				blue5: "#7578FF",
 				blue6: "#EFF0FF",

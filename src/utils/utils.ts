@@ -5,10 +5,14 @@ import type IProductCardModel from "./models/IProductCardModel";
 import type ISingleProductModel from "./models/ISingleProductModel";
 import type IUserPastOrderModel from "./models/IUserPastOrderModel";
 import type { IProductModel } from "./models/api/IProductModel";
+import type IReferalInfoModel from "./models/api/IReferalInfoModel";
+import type IReferalModel from "./models/api/IReferalModel";
 import type IUpcomingDeliveryModel from "./models/api/IUpcomingDeliveryModel";
 import type IUserModel from "./models/api/IUserModel";
 import type IUserPaymentOptionModel from "./models/api/IUserPaymentOptionModel";
 import type IProductResponse from "./models/api/response/IProductResponse";
+import type IReferalInfoResponse from "./models/api/response/IReferalInfoResponse";
+import type IReferalResponse from "./models/api/response/IReferalResponse";
 import type { IUpcomingDeliveryResponse } from "./models/api/response/IUpcomingDeliveryResponse";
 import type IUserPastOrderReponse from "./models/api/response/IUserPastOrderReponse";
 import type IUserPaymentOptionResponse from "./models/api/response/IUserPaymentOptionResponse";
@@ -220,17 +224,17 @@ export const mapSubscriptionModel = (
 
 export const mapUserInfoModel = (model: IUserResponse): IUserModel => {
 	return {
-		id: model.id,
-		email: model.email,
-		cardLastFourDigits: model.cardLastFourDigits,
-		firstName: model.firstName,
-		lastName: model.lastName,
-		isVerified: model.isVerified,
-		phone: model.phone,
-		postalCode: model.postalCode,
-		refCode: model.refCode,
-		referrerId: model.referrerId,
-		shipping: model.shipping,
+		id: model?.id,
+		email: model?.email,
+		cardLastFourDigits: model?.cardLastFourDigits,
+		firstName: model?.firstName,
+		lastName: model?.lastName,
+		isVerified: model?.isVerified,
+		phone: model?.phone,
+		postalCode: model?.postalCode,
+		refCode: model?.refCode,
+		referrerId: model?.referrerId,
+		shipping: model?.shipping,
 	};
 };
 
@@ -256,5 +260,30 @@ export const mapUserPastOrder = (
 		order: model.order,
 		status: model.status,
 		createdAt: model.createdAt,
+		discount: model.discount,
+	};
+};
+
+export const mapReferalModel = (model: IReferalResponse): IReferalModel => {
+	return {
+		amount: model.amount,
+		id: model.id,
+		createdAt: model.createdAt,
+		rate: model.rate,
+		updatedAt: model.updatedAt,
+	};
+};
+
+export const mapReferalInfoModel = (
+	model: IReferalInfoResponse,
+): IReferalInfoModel => {
+	return {
+		balance: model?.wallet?.balance ? Number(model.wallet.balance) : 0,
+		claimed: model?.wallet?.claimed ? Number(model.wallet.claimed) : 0,
+		bonuses: model.bonuses || 0,
+		referralCode: model.referralCode,
+		teams: model.teams,
+		totalSaved: model.totalSaved,
+		referrer: model.referrer,
 	};
 };

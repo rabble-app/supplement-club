@@ -3,6 +3,7 @@ export default interface IUserPastOrderReponse {
 	orderId: string;
 	userId: string;
 	amount: string;
+	discount: number;
 	paymentIntentId: string;
 	status: string;
 	createdAt: string;

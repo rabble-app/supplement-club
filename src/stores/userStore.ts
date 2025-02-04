@@ -33,9 +33,9 @@ export const useUserStore = create(
 				setItem: (key, value) => {
 					const jsonString = JSON.stringify(value);
 
-					// expires in 30 min
+					// expires in 60 min
 					const date = new Date();
-					const minutes = 30;
+					const minutes = 60;
 					date.setTime(date.getTime() + minutes * 60 * 1000);
 					Cookies.set(key, jsonString, { expires: date });
 				},

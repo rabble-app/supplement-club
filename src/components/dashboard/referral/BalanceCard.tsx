@@ -16,7 +16,7 @@ export default function BalanceCard({
 					height={40}
 				/>
 				<div className="text-[48px] leading-[50px] font-inconsolata font-[600] text-white text-center">
-					{balance.toLocaleString()}
+					{balance?.toLocaleString()}
 				</div>
 			</div>
 		</div>

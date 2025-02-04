@@ -17,7 +17,6 @@ import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
-import { Separator } from "@radix-ui/react-separator";
 import { useRouter } from "next/navigation";
 
 export default function Checkout({
@@ -83,7 +82,7 @@ export default function Checkout({
 	useEffect(() => {
 		if (context?.user) {
 			if (context?.user.isVerified) {
-				setStep(2);
+				setStep(3);
 			} else {
 				router.push("/auth/email-verification");
 			}
@@ -176,8 +175,6 @@ export default function Checkout({
 								Register now. Only be charged when we reach 50 pre-orders.{" "}
 							</div>
 						)}
-
-						<Separator className="bg-grey13 h-[1px]" />
 					</PaymentDetails>
 				)}
 				{step === 4 && <ConfirmJoining />}

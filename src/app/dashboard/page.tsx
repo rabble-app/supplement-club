@@ -33,7 +33,7 @@ const otherActions = [
 		id: 1,
 		image: "/images/icons/discount-icon.svg",
 		imageAlt: "Discount icon",
-		link: "/dashboard/refer/",
+		link: "/dashboard/referral/",
 		title: "Refer a Friend & You BOTH Save",
 	},
 	{

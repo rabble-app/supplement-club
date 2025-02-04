@@ -1,25 +1,33 @@
-import { useState } from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ReferInfoCard() {
-	const [price] = useState(48.78);
-
+export default function ReferInfoCard({
+	name,
+	referrals,
+	teams,
+	price,
+	totalCoint,
+}: Readonly<{
+	name: string;
+	referrals: number;
+	teams: number;
+	price: number;
+	totalCoint: number;
+}>) {
 	return (
 		<div className="p-[16px] grid gap-[16px] rounded-[4px] shadow-3 border-[1px] border-grey35">
 			<div>
 				<p className="text-[32px] leading-[36px] font-hagerman uppercase">
-					Maxwell Beard
+					{name}
 				</p>
 				<Link
 					className="text-[14px] underline font-[600] font-inconsolata text-blue"
 					href="#"
 				>
-					8 Referrals
+					{referrals} Referrals
 				</Link>
 				<p className="text-[14px] font-[600] font-inconsolata text-grey15">
-					Member of 4 teams
+					Member of {teams} teams
 				</p>
 			</div>
 			<div className="grid gap-[10px]">
@@ -34,7 +42,7 @@ export default function ReferInfoCard() {
 						height={24}
 					/>
 					<p className="text-[14px] leading-[14px] font-[600] font-inconsolata">
-						100,000 CC
+						{totalCoint} CC
 					</p>
 				</div>
 			</div>

@@ -2,6 +2,7 @@ import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type { IBasketRequest } from "@/utils/models/api/request/IBasketRequest";
+import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
 import { mapUserPaymentOptionModel } from "@/utils/utils";
 
@@ -162,6 +163,30 @@ export const paymentService = {
 			paymentMethodId,
 			stripeCustomerId,
 		}),
+
+	async createPaymentIntent(
+		amount: number,
+		currency: string,
+		customerId: string,
+		paymentMethodId: string,
+	) {
+		const { data } = await apiRequest(
+			PAYMENT_ENDPOINTS.PAYMENT_INTENT,
+			"POST",
+			{
+				amount,
+				currency,
+				customerId,
+				paymentMethodId,
+			},
+		);
+		return {
+			paymentIntentId: data.paymentIntentId,
+			clientSecret:
+				data.clientSecret ||
+				"pi_3Qo2PaLOm4z6Mbsx02aFD8X5_secret_KXf1CadD3fuhfkA13wGRtdskv",
+		} as IPaymentIntentResponse;
+	},
 
 	async getUserPaymentOptions(id: string) {
 		const { data } = await apiRequest(

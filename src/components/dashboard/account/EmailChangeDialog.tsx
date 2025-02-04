@@ -12,6 +12,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
+import { usersService } from "@/services/usersService";
 import type IUserModel from "@/utils/models/api/IUserModel";
 import { emailChangeDialogSchema } from "@/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,13 +47,9 @@ export default function EmailChangeDialog({
 	};
 
 	const onSubmit = async () => {
-		const { firstName, lastName, email } = form.getValues();
-		/* await usersService.updateUserInfo(
-			firstName,
-			lastName,
-			email,
-		); */
-		const updatedUser = { ...user, firstName, lastName, email };
+		const { firstName, lastName } = form.getValues();
+		await usersService.updateUserInfo(firstName, lastName);
+		const updatedUser = { ...user, firstName, lastName };
 		updateUserAction(updatedUser);
 		setIsOpen(false);
 	};
@@ -113,6 +110,7 @@ export default function EmailChangeDialog({
 							form={form}
 							label="Email*"
 							name="email"
+							readonly
 							placeholder="kate.evans@outlook.com"
 							id="email"
 						/>

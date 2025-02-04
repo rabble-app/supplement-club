@@ -77,16 +77,16 @@ export const usersService = {
 		);
 	},
 
-	updateUserInfo: async (firstName: string, lastName: string, email: string) =>
+	updateUserInfo: async (firstName: string, lastName: string) =>
 		apiRequest(USER_ENDPOINTS.UPDATE_INFO, "PATCH", {
 			firstName,
 			lastName,
-			email,
 		}),
 
 	updateShippingInfo: async (
 		userId: string,
 		address: string,
+		address2: string,
 		buildingNo: string,
 		city: string,
 		country: string,
@@ -94,6 +94,7 @@ export const usersService = {
 	) =>
 		apiRequest(USER_ENDPOINTS.UPDATE_SHIPPING(userId), "PATCH", {
 			address,
+			address2,
 			buildingNo,
 			city,
 			country,

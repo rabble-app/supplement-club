@@ -16,6 +16,7 @@ type FormFieldComponentProps<T extends FieldValues> = {
 	id?: string;
 	type?: string;
 	labelContent?: React.ReactNode;
+	readonly?: boolean;
 };
 
 export default function FormFieldComponent<T extends FieldValues>({
@@ -26,11 +27,13 @@ export default function FormFieldComponent<T extends FieldValues>({
 	id,
 	type,
 	labelContent,
+	readonly,
 }: FormFieldComponentProps<T>) {
 	return (
 		<FormField
 			control={form.control}
 			name={name}
+			disabled={readonly}
 			render={({ field, fieldState }) => (
 				<FormItem className={fieldState.invalid ? "error" : ""}>
 					<FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">

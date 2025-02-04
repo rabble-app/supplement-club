@@ -1,5 +1,7 @@
 "use client";
 import PaymentCard from "@/components/dashboard/account/payment-details/PaymentCard";
+import PaymentPage from "@/components/shared/PaymentPage";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import type { IPaymentCard } from "@/utils/models/api/IPaymentCard";
@@ -12,7 +14,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { RadioGroup } from "@radix-ui/react-radio-group";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -41,15 +42,14 @@ export default function AccountPaymentDetails() {
 		);
 	}
 
+	async function payment() {}
+
 	return (
 		<>
 			{userCards.length > 0 && (
 				<div className="mx-auto max-w-[600px] py-[32px]">
 					<div className="px-[16px] py-[32px] bg-white flex flex-col gap-[16px] justify-start">
-						<div
-							key={`text-ss-${defaultCard}`}
-							className="border-grey37 border-[1px] rounded-[4px]"
-						>
+						<div className="border-grey37 border-[1px] rounded-[4px]">
 							{userCards?.map((item, idx) => (
 								<>
 									<RadioGroup
@@ -57,7 +57,15 @@ export default function AccountPaymentDetails() {
 										value={defaultCard.toString()}
 										onValueChange={(value) => setDefaultCard(Number(value))}
 									>
-										<PaymentCard model={item.card}>
+										<PaymentCard
+											model={item.card}
+											topContent={
+												<RadioGroupItem
+													value={item.card.last4.toString()}
+													className="mx-auto"
+												/>
+											}
+										>
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>
 													<Image
@@ -102,7 +110,7 @@ export default function AccountPaymentDetails() {
 									</RadioGroup>
 									{idx !== userCards.length - 1 && (
 										<Separator
-											key={item.card.last4}
+											key={`${item.card.last4}-separator `}
 											className="bg-grey37 h-[1px]"
 										/>
 									)}
@@ -112,7 +120,7 @@ export default function AccountPaymentDetails() {
 					</div>
 				</div>
 			)}
-			<div>payment</div>
+			<PaymentPage />
 		</>
 	);
 }

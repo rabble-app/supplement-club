@@ -5,6 +5,7 @@ export default interface IUserPastOrderModel {
 	createdAt?: string;
 	updatedAt?: string;
 	order: Order;
+	discount: number;
 }
 
 export interface Order {

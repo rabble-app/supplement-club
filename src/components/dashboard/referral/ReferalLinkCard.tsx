@@ -9,10 +9,14 @@ import { Input } from "@/components/ui/input";
 
 export default function ReferalLinkCard({
 	children,
+	refCode,
 }: Readonly<{
 	children?: React.ReactNode;
+	refCode?: string;
 }>) {
-	const [link] = useState("https://example.com/referral?ref=user123");
+	const [link] = useState(
+		`${process.env.NEXT_PUBLIC_API_ENDPOINT}/dashboard/referral?ref=${refCode}`,
+	);
 
 	function copyToClipboard() {
 		toast.custom(() => (

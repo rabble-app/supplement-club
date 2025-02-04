@@ -1,18 +1,22 @@
 import type { IPaymentCard } from "@/utils/models/api/IPaymentCard";
 import { getCardImage } from "@/utils/utils";
-import { RadioGroupItem } from "@radix-ui/react-radio-group";
 import Image from "next/image";
 
 export default function PaymentCard({
 	model,
 	children,
-}: Readonly<{ model: IPaymentCard; children?: React.ReactNode }>) {
+	topContent,
+}: Readonly<{
+	model: IPaymentCard;
+	children?: React.ReactNode;
+	topContent?: React.ReactNode;
+}>) {
 	const dateUpdated = new Date();
 	return (
 		<div>
 			<div className="flex justify-between items-center py-[20px] px-[16px]">
-				<div className="flex itemx-center gap-[8px]">
-					<RadioGroupItem value={`$${model.last4}`} className="mx-auto" />
+				<div className="flex items-center gap-[8px]">
+					{topContent}
 					<div className="grid gap-[4px]">
 						<div className="flex gap-[4px]">
 							<span className="text-[14px] leading-[16px] font-hagerman">

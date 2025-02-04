@@ -13,17 +13,19 @@ export const deliveryAddressSchema = z.object({
 });
 
 export const shippingDetailsShema = z.object({
-	address1: z.string({ required_error: "Field is required." }),
+	address: z.string({ required_error: "Field is required." }),
 	address2: z.string({ required_error: "Field is required." }),
+	buildingNo: z.string().optional(),
 	city: z.string({ required_error: "Field is required." }),
-	postcode: z.string({ required_error: "Field is required." }),
+	postalCode: z.string({ required_error: "Field is required." }),
 	country: z.string({ required_error: "Field is required." }),
 });
 
 export const emailChangeDialogSchema = z.object({
 	email: z
 		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
+		.email({ message: "Invalid email address." })
+		.optional(),
 	firstName: z.string({ required_error: "Field is required." }),
 	lastName: z.string({ required_error: "Field is required." }),
 });

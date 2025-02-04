@@ -17,6 +17,7 @@ export const TEAM_ENDPOINTS = {
 export const PAYMENT_ENDPOINTS = {
 	ADD_CARD: "	payments/add-card",
 	BULK_BASKET: "payments/basket-bulk",
+	PAYMENT_INTENT: "payments/intent",
 	PREORDER_BASKET: "payments/basket",
 	CHARGE_HOST: "payments/charge-host",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",
@@ -47,6 +48,12 @@ export const AUTH_ENDPOINTS = {
 	EMAIL_VERIFY: "auth/email-verification",
 	RESEND_EMAIL_VERIFY: "auth/resend-email-verification",
 	CHANGE_PASSWORD: "auth/change-password",
+};
+
+export const REFERAL_ENDPOINTS = {
+	REWARDS: "referrals/reward-categories",
+	REFERAL_INFO: "referrals/info",
+	CLAIM_REWARD: "referrals/reward-categories",
 };
 
 export const PRODUCT_ENDPOINTS = {

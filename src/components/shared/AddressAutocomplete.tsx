@@ -18,9 +18,11 @@ interface GetAddressEvent {
 	address: {
 		formatted_address: string[];
 		building_number: string;
+		sub_building_number: string;
 		postcode: string;
 		country: string;
 		town_or_city: string;
+		line_2: string;
 	};
 }
 
@@ -74,19 +76,22 @@ export default function AddressAutocomplete({
 
 			try {
 				const autocomplete = (await getAddress.autocomplete(
-					"address1",
+					"address",
 					process.env.NEXT_PUBLIC_GETADDRESS_API_KEY,
 				)) as Autocomplete;
 
 				autocomplete.addEventListener(
 					"getaddress-autocomplete-selected",
 					(e: GetAddressEvent) => {
-						form.setValue("address1", e.address.formatted_address[0]);
-						form.setValue("address2", e.address.formatted_address[1]);
-						form.setValue("building_number", e.address.building_number);
+						form.setValue("address", e.address.formatted_address[0]);
+						form.setValue("address2", e.address.line_2);
+						form.setValue(
+							"buildingNo",
+							e.address.building_number || e.address.sub_building_number,
+						);
 						form.setValue("city", e.address.town_or_city);
 						form.setValue("country", e.address.country);
-						form.setValue("postcode", e.address.postcode);
+						form.setValue("postalCode", e.address.postcode);
 					},
 				);
 			} catch (error) {

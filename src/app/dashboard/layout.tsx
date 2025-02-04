@@ -24,7 +24,7 @@ export default function RootLayout({
 		<div>
 			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px] sticky top-[0] z-[1]">
 				<Link
-					href="/"
+					href="/dashboard"
 					className="font-helvetica text-[16px] leading-[18px] font-bold text-base md:hidden flex gap-[8px] items-center absolute left-[16px]"
 				>
 					<Image
@@ -35,7 +35,10 @@ export default function RootLayout({
 					/>
 					Home
 				</Link>
-				<Link href="/" className="text-[24px] leading-[27px] font-hagerman">
+				<Link
+					href="/dashboard"
+					className="text-[24px] leading-[27px] font-hagerman"
+				>
 					Supplement Club
 				</Link>
 

@@ -9,14 +9,29 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUser } from "@/contexts/UserContext";
+import { referalService } from "@/services/referalService";
+import { useState } from "react";
 
 export default function ClaimRewardDialog({
 	credit,
 	requires,
-}: Readonly<{ credit: number; requires: number }>) {
+	claimRewardAction,
+}: Readonly<{
+	credit: number;
+	requires: number;
+	claimRewardAction: (credit: number) => void;
+}>) {
+	const [isOpen, setIsOpen] = useState(false);
+	const context = useUser();
+	async function onSave() {
+		await referalService.updateClaimReward(context?.user?.id || "", requires);
+		claimRewardAction(credit);
+		setIsOpen(false);
+	}
 	return (
-		<Dialog>
-			<DialogTrigger asChild>
+		<Dialog open={isOpen}>
+			<DialogTrigger asChild onClick={() => setIsOpen(true)}>
 				<Button className="bg-blue text-white text[17px] font-inconsolata w-[146px">
 					Claim Reward
 				</Button>
@@ -43,16 +58,19 @@ export default function ClaimRewardDialog({
 				<DialogDescription className="text-center">
 					<span className="text-[16px] leading-[24px] font-helvetica flex">
 						Are you sure you want to convert {requires.toLocaleString()} CC into
-						£{credit}?{" "}
+						£{credit.toFixed(2)}?{" "}
 					</span>
 					<span className="text-[16px] leading-[24px] font-helvetica text-grey29 flex">
 						This will automatically be credited off your next payment.
 					</span>
 				</DialogDescription>
 
-				<DialogClose className="bg-blue text-white w-full font-bold font-inconsolata h-[48px]">
-					Yes, Convert {requires.toLocaleString()} CC into £{credit}
-				</DialogClose>
+				<Button
+					onClick={onSave}
+					className="bg-blue text-white w-full font-bold font-inconsolata h-[48px]"
+				>
+					Yes, Convert {requires.toLocaleString()} CC into £{credit.toFixed(2)}
+				</Button>
 
 				<DialogClose className="bg-white text-blue w-full font-bold font-inconsolata h-[48px]">
 					Cancel

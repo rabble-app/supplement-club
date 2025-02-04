@@ -43,25 +43,26 @@ export default function ShippingDetailsDialog({
 
 	const updateShippingData = () => {
 		form.reset({
-			address1: user.shipping?.address,
+			address: user.shipping?.address,
 			address2: user.shipping?.address2,
 			city: user.shipping?.city,
 			country: user.shipping?.country,
-			postcode: user.shipping?.postCode,
+			postalCode: user.shipping?.postalCode,
+			buildingNo: user.shipping?.buildingNo,
 		});
 	};
 
 	const onSubmit = async (values: z.infer<typeof shippingDetailsShema>) => {
 		await usersService.updateShippingInfo(
 			user.id || "0eaf5135-f229-4749-bb3b-7336d3739974",
-			values.address1, // missed buildingNo and address2
-			"43", // buildingNo set by default
+			values.address,
+			values.address2,
+			values.buildingNo || "",
 			values.city,
 			values.country,
-			values.postcode,
+			values.postalCode,
 		);
 		user.shipping = values;
-		user.shipping.address = values.address1; // this need to be changed because form does not match with api
 		updateUserAction(user);
 		setIsOpen(false);
 	};
@@ -110,9 +111,9 @@ export default function ShippingDetailsDialog({
 						<FormFieldComponent
 							form={form}
 							label="Address Line 1*"
-							name="address1"
+							name="address"
 							placeholder="Somewhere around"
-							id="address1"
+							id="address"
 						/>
 
 						<FormFieldComponent
@@ -121,6 +122,14 @@ export default function ShippingDetailsDialog({
 							name="address2"
 							placeholder="Near somewhere"
 							id="address2"
+						/>
+
+						<FormFieldComponent
+							form={form}
+							label="Building No"
+							name="buildingNo"
+							placeholder="43"
+							id="building_number"
 						/>
 
 						<FormFieldComponent
@@ -142,9 +151,9 @@ export default function ShippingDetailsDialog({
 						<FormFieldComponent
 							form={form}
 							label="Postcode*"
-							name="postcode"
+							name="postalCode"
 							placeholder="SE167NX"
-							id="postcode"
+							id="postalCode"
 						/>
 
 						<Separator className="h-px bg-grey32 -mx-4" />

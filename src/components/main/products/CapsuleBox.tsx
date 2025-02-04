@@ -5,7 +5,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const generateImage = (count: number) => (
 	<div
@@ -43,7 +43,13 @@ export default function CapsuleBox({
 	const [selectedState, setSelectedState] = useState(2);
 	const [capsules, setCapsules] = useState(selectedState * days);
 
-	const [pricePerCapsule] = useState(Number(price) / Number(capsules));
+	const [pricePerCapsule, setPricePerCapsule] = useState(
+		Number(price) / Number(capsules),
+	);
+
+	useEffect(() => {
+		setPricePerCapsule(Number(price) / Number(capsules));
+	}, [price, capsules]);
 
 	function selectCapsulte(value: number) {
 		setSelectedState(value);
@@ -150,7 +156,7 @@ export default function CapsuleBox({
 						3 Month Subscription <br />({capsules} Capsules)
 					</p>
 					<div className="flex items-center gap-[2px] text-[16px] leading-[18px] font-bold">
-						£{(capsules * Number(pricePerCapsule))?.toFixed(0)}{" "}
+						£{(capsules * Number(pricePerCapsule)).toFixed(0)}{" "}
 						<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
 							(£{pricePerCapsule.toFixed(2)}/capsule)
 						</span>

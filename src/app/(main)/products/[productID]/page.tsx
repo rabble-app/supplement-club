@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import CoinCard from "@/components/dashboard/refer/CoinCard";
-import MilestoneCard from "@/components/dashboard/refer/MilestoneCard";
-import ReferalLinkCard from "@/components/dashboard/refer/ReferalLinkCard";
+import MilestoneCard from "@/components/dashboard/referral/MilestoneCard";
+import ReferalCard from "@/components/dashboard/referral/ReferalCard";
+import ReferalLinkCard from "@/components/dashboard/referral/ReferalLinkCard";
 import BottomSection from "@/components/main/products/BottomSection";
 import Subscription from "@/components/main/products/CapsuleBox";
 import CorporationBox from "@/components/main/products/CorporationBox";
@@ -37,47 +37,19 @@ import {
 } from "@/components/ui/carousel";
 import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
+import { referalService } from "@/services/referalService";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import type { IReferCoinModel } from "@/utils/models/IReferCoinModel";
 import type IReferalSummaryModel from "@/utils/models/IReferalSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
+import type IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
+import type IReferalModel from "@/utils/models/api/IReferalModel";
 import { getQuarterInfo } from "@/utils/utils";
 
 interface ProductDetailsProps {
 	productID: string;
 }
-
-const milestones: IReferCoinModel[] = [
-	{
-		isActive: true,
-		isQuickWin: true,
-		rate: 1000,
-		requires: 50000,
-		credit: 5,
-	},
-	{
-		isActive: true,
-		isQuickWin: false,
-		rate: 980,
-		requires: 98000,
-		credit: 10,
-	},
-	{
-		isActive: false,
-		rate: 960,
-		requires: 192000,
-		credit: 20,
-	},
-	{
-		isActive: false,
-		rate: 950,
-		requires: 475000,
-		credit: 50,
-		isBestValue: true,
-	},
-];
 
 const itemsMembers = [
 	{
@@ -120,7 +92,6 @@ export default function ProductDetails({
 	const [capsulePerDay, setCapsulePerDay] = useState(2);
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const context = useUser();
-	const [balance] = useState(99000);
 	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
 		getQuarterInfo();
 
@@ -132,17 +103,34 @@ export default function ProductDetails({
 		remainsDaysToNextQuater * 2,
 	);
 
-	const [nextMilestone, setNextMilestone] = useState<
-		IReferCoinModel | undefined
-	>();
+	const [nextMilestone, setNextMilestone] = useState<IReferalModel>([]);
+	const [referalRewars, setReferalRewars] = useState<IReferalModel[]>([]);
+	const [referalInfo, setReferalInfo] = useState<IReferalInfoModel>({
+		balance: 0,
+	} as IReferalInfoModel);
 
 	useEffect(() => {
-		milestones.map((item) => {
-			item.percentage = Math.round((balance * 100) / item.requires);
-		});
-		const next = milestones.find((i) => i.requires > balance);
-		setNextMilestone(next);
-	}, [balance]);
+		if (context?.user !== null) {
+			const fetchReferalRewars = async () => {
+				const model = await referalService.getRewars();
+				setReferalRewars(model);
+
+				const next = model.find((i) => i.amount > referalInfo?.balance);
+				setNextMilestone(next);
+			};
+			fetchReferalRewars();
+		}
+	}, [referalInfo?.balance, context?.user]);
+
+	useEffect(() => {
+		if (context?.user !== null) {
+			const fetchReferaInfo = async () => {
+				const model = await referalService.getReferalInfo();
+				setReferalInfo(model);
+			};
+			fetchReferaInfo();
+		}
+	}, [context?.user]);
 
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -170,6 +158,8 @@ export default function ProductDetails({
 
 		setCapsulesPackage(remainsDaysToNextQuater * value);
 	}
+
+	function claimRewardAction() {}
 
 	const summaryProductModel = {
 		orders: [
@@ -420,12 +410,25 @@ export default function ProductDetails({
 								</Button>
 							</ReferalLinkCard>
 
-							<MilestoneCard balance={balance} nextMilestone={nextMilestone} />
+							<MilestoneCard
+								balance={referalInfo.balance}
+								nextMilestone={nextMilestone}
+							/>
 
 							<div className="bg-grey11 md:hidden h-[16px] mx-[-16px] my-[-10px]" />
 
-							{milestones.map((milestone, idx) => (
-								<CoinCard key={`coin-${idx + 1}`} model={milestone} />
+							{referalRewars.map((referal, idx) => (
+								<ReferalCard
+									claimRewardAction={claimRewardAction}
+									percentage={(referal.amount * 100) / referalInfo?.balance}
+									isActive={referalInfo?.claimed >= referal.amount}
+									key={referal.id}
+									credit={referal.amount / referalInfo?.balance}
+									rate={referal.rate}
+									requires={referal.amount}
+									isQuickWin={idx === 0}
+									isBestValue={idx + 1 === referalRewars.length}
+								/>
 							))}
 						</div>
 					</div>
