@@ -3,7 +3,14 @@ import Image from "next/image";
 export default function CorporationCardInfo({
 	name,
 	businessName,
-}: Readonly<{ name?: string; businessName?: string }>) {
+	quantityOfSubUnitPerOrder,
+	unitsOfMeasurePerSubUnit,
+}: Readonly<{
+	name?: string;
+	businessName?: string;
+	quantityOfSubUnitPerOrder?: number;
+	unitsOfMeasurePerSubUnit?: string;
+}>) {
 	return (
 		<div className="grid gap-[8px]">
 			<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
@@ -19,7 +26,7 @@ export default function CorporationCardInfo({
 					width={24}
 					height={24}
 				/>
-				<p className="text-[14px] leading-[16px] text-grey6">100mg</p>
+				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder} ${unitsOfMeasurePerSubUnit}`}</p>
 			</div>
 		</div>
 	);

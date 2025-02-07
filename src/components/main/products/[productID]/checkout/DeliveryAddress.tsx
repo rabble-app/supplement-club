@@ -26,19 +26,16 @@ export default function DeliveryAddress({
 
 	const context = useUser();
 
-	if (context?.user) {
-		currentForm.setValue("userId", context?.user.id);
-	}
-
 	const onSubmit = async (values: z.infer<typeof deliveryAddressSchema>) => {
 		await usersService.updateDeliveryAddress(
-			values.userId,
+			context?.user?.id || "",
 			"SUPPLEMENT",
 			values.firstName,
 			values.lastName,
-			values.address1, // need address2
+			values.address,
+			values.address2,
 			values.city,
-			values.postcode,
+			values.postalCode,
 			values.country,
 			values.mobileNumber,
 		);
@@ -76,8 +73,8 @@ export default function DeliveryAddress({
 					form={currentForm}
 					label="Address Line 1*"
 					placeholder="Somewhere around"
-					id="address1"
-					name="address1"
+					id="address"
+					name="address"
 				/>
 
 				<FormFieldComponent
@@ -108,8 +105,8 @@ export default function DeliveryAddress({
 					form={currentForm}
 					label="Postcode*"
 					placeholder="SE167NX"
-					id="postcode"
-					name="postcode"
+					id="postalCode"
+					name="postalCode"
 				/>
 
 				<FormFieldComponent

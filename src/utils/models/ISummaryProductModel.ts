@@ -7,7 +7,11 @@ export default interface ISummaryProductModel {
 	title?: string;
 	corporation?: string;
 	name?: string;
+	rrp?: number;
 	deliveryText?: string;
+	percentage?: number;
+	quantityOfSubUnitPerOrder?: string;
+	unitsOfMeasurePerSubUnit?: string;
 	orders: IOrderSummaryModel[];
 	referals: IReferalSummaryModel[];
 	subscriptions: ISubscriptionSummaryModel[];

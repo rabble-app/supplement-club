@@ -13,7 +13,7 @@ export default function CorporationBox({
 	description?: string;
 }>) {
 	return (
-		<div className="flex flex-col gap-[16px] md:gap-[24px]">
+		<div className="flex flex-col gap-[16px] md:gap-[24px] ">
 			<CorporationCardInfo businessName={businessName} name={name} />
 
 			<div className="flex flex-col gap-[16px] font-helvetica">

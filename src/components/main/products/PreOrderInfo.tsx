@@ -30,7 +30,7 @@ export default function PreOrderInfo() {
 	return (
 		<div>
 			{items.map((item, index) => (
-				<div key={item.id}>
+				<div key={`${item.id} ${index}`}>
 					<div className="grid gap-[8px]">
 						<p
 							className={`${item.id === 1 ? "text-[26px] leading-[39px] font-inconsolata font-bold" : "text-[20px] leading-[30px] font-inconsolata font-bold"}`}

@@ -18,6 +18,7 @@ export const PAYMENT_ENDPOINTS = {
 	ADD_CARD: "	payments/add-card",
 	BULK_BASKET: "payments/basket-bulk",
 	PAYMENT_INTENT: "payments/intent",
+	CAPTURE_PAYMENT: "payments/intent/capture",
 	PREORDER_BASKET: "payments/basket",
 	CHARGE_HOST: "payments/charge-host",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",
@@ -25,8 +26,8 @@ export const PAYMENT_ENDPOINTS = {
 	PAYMENT_BASKET_ACTIVE: "payments/basket",
 	PAYMENT_BASKET_PREORDER: "payments/basket",
 	CHARGE_USER: "payments/charge",
-	CAPTURE_PAYMENT: "payments/intent/capture",
 	MAKE_CARD_DEFAULT: "payments/default-card",
+	REMOVE_CARD: "payments/remove-card",
 	GET_PAYMENT_OPTIONS: (id: string) => `payments/options/${id}`,
 };
 

@@ -6,4 +6,5 @@ export default interface IProductResponse {
 	product: IProductModel;
 	status: string;
 	productId: string;
+	teamId: string;
 }

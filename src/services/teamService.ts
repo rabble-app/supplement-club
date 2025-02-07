@@ -13,11 +13,11 @@ export const teamsService = {
 			{ status },
 		),
 
-	addTeamMember: async (userId: string, teamId: string, status: string) =>
+	addTeamMember: async (userId: string, teamId: string) =>
 		await apiRequest(TEAM_ENDPOINTS.ADD_TEAM_MEMBER, "POST", {
 			userId,
 			teamId,
-			status,
+			status: "APPROVED",
 		}),
 
 	createTeam: async (

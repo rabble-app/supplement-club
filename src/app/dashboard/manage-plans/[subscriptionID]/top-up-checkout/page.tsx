@@ -18,7 +18,7 @@ export default function TopUpCheckout() {
 	const [step, setStep] = useState<number>(1);
 	const context = useUser();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+	const [totalPrice] = useState<number>(1000);
 	const steps = ["Top Up Capsules", "Payment Details"];
 
 	const summaryProductModel = {
@@ -61,8 +61,8 @@ export default function TopUpCheckout() {
 				)}
 				{step !== 1 && (
 					<PaymentDetails
-						step={step}
-						updateStepAction={updateStep}
+						totalPrice={totalPrice}
+						successAction={() => updateStep(step + 1)}
 						isComming={false}
 					>
 						<BillingAddress />

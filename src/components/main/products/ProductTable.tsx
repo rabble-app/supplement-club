@@ -108,7 +108,7 @@ export default function ProfuctTable() {
 
 			<div className="border-[1px] border-blue rounded-[8px] overflow-hidden">
 				{productTableItems.map((item, index) => (
-					<div key={item.colum1}>
+					<div key={`${item.colum1} ${index}`}>
 						<div
 							className={`grid grid-cols-[1fr_100px_60px_60px] md:grid-cols-[1fr_140px_140px_140px] p-[10px] md:h-[50px] ${index === productTableItems.length - 1 ? "mb-[20px]" : ""}`}
 						>

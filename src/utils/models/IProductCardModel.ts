@@ -17,5 +17,6 @@ export default interface IProductCardModel {
 	producer?: IProducerModel;
 
 	teamName?: string;
+	teamId?: string;
 	subscribers: number;
 }

@@ -12,8 +12,9 @@ export default function Plans() {
 
 	useEffect(() => {
 		(async () => {
-			const userId = "07ef1100-01eb-4938-be0f-afb431ec679f"; // context?.user?.id ||
-			const response = await usersService.getSubscriptionPlans(userId);
+			const response = await usersService.getSubscriptionPlans(
+				context?.user?.id || "",
+			);
 			setSubscriptions(response);
 			console.log(context?.user);
 		})();

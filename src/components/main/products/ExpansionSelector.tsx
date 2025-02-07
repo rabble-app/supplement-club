@@ -57,8 +57,11 @@ export default function ExpansionSelector({
 
 			{/* Collapsible content listing the categories */}
 			<CollapsibleContent className="grid gap-[16px]">
-				{categories.map((category) => (
-					<div key={category} className="flex items-start gap-x-[10px]">
+				{categories.map((category, idx) => (
+					<div
+						key={`${category} ${idx + 1}`}
+						className="flex items-start gap-x-[10px]"
+					>
 						{/* Checkbox for category selection */}
 						<Checkbox
 							value={category}

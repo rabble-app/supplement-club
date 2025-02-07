@@ -26,9 +26,9 @@ export default function ReferalCard({
 }>) {
 	return (
 		<div
-			onClick={() => openAction(true)} // Call the function directly
-			onKeyDown={() => {}} // Add keyboard event handler
-			className={` p-[16px] rounded-[4px] border-[1px] border-grey35 flex justify-between items-center ${isActive ? "bg-white shadow-3" : "mx-[24px] bg-grey35 shadow-5"}`}
+			onClick={() => openAction(true)}
+			onKeyDown={() => {}}
+			className={` p-[16px] rounded-[4px] border-[1px] border-grey35 flex justify-between items-center ${isActive ? "bg-white shadow-3 mx-[-10px] md:mx-[0]" : "md:mx-[24px] bg-grey35 shadow-5"}`}
 		>
 			<div className="grid gap-[16px]">
 				<div className="flex gap-[8px] items-center">

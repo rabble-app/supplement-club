@@ -2,101 +2,114 @@
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderSummaryCard from "./OrderSummaryCard";
 
 export default function SummaryProduct({
 	model,
 	className,
 	children,
+	showOnlyTotal,
 }: Readonly<{
 	model: ISummaryProductModel;
 	className?: string;
+	showOnlyTotal?: boolean;
 	children?: React.ReactNode;
 }>) {
-	const [totalPrice] = useState(
-		model.orders.reduce((acc, val) => acc + val.price || 0, 0),
-	);
-	const [capsules] = useState(
-		model.orders.reduce((acc, val) => acc + val.capsules || 0, 0),
-	);
-	const [totalPercenge] = useState(65);
+	const [totalCount, setTotalCount] = useState(0);
+	const [totalCapsules, setTotalCapsules] = useState(0);
 
+	useEffect(() => {
+		setTotalCount(
+			model.orders?.reduce((sum, item) => sum + item.capsules * 0.25, 0),
+		);
+		setTotalCapsules(
+			model.orders?.reduce((sum, item) => sum + item.capsules, 0),
+		);
+	}, [model.orders]);
 	return (
 		<div
 			key={model.id}
 			className={`grid gap-[24px] p-[16px] md:p-[24px] bg-grey12 ${className}`}
 		>
-			{model.title && (
-				<h1 className="text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
-					{model.title}
-				</h1>
-			)}
+			{!showOnlyTotal && (
+				<>
+					{model.title && (
+						<h1 className="text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
+							{model.title}
+						</h1>
+					)}
 
-			{model.corporation && model.name && (
-				<div className="grid gap-[8px]">
-					<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
-						{model.corporation}
-					</p>
-					<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman">
-						{model.name}
-					</div>
-					<div className="flex items-center gap-[8px]">
-						<Image
-							src="/images/icons/link-icon.svg"
-							alt="security-card-icon"
-							width={24}
-							height={24}
-						/>
-						<p className="text-[14px] leading-[16px] text-grey6">100mg</p>
-					</div>
-				</div>
-			)}
+					{model.corporation && model.name && (
+						<div className="grid gap-[8px]">
+							<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
+								{model.corporation}
+							</p>
+							<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman">
+								{model.name}
+							</div>
+							<div className="flex items-center gap-[8px]">
+								<Image
+									src="/images/icons/link-icon.svg"
+									alt="security-card-icon"
+									width={24}
+									height={24}
+								/>
+								<p className="text-[14px] leading-[16px] text-grey6">
+									{model.quantityOfSubUnitPerOrder}{" "}
+									{model.unitsOfMeasurePerSubUnit}
+								</p>
+							</div>
+						</div>
+					)}
 
-			{model.deliveryText && (
-				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-					{model.deliveryText}
-				</p>
-			)}
-
-			{model.orders.map((order) => (
-				<OrderSummaryCard key={order.id} model={order} />
-			))}
-
-			{model.referals?.length > 0 && (
-				<Separator className="bg-grey13 h-[1px]" />
-			)}
-
-			{model.referals?.map((referal, idx) => (
-				<div key={`${idx + 1}`} className="flex justify-between items-center">
-					<div className="grid gap-[8px]">
-						<p className="text-[20px] leading-[20px] font-[600] font-inconsolata">
-							Succesful Referal x {referal.count}
+					{model.deliveryText && (
+						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+							{model.deliveryText}
 						</p>
-						<p className="text-[14px] leading-[14px] font-[400] font-inconsolata text-grey4">
-							This Quarter
+					)}
+
+					{model.orders?.map((order) => (
+						<OrderSummaryCard key={order.id} model={order} />
+					))}
+
+					{model.referals?.length > 0 && (
+						<Separator className="bg-grey13 h-[1px]" />
+					)}
+
+					{model.referals?.map((referal) => (
+						<div key={`$idx + 1`} className="flex justify-between items-center">
+							<div className="grid gap-[8px]">
+								<p className="text-[20px] leading-[20px] font-[600] font-inconsolata">
+									Succesful Referal x {referal.count}
+								</p>
+								<p className="text-[14px] leading-[14px] font-[400] font-inconsolata text-grey4">
+									This Quarter
+								</p>
+							</div>
+							<div className="text-[20px] leading-[20px] font-bold font-inconsolata">
+								£{referal.price.toFixed(2)}
+							</div>
+						</div>
+					))}
+
+					{model.subscriptions?.length > 0 && (
+						<Separator className="bg-grey13 h-[1px]" />
+					)}
+
+					{model.subscriptions?.length > 0 && (
+						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+							Quarterly Subscription
 						</p>
-					</div>
-					<div className="text-[20px] leading-[20px] font-bold font-inconsolata">
-						£{referal.price.toFixed(2)}
-					</div>
-				</div>
-			))}
+					)}
 
-			{model.subscriptions?.length > 0 && (
-				<Separator className="bg-grey13 h-[1px]" />
+					{model.subscriptions?.map((item) => (
+						<OrderSummaryCard key={item.id} model={item} />
+					))}
+
+					<Separator className="bg-grey13 h-[1px]" />
+				</>
 			)}
-			{model.subscriptions?.length > 0 && (
-				<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-					Subscriptions
-				</p>
-			)}
-
-			{model.subscriptions?.map((item) => (
-				<OrderSummaryCard key={item.id} model={item} />
-			))}
-
-			<Separator className="bg-grey13 h-[1px]" />
 
 			<div>
 				<div className="grid gap-[7px] md:gap-0 md:grid-cols-[84px_1fr]">
@@ -105,18 +118,26 @@ export default function SummaryProduct({
 							Total
 						</p>
 						<p className="text-[14px] leading-[15px] text-grey4 font-inconsolata">
-							{capsules} Capsules
+							{totalCapsules} Capsules
 						</p>
 					</div>
 
-					<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">
-						RRP{" "}
-						<span className="text-[24px] leading-[25px] font-inconsolata line-through font-bold">
-							£{totalPrice}
-						</span>{" "}
-						<span className="text-[24px] leading-[25px] font-inconsolata font-bold text-blue">
-							{totalPercenge}% OFF
-						</span>
+					<div className="grid gap-[7px]">
+						<div className="gap-[2px] text-[32px] leading-[34px] font-inconsolata font-bold flex md:justify-end items-center">
+							£{totalCount?.toFixed(2)}{" "}
+							<span className="text-[12px] leading-[11.5px] font-inconsolata font-bold text-grey1">
+								(£0.25/capsule)
+							</span>
+						</div>
+						<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">
+							RRP{" "}
+							<span className="text-[24px] leading-[25px] font-inconsolata line-through font-bold">
+								£{model.rrp}
+							</span>{" "}
+							<span className="text-[24px] leading-[25px] font-inconsolata font-bold text-blue">
+								{model.percentage?.toFixed(2)}% OFF
+							</span>
+						</div>
 					</div>
 				</div>
 

@@ -160,6 +160,7 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 		subscribers: model.team._count.members,
 		producer: model.team.producer,
 		formulationSummary: model.product.formulationSummary,
+		teamId: model.teamId,
 	};
 };
 
@@ -179,12 +180,15 @@ export const mapSingleProductModel = (
 		imageUrl: model.imageUrl,
 		price: model.price,
 		rrp: model.rrp,
+		quantityOfSubUnitPerOrder: model.quantityOfSubUnitPerOrder,
+		unitsOfMeasurePerSubUnit: model.unitsOfMeasurePerSubUnit,
 		members: model.supplementTeamProducts.team._count.members,
 		tags: model.tags,
 		priceInfo: model.priceInfo,
 		producer: model.producer,
 		formulationSummary: model.formulationSummary,
 		gallery: [model.imageUrl, model.producer.imageUrl],
+		supplementTeamProducts: model.supplementTeamProducts,
 	};
 };
 

@@ -1,14 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 
-import MilestoneCard from "@/components/dashboard/referral/MilestoneCard";
-import ReferalCard from "@/components/dashboard/referral/ReferalCard";
-import ReferalLinkCard from "@/components/dashboard/referral/ReferalLinkCard";
 import BottomSection from "@/components/main/products/BottomSection";
-import Subscription from "@/components/main/products/CapsuleBox";
+import CapsuleBox from "@/components/main/products/CapsuleBox";
 import CorporationBox from "@/components/main/products/CorporationBox";
 import MemberCard from "@/components/main/products/MemberCard";
 import MembersBox from "@/components/main/products/MembersBox";
@@ -16,7 +13,7 @@ import PreOrderInfo from "@/components/main/products/PreOrderInfo";
 import ProductFaqs from "@/components/main/products/ProductFaqs";
 import ProfuctTable from "@/components/main/products/ProductTable";
 import TeamPrice from "@/components/main/products/TeamPrice";
-import TotalCard from "@/components/main/products/[productID]/TotalCard";
+import ReferralCardsWithLink from "@/components/shared/ReferralCardsWithLink";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import {
 	Breadcrumb,
@@ -37,14 +34,10 @@ import {
 } from "@/components/ui/carousel";
 import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
-import { referalService } from "@/services/referalService";
+import { useProductStore } from "@/stores/productStore";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
-import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import type IReferalSummaryModel from "@/utils/models/IReferalSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
-import type IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
-import type IReferalModel from "@/utils/models/api/IReferalModel";
 import { getQuarterInfo } from "@/utils/utils";
 
 interface ProductDetailsProps {
@@ -87,11 +80,16 @@ const itemsMembers = [
 export default function ProductDetails({
 	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {
+	const context = useUser();
+	const productStore = useProductStore();
 	const [api, setApi] = useState<CarouselApi>();
+
+	const days = 90;
+
 	const [current, setCurrent] = useState(0);
 	const [capsulePerDay, setCapsulePerDay] = useState(2);
 	const [product, setProduct] = useState<ISingleProductModel>();
-	const context = useUser();
+
 	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
 		getQuarterInfo();
 
@@ -99,38 +97,15 @@ export default function ProductDetails({
 	const [nextQuater] = useState(
 		currentQuarter + 1 > 4 ? 1 : currentQuarter + 1,
 	);
-	const [capsulesPackage, setCapsulesPackage] = useState(
-		remainsDaysToNextQuater * 2,
+
+	const capsulesPackage = useMemo(
+		() => remainsDaysToNextQuater * capsulePerDay,
+		[remainsDaysToNextQuater, capsulePerDay],
 	);
 
-	const [nextMilestone, setNextMilestone] = useState<IReferalModel>([]);
-	const [referalRewars, setReferalRewars] = useState<IReferalModel[]>([]);
-	const [referalInfo, setReferalInfo] = useState<IReferalInfoModel>({
-		balance: 0,
-	} as IReferalInfoModel);
-
-	useEffect(() => {
-		if (context?.user !== null) {
-			const fetchReferalRewars = async () => {
-				const model = await referalService.getRewars();
-				setReferalRewars(model);
-
-				const next = model.find((i) => i.amount > referalInfo?.balance);
-				setNextMilestone(next);
-			};
-			fetchReferalRewars();
-		}
-	}, [referalInfo?.balance, context?.user]);
-
-	useEffect(() => {
-		if (context?.user !== null) {
-			const fetchReferaInfo = async () => {
-				const model = await referalService.getReferalInfo();
-				setReferalInfo(model);
-			};
-			fetchReferaInfo();
-		}
-	}, [context?.user]);
+	const [summary, setSummary] = useState<ISummaryProductModel>(
+		calculateSummary(2),
+	);
 
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -153,17 +128,36 @@ export default function ProductDetails({
 		});
 	}, [api]);
 
-	function selectCapsuleAction(value: number) {
+	function updateCapsulePerDay(value: number) {
 		setCapsulePerDay(value);
-
-		setCapsulesPackage(remainsDaysToNextQuater * value);
+		productStore.setCapsulesPerDay(value);
 	}
 
-	function claimRewardAction() {}
+	useEffect(() => {
+		setSummary(
+			calculateSummary(capsulePerDay, product?.rrp, product?.isComming),
+		);
+	}, [capsulePerDay, product?.rrp, product?.isComming]);
 
-	const summaryProductModel = {
-		orders: [
+	function calculateSummary(
+		capsulePerDay: number,
+		rrp?: number,
+		isComming?: boolean,
+	) {
+		const orders = [
 			{
+				id: 2,
+				alt: "supplement mockup",
+				description: `${capsulePerDay * days} Capsules Every 3 months`,
+				name: "Quarterly Subscription",
+				delivery: nextDeliveryProductText,
+				src: "/images/supplement-mockup.svg",
+				capsules: capsulePerDay * days,
+			},
+		];
+
+		if (!isComming) {
+			orders.unshift({
 				id: 1,
 				alt: "",
 				description: `${capsulesPackage} Capsules to see you to Q${nextQuater}`,
@@ -171,26 +165,16 @@ export default function ProductDetails({
 				delivery: "Delivered Tomorrow ",
 				src: "/images/ubiquinol.svg",
 				capsules: capsulesPackage,
-				price: product?.price,
-			},
-			{
-				id: 1,
-				alt: "supplement mockup",
-				description: `${capsulePerDay * 90} Capsules Every 3 months`,
-				name: "Quarterly Subscription",
-				delivery: nextDeliveryProductText,
-				src: "/images/supplement-mockup.svg",
-				capsules: capsulePerDay * 90,
-				price: product?.price,
-			},
-		] as IOrderSummaryModel[],
-		referals: [
-			{
-				price: -5,
-				count: 1,
-			},
-		] as IReferalSummaryModel[],
-	} as ISummaryProductModel;
+			});
+		}
+		return {
+			percentage: (capsulePerDay * days * 0.25) / Number(rrp),
+			rrp: rrp,
+			quantityOfSubUnitPerOrder: product?.unitsOfMeasurePerSubUnit,
+			unitsOfMeasurePerSubUnit: product?.unitsOfMeasurePerSubUnit,
+			orders: orders,
+		} as ISummaryProductModel;
+	}
 
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">
@@ -285,7 +269,7 @@ export default function ProductDetails({
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start">
+			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start pb-[50px]">
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -310,6 +294,8 @@ export default function ProductDetails({
 					businessName={product?.producer?.businessName}
 					description={product?.description}
 					name={product?.name}
+					quantityOfSubUnitPerOrder={product?.quantityOfSubUnitPerOrder}
+					unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 				/>
 				{context?.user && product?.isComming && (
 					<div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
@@ -324,14 +310,13 @@ export default function ProductDetails({
 				)}
 				{!context?.user && !product?.isComming && (
 					<div className="flex flex-col gap-[24px]">
-						<Subscription
-							capsuleInfo={product?.capsuleInfo}
-							price={product?.price}
+						<CapsuleBox
 							rrp={product?.rrp}
-							selectCapsuleAction={selectCapsuleAction}
+							capsuleInfo={product?.capsuleInfo}
+							selectCapsulePerDayAction={updateCapsulePerDay}
 						/>
 
-						<SummaryProduct className="bg-white" model={summaryProductModel} />
+						<SummaryProduct className="bg-white" model={summary} />
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
 							<Link href={`/products/${product?.id}/checkout`}>
@@ -375,7 +360,11 @@ export default function ProductDetails({
 				)}
 				{!context?.user && product?.isComming && (
 					<div className="flex flex-col gap-[24px]">
-						<Subscription capsuleInfo={product?.capsuleInfo} />
+						<CapsuleBox
+							rrp={product?.rrp}
+							selectCapsulePerDayAction={updateCapsulePerDay}
+							capsuleInfo={product?.capsuleInfo}
+						/>
 
 						<div className="grid gap-[16px] bg-white">
 							{itemsMembers.map((item) => (
@@ -383,12 +372,10 @@ export default function ProductDetails({
 							))}
 						</div>
 
-						<TotalCard
-							capsules={180}
-							price={40.5}
-							rrp={144}
-							percent={65}
-							capsulePrice={0.25}
+						<SummaryProduct
+							showOnlyTotal={true}
+							className="bg-white"
+							model={summary}
 						/>
 
 						<Button className="bg-blue text-white w-full font-bold">
@@ -400,38 +387,28 @@ export default function ProductDetails({
 					</div>
 				)}
 				{context?.user && (
-					<div className="grid gap-[28px]">
-						<SummaryProduct model={summaryProductModel} />
+					<div className="grid gap-[28px] w-full">
+						<SummaryProduct model={summary} />
 
-						<div className="p-[24px] border-[1px] border-grey12 grid gap-[24px]">
-							<ReferalLinkCard>
-								<Button className="bg-blue text-white text[17px] font-inconsolata w-[146px">
-									Track Your Referral Rewards Here
-								</Button>
-							</ReferalLinkCard>
-
-							<MilestoneCard
-								balance={referalInfo.balance}
-								nextMilestone={nextMilestone}
-							/>
-
-							<div className="bg-grey11 md:hidden h-[16px] mx-[-16px] my-[-10px]" />
-
-							{referalRewars.map((referal, idx) => (
-								<ReferalCard
-									claimRewardAction={claimRewardAction}
-									percentage={(referal.amount * 100) / referalInfo?.balance}
-									isActive={referalInfo?.claimed >= referal.amount}
-									key={referal.id}
-									credit={referal.amount / referalInfo?.balance}
-									rate={referal.rate}
-									requires={referal.amount}
-									isQuickWin={idx === 0}
-									isBestValue={idx + 1 === referalRewars.length}
-								/>
-							))}
-						</div>
+						<ReferralCardsWithLink />
 					</div>
+				)}
+
+				{context?.user && !product?.isComming && (
+					<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
+						<Link href={`/products/${product?.id}/checkout`}>
+							Start My Subscription
+						</Link>
+					</Button>
+				)}
+
+				{context?.user && product?.isComming && (
+					<Button className="bg-blue text-white w-full font-bold">
+						<Link href={`/products/${product?.id}/checkout`}>
+							{" "}
+							REGISTER PRE-ORDER
+						</Link>
+					</Button>
 				)}
 			</div>
 		</div>

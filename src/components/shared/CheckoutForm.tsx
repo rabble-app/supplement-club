@@ -15,7 +15,6 @@ const CheckoutForm = ({
 }>) => {
 	const stripe = useStripe();
 	const elements = useElements();
-	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState<string | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +22,6 @@ const CheckoutForm = ({
 
 		if (!stripe || !elements) return;
 
-		setLoading(true);
 		setMessage(null);
 
 		const { error, paymentIntent } = await stripe.confirmPayment({
@@ -38,8 +36,6 @@ const CheckoutForm = ({
 			setMessage("Payment successful! 🎉");
 			paymentIntentAction(paymentIntent);
 		}
-
-		setLoading(false);
 	};
 
 	return (

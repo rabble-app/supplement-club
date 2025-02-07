@@ -1,6 +1,7 @@
 import type { ICapsuleInfoModel } from "./api/ICapsuleInfoModel";
 import type IPriceInfoModel from "./api/IPriceInfoModel";
 import type { IProducerModel } from "./api/IProducerModel";
+import { ISupplementTeamProducts } from "./api/ISupplementTeamProducts";
 
 export default interface ISingleProductModel {
 	id: string;
@@ -35,4 +36,5 @@ export default interface ISingleProductModel {
 	members: number;
 	isComming: boolean;
 	gallery: string[];
+	supplementTeamProducts?: ISupplementTeamProducts;
 }

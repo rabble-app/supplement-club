@@ -1,7 +1,6 @@
 import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
-import type { IBasketRequest } from "@/utils/models/api/request/IBasketRequest";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
 import { mapUserPaymentOptionModel } from "@/utils/utils";
@@ -13,15 +12,30 @@ export const paymentService = {
 			stripeCustomerId,
 		}),
 
-	addBulkBasket: async (
-		baskets: IBasketRequest[],
-		quateamIdtity: string,
-		deadlineReached: boolean,
+	addCapturePayment: async (
+		amount: number,
+		teamId: string,
+		paymentIntentId: string,
+		userId: string,
 	) =>
-		apiRequest(PAYMENT_ENDPOINTS.BULK_BASKET, "POST", {
-			baskets,
-			quateamIdtity,
-			deadlineReached,
+		apiRequest(PAYMENT_ENDPOINTS.CAPTURE_PAYMENT, "POST", {
+			amount,
+			teamId,
+			paymentIntentId,
+			userId,
+		}),
+
+	addPaymentIntent: async (
+		amount: number,
+		currency: string,
+		customerId: string,
+		paymentMethodId: string,
+	) =>
+		apiRequest(PAYMENT_ENDPOINTS.PAYMENT_INTENT, "POST", {
+			amount,
+			currency,
+			customerId,
+			paymentMethodId,
 		}),
 
 	addPreorderBulkBasket: async (
@@ -162,6 +176,11 @@ export const paymentService = {
 			lastFourDigits,
 			paymentMethodId,
 			stripeCustomerId,
+		}),
+
+	deleteCard: async (paymentMethodId: string) =>
+		apiRequest(PAYMENT_ENDPOINTS.REMOVE_CARD, "DELETE", {
+			paymentMethodId,
 		}),
 
 	async createPaymentIntent(

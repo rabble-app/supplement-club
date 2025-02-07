@@ -9,4 +9,5 @@ export default interface IOrderSummaryModel {
 	pricePerCapsule?: number;
 	rrp?: number;
 	capsules: number;
+	isFree?: boolean;
 }

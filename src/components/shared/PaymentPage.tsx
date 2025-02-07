@@ -10,9 +10,11 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 const PaymentPage = ({
 	children,
 	paymentIntentAction,
+	totalPrice,
 }: Readonly<{
 	children?: React.ReactNode;
 	paymentIntentAction: (val: PaymentIntent) => void;
+	totalPrice: number;
 }>) => {
 	const [clientSecret, setClientSecret] = useState("");
 	const context = useUser();
@@ -20,9 +22,9 @@ const PaymentPage = ({
 	useEffect(() => {
 		const fetchPaymentIntent = async () => {
 			const model = await paymentService.createPaymentIntent(
-				1000,
+				totalPrice,
 				"gbp",
-				context?.user?.stripeCustomerId || "", // Ensure this is used correctly
+				context?.user?.stripeCustomerId || "",
 				context?.user?.stripeDefaultPaymentMethodId || "",
 			);
 			setClientSecret(model.clientSecret);
@@ -32,15 +34,22 @@ const PaymentPage = ({
 	}, [
 		context?.user?.stripeCustomerId,
 		context?.user?.stripeDefaultPaymentMethodId,
-	]); // Add dependencies here
+		totalPrice,
+	]);
+
+	async function onSubmit(val: PaymentIntent) {
+		await paymentService.addCard(
+			context?.user?.stripeDefaultPaymentMethodId || "",
+			val.id,
+		);
+		paymentIntentAction(val);
+	}
 
 	return (
 		<div className="mx-auto w-full">
 			{clientSecret ? (
 				<Elements options={{ clientSecret }} stripe={stripePromise}>
-					<CheckoutForm paymentIntentAction={paymentIntentAction}>
-						{children}
-					</CheckoutForm>
+					<CheckoutForm paymentIntentAction={onSubmit}>{children}</CheckoutForm>
 				</Elements>
 			) : (
 				<p>Loading payment...</p>

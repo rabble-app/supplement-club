@@ -77,7 +77,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 
 				<Button className="bg-blue font-bold" asChild>
 					<Link
-						href={`/products/${model.id}`}
+						href={`/products/${model.id}?teamId=${model.teamId}`}
 						className="flex justify-between py-[16px] px-[24px] w-full"
 					>
 						<span className="leading-[18px] font-bold font-inconsolata text-lg">

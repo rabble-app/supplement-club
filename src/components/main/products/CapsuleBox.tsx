@@ -1,11 +1,11 @@
 import Image from "next/image";
+import { useMemo, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
-import { useEffect, useState } from "react";
 
 const generateImage = (count: number) => (
 	<div
@@ -14,7 +14,7 @@ const generateImage = (count: number) => (
 	>
 		{Array.from({ length: count }).map((_, index) => (
 			<Image
-				key={`pill-${index + 1}`}
+				key={`pill-${index + 1 * count}`}
 				className="absolute"
 				style={{
 					left: `${index * 20}px`,
@@ -30,31 +30,21 @@ const generateImage = (count: number) => (
 
 export default function CapsuleBox({
 	capsuleInfo,
-	price,
 	rrp,
-	selectCapsuleAction,
+	selectCapsulePerDayAction,
 }: Readonly<{
 	capsuleInfo?: ICapsuleInfoModel[];
-	price?: number;
 	rrp?: number;
-	selectCapsuleAction: (val: number) => void;
+	selectCapsulePerDayAction: (val: number) => void;
 }>) {
 	const days = 90;
 	const [selectedState, setSelectedState] = useState(2);
-	const [capsules, setCapsules] = useState(selectedState * days);
 
-	const [pricePerCapsule, setPricePerCapsule] = useState(
-		Number(price) / Number(capsules),
-	);
-
-	useEffect(() => {
-		setPricePerCapsule(Number(price) / Number(capsules));
-	}, [price, capsules]);
+	const capsules = useMemo(() => selectedState * days, [selectedState]);
 
 	function selectCapsulte(value: number) {
 		setSelectedState(value);
-		selectCapsuleAction(value);
-		setCapsules(value * days);
+		selectCapsulePerDayAction(value);
 	}
 
 	return (
@@ -64,9 +54,9 @@ export default function CapsuleBox({
 				onValueChange={(value) => selectCapsulte(Number(value))}
 				className="md:grid-cols-4"
 			>
-				{capsuleInfo?.map((option, idx) => (
+				{capsuleInfo?.map((option) => (
 					<label
-						key={`capuse-${idx + 1}`}
+						key={option.capsuleCount}
 						className={`grid gap-[8px] p-[8px] relative cursor-pointer ${
 							selectedState === option.capsuleCount
 								? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
@@ -112,16 +102,19 @@ export default function CapsuleBox({
 							<div className="hidden md:flex absolute bottom-[-10px] w-full h-[20px] bg-white" />
 						)}
 						{selectedState === option.capsuleCount && (
-							<div key={selectedState} className="grid md:hidden gap-[8px]">
+							<div
+								key={option.capsuleCount}
+								className="grid md:hidden gap-[8px]"
+							>
 								<div className="flex justify-between gap-[7px]">
 									<p className="text-grey7 text-[12px] leading-[14px] max-w-[132px]">
 										3 Month Subscription <br />({capsules} Capsules)
 									</p>
 									<div className="max-w-[164px] grid grid-cols-2 gap-[7px]">
 										<div className="flex flex-col gap-[7px] text-[16px] leading-[18px] font-bold">
-											£{(capsules * Number(pricePerCapsule))?.toFixed(0)}
+											£{(capsules * 0.25)?.toFixed(2)}
 											<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-												(£{pricePerCapsule.toFixed(2)}/capsule)
+												(£0.25/capsule)
 											</span>
 										</div>
 										<div>
@@ -132,17 +125,12 @@ export default function CapsuleBox({
 												</span>
 											</div>
 											<div className="text-[16px] leading-[18px] font-bold text-blue">
-												{(
-													(capsules * Number(pricePerCapsule)) /
-													Number(rrp)
-												).toFixed(2)}
-												% OFF
+												{((capsules * 0.25) / Number(rrp)).toFixed(2)}% OFF
 											</div>
 										</div>
 									</div>
 								</div>
 								<div className="flex flex-col gap-[2px]">
-									<p className="text-grey7 text-[12px] leading-[13px]">ss</p>
 									<p className="text-[12px] leading-[13px]">off</p>
 								</div>
 							</div>
@@ -156,9 +144,9 @@ export default function CapsuleBox({
 						3 Month Subscription <br />({capsules} Capsules)
 					</p>
 					<div className="flex items-center gap-[2px] text-[16px] leading-[18px] font-bold">
-						£{(capsules * Number(pricePerCapsule)).toFixed(0)}{" "}
+						£{(capsules * 0.25).toFixed(2)}{" "}
 						<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-							(£{pricePerCapsule.toFixed(2)}/capsule)
+							(£0.25/capsule)
 						</span>
 					</div>
 					<div>
@@ -169,8 +157,7 @@ export default function CapsuleBox({
 							</span>
 						</div>
 						<div className="text-[16px] leading-[18px] font-bold text-blue">
-							{((capsules * Number(pricePerCapsule)) / Number(rrp)).toFixed(2)}%
-							OFF
+							{((capsules * 0.25) / Number(rrp)).toFixed(2)}% OFF
 						</div>
 					</div>
 				</div>

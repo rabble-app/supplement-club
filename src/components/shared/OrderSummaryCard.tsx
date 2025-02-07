@@ -1,14 +1,34 @@
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import Image from "next/image";
 
-const renderPrice = (model: IOrderSummaryModel) => (
-	<div className="text-lg font-bold text-black flex items-center gap-1 font-inconsolata">
-		£{model.price}
-		<span className="text-xs leading-3 text-grey1 font-bold">
-			(£{model.pricePerCapsule} / capsule)
-		</span>
-	</div>
-);
+const renderPrice = (model: IOrderSummaryModel) =>
+	model.isFree ? (
+		<>
+			<div className="grid gap-[7px]">
+				<div className="gap-[2px] text-[20px] leading-[20px] font-inconsolata font-bold flex md:justify-end items-center line-through">
+					£{model.price?.toFixed(2)}{" "}
+				</div>
+				<div className="text-[20px] leading-[20px] font-inconsolata font-[400] text-grey4 md:text-end">
+					RRP{" "}
+					<span className="text-[20px] leading-[20px] font-inconsolata line-through font-bold">
+						£{model.rrp}
+					</span>{" "}
+					<span className="text-[20px] leading-[20px] font-inconsolata font-bold text-blue">
+						FREE
+					</span>
+				</div>
+			</div>
+		</>
+	) : (
+		<>
+			<div className="text-lg font-bold text-black flex items-center gap-1 font-inconsolata">
+				£{model.capsules * 0.25}
+				<span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+					(£0.25/capsule)
+				</span>
+			</div>
+		</>
+	);
 
 export default function OrderSummaryCard({
 	model,
