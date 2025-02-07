@@ -42,7 +42,7 @@ export default function ReactivatePlan() {
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 				/>
 			</div>
-			<SummaryProduct model={summaryProductModel} />
+			<SummaryProduct totalPriceAction={() => {}} model={summaryProductModel} />
 		</div>
 	);
 }

@@ -9,11 +9,9 @@ import PaymentPage from "./shared/PaymentPage";
 export default function PaymentDetails({
 	successAction,
 	children,
-	isComming,
 	totalPrice,
 }: Readonly<{
 	successAction: () => void;
-	isComming?: boolean;
 	children?: React.ReactNode;
 	totalPrice: number;
 }>) {
@@ -34,8 +32,7 @@ export default function PaymentDetails({
 				</p>
 
 				<Button type="submit" className="bg-blue text-white w-full font-bold">
-					{isComming ? "Register" : "Place Order - £68.20"}{" "}
-					{/* Use a regular string */}
+					{`Place Order - £${totalPrice}`} {/* Use a regular string */}
 				</Button>
 			</PaymentPage>
 

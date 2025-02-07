@@ -10,23 +10,30 @@ export default function SummaryProduct({
 	className,
 	children,
 	showOnlyTotal,
+	totalPriceAction,
+	showTopLine,
 }: Readonly<{
 	model: ISummaryProductModel;
 	className?: string;
 	showOnlyTotal?: boolean;
 	children?: React.ReactNode;
+	totalPriceAction: (val: number) => void;
+	showTopLine?: boolean;
 }>) {
 	const [totalCount, setTotalCount] = useState(0);
 	const [totalCapsules, setTotalCapsules] = useState(0);
 
 	useEffect(() => {
-		setTotalCount(
-			model.orders?.reduce((sum, item) => sum + item.capsules * 0.25, 0),
+		const totalSum = model.orders?.reduce(
+			(sum, item) => sum + item.capsules * 0.25,
+			0,
 		);
+		setTotalCount(totalSum);
+		totalPriceAction(totalSum);
 		setTotalCapsules(
 			model.orders?.reduce((sum, item) => sum + item.capsules, 0),
 		);
-	}, [model.orders]);
+	}, [model.orders, totalPriceAction]);
 	return (
 		<div
 			key={model.id}
@@ -68,6 +75,8 @@ export default function SummaryProduct({
 							{model.deliveryText}
 						</p>
 					)}
+
+					{showTopLine && <Separator className="bg-grey13 h-[1px]" />}
 
 					{model.orders?.map((order) => (
 						<OrderSummaryCard key={order.id} model={order} />

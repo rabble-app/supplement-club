@@ -171,7 +171,7 @@ export default function Checkout({
 			title: "Order Summary",
 			corporation: teamName,
 			name: name,
-			deliveryText: "NEXT DAY DELIVERY",
+			deliveryText: !isComming ? "NEXT DAY DELIVERY" : "",
 			percentage: (capsulePerDay * days * 0.25) / Number(rrp),
 			rrp: rrp,
 			subscriptions: subscriptions,
@@ -197,8 +197,8 @@ export default function Checkout({
 
 	async function successPayment() {
 		if (!product?.isComming) {
-			await paymentService.addPaymentIntent(1000, "gbp", "", "");
-			await paymentService.addCapturePayment(1000, "gbp", "", "");
+			await paymentService.addPaymentIntent(totalPrice, "gbp", "", "");
+			await paymentService.addCapturePayment(totalPrice, "gbp", "", "");
 		}
 		await teamsService.addTeamMember(
 			context?.user?.id || "",
@@ -226,7 +226,6 @@ export default function Checkout({
 					<PaymentDetails
 						totalPrice={totalPrice}
 						successAction={() => successPayment}
-						isComming={product?.isComming || false}
 					>
 						{product?.isComming && <PreOrderMessage />}
 						<BillingAddress />
@@ -242,7 +241,11 @@ export default function Checkout({
 			</div>
 
 			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<SummaryProduct model={summary} />
+				<SummaryProduct
+					model={summary}
+					totalPriceAction={setTotalPrice}
+					showTopLine={product?.isComming}
+				/>
 				{step === 4 && <Delivery />}
 				{step < 4 && <AvailablePayment />}
 			</div>

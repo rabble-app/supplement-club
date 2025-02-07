@@ -119,7 +119,7 @@ export default function Subscription({
 					</Button>
 				</SubscriptionCard>
 
-				<SummaryProduct model={summaryProductModel}>
+				<SummaryProduct totalPriceAction={() => {}} model={summaryProductModel}>
 					<SubscriptionCancelDialog confirmAction={subscriptionCancel} />
 
 					<SubscriptionSkipDialog confirmAction={subscriptionSkipDialog} />

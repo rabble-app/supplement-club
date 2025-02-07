@@ -18,7 +18,7 @@ export default function TopUpCheckout() {
 	const [step, setStep] = useState<number>(1);
 	const context = useUser();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const [totalPrice] = useState<number>(1000);
+	const [totalPrice, setTotalPrice] = useState<number>(0);
 	const steps = ["Top Up Capsules", "Payment Details"];
 
 	const summaryProductModel = {
@@ -63,7 +63,6 @@ export default function TopUpCheckout() {
 					<PaymentDetails
 						totalPrice={totalPrice}
 						successAction={() => updateStep(step + 1)}
-						isComming={false}
 					>
 						<BillingAddress />
 
@@ -80,7 +79,10 @@ export default function TopUpCheckout() {
 			</div>
 
 			<div className="grid gap-[73px]">
-				<SummaryProduct model={summaryProductModel} />
+				<SummaryProduct
+					totalPriceAction={setTotalPrice}
+					model={summaryProductModel}
+				/>
 
 				<AvailablePayment />
 			</div>

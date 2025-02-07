@@ -59,7 +59,7 @@ export default function OptBackIn() {
 					bottomContent={bottomContent}
 				/>
 			</div>
-			<SummaryProduct model={summaryProductModel} />
+			<SummaryProduct totalPriceAction={() => {}} model={summaryProductModel} />
 		</div>
 	);
 }
