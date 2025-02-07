@@ -53,6 +53,14 @@ export default function CreateAccount({
 			const userData = result.data as IUserResponse;
 			setUser(userData);
 			context?.setNewUser(userData);
+
+			// logged the user
+			await authService.login(
+				e.get("email")?.toString() ?? "",
+				e.get("password")?.toString() ?? "",
+				e.get("role")?.toString() ?? "USER",
+			);
+
 			updateStepAction(step + 1);
 		} else {
 			toast.custom(

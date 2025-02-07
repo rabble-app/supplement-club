@@ -128,7 +128,7 @@ export default function PaymentCards({
 										)}
 									</PaymentCard>
 								</RadioGroup>
-								{idx !== userCards.length - 1 && (
+								{idx !== userCards?.length - 1 && (
 									<Separator
 										key={`${item.card.last4}-separator `}
 										className="bg-grey37 h-[1px]"

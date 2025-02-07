@@ -8,7 +8,7 @@ export const deliveryAddressSchema = z.object({
 	city: z.string({ required_error: "Field is required." }),
 	postalCode: z.string({ required_error: "Field is required." }),
 	country: z.string({ required_error: "Field is required." }),
-	mobileNumber: z.string({ required_error: "Field is required." }).optional(),
+	mobileNumber: z.string({ required_error: "Field is required." }),
 });
 
 export const shippingDetailsShema = z.object({

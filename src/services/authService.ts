@@ -16,7 +16,10 @@ export const authService = {
 		await apiRequest(AUTH_ENDPOINTS.RESET_PASSWORD, "POST", { email }),
 
 	emailVerify: async (token: string) =>
-		await apiRequest(AUTH_ENDPOINTS.EMAIL_VERIFY, "POST", { token }),
+		await apiRequest(AUTH_ENDPOINTS.EMAIL_VERIFY, "POST", {
+			token,
+			role: "USER",
+		}),
 
 	resendEmailVerify: async (email: string) =>
 		await apiRequest(AUTH_ENDPOINTS.RESEND_EMAIL_VERIFY, "POST", { email }),

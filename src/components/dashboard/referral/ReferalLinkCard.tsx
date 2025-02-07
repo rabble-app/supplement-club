@@ -18,13 +18,23 @@ export default function ReferalLinkCard({
 		`${process.env.NEXT_PUBLIC_API_ENDPOINT}/dashboard/referral?ref=${refCode}`,
 	);
 
-	function copyToClipboard() {
-		toast.custom(() => (
-			<div className="text-white bg-blue px-[10px] py-[2px]">
-				Copied the refer link
-			</div>
-		));
-	}
+	const [copied, setCopied] = useState(false);
+
+	const copyToClipboard = async () => {
+		try {
+			await navigator.clipboard.writeText(link);
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000);
+
+			toast.custom(() => (
+				<div className="text-white bg-blue px-[10px] py-[2px]">
+					Copied the refer link
+				</div>
+			));
+		} catch (err) {
+			console.error("Failed to copy:", err);
+		}
+	};
 
 	return (
 		<div className=" border-[1px] shadow-4 border-grey35 p-[16px] rounded-[5px] grid gap-[16px]">
@@ -54,7 +64,7 @@ export default function ReferalLinkCard({
 						src="/images/icons/copyright-icon.svg"
 						className="absolute right-[10px] top-[10px] cursor-pointer"
 						title="Copy and share your referral link"
-						onClick={() => copyToClipboard}
+						onClick={copyToClipboard}
 						alt="copyright icon"
 						width={24}
 						height={24}

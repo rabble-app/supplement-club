@@ -128,11 +128,22 @@ export default function Checkout({
 			orders.unshift({
 				id: 1,
 				alt: "",
-				description: `${capsulesPackage} Capsules to see you to Q${nextQuater}`,
-				name: "One time Alignment Package",
-				delivery: "Delivered Tomorrow ",
-				src: "/images/ubiquinol.svg",
+				description: `${capsulesPackage} Capsules to align you with next drop`,
+				name: "Alignment Capsules",
+				src: "/images/supplement-mockup.svg",
 				capsules: capsulesPackage,
+			});
+
+			orders.push({
+				id: 2,
+				alt: "",
+				description: "Startup package",
+				name: "Glass Bottle Container",
+				src: "/images/ubiquinol.svg",
+				capsules: 0,
+				isFree: true,
+				price: 0,
+				rrp: 0,
 			});
 
 			subscriptions.push({
@@ -183,7 +194,7 @@ export default function Checkout({
 
 	useEffect(() => {
 		if (context?.user) {
-			if (context?.user.isVerified) {
+			if (context.user.isVerified) {
 				if (context?.user?.shipping) {
 					setStep(3);
 					return;
