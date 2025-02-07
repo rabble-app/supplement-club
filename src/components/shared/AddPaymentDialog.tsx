@@ -61,12 +61,12 @@ export default function AddPaymentDialog({
 				</DialogClose>
 
 				<div className="h-[1px] bg-grey w-full" />
-				<PaymentPage totalPrice={0}>
+				<PaymentPage paymentIntentAction={() => {}} totalPrice={0}>
 					<div className="flex items-center gap-[8px] mx-auto">
 						<Checkbox
 							id="futurePurchase"
 							checked={futurePurchase}
-							onCheckedChange={(checked) => setFuturePurchase(checked)}
+							onCheckedChange={(checked) => setFuturePurchase(checked === true)}
 						/>
 						<label
 							htmlFor="futurePurchase"
@@ -80,7 +80,7 @@ export default function AddPaymentDialog({
 						<Checkbox
 							id="defaultCard"
 							checked={defaultCard}
-							onCheckedChange={(checked) => setDefaultCard(checked)}
+							onCheckedChange={(checked) => setDefaultCard(checked === true)}
 						/>
 						<label
 							htmlFor="defaultCard"

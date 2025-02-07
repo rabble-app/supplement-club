@@ -50,11 +50,11 @@ export default function PaymentCards({
 
 	return (
 		<>
-			{userCards.length > 0 && (
+			{userCards && userCards?.length > 0 && (
 				<div className="px-[16px] py-[32px] bg-white flex flex-col gap-[16px] justify-start">
 					<div className="border-grey37 border-[1px] rounded-[4px]">
 						{userCards?.map((item, idx) => (
-							<>
+							<div key={item.id}>
 								<RadioGroup
 									key={item.id}
 									value={defaultCard.toString()}
@@ -134,7 +134,7 @@ export default function PaymentCards({
 										className="bg-grey37 h-[1px]"
 									/>
 								)}
-							</>
+							</div>
 						))}
 					</div>
 				</div>

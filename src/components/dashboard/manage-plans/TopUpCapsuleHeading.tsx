@@ -43,11 +43,19 @@ const weeksSupply = [
 	},
 	{
 		id: 3,
-		value: "1 Month",
+		value: "3 Weeks",
 	},
 	{
 		id: 4,
-		value: "6 Months",
+		value: "4 Weeks",
+	},
+	{
+		id: 5,
+		value: "5 Weeks",
+	},
+	{
+		id: 6,
+		value: "6 Weeks",
 	},
 ] as IFilterModel[];
 

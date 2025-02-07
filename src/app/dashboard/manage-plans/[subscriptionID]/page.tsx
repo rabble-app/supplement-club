@@ -13,13 +13,10 @@ import { teamsService } from "@/services/teamService";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type IReferalSummaryModel from "@/utils/models/IReferalSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
+import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
 import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-interface SubscriptionProps {
-	subscriptionID: string;
-}
 
 export default function Subscription({
 	params,
