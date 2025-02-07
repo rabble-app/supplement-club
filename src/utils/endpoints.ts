@@ -36,6 +36,7 @@ export const USER_ENDPOINTS = {
 		`users/${userId}/supplement/upcoming-deliveries`,
 	DELIVERY_ADDRESS: "users/delivery-address",
 	SUBSCRIPTION_PLANS: (userId: string) => `users/${userId}/supplement/plans`,
+	SUBSCRIPTION_PLAN: (userId: string) => `users/supplement/plans/${userId}`,
 	UPDATE_INFO: "users/update",
 	UPDATE_SHIPPING: (userId: string) => `users/delivery-address/${userId}`,
 	PAST_ORDERS: (userId: string) => `users/order-history/${userId}`,

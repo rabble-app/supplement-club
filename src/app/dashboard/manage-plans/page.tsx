@@ -16,7 +16,6 @@ export default function Plans() {
 				context?.user?.id || "",
 			);
 			setSubscriptions(response);
-			console.log(context?.user);
 		})();
 	}, [context?.user]);
 

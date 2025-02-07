@@ -64,6 +64,14 @@ export const usersService = {
 		);
 	},
 
+	async getSubscriptionPlan(userId: string) {
+		const { data } = await apiRequest(
+			USER_ENDPOINTS.SUBSCRIPTION_PLAN(userId),
+			"GET",
+		);
+		return mapSubscriptionModel(data);
+	},
+
 	async getUserInfo(userId: string) {
 		const { data } = await apiRequest(USER_ENDPOINTS.INFO(userId), "GET");
 		return mapUserInfoModel(data);

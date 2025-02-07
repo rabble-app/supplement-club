@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { getQuarterInfo } from "@/utils/utils";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function ReactivatePlanDialog({ id }: Readonly<{ id: string }>) {
 	const [packageAlignment, setPackageAlignment] = useState(false);
@@ -23,9 +23,14 @@ export default function ReactivatePlanDialog({ id }: Readonly<{ id: string }>) {
 	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	const router = useRouter();
 
+	const capsulesPackage = useMemo(
+		() => remainsDaysToNextQuater * 2,
+		[remainsDaysToNextQuater],
+	);
+
 	// need to get product data
 	const product = {
-		name: `86 Capsules to see you to Q${nextQuater}`,
+		name: `${capsulesPackage} Capsules to see you to Q${nextQuater}`,
 		description: "One time Alignment Package",
 	};
 

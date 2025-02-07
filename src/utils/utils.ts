@@ -223,6 +223,7 @@ export const mapSubscriptionModel = (
 		capsulePerDay: +model.team.basket[0].capsulePerDay,
 		isSkipped: model.skipNextDelivery,
 		quantity: model.team.basket[0].quantity,
+		team: model.team,
 	};
 };
 

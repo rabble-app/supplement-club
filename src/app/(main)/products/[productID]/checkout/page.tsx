@@ -55,7 +55,7 @@ export default function Checkout({
 	const productStore = useProductStore();
 
 	const [step, setStep] = useState<number>(1);
-	const [totalPrice, setTotalPrice] = useState<number>(100);
+	const [totalPrice, setTotalPrice] = useState<number>(0);
 	const [userCards, setUserCards] = useState<IUserPaymentOptionModel[]>([]);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
