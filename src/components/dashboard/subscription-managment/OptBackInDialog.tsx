@@ -11,30 +11,31 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import { getQuarterInfo } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function OptBackInDialog({ id }: Readonly<{ id: string }>) {
+export default function OptBackInDialog({
+	model,
+}: Readonly<{
+	model: IManagePlanModel;
+}>) {
 	const [packageAlignment, setPackageAlignment] = useState(false);
 	const { remainsDaysToNextQuater, endDate, year, currentQuarter } =
 		getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	const router = useRouter();
-
-	// need to get product data
-	const product = {
-		name: `86 Capsules to see you to Q${nextQuater}`,
-		description: "One time Alignment Package",
-	};
+	const [isOpen, setIsOpen] = useState(false);
 
 	function confirmAction() {
-		router.push(`/dashboard/manage-plans/${id}/opt-back-in`);
+		router.push(`/dashboard/manage-plans/${model.id}/opt-back-in`);
+		setIsOpen(false);
 	}
 	return (
-		<Dialog>
-			<DialogTrigger asChild>
+		<Dialog open={isOpen}>
+			<DialogTrigger onClick={() => setIsOpen(true)}>
 				<div className="text-blue flex justify-center items-center text-center h-[50px] rounded-[2px] bg-grey27/[12%] text-[17px] leading-[22px] font-bold font-inconsolata">
 					Opt Back in
 				</div>
@@ -54,7 +55,10 @@ export default function OptBackInDialog({ id }: Readonly<{ id: string }>) {
 						</p>
 					</div>
 
-					<DialogClose className="m-[0] p-[0] absolute top-[16px] right-[16px]">
+					<DialogClose
+						onClick={() => setIsOpen(false)}
+						className="m-[0] p-[0] absolute top-[16px] right-[16px]"
+					>
 						<div className="border-[1px] border-grey32 w-[38px] h-[38px] rounded-[50%] flex justify-center">
 							<Image
 								src="/images/icons/close-black-icon.svg"
@@ -74,7 +78,7 @@ export default function OptBackInDialog({ id }: Readonly<{ id: string }>) {
 					<Checkbox
 						id="packageAlignment"
 						checked={packageAlignment}
-						onCheckedChange={(checked) => setPackageAlignment(checked)}
+						onCheckedChange={(checked) => setPackageAlignment(checked === true)}
 					/>
 					<label
 						htmlFor="packageAlignment"
@@ -94,16 +98,16 @@ export default function OptBackInDialog({ id }: Readonly<{ id: string }>) {
 						/>
 						<div className="grid gap-[8px]">
 							<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
-								{product.name}
+								{`${model.capsulePerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`}
 							</p>
 							<p className="text-[16px] leading-[16px] font-[600] font-inconsolata">
-								{product.description}
+								{model.name}
 							</p>
 							<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 								Delivered Tomorrow
 							</p>
 						</div>
-						<PricePerCapsule capsules={100} price={100} />
+						<PricePerCapsule price={+model.price} />
 					</div>
 				)}
 
@@ -115,7 +119,7 @@ export default function OptBackInDialog({ id }: Readonly<{ id: string }>) {
 						Re-Activate My Plan
 					</Button>
 
-					<DialogClose asChild>
+					<DialogClose onClick={() => setIsOpen(false)} asChild>
 						<Button className="text-blue bg-[#7878801F] flex justify-center items-center  w-full text-[17px] leading-[22px] font-bold font-inconsolata h-[46px]">
 							Cancel
 						</Button>

@@ -2,18 +2,37 @@
 
 import Image from "next/image";
 
-import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { paymentService } from "@/services/paymentService";
+import type IManagePlanModel from "@/utils/models/IManagePlanModel";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogOverlay,
+	DialogPortal,
+	DialogTitle,
+	DialogTrigger,
+} from "@radix-ui/react-dialog";
+import { VisuallyHidden } from "@reach/visually-hidden";
+import { useEffect, useState } from "react";
 
 export default function SubscriptionPlan({
 	confirmAction,
+	managePlan,
 }: Readonly<{
 	confirmAction: (val: number) => void;
+	managePlan?: IManagePlanModel;
 }>) {
-	const capsule = 1;
 	const [changePlan, setChangePlan] = useState(false);
-	const [initCapsule, setInitCapsule] = useState(capsule);
+	const [initCapsule, setInitCapsule] = useState(1);
+	const [isOpen, setIsOpen] = useState(false);
+
+	useEffect(() => {
+		if (managePlan?.team?.basket[0]?.capsulePerDay)
+			setInitCapsule(Number(managePlan?.team?.basket[0]?.capsulePerDay));
+	}, [managePlan]);
 
 	function getBoxClasses(idx: number) {
 		const isFirst = idx === 0;
@@ -30,9 +49,16 @@ export default function SubscriptionPlan({
 			.join(" ");
 	}
 
-	function confirmChangeCapsule(val: number) {
-		setChangePlan(false);
-		confirmAction(val);
+	async function onOpenChange(val) {
+		setChangePlan(val);
+		if (val) {
+			await paymentService.updateSubscription(
+				managePlan?.id || "",
+				5,
+				initCapsule,
+			);
+		}
+		setIsOpen(val);
 	}
 
 	return (
@@ -42,7 +68,7 @@ export default function SubscriptionPlan({
 					KANEKA CORPRATION
 				</p>
 				<p className="text-[24px] leading-[28px] font-[400] font-hagerman">
-					Coenzyme Q10 Ubiquinol Kaneka TM
+					{managePlan?.name}
 				</p>
 			</div>
 
@@ -96,15 +122,63 @@ export default function SubscriptionPlan({
 				</Button>
 			)}
 
-			{changePlan && capsule !== initCapsule && (
-				<ConfirmDialog
-					onOpenChange={() => confirmChangeCapsule}
-					title="Subscription Quantity updated"
-					description={`You have changed your subscription quantity from ${capsule} capsule
-							to ${initCapsule} capsules per day, the next delivery is on X
-							date.`}
-					topContent="Confirm New Subscription Quantity"
-				/>
+			{changePlan && (
+				<Dialog open={isOpen} onOpenChange={onOpenChange}>
+					<DialogTrigger asChild onClick={() => onOpenChange}>
+						<Button className="bg-blue w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-white rounded-[2px] h-[46px]">
+							Confirm New Subscription Quantity
+						</Button>
+					</DialogTrigger>
+					<DialogPortal>
+						<DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200]" />
+						<DialogContent
+							border="rounded"
+							className="w-[calc(100%-20px)] max-w-[600px] gap-[16px] fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] bg-white z-[201] p-[24px]"
+						>
+							<DialogClose className="absolute right-[16px] top-[16px]">
+								<div className="border-[1px] border-grey32 w-[38px] h-[38px] rounded-[50%] flex justify-center">
+									<Image
+										src="/images/icons/close-black-icon.svg"
+										alt="Close icon"
+										width={16}
+										height={16}
+									/>
+								</div>
+							</DialogClose>
+
+							<VisuallyHidden>
+								<DialogTitle>Your hidden title</DialogTitle>
+							</VisuallyHidden>
+
+							<VisuallyHidden>
+								<DialogDescription />
+							</VisuallyHidden>
+
+							<div className="grid gap-[12px] pt-[20px]">
+								<div className="w-[87px] h-[87px] rounded-[50%] mx-auto flex items-center justify-center bg-blue text-white">
+									<Image
+										src="/images/icons/check-white-icon.svg"
+										alt="Check icon"
+										width={100}
+										height={100}
+									/>
+								</div>
+
+								<div className="grid gap-[16px]">
+									<p className="text-[24px] leading-[120%] font-hagerman uppercase text-center font-[400]">
+										Subscription Quantity updated
+									</p>
+									<p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center w-full font-[400]">
+										`You have changed your subscription quantity from $
+										{managePlan?.team?.basket[0]?.capsulePerDay} capsule to $
+										{initCapsule} capsules per day, the next delivery is on X
+										date.`
+									</p>
+								</div>
+							</div>
+						</DialogContent>
+					</DialogPortal>
+				</Dialog>
 			)}
 		</div>
 	);

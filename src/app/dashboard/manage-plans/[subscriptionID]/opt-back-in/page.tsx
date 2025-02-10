@@ -1,37 +1,88 @@
 "use client";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import PaymentList from "@/components/shared/PaymentList";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
+import { usersService } from "@/services/usersService";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
+import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
+import { getQuarterInfo } from "@/utils/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function OptBackIn() {
-	const [isDialogOpen, setIsDialogOpen] = useState(true);
+export default function OptBackIn({
+	params,
+}: Readonly<{ params: Promise<SubscriptionProps> }>) {
 	const context = useUser();
+	const router = useRouter();
 
-	const summaryProductModel = {
-		title: "Order Summary",
-		corporation: "KANEKA CORPRATION",
-		name: "Coenzyme Q10 Ubiquinol Kaneka TM",
-		deliveryText: "NEXT DAY DELIVERY",
-		orders: [
-			{
-				alt: "supplement mockup",
-				description: "86 Capsules to see you to Q1",
-				capsules: 86,
-				name: "One time Alignment Package	",
-				delivery: "Delivered Tomorrow",
-				src: "/images/supplement-mockup.svg",
-				price: 23.2,
-				pricePerCapsule: 0.25,
-			},
-		] as IOrderSummaryModel[],
-	} as ISummaryProductModel;
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [totalPrice, setTotalPrice] = useState(0);
+	const [subscriptionId, setSubscriptionId] = useState<string>();
+	const [summary, setSummary] = useState<ISummaryProductModel>(
+		{} as ISummaryProductModel,
+	);
+
+	const {
+		remainsDaysToNextQuater,
+		endDate,
+		year,
+		currentQuarter,
+		prevQuarterYear,
+		prevEndDate,
+	} = getQuarterInfo();
+	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
+	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+	const previousDelivery = `${prevEndDate.toLocaleString("en", { month: "long" })} ${prevQuarterYear}`;
+	const previousDeliveryWithDay = `1st ${prevEndDate.toLocaleString("en", { month: "long" })}, ${prevQuarterYear}`;
+
+	useEffect(() => {
+		const fetchParams = async () => {
+			const { subscriptionID } = await params;
+			setSubscriptionId(subscriptionID);
+			const response = await usersService.getSubscriptionPlan(subscriptionID);
+
+			const orders = [] as IOrderSummaryModel[];
+
+			for (const item of response.team.basket) {
+				const capsules = +item.capsulePerDay * remainsDaysToNextQuater;
+				orders.push({
+					alt: item.product.imageUrl,
+					description:
+						capsules > 0
+							? `${+item.capsulePerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
+							: "",
+					capsules: capsules,
+					name: item.product.name,
+					delivery: nextDelivery,
+					src: item.product.imageUrl,
+					rrp: item.product.rrp,
+					price: capsules * 0.25,
+					pricePerCapsule: 0.25,
+					id: item.id,
+				});
+			}
+
+			setTotalPrice(orders?.reduce((sum, item) => sum + item.price, 0));
+
+			const model = {
+				title: "Order Summary",
+				corporation: "KANEKA CORPRATION",
+				name: response.name,
+				deliveryText: "NEXT DAY DELIVERY",
+				orders: orders as IOrderSummaryModel[],
+			} as ISummaryProductModel;
+
+			setSummary(model);
+		};
+		fetchParams();
+	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
 
 	function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
+		router.push(`/dashboard/manage-plans/${subscriptionId}`);
 	}
 
 	const bottomContent = (
@@ -44,7 +95,7 @@ export default function OptBackIn() {
 					height={24}
 				/>
 			</div>
-			Delivering 1st April, 2025
+			Delivering {previousDeliveryWithDay}
 		</div>
 	);
 
@@ -54,12 +105,13 @@ export default function OptBackIn() {
 				<ConfirmDialog
 					isDialogOpen={isDialogOpen}
 					onOpenChange={onOpenChange}
-					title="You've been successfully opted back for April 2025"
+					title={`You've been successfully opted back for ${previousDelivery}`}
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 					bottomContent={bottomContent}
 				/>
+				<PaymentList totalPrice={totalPrice} />
 			</div>
-			<SummaryProduct totalPriceAction={() => {}} model={summaryProductModel} />
+			<SummaryProduct model={summary} />
 		</div>
 	);
 }

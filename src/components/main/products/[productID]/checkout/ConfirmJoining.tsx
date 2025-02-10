@@ -3,7 +3,9 @@ import Image from "next/image";
 import ShareBox from "@/components/main/products/[productID]/checkout/ShareBox";
 import ReferralCardsWithLink from "@/components/shared/ReferralCardsWithLink";
 
-export default function ConfirmJoining() {
+export default function ConfirmJoining({
+	email,
+}: Readonly<{ email?: string }>) {
 	return (
 		<div className="grid gap-[24px]">
 			<div className="py-[41px] px-[24px] grid gap-[12px] md:h-[264px]">
@@ -20,7 +22,7 @@ export default function ConfirmJoining() {
 						Thank you For Joining Supplement Club
 					</p>
 					<p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center">
-						A confirmation email has been sent to maxwelrd@gmail.com
+						A confirmation email has been sent to {email}
 					</p>
 				</div>
 			</div>

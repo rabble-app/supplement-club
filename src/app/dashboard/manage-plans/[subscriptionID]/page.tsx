@@ -10,66 +10,77 @@ import SummaryProduct from "@/components/shared/SummaryProduct";
 import { Button } from "@/components/ui/button";
 import { paymentService } from "@/services/paymentService";
 import { teamsService } from "@/services/teamService";
+import { usersService } from "@/services/usersService";
+import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import type IReferalSummaryModel from "@/utils/models/IReferalSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
-import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
+import { getQuarterInfo } from "@/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Subscription({
 	params,
 }: Readonly<{ params: Promise<SubscriptionProps> }>) {
-	const [setCapsule] = useState<number>(1);
 	const [subscriptionID, setSubscriptionID] = useState<string>();
-	const { currentQuarter, daysToNextQuarter, year } = getQuarterInfo();
-	const { startDate } = getQuarterDates(year, currentQuarter);
+	const [totalCapsule, setTotalCapsule] = useState<number>(0);
+	const [managePlan, setManagePlan] = useState<IManagePlanModel>();
+	const [summary, setSummary] = useState<ISummaryProductModel>(
+		{} as ISummaryProductModel,
+	);
 	const router = useRouter();
-	const nextDeliveryText = `1 ${startDate.toLocaleString("en", { month: "short" })} ${year} - ${daysToNextQuarter} Days`;
+	const {
+		endDate,
+		year,
+		daysToNextQuarter,
+		remainsDaysToNextQuater,
+		currentQuarter,
+	} = getQuarterInfo();
+	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
+	const nextDelivery = `1 ${endDate.toLocaleString("en", { month: "short" })} ${year} - ${daysToNextQuarter} Days`;
 
 	useEffect(() => {
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
 			setSubscriptionID(subscriptionID);
+			const response = await usersService.getSubscriptionPlan(subscriptionID);
+			setManagePlan(response);
+
+			const orders = [] as IOrderSummaryModel[];
+			let caps = 0;
+			for (const item of response.team.basket) {
+				const capsules = +item.capsulePerDay * remainsDaysToNextQuater;
+				orders.push({
+					alt: item.product.imageUrl,
+					description:
+						capsules > 0
+							? `${+item.capsulePerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
+							: "",
+					capsules: capsules,
+					name: item.product.name,
+					delivery: nextDelivery,
+					src: item.product.imageUrl,
+					price: capsules * 0.25,
+					rrp: item.product.rrp,
+					pricePerCapsule: 0.25,
+					id: item.id,
+				});
+				caps += capsules;
+			}
+
+			setTotalCapsule(caps);
+
+			const model = {
+				orders: orders as IOrderSummaryModel[],
+			} as ISummaryProductModel;
+
+			setSummary(model);
 		};
 		fetchParams();
-	}, [params]);
-
-	const summaryProductModel = {
-		orders: [
-			{
-				id: 1,
-				alt: "",
-				description: "$100 Capsules to see you to Q1",
-				name: "One time Alignment Package",
-				delivery: "Delivered Tomorrow ",
-				src: "/images/ubiquinol.svg",
-				capsules: 100,
-				price: 200,
-			},
-			{
-				id: 1,
-				alt: "supplement mockup",
-				description: "300 Capsules Every 3 months",
-				name: "Quarterly Subscription",
-				delivery: "text",
-				src: "/images/supplement-mockup.svg",
-				capsules: 300,
-				price: 250,
-			},
-		] as IOrderSummaryModel[],
-		referals: [
-			{
-				price: -5,
-				count: 1,
-			},
-		] as IReferalSummaryModel[],
-	} as ISummaryProductModel;
+	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
 
 	async function confirmAction(capsule: number) {
 		await paymentService.updateSubscription(subscriptionID || "", 5, capsule);
-		setCapsule(capsule);
 	}
 
 	async function subscriptionCancel() {
@@ -91,16 +102,19 @@ export default function Subscription({
 
 				<SubscriptionCard
 					title="Next Quarterly Drop"
-					description={nextDeliveryText}
+					description={nextDelivery}
 					imageSrc="/images/icons/calendar-blue-icon.svg"
 					imageAlt="Calendar icon"
 				/>
 
-				<SubscriptionPlan confirmAction={confirmAction} />
+				<SubscriptionPlan
+					managePlan={managePlan}
+					confirmAction={confirmAction}
+				/>
 
 				<SubscriptionCard
 					title="Your Stock"
-					description="You should have 148 Capsules to tie you over to the Jan 1st 2024 drop"
+					description={`You should have ${totalCapsule} Capsules to tie you over to the ${endDate.toLocaleString("en", { month: "short" })} 1st ${year} drop`}
 					imageSrc="/images/icons/truck-icon.svg"
 					imageAlt="Truck icon"
 				>
@@ -116,7 +130,7 @@ export default function Subscription({
 					</Button>
 				</SubscriptionCard>
 
-				<SummaryProduct totalPriceAction={() => {}} model={summaryProductModel}>
+				<SummaryProduct model={summary}>
 					<SubscriptionCancelDialog confirmAction={subscriptionCancel} />
 
 					<SubscriptionSkipDialog confirmAction={subscriptionSkipDialog} />

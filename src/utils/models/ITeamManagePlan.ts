@@ -8,16 +8,16 @@ export interface IBasketManagePlan {
 	id: string;
 	quantity: number;
 	product: IProductManagePlan;
-	capsulePerDay: string;
+	capsulePerDay: number;
 }
 
 export interface IProductManagePlan {
 	id: string;
 	name: string;
-	price: string;
+	price: number;
 	quantityOfSubUnitPerOrder: string;
 	unitsOfMeasurePerSubUnit: string;
-	rrp: string;
+	rrp: number;
 	imageUrl: string;
 	producer: IProducerManagePlan;
 }

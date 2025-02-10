@@ -2,11 +2,15 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
-import { useUserStore } from "@/stores/userStore";
 
 export default function ResetPasswordPage() {
-	const { user } = useUserStore((state) => state);
+	const context = useUser();
+
+	async function resetPassword() {
+		await authService.resetPassword(context?.user?.email || "");
+	}
 
 	return (
 		<div className="w-full md:w-[800px] mx-auto py-[200px] px-[20px] grid gap-[24px] justify-center">
@@ -26,11 +30,7 @@ export default function ResetPasswordPage() {
 				your spam folder
 			</div>
 			<Button
-				onClick={() =>
-					user?.email != null
-						? authService.resetPassword(user.email)
-						: undefined
-				}
+				onClick={resetPassword}
 				className=" text-white w-[280px] text[16px] leading-[24px] mx-auto font-inconsolata font-bold bg-blue"
 			>
 				Request a New Link

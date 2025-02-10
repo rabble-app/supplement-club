@@ -69,14 +69,14 @@ export const paymentService = {
 		}),
 
 	topUpSubscription: async (
-		amount: string,
+		amount: number,
 		teamId: string,
 		paymentIntentId: string,
 		userId: string,
 		productId: string,
-		quantity: string,
+		quantity: number,
 		capsulePerDay: number,
-		price: string,
+		price: number,
 	) =>
 		apiRequest(PAYMENT_ENDPOINTS.SUBSCRIPTION_TOPUP, "POST", {
 			amount,

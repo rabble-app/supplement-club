@@ -62,13 +62,9 @@ export default function Checkout({
 	const [capsulePerDay] = useState(productStore.capsulesPerDay || 2);
 	const [product, setProduct] = useState<ISingleProductModel>();
 
-	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
-		getQuarterInfo();
+	const { year, endDate, remainsDaysToNextQuater } = getQuarterInfo();
 
 	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
-	const [nextQuater] = useState(
-		currentQuarter + 1 > 4 ? 1 : currentQuarter + 1,
-	);
 
 	const capsulesPackage = useMemo(
 		() => remainsDaysToNextQuater * capsulePerDay,
@@ -76,7 +72,7 @@ export default function Checkout({
 	);
 
 	const [summary, setSummary] = useState<ISummaryProductModel>(
-		calculateSummary(2),
+		calculateSummary(2, step),
 	);
 
 	useEffect(() => {
@@ -102,6 +98,7 @@ export default function Checkout({
 		setSummary(
 			calculateSummary(
 				capsulePerDay,
+				step,
 				product?.name,
 				product?.isComming,
 				product?.teamName,
@@ -110,10 +107,11 @@ export default function Checkout({
 				product?.unitsOfMeasurePerSubUnit,
 			),
 		);
-	}, [capsulePerDay, product]);
+	}, [capsulePerDay, product, step]);
 
 	function calculateSummary(
 		capsulePerDay: number,
+		step: number,
 		name?: string,
 		isComming?: boolean,
 		teamName?: string,
@@ -178,11 +176,13 @@ export default function Checkout({
 			});
 		}
 
+		setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
+
 		return {
 			title: "Order Summary",
 			corporation: teamName,
 			name: name,
-			deliveryText: !isComming ? "NEXT DAY DELIVERY" : "",
+			deliveryText: !isComming && step < 4 ? "NEXT DAY DELIVERY" : "",
 			percentage: (capsulePerDay * days * 0.25) / Number(rrp),
 			rrp: rrp,
 			subscriptions: subscriptions,
@@ -248,7 +248,7 @@ export default function Checkout({
 						)}
 					</PaymentDetails>
 				)}
-				{step === 4 && <ConfirmJoining />}
+				{step === 4 && <ConfirmJoining email={context?.user?.email} />}
 			</div>
 
 			<div className="mx-[-16px] md:mx-[0] mt-[32px]">

@@ -31,7 +31,7 @@ export default function ConfirmDialog({
 	return (
 		<Dialog open={isDialogOpen} onOpenChange={onOpenChange}>
 			{topContent && (
-				<DialogTrigger asChild>
+				<DialogTrigger asChild onClick={() => onOpenChange}>
 					<Button className="bg-blue w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-white rounded-[2px] h-[46px]">
 						{topContent}
 					</Button>
@@ -73,7 +73,7 @@ export default function ConfirmDialog({
 						</div>
 
 						<div className="grid gap-[16px]">
-							<p className="text-[24px] leading-[28px] font-hagerman uppercase text-center font-[400]">
+							<p className="text-[24px] leading-[120%] font-hagerman uppercase text-center font-[400]">
 								{title}
 							</p>
 							<p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center w-full font-[400]">

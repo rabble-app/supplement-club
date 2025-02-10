@@ -4,6 +4,7 @@ import { apiRequest } from "@/utils/helpers";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
 import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
+import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import type IUserPlanReponse from "@/utils/models/api/response/IUserPlanResponse";
@@ -27,7 +28,7 @@ export const usersService = {
 		);
 	},
 
-	updateDeliveryAddress: async (
+	addDeliveryAddress: async (
 		userId: string,
 		channel: string,
 		firstName: string,
@@ -38,8 +39,8 @@ export const usersService = {
 		postalCode: string,
 		country: string,
 		phone: string,
-	): Promise<IUpcomingDeliveryModel[]> => {
-		const { data } = await apiRequest(USER_ENDPOINTS.DELIVERY_ADDRESS, "POST", {
+	): Promise<IResponseModel> => {
+		const response = await apiRequest(USER_ENDPOINTS.DELIVERY_ADDRESS, "POST", {
 			userId,
 			channel,
 			firstName,
@@ -51,7 +52,7 @@ export const usersService = {
 			country,
 			phone,
 		});
-		return data; // Assuming additional mapping may not be necessary
+		return response; // Assuming additional mapping may not be necessary
 	},
 
 	async getSubscriptionPlans(userId: string) {
@@ -100,7 +101,7 @@ export const usersService = {
 		buildingNo: string,
 		city: string,
 		country: string,
-		postCode: string,
+		postalCode: string,
 	) =>
 		apiRequest(USER_ENDPOINTS.UPDATE_SHIPPING(userId), "PATCH", {
 			address,
@@ -108,6 +109,6 @@ export const usersService = {
 			buildingNo,
 			city,
 			country,
-			postCode,
+			postalCode,
 		}),
 };

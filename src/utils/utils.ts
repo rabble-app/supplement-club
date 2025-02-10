@@ -30,29 +30,57 @@ export function getQuarterInfo() {
 
 	// Determine the start of the next quarter
 	const nextQuarterMonth = (Math.floor(month / 3) + 1) * 3;
-	const year =
+	const nextYear =
 		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;
-	const nextQuarterStart = new Date(year, nextQuarterMonth % 12, 1);
+	const nextQuarterStart = new Date(nextYear, nextQuarterMonth % 12, 1);
 
-	// Calculate days remaining
+	// Calculate days remaining for the next quarter
 	const diffTime = nextQuarterStart - date;
 	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-	const { startDate, endDate } = getQuarterDates(year, currentQuarter);
+	// Previous quarter calculations
+	const prevQuarterMonth = (Math.floor(month / 3) - 1) * 3;
+	const prevYear =
+		prevQuarterMonth >= 0 ? date.getFullYear() : date.getFullYear() - 1;
+	const prevQuarterStart = new Date(prevYear, (prevQuarterMonth + 12) % 12, 1);
+
+	// Previous month calculations
+	const prevMonth = month === 0 ? 11 : month - 1;
+	const prevMonthYear =
+		month === 0 ? date.getFullYear() - 1 : date.getFullYear();
+	const prevMonthStart = new Date(prevMonthYear, prevMonth, 1);
+
+	// Get quarter dates
+	const { startDate, endDate } = getQuarterDates(
+		date.getFullYear(),
+		currentQuarter,
+	);
+	const { startDate: prevStartDate, endDate: prevEndDate } = getQuarterDates(
+		prevYear,
+		Math.floor(prevQuarterMonth / 3) + 1,
+	);
 
 	const remainsDaysToNextQuater = getDifferenceInDays(
-		new Date(year, endDate.getMonth(), 1),
+		new Date(nextYear, endDate.getMonth(), 1),
 		new Date(),
 	);
 
 	return {
 		currentQuarter,
 		daysToNextQuarter: diffDays,
-		year,
+		year: date.getFullYear(),
 		nextQuarterMonth,
 		startDate,
 		endDate,
 		remainsDaysToNextQuater,
+		prevQuarterMonth,
+		prevQuarterYear: prevYear,
+		prevQuarterStart,
+		prevMonth,
+		prevMonthYear,
+		prevMonthStart,
+		prevStartDate,
+		prevEndDate,
 	};
 }
 
@@ -216,11 +244,6 @@ export const mapSubscriptionModel = (
 		id: model.id,
 		name: model.team.basket[0].product.producer.businessName,
 		subscriptionStatus: model.subscriptionStatus,
-		price: model.team.basket[0].product.price,
-		percent:
-			Number(model.team.basket[0].product.price) /
-			Number(model.team.basket[0].product.rrp),
-		capsulePerDay: +model.team.basket[0].capsulePerDay,
 		isSkipped: model.skipNextDelivery,
 		quantity: model.team.basket[0].quantity,
 		team: model.team,

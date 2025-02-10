@@ -80,7 +80,7 @@ export default function CapsuleBox({
 						<p className="text-[12px] leading-[13px] font-bold font-helvetica text-center">
 							{option.title1}
 						</p>
-						<Separator className="bg-grey13 h-[1px]" />
+						<Separator className="bg-grey3 h-[1px]" />
 						<div className="grid gap-[4px]">
 							<p className="text-grey6 text-[14px] leading-[16px]">
 								{option.title1}
@@ -89,7 +89,7 @@ export default function CapsuleBox({
 								{option.description1}
 							</p>
 						</div>
-						<Separator className="bg-grey13 h-[1px]" />
+						<Separator className="bg-grey3 h-[1px]" />
 						<div className="grid gap-[4px]">
 							<p className="text-grey6 text-[14px] leading-[16px]">
 								{option.title2}

@@ -2,13 +2,16 @@
 
 import AddressAutocomplete from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
+import Notify from "@/components/shared/Notify";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
 import { deliveryAddressSchema } from "@/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function DeliveryAddress({
 	step,
@@ -26,27 +29,37 @@ export default function DeliveryAddress({
 
 	const context = useUser();
 
-	const onSubmit = async (values: z.infer<typeof deliveryAddressSchema>) => {
-		await usersService.updateDeliveryAddress(
+	async function onSubmit(e: FormData) {
+		const result = await usersService.addDeliveryAddress(
 			context?.user?.id || "",
 			"SUPPLEMENT",
-			values.firstName,
-			values.lastName,
-			values.address,
-			values.address2,
-			values.city,
-			values.postalCode,
-			values.country,
-			values.mobileNumber,
+			e.get("firstName")?.toString() || "",
+			e.get("lastName")?.toString() || "",
+			e.get("address")?.toString() || "",
+			e.get("address2")?.toString() || "",
+			e.get("city")?.toString() || "",
+			e.get("postalCode")?.toString() || "",
+			e.get("country")?.toString() || "",
+			e.get("mobileNumber")?.toString() || "",
 		);
-		updateStepAction(step + 1);
-	};
+
+		if (result?.statusCode === 200) {
+			updateStepAction(step + 1);
+		} else {
+			toast.custom(
+				() => <Notify message={JSON.parse(result.error).message} />,
+				{
+					position: "top-right",
+				},
+			);
+		}
+	}
 
 	return (
 		<Form {...currentForm}>
 			<AddressAutocomplete form={currentForm} />
 			<form
-				onSubmit={currentForm.handleSubmit(onSubmit)}
+				action={(e) => startTransition(() => onSubmit(e))}
 				className="flex flex-col gap-[24px] p-[16px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
 			>
 				{children}

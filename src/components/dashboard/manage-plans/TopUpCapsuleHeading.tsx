@@ -20,7 +20,6 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-import { paymentService } from "@/services/paymentService";
 import type { IFilterModel } from "@/utils/models/IFilterModel";
 
 const step1FormSchema = z.object({
@@ -79,11 +78,9 @@ const capsulesPerDay = [
 ] as IFilterModel[];
 
 export default function TopUpCapsuleHeading({
-	step,
-	updateStepAction,
+	updateInfoAction,
 }: Readonly<{
-	step: number;
-	updateStepAction: (newValue: number) => void;
+	updateInfoAction: (capsules: string, weeks: string) => void;
 }>) {
 	const form = useForm<z.infer<typeof step1FormSchema>>({
 		resolver: zodResolver(step1FormSchema),
@@ -93,17 +90,7 @@ export default function TopUpCapsuleHeading({
 	const onSubmit: SubmitHandler<z.infer<typeof step1FormSchema>> = async (
 		data,
 	) => {
-		await paymentService.topUpSubscription(
-			"1000",
-			"a621791d-1064-4fd3-ad11-7db0f9ff7d94",
-			"pi_3QiG9wLOm4z6Mbsx0NkZ7HBg",
-			"fcb46302-6f8b-4cfe-aae7-bbc102e85ce0",
-			"1d84f735-61d0-44fb-be3f-beba37d737c4",
-			"7",
-			100,
-			data.capsules,
-		);
-		updateStepAction(step + 1);
+		updateInfoAction(data.capsules, data.weekly);
 	};
 
 	return (

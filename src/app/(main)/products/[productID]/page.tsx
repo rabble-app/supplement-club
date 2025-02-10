@@ -316,11 +316,7 @@ export default function ProductDetails({
 							selectCapsulePerDayAction={updateCapsulePerDay}
 						/>
 
-						<SummaryProduct
-							totalPriceAction={() => {}}
-							className="bg-white"
-							model={summary}
-						/>
+						<SummaryProduct className="bg-white" model={summary} />
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
 							<Link href={`/products/${product?.id}/checkout`}>
@@ -377,7 +373,6 @@ export default function ProductDetails({
 						</div>
 
 						<SummaryProduct
-							totalPriceAction={() => {}}
 							showOnlyTotal={true}
 							className="bg-white"
 							model={summary}
@@ -393,7 +388,7 @@ export default function ProductDetails({
 				)}
 				{context?.user && (
 					<div className="grid gap-[28px] w-full">
-						<SummaryProduct totalPriceAction={() => {}} model={summary} />
+						<SummaryProduct model={summary} />
 
 						<ReferralCardsWithLink />
 					</div>

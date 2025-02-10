@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
-
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import EmailReminders from "./shared/EmailReminders";
 import PaymentPage from "./shared/PaymentPage";
 
 export default function PaymentDetails({
@@ -20,10 +19,10 @@ export default function PaymentDetails({
 			<div className="grid gap-[24px]">
 				{children}
 
-				<Separator className="bg-grey13 h-[1px]" />
+				<Separator className="bg-grey3 h-[1px]" />
 			</div>
 			<PaymentPage paymentIntentAction={successAction} totalPrice={totalPrice}>
-				<Separator className="bg-grey13" />
+				<Separator className="bg-grey3" />
 
 				<p className="text-[14px] leading-[16px]">
 					By making this purchase your supplement club will automatically renew
@@ -36,20 +35,7 @@ export default function PaymentDetails({
 				</Button>
 			</PaymentPage>
 
-			<div className="grid gap-[11px]">
-				<div className="flex gap-[5px] items-center font-bold text-[16px] leading-[18px]">
-					<Image
-						src="/images/icons/email-icon.svg"
-						alt="Email icon"
-						width={24}
-						height={24}
-					/>{" "}
-					Email Reminders
-				</div>
-				<p className="text-[12px] leading-[13px] text-grey4">
-					We notify you with enough time to make changes before each order
-				</p>
-			</div>
+			<EmailReminders />
 		</div>
 	);
 }

@@ -20,9 +20,12 @@ import { useEffect, useState } from "react";
 export default function PaymentCards({
 	editable,
 }: Readonly<{ editable?: boolean }>) {
-	const [defaultCard, setDefaultCard] = useState("");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const context = useUser();
+
+	const [defaultCard, setDefaultCard] = useState(
+		context?.user?.stripeDefaultPaymentMethodId || "",
+	);
 	const [userCards, setUserCards] = useState<IUserPaymentOptionModel[]>([]);
 
 	useEffect(() => {
@@ -41,11 +44,12 @@ export default function PaymentCards({
 			paymentId,
 			context?.user?.stripeCustomerId || "",
 		);
-		setUserCards(userCards.filter((c) => c.id !== paymentId));
+		setDefaultCard(paymentId);
 	}
 
-	function confirmDeleteAction(id: string) {
-		setUserCards(userCards.filter((c) => c.id !== id));
+	async function confirmDeleteAction(paymentId: string) {
+		await paymentService.deleteCard(paymentId);
+		setUserCards(userCards.filter((c) => c.id !== paymentId));
 	}
 
 	return (
@@ -62,6 +66,7 @@ export default function PaymentCards({
 								>
 									<PaymentCard
 										model={item.card}
+										isDefault={defaultCard === item.id}
 										topContent={
 											<RadioGroupItem
 												value={item.id.toString()}
@@ -69,7 +74,7 @@ export default function PaymentCards({
 											/>
 										}
 									>
-										{editable && (
+										{editable && defaultCard !== item.id && (
 											<DropdownMenu>
 												<DropdownMenuTrigger>
 													<Image

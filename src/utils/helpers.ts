@@ -34,7 +34,7 @@ export const apiRequest = async <IResponseModel>(
 	} catch (e) {
 		return {
 			error: e instanceof Error ? e.message : "An unknown error occurred",
-		};
+		} as IResponseModel;
 	}
 };
 

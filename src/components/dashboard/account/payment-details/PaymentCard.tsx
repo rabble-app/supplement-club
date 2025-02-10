@@ -6,8 +6,10 @@ export default function PaymentCard({
 	model,
 	children,
 	topContent,
+	isDefault,
 }: Readonly<{
 	model: IPaymentCard;
+	isDefault: boolean;
 	children?: React.ReactNode;
 	topContent?: React.ReactNode;
 }>) {
@@ -28,9 +30,6 @@ export default function PaymentCard({
 						</div>
 						{dateUpdated && (
 							<div className="flex gap-[4px]">
-								<span className="text-[10px] leading-[11px] font-[400] font-helvetica text-black6">
-									Last time used:
-								</span>
 								<span className="text-[10px] leading-[11px] font-[700] font-helvetica text-black6">
 									Thu, Mar 18, 2023
 								</span>
@@ -45,7 +44,7 @@ export default function PaymentCard({
 				</div>
 
 				<div className="flex justify-between items-center gap-[14px]">
-					{true && (
+					{isDefault && (
 						<span className="rounded-[28px] bg-blue text-white px-[10px] text-[10px] leading-[10px] font-[600] font-inconsolata h-[20px] flex items-center">
 							Default
 						</span>

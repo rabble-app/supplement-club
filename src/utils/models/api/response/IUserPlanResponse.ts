@@ -18,7 +18,7 @@ export interface Basket {
 	id: string;
 	quantity: number;
 	product: Product;
-	capsulePerDay: string;
+	capsulePerDay: number;
 }
 
 export interface Product {

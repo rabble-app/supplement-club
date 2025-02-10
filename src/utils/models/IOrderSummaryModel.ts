@@ -1,5 +1,5 @@
 export default interface IOrderSummaryModel {
-	id: number;
+	id: string;
 	src?: string;
 	alt?: string;
 	name?: string;
