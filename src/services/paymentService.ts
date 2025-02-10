@@ -2,6 +2,7 @@ import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
+import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
 import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
 import { mapUserPaymentOptionModel } from "@/utils/utils";
 
@@ -170,6 +171,13 @@ export const paymentService = {
 			paymentMethodId,
 		}),
 
+	async setupIntent() {
+		const { data } = await apiRequest(PAYMENT_ENDPOINTS.SETUP_INTENT, "POST");
+		return {
+			clientSecret: data.client_secret,
+		} as ISetupIntentResponse;
+	},
+
 	async createPaymentIntent(
 		amount: number,
 		currency: string,
@@ -188,9 +196,7 @@ export const paymentService = {
 		);
 		return {
 			paymentIntentId: data.paymentIntentId,
-			clientSecret:
-				data.clientSecret ||
-				"pi_3Qo2PaLOm4z6Mbsx02aFD8X5_secret_KXf1CadD3fuhfkA13wGRtdskv",
+			clientSecret: data.clientSecret,
 		} as IPaymentIntentResponse;
 	},
 

@@ -1,7 +1,7 @@
+"use client";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Dialog,
 	DialogClose,
@@ -9,21 +9,38 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
-import PaymentPage from "./PaymentPage";
+import { paymentService } from "@/services/paymentService";
+import { Elements } from "@stripe/react-stripe-js";
+import { type PaymentMethod, loadStripe } from "@stripe/stripe-js";
+import { useEffect, useState } from "react";
+import PaymentForm from "./PaymentForm";
+const stripePromise = loadStripe(
+	process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string,
+);
 
 export default function AddPaymentDialog({
 	successAction,
+	totalPrice,
 }: Readonly<{
-	successAction: () => void;
+	successAction: (val: string | PaymentMethod | null) => void;
+	totalPrice: number;
 }>) {
 	const [isOpen, setIsOpen] = useState(false);
-	const [futurePurchase, setFuturePurchase] = useState(true);
-	const [defaultCard, setDefaultCard] = useState(true);
 
-	async function onSave() {
+	const [clientSecret, setClientSecret] = useState("");
+
+	useEffect(() => {
+		const fetchSetupIntent = async () => {
+			const model = await paymentService.setupIntent();
+			setClientSecret(model.clientSecret);
+		};
+
+		fetchSetupIntent();
+	}, []);
+
+	function addNewCard(val: string | PaymentMethod | null) {
 		setIsOpen(false);
-		successAction();
+		successAction(val);
 	}
 
 	return (
@@ -61,43 +78,16 @@ export default function AddPaymentDialog({
 				</DialogClose>
 
 				<div className="h-[1px] bg-grey w-full" />
-				<PaymentPage paymentIntentAction={() => {}} totalPrice={0}>
-					<div className="flex items-center gap-[8px] mx-auto">
-						<Checkbox
-							id="futurePurchase"
-							checked={futurePurchase}
-							onCheckedChange={(checked) => setFuturePurchase(checked === true)}
-						/>
-						<label
-							htmlFor="futurePurchase"
-							className="text-[16px] leading-[19px] text-black5 cursor-pointer"
-						>
-							Save card for future purchase
-						</label>
-					</div>
 
-					<div className="flex items-center gap-[8px] mx-auto">
-						<Checkbox
-							id="defaultCard"
-							checked={defaultCard}
-							onCheckedChange={(checked) => setDefaultCard(checked === true)}
+				<div className="mx-auto w-full">
+					<Elements options={{ clientSecret }} stripe={stripePromise}>
+						<PaymentForm
+							cardAction={addNewCard}
+							totalPrice={totalPrice}
+							clientSecret={clientSecret}
 						/>
-						<label
-							htmlFor="defaultCard"
-							className="text-[16px] leading-[19px] text-black5 cursor-pointer"
-						>
-							Use this card as default payment method
-						</label>
-					</div>
-
-					<div className="h-[1px] bg-grey w-full" />
-					<Button
-						onClick={onSave}
-						className="bg-blue text-[16px] flex ml-auto text-white font-bold font-inconsolata h-[48px] w-[179px]"
-					>
-						Add Card Details
-					</Button>
-				</PaymentPage>
+					</Elements>
+				</div>
 			</DialogContent>
 		</Dialog>
 	);

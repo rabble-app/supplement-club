@@ -10,8 +10,10 @@ import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { teamsService } from "@/services/teamService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
+import type { PaymentMethod } from "@stripe/stripe-js";
 import { toast } from "sonner";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
+import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
 import Notify from "./Notify";
 
@@ -101,6 +103,8 @@ export default function PaymentList({
 		successAction();
 	}
 
+	function addCardMethod(val: string | PaymentMethod | null) {}
+
 	return (
 		<div className="border-[1px] border-grey12 flex flex-col items-start p-[32px] gap-[24px]">
 			<div className="grid gap-[24px]">
@@ -160,6 +164,11 @@ export default function PaymentList({
 							))}
 						</div>
 					</div>
+
+					<AddPaymentDialog
+						totalPrice={totalPrice}
+						successAction={addCardMethod}
+					/>
 				</div>
 			)}
 

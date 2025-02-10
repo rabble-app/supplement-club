@@ -17,6 +17,7 @@ export const TEAM_ENDPOINTS = {
 export const PAYMENT_ENDPOINTS = {
 	ADD_CARD: "	payments/add-card",
 	BULK_BASKET: "payments/basket-bulk",
+	SETUP_INTENT: "payments/setup-intent/",
 	PAYMENT_INTENT: "payments/intent",
 	CAPTURE_PAYMENT: "payments/intent/capture",
 	PREORDER_BASKET: "payments/basket",

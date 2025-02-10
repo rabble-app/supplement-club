@@ -10,7 +10,7 @@ export default function AccountPaymentDetails() {
 		<>
 			<div className="mx-auto max-w-[600px]">
 				<PaymentCards editable={true} />
-				<AddPaymentDialog successAction={successAction} />
+				<AddPaymentDialog totalPrice={0} successAction={successAction} />
 			</div>
 		</>
 	);
