@@ -8,14 +8,22 @@ import { Checkbox } from "../ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
+import { teamsService } from "@/services/teamService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
+import { toast } from "sonner";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import EmailReminders from "./EmailReminders";
+import Notify from "./Notify";
 
 export default function PaymentList({
 	totalPrice,
+	isComming,
 	successAction,
-}: Readonly<{ totalPrice: number; successAction: () => void }>) {
+}: Readonly<{
+	totalPrice: number;
+	isComming?: boolean;
+	successAction: () => void;
+}>) {
 	const [policyTerms, setPolicyTerms] = useState(true);
 	const [saveAddress, setSameAddress] = useState(true);
 
@@ -37,15 +45,58 @@ export default function PaymentList({
 	}, [context?.user?.stripeCustomerId]);
 
 	async function onSubmit() {
-		const cutomerId = userCards.find((u) => u.id === defaultCard)?.customer;
-		await paymentService.chargeUser(
-			totalPrice,
-			"gbp",
-			cutomerId || "",
-			defaultCard,
+		const currectCard = userCards.find((u) => u.id === defaultCard);
+
+		if (!isComming) {
+			const { data } = await paymentService.addPaymentIntent(
+				totalPrice,
+				"gbp",
+				currectCard?.customer || "",
+				defaultCard,
+			);
+
+			if (!data?.paymentIntentId) {
+				toast.custom(
+					() => (
+						<Notify
+							message={
+								"Cannot charge money from this card.Please chose another one"
+							}
+						/>
+					),
+					{
+						position: "top-right",
+					},
+				);
+				return;
+			}
+
+			const captureResponse = await paymentService.addCapturePayment(
+				totalPrice,
+				context?.user?.teamId || "",
+				data.paymentIntentId,
+				context?.user?.id || "",
+			);
+
+			if (captureResponse.error) {
+				toast.custom(() => <Notify message={"Cannot add capture payment"} />, {
+					position: "top-right",
+				});
+				return;
+			}
+		}
+
+		const addTeamMemberResponse = await teamsService.addTeamMember(
 			context?.user?.id || "",
 			context?.user?.teamId || "",
 		);
+
+		if (addTeamMemberResponse.error) {
+			toast.custom(() => <Notify message={"Cannot add team member"} />, {
+				position: "top-right",
+			});
+			return;
+		}
 
 		successAction();
 	}

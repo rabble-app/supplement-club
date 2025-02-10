@@ -11,9 +11,7 @@ import PaymentList from "@/components/shared/PaymentList";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
-import { paymentService } from "@/services/paymentService";
 import { productService } from "@/services/productService";
-import { teamsService } from "@/services/teamService";
 import { useProductStore } from "@/stores/productStore";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
@@ -179,15 +177,8 @@ export default function Checkout({
 	}, [context?.user, router]);
 
 	async function successAction() {
-		if (!product?.isComming) {
-			await paymentService.addPaymentIntent(totalPrice, "gbp", "", "");
-			await paymentService.addCapturePayment(totalPrice, "gbp", "", "");
-		}
-		await teamsService.addTeamMember(
-			context?.user?.id || "",
-			product?.supplementTeamProducts?.team.id || "",
-		);
-		setStep(step + 1);
+		const currentStep = step + 1;
+		setStep(currentStep);
 	}
 
 	return (
@@ -206,7 +197,11 @@ export default function Checkout({
 					</DeliveryAddress>
 				)}
 				{step === 3 && (
-					<PaymentList totalPrice={totalPrice} successAction={successAction} />
+					<PaymentList
+						isComming={!product?.isComming}
+						totalPrice={totalPrice}
+						successAction={successAction}
+					/>
 				)}
 				{step === 4 && <ConfirmJoining email={context?.user?.email} />}
 			</div>
