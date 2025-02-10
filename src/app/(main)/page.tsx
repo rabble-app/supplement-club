@@ -14,6 +14,15 @@ import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
 const homeCards = [
 	{
 		id: 1,
+		src: "/images/labs.svg",
+		alt: "Labs",
+		title: "Straight from the Source",
+		subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
+		description:
+			"Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door..",
+	},
+	{
+		id: 2,
 		src: "/images/truck.svg",
 		alt: "Truck",
 		title: "Get Started Today",
@@ -22,22 +31,13 @@ const homeCards = [
 			"Choose the supplements you want today, and we'll ship you a 'sync package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
 	},
 	{
-		id: 2,
+		id: 3,
 		src: "/images/icons/people.svg",
 		alt: "People",
 		title: "There’s Savings in Numbers",
 		subtitle: "The More People Join the Cheaper it Gets",
 		description:
 			"Your sync package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of sync with the bulk ordering cycle.",
-	},
-	{
-		id: 3,
-		src: "/images/labs.svg",
-		alt: "Labs",
-		title: "Straight from the Source",
-		subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
-		description:
-			"Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door..",
 	},
 ] as IHomeCardModel[];
 
