@@ -72,9 +72,7 @@ export default function ShippingDetailsDialog({
 			<DialogTrigger onClick={() => setIsOpen(true)}>
 				<ManageAccountCard
 					title="Shipping address"
-					value={
-						user?.shipping?.address || user?.shipping?.address1 || "Not set"
-					}
+					value={user?.shipping?.address || "Not set"}
 					imageAlt="Home icon"
 					imageSrc="/images/icons/home-blue-icon.svg"
 				/>

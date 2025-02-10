@@ -15,6 +15,7 @@ import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
 import Notify from "./Notify";
+import PaymentConfirmForm from "./PaymentConfirmForm";
 
 export default function PaymentList({
 	totalPrice,
@@ -45,7 +46,8 @@ export default function PaymentList({
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
 
-	async function onSubmit() {
+	async function onSubmit(e) {
+		e.preventDefault();
 		const currectCard = userCards.find((u) => u.id === defaultCard);
 
 		if (!isComming) {
@@ -152,7 +154,10 @@ export default function PaymentList({
 									>
 										<PaymentCard
 											model={item.card}
-											isDefault={defaultCard === item.id}
+											isDefault={
+												(context?.user?.stripeDefaultPaymentMethodId || "") ===
+												item.id
+											}
 											topContent={
 												<RadioGroupItem
 													value={item.id.toString()}
@@ -176,7 +181,10 @@ export default function PaymentList({
 				</div>
 			)}
 
-			{!userCards && userCards.length === 0 && <div>Form HERE</div>}
+			{!userCards ||
+				(userCards?.length === 0 && (
+					<PaymentConfirmForm totalPrice={totalPrice} />
+				))}
 
 			<Separator className="bg-grey3 h-[1px] w-full" />
 

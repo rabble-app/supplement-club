@@ -10,7 +10,7 @@ import type { PaymentMethod } from "@stripe/stripe-js";
 import { useState } from "react";
 import { Button } from "../ui/button";
 
-export default function PaymentForm({
+export default function PaymentSetupForm({
 	clientSecret,
 	cardAction,
 }: Readonly<{

@@ -13,7 +13,7 @@ import { paymentService } from "@/services/paymentService";
 import { Elements } from "@stripe/react-stripe-js";
 import { type PaymentMethod, loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
-import PaymentForm from "./PaymentForm";
+import PaymentSetupForm from "./PaymentSetupForm";
 const stripePromise = loadStripe(
 	process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string,
 );
@@ -65,7 +65,7 @@ export default function AddPaymentDialog({
 					onClick={() => setIsOpen(false)}
 					className="absolute right-[7px] top-[9px]"
 				>
-					<div className="w-[38px] h-[38px] flex justify-center">
+					<div className="border border-grey32 w-10 h-10 rounded-full flex justify-center items-center">
 						<Image
 							src="/images/icons/close-black-icon.svg"
 							alt="Close icon"
@@ -79,7 +79,10 @@ export default function AddPaymentDialog({
 
 				<div className="mx-auto w-full">
 					<Elements options={{ clientSecret }} stripe={stripePromise}>
-						<PaymentForm cardAction={addNewCard} clientSecret={clientSecret} />
+						<PaymentSetupForm
+							cardAction={addNewCard}
+							clientSecret={clientSecret}
+						/>
 					</Elements>
 				</div>
 			</DialogContent>
