@@ -42,7 +42,7 @@ export default function Orders() {
 						<div className="grid grid-cols-[69px_1fr] gap-[8px]">
 							<div className="rounded-[8px] border-[1px] border-grey28 w-[69px] p-[4px]">
 								<Image
-									src={item.order.basket[0].product.imageUrl}
+									src={item.order?.basket[0]?.product.imageUrl}
 									alt="supplement icon"
 									width={61}
 									height={61}
@@ -51,22 +51,22 @@ export default function Orders() {
 							<div className="flex flex-col gap-[6px]">
 								<div className="flex items-center gap-[2px]">
 									<span className="text-[12px] leading-[13px] font-hagerman text-grey4">
-										{item.order.team.producer.businessName}
+										{item.order?.team?.producer?.businessName}
 										{" -"}
 									</span>
 									<span className="text-[12px] leading-[13px] font-inconsolata text-grey4">
-										{Number(item.order.basket[0].capsulePerDay) * 90} Capsules
+										{Number(item.order?.basket[0]?.capsulePerDay) * 90} Capsules
 									</span>
 								</div>
 
 								<div className="flex text-[12px] leading-[13px] text-grey4 font-helvetica">
-									Order Number: {item.order.accumulatedAmount}
+									Order Number: {item.order?.accumulatedAmount}
 								</div>
 
 								<div className="text-[16px] leading-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
-									£{item.order.basket[0].price}{" "}
+									£{item.order?.basket[0]?.price}{" "}
 									<span className="text-[10px] leading-[11px] text-grey1 font-[800] font-inconsolata">
-										(£{item.order.basket[0].price} / capsule)
+										(£{item.order?.basket[0].price} / capsule)
 									</span>
 								</div>
 
@@ -75,7 +75,7 @@ export default function Orders() {
 										day: "numeric",
 										month: "long",
 										year: "numeric",
-									}).format(new Date(item.order.deadline))}
+									}).format(new Date(item?.order?.deadline || new Date()))}
 								</div>
 							</div>
 						</div>
@@ -116,7 +116,7 @@ export default function Orders() {
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
 							Total{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£{item.order.basket[0].price}
+								£{item.order?.basket[0]?.price}
 							</span>
 						</p>
 					</CollapsibleContent>

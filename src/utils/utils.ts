@@ -309,10 +309,10 @@ export const mapReferalInfoModel = (
 	return {
 		balance: model?.wallet?.balance ? Number(model.wallet.balance) : 0,
 		claimed: model?.wallet?.claimed ? Number(model.wallet.claimed) : 0,
-		bonuses: model.bonuses || 0,
-		referralCode: model.referralCode,
-		teams: model.teams,
-		totalSaved: model.totalSaved,
-		referrer: model.referrer,
+		bonuses: model?.bonuses || 0,
+		referralCode: model?.referralCode,
+		teams: model?.teams,
+		totalSaved: model?.totalSaved,
+		referrer: model?.referrer,
 	};
 };

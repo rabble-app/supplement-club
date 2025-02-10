@@ -1,4 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import {
 	PaymentElement,
@@ -8,14 +9,11 @@ import {
 import type { PaymentMethod } from "@stripe/stripe-js";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { useUser } from "@/contexts/UserContext";
 
 export default function PaymentForm({
-	totalPrice,
 	clientSecret,
 	cardAction,
 }: Readonly<{
-	totalPrice: number;
 	clientSecret: string;
 	cardAction: (val: string | PaymentMethod | null) => void;
 }>) {
@@ -25,7 +23,6 @@ export default function PaymentForm({
 	const stripe = useStripe();
 	const elements = useElements();
 	const context = useUser();
-	const [message, setMessage] = useState<string | null>(null);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -96,12 +93,10 @@ export default function PaymentForm({
 
 			<Button
 				type="submit"
-				className="bg-blue text-[16px] flex ml-auto text-white font-bold font-inconsolata h-[48px] w-[179px]"
+				className="bg-blue text-[16px] flex ml-auto text-white font-bold font-inconsolata h-[48px] w-[179px] mt-[20px]"
 			>
 				Add Card Details
 			</Button>
-
-			{message && <p className="text-red-500">{message}</p>}
 		</form>
 	);
 }

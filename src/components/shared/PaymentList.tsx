@@ -10,7 +10,6 @@ import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { teamsService } from "@/services/teamService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
-import type { PaymentMethod } from "@stripe/stripe-js";
 import { toast } from "sonner";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
@@ -103,10 +102,18 @@ export default function PaymentList({
 		successAction();
 	}
 
-	function addCardMethod(val: string | PaymentMethod | null) {}
+	async function addCardMethod() {
+		const model = await paymentService.getUserPaymentOptions(
+			context?.user?.stripeCustomerId || "",
+		);
+		setUserCards(model);
+	}
 
 	return (
-		<div className="border-[1px] border-grey12 flex flex-col items-start p-[32px] gap-[24px]">
+		<form
+			onSubmit={onSubmit}
+			className="border-[1px] border-grey12 flex flex-col items-start p-[32px] gap-[24px]"
+		>
 			<div className="grid gap-[24px]">
 				<p className="text-[24px] leading-[27px] font-hagerman uppercase">
 					Billing Address
@@ -165,12 +172,11 @@ export default function PaymentList({
 						</div>
 					</div>
 
-					<AddPaymentDialog
-						totalPrice={totalPrice}
-						successAction={addCardMethod}
-					/>
+					<AddPaymentDialog successAction={addCardMethod} />
 				</div>
 			)}
+
+			{!userCards && userCards.length === 0 && <div>Form HERE</div>}
 
 			<Separator className="bg-grey3 h-[1px] w-full" />
 
@@ -194,14 +200,11 @@ export default function PaymentList({
 				or modify at any time using your customer login.
 			</p>
 
-			<Button
-				onClick={onSubmit}
-				className="bg-blue text-white w-full font-bold"
-			>
+			<Button type="submit" className="bg-blue text-white w-full font-bold">
 				{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 				{/* Use a regular string */}
 			</Button>
 			<EmailReminders />
-		</div>
+		</form>
 	);
 }

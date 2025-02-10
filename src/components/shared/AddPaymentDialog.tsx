@@ -20,10 +20,8 @@ const stripePromise = loadStripe(
 
 export default function AddPaymentDialog({
 	successAction,
-	totalPrice,
 }: Readonly<{
 	successAction: (val: string | PaymentMethod | null) => void;
-	totalPrice: number;
 }>) {
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -81,11 +79,7 @@ export default function AddPaymentDialog({
 
 				<div className="mx-auto w-full">
 					<Elements options={{ clientSecret }} stripe={stripePromise}>
-						<PaymentForm
-							cardAction={addNewCard}
-							totalPrice={totalPrice}
-							clientSecret={clientSecret}
-						/>
+						<PaymentForm cardAction={addNewCard} clientSecret={clientSecret} />
 					</Elements>
 				</div>
 			</DialogContent>

@@ -29,12 +29,13 @@ export default function SummaryProduct({
 			0,
 		);
 
-		const totalRRP = Math.round(
-			model?.orders?.reduce(
-				(sum, item) => sum + (item?.rrp ?? 0),
-				model.rrp || 0,
-			),
-		);
+		const totalRRP =
+			Math.round(
+				model?.orders?.reduce(
+					(sum, item) => sum + (item?.rrp ?? 0),
+					model.rrp || 0,
+				),
+			) || 0;
 		setTotalRrp(totalRRP);
 
 		let percentage = model?.percentage;
@@ -43,17 +44,18 @@ export default function SummaryProduct({
 		}
 		setPercentage(percentage);
 
-		const totalSumOfSubs = model?.subscriptions?.reduce(
-			(sum, item) => sum + item.capsules * 0.25,
-			0,
-		);
+		const totalSumOfSubs =
+			model?.subscriptions?.reduce(
+				(sum, item) => sum + item.capsules * 0.25,
+				0,
+			) || 0;
 
 		setTotalCount(totalSum + totalSumOfSubs);
 
 		setTotalCapsules(
 			model?.orders?.reduce((sum, item) => sum + item.capsules, 0),
 		);
-	}, [model?.orders, model?.rrp, model?.percentage]);
+	}, [model]);
 	return (
 		<div
 			key={model?.id}
