@@ -97,7 +97,7 @@ export function getQuarterDates(year: number, quarterNumber: number) {
 	return { startDate, endDate };
 }
 
-export function getDifferenceInDays(date1, date2) {
+export function getDifferenceInDays(date1: string, date2: string) {
 	// Ensure the input is converted to Date objects
 	const d1 = new Date(date1);
 	const d2 = new Date(date2);
@@ -153,6 +153,7 @@ export function getCardImage(brand: string) {
 	if (value === "discover") {
 		return "/images/payment-cards/discover.svg";
 	}
+	return "";
 }
 
 export function formatDate(value: string) {

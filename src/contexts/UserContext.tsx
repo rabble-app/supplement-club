@@ -24,7 +24,7 @@ export function UserProvider({ children, state }: Readonly<UserProviderProps>) {
 
 	// Initialize state with `state` prop or default values
 	const [user, setUser] = useState<IUserResponse | null>(state?.user || null);
-	const setNewUser = (user) => {
+	const setNewUser = (user: IUserResponse) => {
 		setUser(user);
 	};
 

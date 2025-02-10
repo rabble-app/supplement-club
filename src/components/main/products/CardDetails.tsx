@@ -6,7 +6,7 @@ import stripe from "stripe";
 export default function CardDetails() {
 	const [loading] = useState(false);
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 	};
 

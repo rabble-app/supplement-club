@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,8 +16,10 @@ export default function EmailVerifyPage() {
 	useEffect(() => {
 		const fetchToken = async () => {
 			if (token) {
-				const { data } = await authService.emailVerify(token);
-				setUser(data);
+				const response = (await authService.emailVerify(token)) as {
+					data: IUserResponse;
+				};
+				setUser(response.data);
 			}
 		};
 		if (token) {

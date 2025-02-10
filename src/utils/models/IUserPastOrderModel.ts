@@ -1,3 +1,5 @@
+import type { IBasketManagePlan } from "./ITeamManagePlan";
+
 export default interface IUserPastOrderModel {
 	id: string;
 	amount: string;
@@ -21,7 +23,7 @@ export interface Order {
 	type: string;
 	createdAt: string;
 	updatedAt: string;
-	basket: any[];
+	basket: IBasketManagePlan[];
 	team: Team;
 }
 

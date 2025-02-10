@@ -2,6 +2,7 @@ import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
+import type ISetupIntent from "@/utils/models/api/response/ISetupIntent";
 import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
 import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
 import { mapUserPaymentOptionModel } from "@/utils/utils";
@@ -170,9 +171,9 @@ export const paymentService = {
 		apiRequest(PAYMENT_ENDPOINTS.REMOVE_CARD, "DELETE", {
 			paymentMethodId,
 		}),
-
 	async setupIntent() {
-		const { data } = await apiRequest(PAYMENT_ENDPOINTS.SETUP_INTENT, "POST");
+		const response = await apiRequest(PAYMENT_ENDPOINTS.SETUP_INTENT, "POST");
+		const data = response as ISetupIntent;
 		return {
 			clientSecret: data.client_secret,
 		} as ISetupIntentResponse;
@@ -184,7 +185,7 @@ export const paymentService = {
 		customerId: string,
 		paymentMethodId: string,
 	) {
-		const { data } = await apiRequest(
+		const response = await apiRequest(
 			PAYMENT_ENDPOINTS.PAYMENT_INTENT,
 			"POST",
 			{
@@ -194,6 +195,8 @@ export const paymentService = {
 				paymentMethodId,
 			},
 		);
+
+		const data = response as IPaymentIntentResponse;
 		return {
 			paymentIntentId: data.paymentIntentId,
 			clientSecret: data.clientSecret,
@@ -201,10 +204,11 @@ export const paymentService = {
 	},
 
 	async getUserPaymentOptions(id: string) {
-		const { data } = await apiRequest(
+		const response = await apiRequest(
 			PAYMENT_ENDPOINTS.GET_PAYMENT_OPTIONS(id),
 			"GET",
 		);
+		const data = response as IUserPaymentOptionResponse[];
 		return data?.map<IUserPaymentOptionModel>((r: IUserPaymentOptionResponse) =>
 			mapUserPaymentOptionModel(r),
 		);

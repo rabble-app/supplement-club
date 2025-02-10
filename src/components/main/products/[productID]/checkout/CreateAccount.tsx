@@ -14,6 +14,7 @@ import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 
 export default function CreateAccount({
 	step,
@@ -44,11 +45,11 @@ export default function CreateAccount({
 	});
 
 	async function handleSubmit(e: FormData) {
-		const result = await authService.register(
+		const result = (await authService.register(
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
 			e.get("role")?.toString() ?? "USER",
-		);
+		)) as IResponseModel;
 		if (result.statusCode === 200) {
 			const userData = result.data as IUserResponse;
 			setUser(userData);

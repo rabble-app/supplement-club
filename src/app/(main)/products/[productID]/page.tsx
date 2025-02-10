@@ -36,6 +36,7 @@ import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
 import { useProductStore } from "@/stores/productStore";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
+import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { getQuarterInfo } from "@/utils/utils";
@@ -104,7 +105,7 @@ export default function ProductDetails({
 	);
 
 	const [summary, setSummary] = useState<ISummaryProductModel>(
-		calculateSummary(2),
+		{} as ISummaryProductModel,
 	);
 
 	useEffect(() => {
@@ -134,47 +135,49 @@ export default function ProductDetails({
 	}
 
 	useEffect(() => {
-		setSummary(
-			calculateSummary(capsulePerDay, product?.rrp, product?.isComming),
-		);
-	}, [capsulePerDay, product?.rrp, product?.isComming]);
-
-	function calculateSummary(
-		capsulePerDay: number,
-		rrp?: number,
-		isComming?: boolean,
-	) {
 		const orders = [
 			{
-				id: 2,
+				id: "2",
 				alt: "supplement mockup",
 				description: `${capsulePerDay * days} Capsules Every 3 months`,
 				name: "Quarterly Subscription",
 				delivery: nextDeliveryProductText,
 				src: "/images/supplement-mockup.svg",
 				capsules: capsulePerDay * days,
+				price: 0,
 			},
 		];
 
-		if (!isComming) {
+		if (!product?.isComming) {
 			orders.unshift({
-				id: 1,
+				id: "1",
 				alt: "",
 				description: `${capsulesPackage} Capsules to see you to Q${nextQuater}`,
 				name: "One time Alignment Package",
 				delivery: "Delivered Tomorrow ",
 				src: "/images/ubiquinol.svg",
 				capsules: capsulesPackage,
+				price: 0,
 			});
 		}
-		return {
-			percentage: (capsulePerDay * days * 0.25) / Number(rrp),
-			rrp: rrp,
+		const obj = {
+			percentage: (capsulePerDay * days * 0.25) / Number(product?.rrp),
+			rrp: product?.rrp,
 			quantityOfSubUnitPerOrder: product?.unitsOfMeasurePerSubUnit,
 			unitsOfMeasurePerSubUnit: product?.unitsOfMeasurePerSubUnit,
-			orders: orders,
-		} as ISummaryProductModel;
-	}
+			orders: orders as IOrderSummaryModel[],
+			id: 1,
+			referals: [],
+			subscriptions: [],
+		};
+		setSummary(obj);
+	}, [
+		capsulePerDay,
+		product,
+		capsulesPackage,
+		nextDeliveryProductText,
+		nextQuater,
+	]);
 
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">

@@ -5,7 +5,7 @@ import { useState } from "react";
 import RererralCardsWithLink from "@/components/shared/ReferralCardsWithLink";
 
 export default function Refer() {
-	const [claimValue, setClaimValue] = useState(0);
+	const [claimValue] = useState(0);
 
 	return (
 		<>

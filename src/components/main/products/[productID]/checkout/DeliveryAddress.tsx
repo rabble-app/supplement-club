@@ -1,6 +1,8 @@
 "use client";
 
-import AddressAutocomplete from "@/components/shared/AddressAutocomplete";
+import AddressAutocomplete, {
+	type AddressFormData,
+} from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import Notify from "@/components/shared/Notify";
 import { Button } from "@/components/ui/button";
@@ -22,7 +24,7 @@ export default function DeliveryAddress({
 	updateStepAction: (newValue: number) => void;
 	children?: React.ReactNode;
 }>) {
-	const currentForm = useForm({
+	const currentForm = useForm<AddressFormData>({
 		resolver: zodResolver(deliveryAddressSchema),
 		mode: "onChange",
 	});

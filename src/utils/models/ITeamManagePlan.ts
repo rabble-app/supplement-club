@@ -9,6 +9,11 @@ export interface IBasketManagePlan {
 	quantity: number;
 	product: IProductManagePlan;
 	capsulePerDay: number;
+	orderId?: string;
+	userId?: string;
+	productId?: string;
+	price?: number;
+	type?: string;
 }
 
 export interface IProductManagePlan {

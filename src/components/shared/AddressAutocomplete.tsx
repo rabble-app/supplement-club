@@ -4,13 +4,17 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
-interface AddressFormData {
-	address1?: string;
+export interface AddressFormData {
+	address: string; // Ensure this is a required string
 	address2?: string;
-	city?: string;
-	country?: string;
-	postcode?: string;
+	city: string;
+	postalCode: string;
+	country: string;
+	buildingNo?: string;
 	building_number?: string;
+	firstName?: string;
+	lastName?: string;
+	mobileNumber?: string;
 	// Add other fields as necessary
 }
 
@@ -19,7 +23,7 @@ interface GetAddressEvent {
 		formatted_address: string[];
 		building_number: string;
 		sub_building_number: string;
-		postcode: string;
+		postalCode: string;
 		country: string;
 		town_or_city: string;
 		line_2: string;
@@ -48,7 +52,7 @@ interface Autocomplete {
 
 export default function AddressAutocomplete({
 	form,
-}: IntrinsicAttributes & AddressAutocompleteProps) {
+}: AddressAutocompleteProps) {
 	const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
 	useEffect(() => {
@@ -91,7 +95,7 @@ export default function AddressAutocomplete({
 						);
 						form.setValue("city", e.address.town_or_city);
 						form.setValue("country", e.address.country);
-						form.setValue("postalCode", e.address.postcode);
+						form.setValue("postalCode", e.address.postalCode);
 					},
 				);
 			} catch (error) {

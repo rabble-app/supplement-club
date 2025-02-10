@@ -1,7 +1,8 @@
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
+import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
 
-const renderPrice = (model: IOrderSummaryModel) =>
+const renderPrice = (model: IOrderSummaryModel | ISubscriptionSummaryModel) =>
 	model.isFree ? (
 		<>
 			<div className="grid gap-[7px]">
@@ -32,7 +33,7 @@ const renderPrice = (model: IOrderSummaryModel) =>
 
 export default function OrderSummaryCard({
 	model,
-}: Readonly<{ model: IOrderSummaryModel }>) {
+}: Readonly<{ model: IOrderSummaryModel | ISubscriptionSummaryModel }>) {
 	return (
 		<div
 			className={`grid gap-2 items-center ${

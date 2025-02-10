@@ -132,7 +132,6 @@ export default function AccountPaymentDetails() {
 																	confirmDeleteAction(item.id)
 																}
 																last4={item.card.last4}
-																paymentMethodId={item.id}
 															/>
 														</DropdownMenuContent>
 													</DropdownMenu>

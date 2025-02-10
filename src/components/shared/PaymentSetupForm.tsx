@@ -8,7 +8,9 @@ import {
 } from "@stripe/react-stripe-js";
 import type { PaymentMethod } from "@stripe/stripe-js";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
+import Notify from "./Notify";
 
 export default function PaymentSetupForm({
 	clientSecret,
@@ -24,15 +26,23 @@ export default function PaymentSetupForm({
 	const elements = useElements();
 	const context = useUser();
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		if (!stripe || !elements || !clientSecret) return;
 
-		// ✅ Call elements.submit() first
 		const submitResult = await elements.submit();
 		if (submitResult.error) {
-			console.error("Submit Error:", submitResult.error.message);
+			toast.custom(
+				() => (
+					<Notify
+						message={`Payment Failed:" ${submitResult?.error?.message}`}
+					/>
+				),
+				{
+					position: "top-right",
+				},
+			);
 			return;
 		}
 
@@ -45,9 +55,13 @@ export default function PaymentSetupForm({
 		});
 
 		if (error) {
-			console.error("Setup Failed:", error.message);
+			toast.custom(
+				() => <Notify message={`Payment Failed:" ${error.message}`} />,
+				{
+					position: "top-right",
+				},
+			);
 		} else if (setupIntent?.status === "succeeded") {
-			console.log("Payment method saved:", setupIntent.payment_method);
 			await paymentService.addCard(
 				(setupIntent.payment_method as string) || "",
 				context?.user?.stripeCustomerId || "",

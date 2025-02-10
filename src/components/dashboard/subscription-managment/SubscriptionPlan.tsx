@@ -19,10 +19,8 @@ import { VisuallyHidden } from "@reach/visually-hidden";
 import { useEffect, useState } from "react";
 
 export default function SubscriptionPlan({
-	confirmAction,
 	managePlan,
 }: Readonly<{
-	confirmAction: (val: number) => void;
 	managePlan?: IManagePlanModel;
 }>) {
 	const [changePlan, setChangePlan] = useState(false);
@@ -49,7 +47,7 @@ export default function SubscriptionPlan({
 			.join(" ");
 	}
 
-	async function onOpenChange(val) {
+	async function onOpenChange(val: boolean) {
 		setChangePlan(val);
 		if (val) {
 			await paymentService.updateSubscription(
@@ -131,10 +129,7 @@ export default function SubscriptionPlan({
 					</DialogTrigger>
 					<DialogPortal>
 						<DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200]" />
-						<DialogContent
-							border="rounded"
-							className="w-[calc(100%-20px)] max-w-[600px] gap-[16px] fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] bg-white z-[201] p-[24px]"
-						>
+						<DialogContent className="w-[calc(100%-20px)]  border rounded max-w-[600px] gap-[16px] fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] bg-white z-[201] p-[24px]">
 							<DialogClose className="absolute right-[16px] top-[16px]">
 								<div className="border-[1px] border-grey32 w-[38px] h-[38px] rounded-[50%] flex justify-center">
 									<Image

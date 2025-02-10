@@ -12,16 +12,14 @@ import { useState } from "react";
 
 export default function DeleteCardDialog({
 	open,
-	paymentMethodId,
 	last4,
 	confirmDeleteAction,
 }: Readonly<{
 	open: boolean;
-	paymentMethodId: string;
 	last4: string;
 	confirmDeleteAction: () => void;
 }>) {
-	const [isOpen, setIsOpen] = useState(open);
+	const [isOpen] = useState(open);
 
 	async function confirmAction() {
 		//await paymentService.deleteCard(paymentMethodId);

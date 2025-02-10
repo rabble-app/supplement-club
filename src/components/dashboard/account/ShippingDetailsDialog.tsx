@@ -5,7 +5,9 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import AddressAutocomplete from "@/components/shared/AddressAutocomplete";
+import AddressAutocomplete, {
+	type AddressFormData,
+} from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,7 +38,7 @@ export default function ShippingDetailsDialog({
 	updateUserAction,
 }: ShippingDialogProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const form = useForm<z.infer<typeof shippingDetailsShema>>({
+	const form = useForm<AddressFormData>({
 		resolver: zodResolver(shippingDetailsShema),
 		mode: "onChange",
 	});
@@ -54,7 +56,7 @@ export default function ShippingDetailsDialog({
 
 	const onSubmit = async (values: z.infer<typeof shippingDetailsShema>) => {
 		await usersService.updateShippingInfo(
-			user.id || "0eaf5135-f229-4749-bb3b-7336d3739974",
+			user.id || "",
 			values.address,
 			values.address2,
 			values.buildingNo || "",
@@ -80,10 +82,7 @@ export default function ShippingDetailsDialog({
 			<DialogContent className="w-full h-full sm:h-auto sm:max-w-[600px] p-0 gap-4 rounded-md">
 				<AddressAutocomplete form={form} />
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-col gap-4 p-4"
-					>
+					<form onSubmit={() => onSubmit} className="flex flex-col gap-4 p-4">
 						<DialogHeader className="flex flex-row justify-between items-center">
 							<DialogTitle className="text-lg font-bold font-inconsolata">
 								Shipping Details

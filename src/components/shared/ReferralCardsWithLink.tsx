@@ -14,7 +14,6 @@ import { Button } from "../ui/button";
 
 export default function ReferralCardsWithLink() {
 	const [nextMilestone, setNextMilestone] = useState<IReferalModel>();
-	const [claimValue, setClaimValue] = useState(0);
 	const [openReferal, setOpenReferal] = useState(false);
 	const pathname = usePathname();
 	const [isDashboard] = useState(pathname === "/dashboard/referral");
@@ -47,7 +46,7 @@ export default function ReferralCardsWithLink() {
 	}, []);
 
 	function claimReward(val: number) {
-		setClaimValue(val);
+		console.log(val);
 	}
 
 	function updateVisibility(val: boolean) {

@@ -13,7 +13,7 @@ export default function CorporationBox({
 	name?: string;
 	businessName?: string;
 	description?: string;
-	quantityOfSubUnitPerOrder?: number;
+	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	return (

@@ -79,7 +79,7 @@ export default function Checkout({
 
 			if (!response.isComming) {
 				orders.unshift({
-					id: 1,
+					id: "1",
 					alt: "",
 					description: `${capsulesPackage} Capsules to align you with next drop`,
 					name: "Alignment Capsules",
@@ -89,7 +89,7 @@ export default function Checkout({
 				});
 
 				orders.push({
-					id: 2,
+					id: "2",
 					alt: "",
 					description: "Startup package",
 					name: "Glass Bottle Container",
@@ -112,7 +112,7 @@ export default function Checkout({
 			} else {
 				orders.push({
 					price: 0, // Ensure price is included
-					id: 1,
+					id: "1",
 					alt: "supplement mockup",
 					description: `${capsulePerDay * days} Capsules Every 3 months`,
 					name: "Quarterly Subscription",
@@ -121,7 +121,7 @@ export default function Checkout({
 					capsules: capsulePerDay * days,
 				});
 				orders.push({
-					id: 2,
+					id: "2",
 					alt: "supplement mockup",
 					description: "Startup Package",
 					name: "Glass Bottle Container",

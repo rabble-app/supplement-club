@@ -8,7 +8,7 @@ export default function CorporationCardInfo({
 }: Readonly<{
 	name?: string;
 	businessName?: string;
-	quantityOfSubUnitPerOrder?: number;
+	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	return (

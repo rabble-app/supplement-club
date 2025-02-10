@@ -63,7 +63,7 @@ export default function ReactivatePlan({
 				orders: orders as IOrderSummaryModel[],
 			} as ISummaryProductModel;
 
-			setTotalPrice(orders?.reduce((sum, item) => sum + item.price, 0));
+			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
 
 			setSummary(model);
 		};

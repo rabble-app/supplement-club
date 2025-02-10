@@ -17,6 +17,7 @@ import Notify from "@/components/shared/Notify";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
+import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { loginSchema } from "@/validations";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -44,11 +45,11 @@ export default function LoginPage() {
 	}, [searchParams]);
 
 	async function handleSubmit(e: FormData) {
-		const result = await authService.login(
+		const result = (await authService.login(
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
 			e.get("role")?.toString() ?? "USER",
-		);
+		)) as IResponseModel;
 
 		if (result.statusCode === 200) {
 			const userData = result.data as IUserResponse;

@@ -18,13 +18,9 @@ export default function ReferalLinkCard({
 		`${process.env.NEXT_PUBLIC_API_ENDPOINT}/dashboard/referral?ref=${refCode}`,
 	);
 
-	const [copied, setCopied] = useState(false);
-
 	const copyToClipboard = async () => {
 		try {
 			await navigator.clipboard.writeText(link);
-			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
 
 			toast.custom(() => (
 				<div className="text-white bg-blue px-[10px] py-[2px]">

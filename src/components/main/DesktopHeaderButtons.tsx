@@ -26,16 +26,19 @@ export default function DesktopHeaderButtons() {
 	const context = useUser();
 	return (
 		<div className="hidden lg:flex lg:gap-x-[24px] lg:items-center">
-			<UserProfile user={context?.user} />
 			{context?.user && (
-				<Button onClick={() => context?.logout()}>
-					<Image
-						src="/images/logout.svg"
-						alt="Logout icon"
-						width={24}
-						height={24}
-					/>
-				</Button>
+				<>
+					<UserProfile user={context?.user} />
+
+					<Button onClick={() => context?.logout()}>
+						<Image
+							src="/images/logout.svg"
+							alt="Logout icon"
+							width={24}
+							height={24}
+						/>
+					</Button>
+				</>
 			)}
 		</div>
 	);

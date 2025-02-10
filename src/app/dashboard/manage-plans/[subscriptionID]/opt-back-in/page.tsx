@@ -65,7 +65,7 @@ export default function OptBackIn({
 				});
 			}
 
-			setTotalPrice(orders?.reduce((sum, item) => sum + item.price, 0));
+			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
 
 			const model = {
 				title: "Order Summary",

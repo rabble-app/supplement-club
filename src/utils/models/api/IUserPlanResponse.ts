@@ -12,6 +12,7 @@ export interface Team {
 	basket: Basket[];
 	supplementTeamProducts: SupplementTeamProducts;
 	_count: Count;
+	producer: Producer;
 }
 
 export interface Basket {

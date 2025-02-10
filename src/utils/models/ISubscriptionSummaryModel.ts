@@ -9,4 +9,5 @@ export default interface ISubscriptionSummaryModel {
 	pricePerCapsule?: number;
 	rrp?: number;
 	capsules: number;
+	isFree?: boolean;
 }

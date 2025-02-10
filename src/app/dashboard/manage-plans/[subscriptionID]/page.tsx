@@ -8,7 +8,6 @@ import SubscriptionPlan from "@/components/dashboard/subscription-managment/Subs
 import SubscriptionSkipDialog from "@/components/dashboard/subscription-managment/SubscriptionSkipDialog";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { Button } from "@/components/ui/button";
-import { paymentService } from "@/services/paymentService";
 import { teamsService } from "@/services/teamService";
 import { usersService } from "@/services/usersService";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
@@ -79,10 +78,6 @@ export default function Subscription({
 		fetchParams();
 	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
 
-	async function confirmAction(capsule: number) {
-		await paymentService.updateSubscription(subscriptionID || "", 5, capsule);
-	}
-
 	async function subscriptionCancel() {
 		await teamsService.cancelSubscriptionPlan(subscriptionID);
 		router.push("/dashboard/manage-plans/");
@@ -107,10 +102,7 @@ export default function Subscription({
 					imageAlt="Calendar icon"
 				/>
 
-				<SubscriptionPlan
-					managePlan={managePlan}
-					confirmAction={confirmAction}
-				/>
+				<SubscriptionPlan managePlan={managePlan} />
 
 				<SubscriptionCard
 					title="Your Stock"
