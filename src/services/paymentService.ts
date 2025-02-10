@@ -55,19 +55,6 @@ export const paymentService = {
 			capsulePerDay,
 		}),
 
-	chargeUser: async (
-		amount: string,
-		currency: string,
-		customerId: string,
-		paymentMethodId: string,
-	) =>
-		apiRequest(PAYMENT_ENDPOINTS.CHARGE_HOST, "POST", {
-			amount,
-			currency,
-			customerId,
-			paymentMethodId,
-		}),
-
 	topUpSubscription: async (
 		amount: number,
 		teamId: string,
@@ -137,8 +124,8 @@ export const paymentService = {
 			price,
 		}),
 
-	chargeUsers: async (
-		amount: string,
+	chargeUser: async (
+		amount: number,
 		currency: string,
 		customerId: string,
 		paymentMethodId: string,

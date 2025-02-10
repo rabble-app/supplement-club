@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-import PaymentDetails from "@/components/PaymentDetails";
 import TopUpCapsuleHeading from "@/components/dashboard/manage-plans/TopUpCapsuleHeading";
 import AvailablePayment from "@/components/shared/AvailablePayment";
-import BillingAddress from "@/components/shared/BillingAddress";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import PaymentList from "@/components/shared/PaymentList";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
@@ -17,7 +16,7 @@ import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
 import { getQuarterInfo } from "@/utils/utils";
-import { Separator } from "@radix-ui/react-separator";
+import { useRouter } from "next/navigation";
 
 export default function TopUpCheckout({
 	params,
@@ -29,8 +28,8 @@ export default function TopUpCheckout({
 	const [capsulesPerDay, setCapsulesPerDay] = useState<number>(1);
 	const [weeks, setWeeks] = useState<number>(1);
 	const steps = ["Top Up Capsules", "Payment Details"];
+	const router = useRouter();
 
-	const [subscriptionId, setSubscriptionId] = useState<string>();
 	const [managePlan, setManagePlan] = useState<IManagePlanModel>();
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,
@@ -44,7 +43,6 @@ export default function TopUpCheckout({
 	useEffect(() => {
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
-			setSubscriptionId(subscriptionID);
 			const response = await usersService.getSubscriptionPlan(subscriptionID);
 			setManagePlan(response);
 
@@ -89,23 +87,23 @@ export default function TopUpCheckout({
 		setStep(step + 1);
 	}
 
-	async function onPayment(paymentIntentId: string) {
-		await paymentService.topUpSubscription(
-			totalPrice,
-			managePlan?.team?.id || "",
-			paymentIntentId,
-			context?.user?.id || "",
-			managePlan?.team.basket[0].product.id || "",
-			0,
-			capsulesPerDay,
-			100,
-		);
-
-		setIsDialogOpen(true);
-	}
-
-	function onOpenChange(val: boolean) {
+	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
+
+		if (val) {
+			await paymentService.topUpSubscription(
+				weeks * 7 * capsulesPerDay,
+				managePlan?.team?.id || "",
+				context?.user?.stripeDefaultPaymentMethodId || "",
+				context?.user?.id || "",
+				managePlan?.team.basket[0].product.id || "",
+				weeks * capsulesPerDay,
+				capsulesPerDay,
+				totalPrice,
+			);
+		} else {
+			router.push("/dashboard/manage-plans/");
+		}
 	}
 
 	return (
@@ -116,14 +114,10 @@ export default function TopUpCheckout({
 					<TopUpCapsuleHeading updateInfoAction={setCapsulePerWeek} />
 				)}
 				{step !== 1 && (
-					<PaymentDetails
+					<PaymentList
+						successAction={() => onOpenChange(true)}
 						totalPrice={totalPrice}
-						successAction={() => setStep(step + 1)}
-					>
-						<BillingAddress />
-
-						<Separator className="bg-grey3" />
-					</PaymentDetails>
+					/>
 				)}
 
 				<ConfirmDialog

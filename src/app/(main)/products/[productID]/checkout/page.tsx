@@ -2,14 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import PaymentDetails from "@/components/PaymentDetails";
 import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
 import CreateAccount from "@/components/main/products/[productID]/checkout/CreateAccount";
 import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
 import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
 import AvailablePayment from "@/components/shared/AvailablePayment";
-import BillingAddress from "@/components/shared/BillingAddress";
-import PaymentCards from "@/components/shared/PaymentCards";
+import PaymentList from "@/components/shared/PaymentList";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
@@ -19,7 +17,6 @@ import { teamsService } from "@/services/teamService";
 import { useProductStore } from "@/stores/productStore";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
-import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import { getQuarterInfo } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 
@@ -56,11 +53,13 @@ export default function Checkout({
 
 	const [step, setStep] = useState<number>(1);
 	const [totalPrice, setTotalPrice] = useState<number>(0);
-	const [userCards, setUserCards] = useState<IUserPaymentOptionModel[]>([]);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
 	const [capsulePerDay] = useState(productStore.capsulesPerDay || 2);
 	const [product, setProduct] = useState<ISingleProductModel>();
+	const [summary, setSummary] = useState<ISummaryProductModel>(
+		{} as ISummaryProductModel,
+	);
 
 	const { year, endDate, remainsDaysToNextQuater } = getQuarterInfo();
 
@@ -71,126 +70,99 @@ export default function Checkout({
 		[remainsDaysToNextQuater, capsulePerDay],
 	);
 
-	const [summary, setSummary] = useState<ISummaryProductModel>(
-		calculateSummary(2, step),
-	);
-
-	useEffect(() => {
-		const fetchUserPaymentOptions = async () => {
-			const model = await paymentService.getUserPaymentOptions(
-				context?.user?.stripeCustomerId || "",
-			);
-			setUserCards(model);
-		};
-		fetchUserPaymentOptions();
-	}, [context?.user?.stripeCustomerId]);
-
 	useEffect(() => {
 		const fetchProductId = async () => {
 			const { productID } = await params;
 			const response = await productService.product(productID);
 			setProduct(response);
+
+			const orders = [];
+			const subscriptions = [];
+
+			if (!response.isComming) {
+				orders.unshift({
+					id: 1,
+					alt: "",
+					description: `${capsulesPackage} Capsules to align you with next drop`,
+					name: "Alignment Capsules",
+					src: "/images/supplement-mockup.svg",
+					capsules: capsulesPackage,
+					price: 0,
+				});
+
+				orders.push({
+					id: 2,
+					alt: "",
+					description: "Startup package",
+					name: "Glass Bottle Container",
+					src: "/images/ubiquinol.svg",
+					capsules: 0,
+					isFree: true,
+					price: 0,
+					rrp: 0,
+				});
+
+				subscriptions.push({
+					id: 2,
+					alt: "supplement mockup",
+					description: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "Quarterly Subscription",
+					delivery: nextDeliveryProductText,
+					src: "/images/supplement-mockup.svg",
+					capsules: capsulePerDay * days,
+				});
+			} else {
+				orders.push({
+					price: 0, // Ensure price is included
+					id: 1,
+					alt: "supplement mockup",
+					description: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "Quarterly Subscription",
+					delivery: nextDeliveryProductText,
+					src: "/images/supplement-mockup.svg",
+					capsules: capsulePerDay * days,
+				});
+				orders.push({
+					id: 2,
+					alt: "supplement mockup",
+					description: "Startup Package",
+					name: "Glass Bottle Container",
+					src: "/images/ubiquinol.svg",
+					capsules: 0,
+					rrp: 18,
+					price: 0,
+					isFree: true,
+				});
+			}
+
+			const ordersSum = orders?.reduce(
+				(sum, item) => sum + item.capsules * 0.25,
+				0,
+			);
+			const totalSumOfSubs = subscriptions?.reduce(
+				(sum, item) => sum + item.capsules * 0.25,
+				0,
+			);
+			setTotalPrice(ordersSum + totalSumOfSubs);
+
+			setSummary({
+				referals: [],
+				id: 0,
+				title: "Order Summary",
+				corporation: response?.teamName,
+				name: response.name,
+				deliveryText:
+					!response.isComming && step < 4 ? "NEXT DAY DELIVERY" : "",
+				percentage: (capsulePerDay * days * 0.25) / Number(response.rrp),
+				rrp: response.rrp,
+				subscriptions: subscriptions,
+				quantityOfSubUnitPerOrder: response?.quantityOfSubUnitPerOrder,
+				unitsOfMeasurePerSubUnit: response?.unitsOfMeasurePerSubUnit,
+				orders: orders,
+			});
 		};
 		fetchProductId();
-	}, [params]);
-
-	useEffect(() => {
-		setSummary(
-			calculateSummary(
-				capsulePerDay,
-				step,
-				product?.name,
-				product?.isComming,
-				product?.teamName,
-				product?.rrp,
-				product?.quantityOfSubUnitPerOrder,
-				product?.unitsOfMeasurePerSubUnit,
-			),
-		);
-	}, [capsulePerDay, product, step]);
-
-	function calculateSummary(
-		capsulePerDay: number,
-		step: number,
-		name?: string,
-		isComming?: boolean,
-		teamName?: string,
-		rrp?: number,
-		quantityOfSubUnitPerOrder?: number,
-		unitsOfMeasurePerSubUnit?: string,
-	) {
-		const orders = [];
-		const subscriptions = [];
-
-		if (!isComming) {
-			orders.unshift({
-				id: 1,
-				alt: "",
-				description: `${capsulesPackage} Capsules to align you with next drop`,
-				name: "Alignment Capsules",
-				src: "/images/supplement-mockup.svg",
-				capsules: capsulesPackage,
-			});
-
-			orders.push({
-				id: 2,
-				alt: "",
-				description: "Startup package",
-				name: "Glass Bottle Container",
-				src: "/images/ubiquinol.svg",
-				capsules: 0,
-				isFree: true,
-				price: 0,
-				rrp: 0,
-			});
-
-			subscriptions.push({
-				id: 2,
-				alt: "supplement mockup",
-				description: `${capsulePerDay * days} Capsules Every 3 months`,
-				name: "Quarterly Subscription",
-				delivery: nextDeliveryProductText,
-				src: "/images/supplement-mockup.svg",
-				capsules: capsulePerDay * days,
-			});
-		} else {
-			orders.push({
-				id: 1,
-				alt: "supplement mockup",
-				description: `${capsulePerDay * days} Capsules Every 3 months`,
-				name: "Quarterly Subscription",
-				delivery: nextDeliveryProductText,
-				src: "/images/supplement-mockup.svg",
-				capsules: capsulePerDay * days,
-			});
-			orders.push({
-				id: 2,
-				alt: "supplement mockup",
-				description: "Startup Package",
-				name: "Glass Bottle Container",
-				src: "/images/ubiquinol.svg",
-				capsules: 0,
-				rrp: 18,
-				price: 0,
-				isFree: true,
-			});
-		}
-
-		setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
-
-		return {
-			title: "Order Summary",
-			corporation: teamName,
-			name: name,
-			deliveryText: !isComming && step < 4 ? "NEXT DAY DELIVERY" : "",
-			percentage: (capsulePerDay * days * 0.25) / Number(rrp),
-			rrp: rrp,
-			subscriptions: subscriptions,
-			quantityOfSubUnitPerOrder: quantityOfSubUnitPerOrder,
-			unitsOfMeasurePerSubUnit: unitsOfMeasurePerSubUnit,
-			orders: orders,
-		} as ISummaryProductModel;
-	}
+	}, [params, capsulePerDay, capsulesPackage, nextDeliveryProductText, step]);
 
 	useEffect(() => {
 		if (context?.user) {
@@ -206,7 +178,7 @@ export default function Checkout({
 		}
 	}, [context?.user, router]);
 
-	async function successPayment() {
+	async function successAction() {
 		if (!product?.isComming) {
 			await paymentService.addPaymentIntent(totalPrice, "gbp", "", "");
 			await paymentService.addCapturePayment(totalPrice, "gbp", "", "");
@@ -234,29 +206,13 @@ export default function Checkout({
 					</DeliveryAddress>
 				)}
 				{step === 3 && (
-					<PaymentDetails
-						totalPrice={totalPrice}
-						successAction={() => successPayment}
-					>
-						{product?.isComming && <PreOrderMessage />}
-						<BillingAddress />
-						{userCards.length > 0 && <PaymentCards />}
-						{product?.isComming && (
-							<div className="text-blue text-[16px] leading-[19px] font-helvetica flex justify-center text-center bg-blue10 rounded-[100px] py-[4px] px-[10px] w-full">
-								Register now. Only be charged when we reach 50 pre-orders.{" "}
-							</div>
-						)}
-					</PaymentDetails>
+					<PaymentList totalPrice={totalPrice} successAction={successAction} />
 				)}
 				{step === 4 && <ConfirmJoining email={context?.user?.email} />}
 			</div>
 
 			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<SummaryProduct
-					model={summary}
-					totalPriceAction={setTotalPrice}
-					showTopLine={product?.isComming}
-				/>
+				<SummaryProduct model={summary} showTopLine={product?.isComming} />
 				{step === 4 && <Delivery />}
 				{step < 4 && <AvailablePayment />}
 			</div>

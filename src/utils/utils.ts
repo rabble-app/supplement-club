@@ -276,6 +276,7 @@ export const mapUserPaymentOptionModel = (
 		livemode: model.livemode,
 		type: model.type,
 		created: model.created,
+		customer: model.customer,
 	};
 };
 

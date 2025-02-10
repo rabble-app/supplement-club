@@ -8,4 +8,5 @@ export default interface IUserPaymentOptionModel {
 	created: number;
 	livemode: boolean;
 	type: string;
+	customer: string;
 }

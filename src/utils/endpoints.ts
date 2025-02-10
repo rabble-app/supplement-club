@@ -20,7 +20,6 @@ export const PAYMENT_ENDPOINTS = {
 	PAYMENT_INTENT: "payments/intent",
 	CAPTURE_PAYMENT: "payments/intent/capture",
 	PREORDER_BASKET: "payments/basket",
-	CHARGE_HOST: "payments/charge-host",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",
 	UPDATE_SUBSCRIPTION: (id: string) => `payments/basketC/${id}`,
 	PAYMENT_BASKET_ACTIVE: "payments/basket",

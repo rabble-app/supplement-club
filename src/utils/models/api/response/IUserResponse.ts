@@ -16,6 +16,7 @@ export interface IUserResponse extends IBaseTimestamps {
 	imageUrl?: string;
 	imageKey?: string;
 	refCode?: string;
+	teamId?: string;
 	referrerId?: string;
 	role?: string;
 	notificationToken?: string;

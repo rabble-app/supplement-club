@@ -5,7 +5,7 @@ export default interface ISubscriptionSummaryModel {
 	name?: string;
 	description?: string;
 	delivery?: string;
-	price: number;
+	price?: number;
 	pricePerCapsule?: number;
 	rrp?: number;
 	capsules: number;

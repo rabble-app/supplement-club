@@ -3,8 +3,8 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import PaymentList from "@/components/shared/PaymentList";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
+import { teamsService } from "@/services/teamService";
 import { usersService } from "@/services/usersService";
-import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
@@ -20,8 +20,7 @@ export default function ReactivatePlan({
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [totalPrice, setTotalPrice] = useState(0);
-	const [subscriptionId, setSubscriptionId] = useState<string>();
-	const [managePlan, setManagePlan] = useState<IManagePlanModel>();
+	const [subscriptionId, setSubscriptionId] = useState<string>("");
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,
 	);
@@ -34,10 +33,8 @@ export default function ReactivatePlan({
 	useEffect(() => {
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
-			setSubscriptionId(subscriptionID);
 			const response = await usersService.getSubscriptionPlan(subscriptionID);
-			setManagePlan(response);
-
+			setSubscriptionId(subscriptionID);
 			const orders = [] as IOrderSummaryModel[];
 			for (const item of response.team.basket) {
 				const capsules = +item.capsulePerDay * remainsDaysToNextQuater;
@@ -73,9 +70,14 @@ export default function ReactivatePlan({
 		fetchParams();
 	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
 
-	function onOpenChange(val: boolean) {
+	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
-		router.push(`/dashboard/manage-plans/${subscriptionId}`);
+
+		if (val) {
+			await teamsService.reactivateSubscriptionPlan(subscriptionId);
+		} else {
+			router.push("/dashboard/manage-plans/");
+		}
 	}
 	return (
 		<div className="grid gap-[16px] py-[24px] md:grid-cols-[600px_600px] md:justify-center">
@@ -86,7 +88,10 @@ export default function ReactivatePlan({
 					title="Your plan has be re-activated"
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 				/>
-				<PaymentList totalPrice={totalPrice} />
+				<PaymentList
+					successAction={() => onOpenChange(true)}
+					totalPrice={totalPrice}
+				/>
 			</div>
 			<SummaryProduct model={summary} />
 		</div>

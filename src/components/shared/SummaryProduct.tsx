@@ -37,13 +37,19 @@ export default function SummaryProduct({
 		);
 		setTotalRrp(totalRRP);
 
-		let percentage = model.percentage;
+		let percentage = model?.percentage;
 		if (!percentage) {
 			percentage = totalSum / Number(totalRRP);
 		}
 		setPercentage(percentage);
 
-		setTotalCount(totalSum);
+		const totalSumOfSubs = model?.subscriptions?.reduce(
+			(sum, item) => sum + item.capsules * 0.25,
+			0,
+		);
+
+		setTotalCount(totalSum + totalSumOfSubs);
+
 		setTotalCapsules(
 			model?.orders?.reduce((sum, item) => sum + item.capsules, 0),
 		);

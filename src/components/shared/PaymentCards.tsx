@@ -55,7 +55,7 @@ export default function PaymentCards({
 	return (
 		<>
 			{userCards && userCards?.length > 0 && (
-				<div className="px-[16px] py-[32px] bg-white flex flex-col gap-[16px] justify-start">
+				<div className="px-[16px] py-[32px] bg-white flex flex-col gap-[16px] justify-start w-full">
 					<div className="border-grey37 border-[1px] rounded-[4px]">
 						{userCards?.map((item, idx) => (
 							<div key={item.id}>

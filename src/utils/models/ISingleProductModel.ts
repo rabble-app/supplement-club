@@ -1,7 +1,7 @@
 import type { ICapsuleInfoModel } from "./api/ICapsuleInfoModel";
 import type IPriceInfoModel from "./api/IPriceInfoModel";
 import type { IProducerModel } from "./api/IProducerModel";
-import { ISupplementTeamProducts } from "./api/ISupplementTeamProducts";
+import type { ISupplementTeamProducts } from "./api/ISupplementTeamProducts";
 
 export default interface ISingleProductModel {
 	id: string;
@@ -19,7 +19,7 @@ export default interface ISingleProductModel {
 	status?: string;
 	orderUnit?: string;
 	subUnit?: string;
-	quantityOfSubUnitPerOrder?: number;
+	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 	measuresPerSubUnit?: number;
 	approvalStatus?: string;

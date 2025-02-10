@@ -3,6 +3,7 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import PaymentList from "@/components/shared/PaymentList";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
+import { teamsService } from "@/services/teamService";
 import { usersService } from "@/services/usersService";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
@@ -18,9 +19,9 @@ export default function OptBackIn({
 	const context = useUser();
 	const router = useRouter();
 
+	const [subscriptionId, setSubscriptionId] = useState<string>("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [totalPrice, setTotalPrice] = useState(0);
-	const [subscriptionId, setSubscriptionId] = useState<string>();
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,
 	);
@@ -41,9 +42,8 @@ export default function OptBackIn({
 	useEffect(() => {
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
-			setSubscriptionId(subscriptionID);
 			const response = await usersService.getSubscriptionPlan(subscriptionID);
-
+			setSubscriptionId(subscriptionID);
 			const orders = [] as IOrderSummaryModel[];
 
 			for (const item of response.team.basket) {
@@ -80,9 +80,14 @@ export default function OptBackIn({
 		fetchParams();
 	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
 
-	function onOpenChange(val: boolean) {
+	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
-		router.push(`/dashboard/manage-plans/${subscriptionId}`);
+
+		if (val) {
+			await teamsService.optBackInForNextDelivery(subscriptionId);
+		} else {
+			router.push("/dashboard/manage-plans/");
+		}
 	}
 
 	const bottomContent = (
@@ -109,7 +114,10 @@ export default function OptBackIn({
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 					bottomContent={bottomContent}
 				/>
-				<PaymentList totalPrice={totalPrice} />
+				<PaymentList
+					successAction={() => onOpenChange(true)}
+					totalPrice={totalPrice}
+				/>
 			</div>
 			<SummaryProduct model={summary} />
 		</div>
