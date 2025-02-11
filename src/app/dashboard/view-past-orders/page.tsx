@@ -12,11 +12,11 @@ import { Separator } from "@radix-ui/react-separator";
 
 import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
-import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
+import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import { useEffect, useState } from "react";
 
 export default function Orders() {
-	const [orders, setOrders] = useState<IUserPastOrderModel[]>([]);
+	const [orders, setOrders] = useState<IUserPastOrderReponse[]>([]);
 	const context = useUser();
 
 	useEffect(() => {

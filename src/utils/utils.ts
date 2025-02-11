@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge";
 import type IManagePlanModel from "./models/IManagePlanModel";
 import type IProductCardModel from "./models/IProductCardModel";
 import type ISingleProductModel from "./models/ISingleProductModel";
-import type IUserPastOrderModel from "./models/IUserPastOrderModel";
 import type { IProductModel } from "./models/api/IProductModel";
 import type IReferalInfoModel from "./models/api/IReferalInfoModel";
 import type IReferalModel from "./models/api/IReferalModel";
@@ -290,7 +289,7 @@ export const mapUserPaymentOptionModel = (
 
 export const mapUserPastOrder = (
 	model: IUserPastOrderReponse,
-): IUserPastOrderModel => {
+): IUserPastOrderReponse => {
 	return {
 		id: model.id,
 		amount: model.amount,

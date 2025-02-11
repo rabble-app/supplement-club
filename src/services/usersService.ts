@@ -2,7 +2,6 @@ import { USER_ENDPOINTS } from "@/utils/endpoints";
 
 import { apiRequest } from "@/utils/helpers";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
 import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
@@ -92,7 +91,7 @@ export const usersService = {
 			USER_ENDPOINTS.PAST_ORDERS(userId),
 			"GET",
 		)) as IPastOrdersApiResponse;
-		return data?.map<IUserPastOrderModel>((r: IUserPastOrderReponse) =>
+		return data?.map<IUserPastOrderReponse>((r: IUserPastOrderReponse) =>
 			mapUserPastOrder(r),
 		);
 	},

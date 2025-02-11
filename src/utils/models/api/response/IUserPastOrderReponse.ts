@@ -2,14 +2,14 @@ import type { IBasketManagePlan } from "../../ITeamManagePlan";
 
 export default interface IUserPastOrderReponse {
 	id: string;
-	orderId: string;
-	userId: string;
+	orderId?: string;
+	userId?: string;
 	amount: string;
 	discount: number;
-	paymentIntentId: string;
+	paymentIntentId?: string;
 	status: string;
-	createdAt: string;
-	updatedAt: string;
+	createdAt?: string;
+	updatedAt?: string;
 	order: Order;
 }
 
