@@ -22,10 +22,9 @@ export default function ReactivatePlanDialog({
 	model: IManagePlanModel;
 }>) {
 	const [packageAlignment, setPackageAlignment] = useState(false);
-	const { remainsDaysToNextQuater, endDate, year, currentQuarter } =
+	const { remainsDaysToNextQuater, nextDeliveryText, currentQuarter } =
 		getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
-	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -51,7 +50,7 @@ export default function ReactivatePlanDialog({
 						</DialogTitle>
 						<p className="text-[16px] leading-[24px] font-helvetica font-[400] text-center">
 							You are Re-Activating your plan and, the next delivery is on{" "}
-							<span className="font-bold">{nextDelivery}</span>.
+							<span className="font-bold">{nextDeliveryText}</span>.
 						</p>
 					</div>
 

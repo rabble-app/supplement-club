@@ -28,14 +28,12 @@ export default function OptBackIn({
 
 	const {
 		remainsDaysToNextQuater,
-		endDate,
-		year,
 		currentQuarter,
 		prevQuarterYear,
 		prevEndDate,
+		nextDeliveryText,
 	} = getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
-	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	const previousDelivery = `${prevEndDate.toLocaleString("en", { month: "long" })} ${prevQuarterYear}`;
 	const previousDeliveryWithDay = `1st ${prevEndDate.toLocaleString("en", { month: "long" })}, ${prevQuarterYear}`;
 
@@ -56,7 +54,7 @@ export default function OptBackIn({
 							: "",
 					capsules: capsules,
 					name: item.product.name,
-					delivery: nextDelivery,
+					delivery: nextDeliveryText,
 					src: item.product.imageUrl,
 					rrp: item.product.rrp,
 					price: capsules * 0.25,
@@ -78,7 +76,7 @@ export default function OptBackIn({
 			setSummary(model);
 		};
 		fetchParams();
-	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
+	}, [params, nextDeliveryText, nextQuater, remainsDaysToNextQuater]);
 
 	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);

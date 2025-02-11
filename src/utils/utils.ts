@@ -63,6 +63,8 @@ export function getQuarterInfo() {
 		new Date().toISOString(),
 	);
 
+	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${date.getFullYear()}`;
+
 	return {
 		currentQuarter,
 		daysToNextQuarter: diffDays,
@@ -79,6 +81,7 @@ export function getQuarterInfo() {
 		prevMonthStart,
 		prevStartDate,
 		prevEndDate,
+		nextDeliveryText,
 	};
 }
 

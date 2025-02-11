@@ -5,7 +5,6 @@ import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IUserPastOrderModel from "@/utils/models/IUserPastOrderModel";
 import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
-import type { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import type IDeliveryAddressApiResponse from "@/utils/models/services/IDeliveryAddressApiResponse";
 import type IPastOrdersApiResponse from "@/utils/models/services/IPastOrdersApiResponse";

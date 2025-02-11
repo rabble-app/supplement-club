@@ -14,7 +14,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { useUser } from "@/contexts/UserContext";
-import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
+import { getQuarterInfo } from "@/utils/utils";
 import DesktopHeaderButtons from "./DesktopHeaderButtons";
 import UserLoggedIn from "./UserLoggedIn";
 import UserLoggedOut from "./UserLoggedOut";
@@ -22,9 +22,7 @@ import UserLoggedOut from "./UserLoggedOut";
 export default function Header() {
 	const context = useUser();
 
-	const { currentQuarter, year } = getQuarterInfo();
-	const { endDate } = getQuarterDates(year, currentQuarter);
-	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+	const { nextDeliveryText } = getQuarterInfo();
 	return (
 		<header>
 			<div className="flex justify-center items-center h-[40px] bg-blue2">

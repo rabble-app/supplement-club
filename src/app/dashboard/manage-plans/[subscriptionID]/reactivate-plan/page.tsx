@@ -25,10 +25,9 @@ export default function ReactivatePlan({
 		{} as ISummaryProductModel,
 	);
 
-	const { remainsDaysToNextQuater, endDate, year, currentQuarter } =
+	const { remainsDaysToNextQuater, currentQuarter, nextDeliveryText } =
 		getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
-	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -46,7 +45,7 @@ export default function ReactivatePlan({
 							: "",
 					capsules: capsules,
 					name: item.product.name,
-					delivery: nextDelivery,
+					delivery: nextDeliveryText,
 					src: item.product.imageUrl,
 					rrp: item.product.rrp,
 					price: capsules * 0.25,
@@ -68,7 +67,7 @@ export default function ReactivatePlan({
 			setSummary(model);
 		};
 		fetchParams();
-	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
+	}, [params, nextDeliveryText, nextQuater, remainsDaysToNextQuater]);
 
 	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);

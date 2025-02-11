@@ -35,10 +35,9 @@ export default function TopUpCheckout({
 		{} as ISummaryProductModel,
 	);
 
-	const { remainsDaysToNextQuater, endDate, year, currentQuarter } =
+	const { remainsDaysToNextQuater, nextDeliveryText, currentQuarter } =
 		getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
-	const nextDelivery = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -57,7 +56,7 @@ export default function TopUpCheckout({
 							: "",
 					capsules: capsules,
 					name: item.product.name,
-					delivery: nextDelivery,
+					delivery: nextDeliveryText,
 					src: item.product.imageUrl,
 					price: capsules * 0.25,
 					pricePerCapsule: 0.25,
@@ -79,7 +78,7 @@ export default function TopUpCheckout({
 			setSummary(model);
 		};
 		fetchParams();
-	}, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
+	}, [params, nextDeliveryText, nextQuater, remainsDaysToNextQuater]);
 
 	function setCapsulePerWeek(capules: string, week: string) {
 		setCapsulesPerDay(+capules);

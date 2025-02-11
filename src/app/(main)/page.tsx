@@ -9,7 +9,7 @@ import Link from "next/link";
 import { productService } from "@/services/productService";
 import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import { getQuarterDates, getQuarterInfo } from "@/utils/utils";
+import { getQuarterInfo } from "@/utils/utils";
 
 const homeCards = [
 	{
@@ -135,9 +135,7 @@ export default async function Home() {
 
 	const fetchProducts = async () => await productService.productsLimit(3);
 
-	const { currentQuarter, year } = getQuarterInfo();
-	const { endDate } = getQuarterDates(year, currentQuarter);
-	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+	const { nextDeliveryText } = getQuarterInfo();
 
 	const [productModel, products] = await Promise.all([
 		fetchProduct(),
