@@ -1,6 +1,7 @@
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
 import ClaimRewardDialog from "./ClaimRewardDialog";
 
 export default function ReferalCard({
@@ -25,10 +26,9 @@ export default function ReferalCard({
 	openAction: (val: boolean) => void;
 }>) {
 	return (
-		<div
+		<Button
 			onClick={() => openAction(true)}
-			onKeyDown={() => {}}
-			className={` p-[16px] rounded-[4px] border-[1px] border-grey35 flex justify-between items-center ${isActive ? "bg-white shadow-3 mx-[-10px] md:mx-[0]" : "md:mx-[24px] bg-grey35 shadow-5"}`}
+			className={` p-[16px] rounded-[4px] border-[1px] border-grey35 flex justify-between min-h-[110px] text-black items-center ${isActive ? "bg-white shadow-3 mx-[-10px] md:mx-[0]" : "md:mx-[24px] bg-grey35 shadow-5"}`}
 		>
 			<div className="grid gap-[16px]">
 				<div className="flex gap-[8px] items-center">
@@ -87,6 +87,6 @@ export default function ReferalCard({
 					requires={requires}
 				/>
 			)}
-		</div>
+		</Button>
 	);
 }
