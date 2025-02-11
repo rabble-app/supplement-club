@@ -12,6 +12,7 @@ import { teamsService } from "@/services/teamService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
+import { getQuarterInfo } from "@/utils/utils";
 import { toast } from "sonner";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
@@ -22,14 +23,25 @@ import PaymentConfirmForm from "./PaymentConfirmForm";
 export default function PaymentList({
 	totalPrice,
 	isComming,
+	capsulePerDay,
+	teamId,
+	productId,
+	orderId,
 	successAction,
 }: Readonly<{
 	totalPrice: number;
+	capsulePerDay: number;
+	teamId?: string;
+	productId?: string;
+	orderId?: string;
 	isComming?: boolean;
 	successAction: () => void;
 }>) {
 	const [policyTerms, setPolicyTerms] = useState(true);
 	const [address, setAddress] = useState(true);
+	const { quarterly } = getQuarterInfo();
+	const topupQuantity = 2;
+	const quantity = topupQuantity * quarterly; // total quantity (quartely + topUp quantity)
 
 	const context = useUser();
 
@@ -75,7 +87,7 @@ export default function PaymentList({
 
 			const captureResponse = (await paymentService.addCapturePayment(
 				totalPrice,
-				context?.user?.teamId ?? "",
+				teamId ?? "",
 				response.paymentIntentId,
 				context?.user?.id ?? "",
 			)) as IResponseModel;
@@ -86,6 +98,26 @@ export default function PaymentList({
 				});
 				return;
 			}
+
+			await paymentService.paymentBasketActive({
+				capsulePerDay: capsulePerDay,
+				orderId: orderId ?? "",
+				price: totalPrice,
+				productId: productId ?? "",
+				quantity: quantity,
+				teamId: teamId ?? "",
+				topupQuantity: topupQuantity,
+				userId: context?.user?.id ?? "",
+			});
+		} else {
+			await paymentService.addPreorderBulkBasket(
+				teamId ?? "",
+				context?.user?.id ?? "",
+				productId ?? "",
+				quantity,
+				totalPrice,
+				capsulePerDay,
+			);
 		}
 
 		const addTeamMemberResponse = (await teamsService.addTeamMember(

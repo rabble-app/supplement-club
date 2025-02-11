@@ -5,6 +5,7 @@ import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
 import { teamsService } from "@/services/teamService";
 import { usersService } from "@/services/usersService";
+import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
@@ -20,6 +21,9 @@ export default function ReactivatePlan({
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [totalPrice, setTotalPrice] = useState(0);
+	const [managePlan, setManagePlan] = useState<IManagePlanModel>(
+		{} as IManagePlanModel,
+	);
 	const [subscriptionId, setSubscriptionId] = useState<string>("");
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,
@@ -33,6 +37,7 @@ export default function ReactivatePlan({
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
 			const response = await usersService.getSubscriptionPlan(subscriptionID);
+			setManagePlan(response);
 			setSubscriptionId(subscriptionID);
 			const orders = [] as IOrderSummaryModel[];
 			for (const item of response.team.basket) {
@@ -88,6 +93,9 @@ export default function ReactivatePlan({
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 				/>
 				<PaymentList
+					productId={managePlan?.team?.basket[0]?.product?.id}
+					teamId={managePlan?.team.id}
+					capsulePerDay={managePlan.capsulePerDay}
 					successAction={() => onOpenChange(true)}
 					totalPrice={totalPrice}
 				/>

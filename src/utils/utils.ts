@@ -76,6 +76,7 @@ export function getQuarterInfo() {
 		prevQuarterYear: prevYear,
 		prevQuarterStart,
 		prevMonth,
+		quarterly: getDifferenceInDays(endDate.toString(), startDate.toString()),
 		prevMonthYear,
 		prevMonthStart,
 		prevStartDate,
@@ -224,6 +225,7 @@ export const mapSingleProductModel = (
 		formulationSummary: model.formulationSummary,
 		gallery: [model.imageUrl, model.producer.imageUrl],
 		supplementTeamProducts: model.supplementTeamProducts,
+		orderId: model.orderId,
 	};
 };
 

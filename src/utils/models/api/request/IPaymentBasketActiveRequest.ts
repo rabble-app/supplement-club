@@ -1,10 +1,10 @@
 export default interface IPaymentBasketActiveRequest {
 	orderId: string;
 	teamId: string;
-	topupQuantity: string;
+	topupQuantity: number;
 	userId: string;
 	productId: string;
-	quantity: string;
-	capsulePerDay: string;
-	price: string;
+	quantity: number;
+	capsulePerDay: number;
+	price: number;
 }

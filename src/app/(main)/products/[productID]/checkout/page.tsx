@@ -198,8 +198,12 @@ export default function Checkout({
 				)}
 				{step === 3 && (
 					<PaymentList
+						orderId={product?.orderId}
+						productId={product?.id}
+						teamId={product?.supplementTeamProducts?.team.id}
 						isComming={!product?.isComming}
 						totalPrice={totalPrice}
+						capsulePerDay={capsulePerDay}
 						successAction={successAction}
 					/>
 				)}

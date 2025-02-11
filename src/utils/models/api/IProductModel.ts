@@ -33,5 +33,6 @@ export interface IProductModel extends IBaseTimestamps {
 	producer: IProducerModel;
 	partionedProducts?: [];
 	formulationSummary?: string[];
+	orderId?: string;
 	supplementTeamProducts: ISupplementTeamProducts;
 }

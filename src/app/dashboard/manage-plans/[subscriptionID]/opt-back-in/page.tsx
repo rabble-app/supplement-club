@@ -5,6 +5,7 @@ import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
 import { teamsService } from "@/services/teamService";
 import { usersService } from "@/services/usersService";
+import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
@@ -19,6 +20,9 @@ export default function OptBackIn({
 	const context = useUser();
 	const router = useRouter();
 
+	const [managePlan, setManagePlan] = useState<IManagePlanModel>(
+		{} as IManagePlanModel,
+	);
 	const [subscriptionId, setSubscriptionId] = useState<string>("");
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [totalPrice, setTotalPrice] = useState(0);
@@ -41,6 +45,7 @@ export default function OptBackIn({
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
 			const response = await usersService.getSubscriptionPlan(subscriptionID);
+			setManagePlan(response);
 			setSubscriptionId(subscriptionID);
 			const orders = [] as IOrderSummaryModel[];
 
@@ -113,6 +118,9 @@ export default function OptBackIn({
 					bottomContent={bottomContent}
 				/>
 				<PaymentList
+					productId={managePlan?.team?.basket[0]?.product?.id}
+					teamId={managePlan?.team.id}
+					capsulePerDay={managePlan.capsulePerDay}
 					successAction={() => onOpenChange(true)}
 					totalPrice={totalPrice}
 				/>

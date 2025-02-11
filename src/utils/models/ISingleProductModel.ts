@@ -36,5 +36,6 @@ export default interface ISingleProductModel {
 	members: number;
 	isComming: boolean;
 	gallery: string[];
+	orderId?: string;
 	supplementTeamProducts?: ISupplementTeamProducts;
 }
