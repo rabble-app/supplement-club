@@ -68,7 +68,7 @@ export default function TeamPrice({
 
 			result += "  z-[20]";
 		} else {
-			if (isCellInucluded(index, i)) {
+			if (isCellIncluded(index, i)) {
 				result += " bg-blue";
 				return result;
 			}
@@ -79,59 +79,85 @@ export default function TeamPrice({
 		return result;
 	}
 
-	function isCellInucluded(infoIndex: number, idx: number) {
-		if (activeMemberIndex === infoIndex) {
-			// include previous to the middle
-			if (
-				(activeMemberIndex === 0 && idx < 4) ||
-				(activeMemberIndex > 0 && idx < 6)
-			)
-				return true;
+	function isActiveIndex(infoIndex: number): boolean {
+		return activeMemberIndex === infoIndex;
+	}
 
-			const avgMembers =
-				(priceInfo[infoIndex + 1].teamMemberCount +
-					priceInfo[infoIndex].teamMemberCount) /
-				2;
+	function shouldIncludePreviousToMiddle(
+		infoIndex: number,
+		idx: number,
+	): boolean {
+		return (
+			(activeMemberIndex === 0 && idx < 4) || (activeMemberIndex > 0 && idx < 6)
+		);
+	}
 
-			// show when avg count between current and next are higher
-			if (members >= avgMembers) {
-				return true;
-			}
+	function getAverageMembers(infoIndex: number): number {
+		return (
+			((priceInfo[infoIndex + 1]?.teamMemberCount || 0) +
+				priceInfo[infoIndex].teamMemberCount) /
+			2
+		);
+	}
 
-			const leftAvgItem =
-				(avgMembers - priceInfo[infoIndex].teamMemberCount) / 5;
+	function shouldShowBasedOnAvg(infoIndex: number, members: number): boolean {
+		const avgMembers = getAverageMembers(infoIndex);
+		return members >= avgMembers;
+	}
 
-			// show after middle active item
-			if (
-				Math.abs(5 - idx) * leftAvgItem +
-					priceInfo[infoIndex].teamMemberCount <=
-				members
-			)
-				return true;
+	function shouldShowAfterMiddle(
+		infoIndex: number,
+		idx: number,
+		members: number,
+	): boolean {
+		const avgMembers = getAverageMembers(infoIndex);
+		const leftAvgItem = (avgMembers - priceInfo[infoIndex].teamMemberCount) / 5;
+		return (
+			Math.abs(5 - idx) * leftAvgItem + priceInfo[infoIndex].teamMemberCount <=
+			members
+		);
+	}
+
+	function shouldIncludeFirstInactive(
+		infoIndex: number,
+		idx: number,
+		members: number,
+	): boolean {
+		const avgMem =
+			((priceInfo[infoIndex]?.teamMemberCount || 0) +
+				(priceInfo[infoIndex - 1]?.teamMemberCount || 0)) /
+			2;
+		const unit = ((priceInfo[infoIndex]?.teamMemberCount || 0) - avgMem) / 5;
+		return idx * unit + avgMem <= members;
+	}
+
+	function shouldIncludePreviousActive(infoIndex: number): boolean {
+		return activeMemberIndex > infoIndex;
+	}
+
+	function shouldIncludeFirstValue(
+		infoIndex: number,
+		idx: number,
+		members: number,
+	): boolean {
+		if (infoIndex !== 0 || idx >= 5) return false;
+		const avg = priceInfo[0].teamMemberCount / 4;
+		return idx * avg < members || (idx === 1 && members > 0);
+	}
+
+	function isCellIncluded(infoIndex: number, idx: number): boolean {
+		if (isActiveIndex(infoIndex)) {
+			if (shouldIncludePreviousToMiddle(infoIndex, idx)) return true;
+			if (shouldShowBasedOnAvg(infoIndex, members)) return true;
+			if (shouldShowAfterMiddle(infoIndex, idx, members)) return true;
 		}
-
-		// first part inactive of next active point
-		if (activeMemberIndex + 1 === infoIndex) {
-			const avgMem =
-				(priceInfo[infoIndex].teamMemberCount +
-					priceInfo[infoIndex - 1]?.teamMemberCount || 0) / 2;
-
-			const unit = (priceInfo[infoIndex].teamMemberCount - avgMem) / 5;
-
-			if (idx * unit + avgMem <= members) return true;
-		}
-
-		// include previous active
-		if (activeMemberIndex > infoIndex) {
+		if (
+			activeMemberIndex + 1 === infoIndex &&
+			shouldIncludeFirstInactive(infoIndex, idx, members)
+		)
 			return true;
-		}
-
-		// case 1: less then first value
-		if (infoIndex === 0 && idx < 5) {
-			const avg = priceInfo[0].teamMemberCount / 4;
-			// idx === 1 and at least 1 member : for first cell marked
-			if (idx * avg < members || (idx === 1 && members > 0)) return true;
-		}
+		if (shouldIncludePreviousActive(infoIndex)) return true;
+		if (shouldIncludeFirstValue(infoIndex, idx, members)) return true;
 
 		return false;
 	}
