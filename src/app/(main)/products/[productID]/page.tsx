@@ -38,7 +38,6 @@ import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
 import { useProductStore } from "@/stores/productStore";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
-import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { getQuarterInfo } from "@/utils/utils";
@@ -167,7 +166,7 @@ export default function ProductDetails({
 			rrp: product?.rrp,
 			quantityOfSubUnitPerOrder: product?.unitsOfMeasurePerSubUnit,
 			unitsOfMeasurePerSubUnit: product?.unitsOfMeasurePerSubUnit,
-			orders: orders as IOrderSummaryModel[],
+			orders: orders,
 			id: 1,
 			referals: [],
 			subscriptions: [],

@@ -70,10 +70,10 @@ export default function TopUpCheckout({
 				corporation: "KANEKA CORPRATION",
 				name: response.name,
 				deliveryText: "NEXT DAY DELIVERY",
-				orders: orders as IOrderSummaryModel[],
+				orders: orders,
 			} as ISummaryProductModel;
 
-			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
+			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price ?? 0), 0));
 
 			setSummary(model);
 		};
@@ -92,10 +92,10 @@ export default function TopUpCheckout({
 		if (val) {
 			await paymentService.topUpSubscription(
 				weeks * 7 * capsulesPerDay,
-				managePlan?.team?.id || "",
-				context?.user?.stripeDefaultPaymentMethodId || "",
-				context?.user?.id || "",
-				managePlan?.team.basket[0].product.id || "",
+				managePlan?.team?.id ?? "",
+				context?.user?.stripeDefaultPaymentMethodId ?? "",
+				context?.user?.id ?? "",
+				managePlan?.team.basket[0].product.id ?? "",
 				weeks * capsulesPerDay,
 				capsulesPerDay,
 				totalPrice,

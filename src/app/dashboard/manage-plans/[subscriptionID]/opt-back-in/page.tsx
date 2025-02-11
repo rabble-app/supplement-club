@@ -63,14 +63,14 @@ export default function OptBackIn({
 				});
 			}
 
-			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
+			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price ?? 0), 0));
 
 			const model = {
 				title: "Order Summary",
 				corporation: "KANEKA CORPRATION",
 				name: response.name,
 				deliveryText: "NEXT DAY DELIVERY",
-				orders: orders as IOrderSummaryModel[],
+				orders: orders,
 			} as ISummaryProductModel;
 
 			setSummary(model);

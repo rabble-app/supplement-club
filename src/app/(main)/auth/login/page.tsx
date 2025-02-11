@@ -63,7 +63,7 @@ export default function LoginPage() {
 				() => (
 					<Notify
 						message={
-							JSON.parse(result.error || "Incorrect email/password").message
+							JSON.parse(result.error ?? "Incorrect email/password").message
 						}
 					/>
 				),

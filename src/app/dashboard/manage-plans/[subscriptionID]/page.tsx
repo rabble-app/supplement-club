@@ -70,7 +70,7 @@ export default function Subscription({
 			setTotalCapsule(caps);
 
 			const model = {
-				orders: orders as IOrderSummaryModel[],
+				orders: orders,
 			} as ISummaryProductModel;
 
 			setSummary(model);

@@ -52,7 +52,7 @@ interface Autocomplete {
 
 export default function AddressAutocomplete({
 	form,
-}: AddressAutocompleteProps) {
+}: Readonly<AddressAutocompleteProps>) {
 	const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
 	useEffect(() => {
@@ -91,7 +91,7 @@ export default function AddressAutocomplete({
 						form.setValue("address2", e.address.line_2);
 						form.setValue(
 							"buildingNo",
-							e.address.building_number || e.address.sub_building_number,
+							e.address.building_number ?? e.address.sub_building_number,
 						);
 						form.setValue("city", e.address.town_or_city);
 						form.setValue("country", e.address.country);

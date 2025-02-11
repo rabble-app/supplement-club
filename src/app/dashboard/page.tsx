@@ -60,7 +60,7 @@ export default function ManagerPage() {
 	useEffect(() => {
 		const fetchUpcomingDeliveries = async () => {
 			const response = await usersService.getUpcomingDeliveries(
-				context?.user?.id || "",
+				context?.user?.id ?? "",
 			);
 			setUpcomingDeliveries(response);
 		};

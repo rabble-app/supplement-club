@@ -28,7 +28,7 @@ export default function FormFieldComponent<T extends FieldValues>({
 	type,
 	labelContent,
 	readonly,
-}: FormFieldComponentProps<T>) {
+}: Readonly<FormFieldComponentProps<T>>) {
 	return (
 		<FormField
 			control={form.control}
@@ -37,14 +37,14 @@ export default function FormFieldComponent<T extends FieldValues>({
 			render={({ field, fieldState }) => (
 				<FormItem className={fieldState.invalid ? "error" : ""}>
 					<FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
-						{labelContent ? labelContent : label}
+						{labelContent ?? label}
 					</FormLabel>
 					<FormControl>
 						<Input
 							{...field}
 							placeholder={placeholder}
 							id={id}
-							type={type || "string"}
+							type={type ?? "string"}
 						/>
 					</FormControl>
 				</FormItem>

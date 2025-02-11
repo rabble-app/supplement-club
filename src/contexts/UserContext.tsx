@@ -22,7 +22,7 @@ interface UserProviderProps {
 export function UserProvider({ children, state }: Readonly<UserProviderProps>) {
 	const storeState = useUserStore((store) => store);
 
-	const [user, setUser] = useState<IUserResponse | null>(state?.user || null);
+	const [user, setUser] = useState<IUserResponse | null>(state?.user ?? null);
 	const setNewUser = (user: IUserResponse) => {
 		setUser(user);
 	};

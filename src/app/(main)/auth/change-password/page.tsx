@@ -39,7 +39,7 @@ export default function ChangePasswordPage() {
 
 	async function postChangePassword(e: FormData) {
 		await authService.changePassword(
-			e.get("password")?.toString() || "",
+			e.get("password")?.toString() ?? "",
 			token ?? "",
 		);
 		router.push("/");

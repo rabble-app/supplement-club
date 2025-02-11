@@ -51,7 +51,7 @@ export default function SubscriptionPlan({
 		setChangePlan(val);
 		if (val) {
 			await paymentService.updateSubscription(
-				managePlan?.id || "",
+				managePlan?.id ?? "",
 				5,
 				initCapsule,
 			);

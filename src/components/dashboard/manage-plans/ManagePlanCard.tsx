@@ -19,7 +19,10 @@ const ConditionalLink = ({
 	condition: boolean;
 	children: ReactNode;
 }>) => {
-	return condition ? <Link href={href}>{children}</Link> : <>{children}</>;
+	if (condition) {
+		return <Link href={href}>{children}</Link>;
+	}
+	return <>{children}</>;
 };
 
 export default function ManagePlanCard({

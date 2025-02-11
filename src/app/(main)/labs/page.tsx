@@ -114,7 +114,7 @@ export default async function Labs() {
 	] as IGoalCardModel[];
 
 	const product = await productService.product(
-		process.env.NEXT_PUBLIC_PRODUCT_ID || "",
+		process.env.NEXT_PUBLIC_PRODUCT_ID as string,
 	);
 
 	return (

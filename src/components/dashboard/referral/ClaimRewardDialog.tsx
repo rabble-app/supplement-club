@@ -25,7 +25,7 @@ export default function ClaimRewardDialog({
 	const [isOpen, setIsOpen] = useState(false);
 	const context = useUser();
 	async function onSave() {
-		await referalService.updateClaimReward(context?.user?.id || "", requires);
+		await referalService.updateClaimReward(context?.user?.id ?? "", requires);
 		claimRewardAction(credit);
 		setIsOpen(false);
 	}

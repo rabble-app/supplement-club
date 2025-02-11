@@ -18,7 +18,7 @@ export default function Account() {
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
-			const model = await usersService.getUserInfo(context?.user?.id || "");
+			const model = await usersService.getUserInfo(context?.user?.id ?? "");
 			setUserInfo(model);
 		};
 		fetchUserInfo();
@@ -27,13 +27,13 @@ export default function Account() {
 	useEffect(() => {
 		const fetchUserPaymentOptions = async () => {
 			const model = await paymentService.getUserPaymentOptions(
-				context?.user?.stripeCustomerId || "",
+				context?.user?.stripeCustomerId ?? "",
 			);
 			const card = model.find(
 				(c: IUserPaymentOptionModel) =>
 					c.id === context?.user?.stripeDefaultPaymentMethodId,
 			);
-			setDefaultCard(card || model[0]);
+			setDefaultCard(card ?? model[0]);
 		};
 		fetchUserPaymentOptions();
 	}, [

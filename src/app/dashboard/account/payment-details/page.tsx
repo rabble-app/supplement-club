@@ -22,14 +22,14 @@ export default function AccountPaymentDetails() {
 	const context = useUser();
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const [defaultCard, setDefaultCard] = useState(
-		context?.user?.stripeDefaultPaymentMethodId || "",
+		context?.user?.stripeDefaultPaymentMethodId ?? "",
 	);
 	const [userCards, setUserCards] = useState<IUserPaymentOptionModel[]>([]);
 
 	useEffect(() => {
 		const fetchUserPaymentOptions = async () => {
 			const model = await paymentService.getUserPaymentOptions(
-				context?.user?.stripeCustomerId || "",
+				context?.user?.stripeCustomerId ?? "",
 			);
 			setUserCards(model);
 		};
@@ -38,7 +38,7 @@ export default function AccountPaymentDetails() {
 
 	async function addCardMethod() {
 		const model = await paymentService.getUserPaymentOptions(
-			context?.user?.stripeCustomerId || "",
+			context?.user?.stripeCustomerId ?? "",
 		);
 		setUserCards(model);
 	}
@@ -47,7 +47,7 @@ export default function AccountPaymentDetails() {
 		await paymentService.makeCardDefault(
 			card.last4,
 			paymentId,
-			context?.user?.stripeCustomerId || "",
+			context?.user?.stripeCustomerId ?? "",
 		);
 		setDefaultCard(paymentId);
 	}
@@ -57,102 +57,101 @@ export default function AccountPaymentDetails() {
 		setUserCards(userCards.filter((c) => c.id !== paymentId));
 	}
 	return (
-		<>
-			<div className="mx-auto max-w-[600px]">
-				{userCards && userCards?.length > 0 && (
-					<div className="grid gap-[16px] w-full px-[16px] py-[32px] rounded-[12px]">
-						<div className=" bg-white flex flex-col gap-[16px] justify-start w-full">
-							<div className="border-grey37 border-[1px] rounded-[4px]">
-								{userCards?.map((item, idx) => (
-									<div key={item.id}>
-										<RadioGroup
-											key={item.id}
-											value={defaultCard.toString()}
-											onValueChange={(value) => setDefaultCard(value)}
+		<div className="mx-auto max-w-[600px]">
+			{userCards && userCards?.length > 0 && (
+				<div className="grid gap-[16px] w-full px-[16px] py-[32px] rounded-[12px]">
+					<div className=" bg-white flex flex-col gap-[16px] justify-start w-full">
+						<div className="border-grey37 border-[1px] rounded-[4px]">
+							{userCards?.map((item, idx) => (
+								<div key={item.id}>
+									<RadioGroup
+										key={item.id}
+										value={defaultCard.toString()}
+										onValueChange={(value) => setDefaultCard(value)}
+									>
+										<PaymentCard
+											model={item.card}
+											isDefault={defaultCard === item.id}
+											topContent={
+												<RadioGroupItem
+													value={item.id.toString()}
+													className="mx-auto"
+												/>
+											}
 										>
-											<PaymentCard
-												model={item.card}
-												isDefault={defaultCard === item.id}
-												topContent={
-													<RadioGroupItem
-														value={item.id.toString()}
-														className="mx-auto"
-													/>
-												}
-											>
-												{defaultCard !== item.id && (
-													<DropdownMenu>
-														<DropdownMenuTrigger>
+											{defaultCard !== item.id && (
+												<DropdownMenu>
+													<DropdownMenuTrigger>
+														<Image
+															src="/images/icons/dots-black-icon.svg"
+															alt="Trash icon"
+															className="cursor-pointer"
+															width={24}
+															height={24}
+														/>
+													</DropdownMenuTrigger>
+													<DropdownMenuContent
+														align="end"
+														className="bg-white rounded-[8px] shadow-3 px-[16px]"
+													>
+														<DropdownMenuItem
+															onClick={() => setDefault(item.card, item.id)}
+															className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none"
+														>
 															<Image
-																src="/images/icons/dots-black-icon.svg"
+																src="/images/icons/favorite-black-icon.svg"
 																alt="Trash icon"
-																className="cursor-pointer"
 																width={24}
 																height={24}
 															/>
-														</DropdownMenuTrigger>
-														<DropdownMenuContent
-															align="end"
-															className="bg-white rounded-[8px] shadow-3 px-[16px]"
+															<div className=" text-[18px] leading-[27px] font-bold font-inconsolata">
+																Use as Default
+															</div>
+														</DropdownMenuItem>
+
+														<DropdownMenuSeparator className="h-[1px] bg-grey18" />
+
+														<DropdownMenuItem
+															onClick={() => setShowDeleteDialog(true)}
+															className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none"
 														>
-															<DropdownMenuItem
-																onClick={() => setDefault(item.card, item.id)}
-																className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none"
-															>
-																<Image
-																	src="/images/icons/favorite-black-icon.svg"
-																	alt="Trash icon"
-																	width={24}
-																	height={24}
-																/>
-																<div className=" text-[18px] leading-[27px] font-bold font-inconsolata">
-																	Use as Default
-																</div>
-															</DropdownMenuItem>
-
-															<DropdownMenuSeparator className="h-[1px] bg-grey18" />
-
-															<DropdownMenuItem
-																onClick={() => setShowDeleteDialog(true)}
-																className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none"
-															>
-																<Image
-																	src="/images/icons/trash-red-icon.svg"
-																	alt="Trash icon"
-																	width={24}
-																	height={24}
-																/>
-																<div className="text-red text-[18px] leading-[27px] font-bold font-inconsolata">
-																	Delete Card
-																</div>
-															</DropdownMenuItem>
-															<DeleteCardDialog
-																open={showDeleteDialog}
-																confirmDeleteAction={() =>
-																	confirmDeleteAction(item.id)
-																}
-																last4={item.card.last4}
+															<Image
+																src="/images/icons/trash-red-icon.svg"
+																alt="Trash icon"
+																width={24}
+																height={24}
 															/>
-														</DropdownMenuContent>
-													</DropdownMenu>
-												)}
-											</PaymentCard>
-										</RadioGroup>
-										{idx !== userCards?.length - 1 && (
-											<Separator
-												key={`${item.card.last4}-separator `}
-												className="bg-grey37 h-[1px]"
-											/>
-										)}
-									</div>
-								))}
-							</div>
+															<div className="text-red text-[18px] leading-[27px] font-bold font-inconsolata">
+																Delete Card
+															</div>
+														</DropdownMenuItem>
+														<DeleteCardDialog
+															paymentMethodId={item.id}
+															open={showDeleteDialog}
+															confirmDeleteAction={() =>
+																confirmDeleteAction(item.id)
+															}
+															last4={item.card.last4}
+														/>
+													</DropdownMenuContent>
+												</DropdownMenu>
+											)}
+										</PaymentCard>
+									</RadioGroup>
+									{idx !== userCards?.length - 1 && (
+										<Separator
+											key={`${item.card.last4}-separator `}
+											className="bg-grey37 h-[1px]"
+										/>
+									)}
+								</div>
+							))}
 						</div>
-
-						<AddPaymentDialog successAction={addCardMethod} />
 					</div>
-				)}
-			</div>
-		</>
+
+					<AddPaymentDialog successAction={addCardMethod} />
+				</div>
+			)}
+		</div>
 	);
 }

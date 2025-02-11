@@ -26,8 +26,8 @@ export default function PaymentConfirmForm({
 			const model = await paymentService.createPaymentIntent(
 				totalPrice,
 				"gbp",
-				context?.user?.stripeCustomerId || "",
-				context?.user?.stripeDefaultPaymentMethodId || "",
+				context?.user?.stripeCustomerId ?? "",
+				context?.user?.stripeDefaultPaymentMethodId ?? "",
 			);
 			setClientSecret(model.clientSecret);
 		};

@@ -19,7 +19,7 @@ export default function ReferralCardsWithLink() {
 	const [isDashboard] = useState(pathname === "/dashboard/referral");
 	const context = useUser();
 	const [userName] = useState(
-		`${context?.user?.firstName || ""} ${context?.user?.lastName ?? ""}`,
+		`${context?.user?.firstName ?? ""} ${context?.user?.lastName ?? ""}`,
 	);
 	const [referalRewars, setReferalRewars] = useState<IReferalModel[]>([]);
 	const [referalInfo, setReferalInfo] = useState<IReferalInfoModel>({
@@ -64,9 +64,9 @@ export default function ReferralCardsWithLink() {
 							price={referalInfo.claimed}
 							referrals={
 								referalInfo.bonuses?.filter((b) => b.type === "REFERRAL")
-									.length || 0
+									.length ?? 0
 							}
-							teams={referalInfo.teams || 0}
+							teams={referalInfo.teams ?? 0}
 						/>
 
 						<div className="grid gap-[10px]">

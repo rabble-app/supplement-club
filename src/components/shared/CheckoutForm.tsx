@@ -31,7 +31,7 @@ const CheckoutForm = ({
 		});
 
 		if (error) {
-			setMessage(error.message || "Payment failed");
+			setMessage(error.message ?? "Payment failed");
 		} else if (paymentIntent?.status === "succeeded") {
 			setMessage("Payment successful! 🎉");
 			paymentIntentAction(paymentIntent);

@@ -33,9 +33,9 @@ export default function SummaryProduct({
 			Math.round(
 				model?.orders?.reduce(
 					(sum, item) => sum + (item?.rrp ?? 0),
-					model.rrp || 0,
+					model.rrp ?? 0,
 				),
-			) || 0;
+			) ?? 0;
 		setTotalRrp(totalRRP);
 
 		let percentage = model?.percentage;
@@ -48,7 +48,7 @@ export default function SummaryProduct({
 			model?.subscriptions?.reduce(
 				(sum, item) => sum + item.capsules * 0.25,
 				0,
-			) || 0;
+			) ?? 0;
 
 		setTotalCount(totalSum + totalSumOfSubs);
 

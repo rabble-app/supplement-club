@@ -19,8 +19,8 @@ export default function TeamPrice({
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
 	useEffect(() => {
-		for (let i = 0; i < priceInfo.length; i++) {
-			priceInfo[i].price = (price * priceInfo[i].percentageDiscount) / 100;
+		for (const info of priceInfo) {
+			info.price = (price * info.percentageDiscount) / 100;
 		}
 	}, [priceInfo, price]);
 
@@ -70,9 +70,10 @@ export default function TeamPrice({
 		} else {
 			if (isCellInucluded(index, i)) {
 				result += " bg-blue";
-			} else {
-				result += " bg-grey";
+				return result;
 			}
+
+			result += " bg-grey";
 		}
 
 		return result;

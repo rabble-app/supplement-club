@@ -59,10 +59,10 @@ export default function ReactivatePlan({
 				corporation: "KANEKA CORPRATION",
 				name: response.name,
 				deliveryText: "NEXT DAY DELIVERY",
-				orders: orders as IOrderSummaryModel[],
+				orders: orders,
 			} as ISummaryProductModel;
 
-			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price || 0), 0));
+			setTotalPrice(orders?.reduce((sum, item) => sum + (item.price ?? 0), 0));
 
 			setSummary(model);
 		};

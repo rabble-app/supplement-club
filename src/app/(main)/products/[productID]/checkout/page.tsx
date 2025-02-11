@@ -53,7 +53,7 @@ export default function Checkout({
 	const [totalPrice, setTotalPrice] = useState<number>(0);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
-	const [capsulePerDay] = useState(productStore.capsulesPerDay || 2);
+	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,

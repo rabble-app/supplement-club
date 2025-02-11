@@ -9,20 +9,23 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { paymentService } from "@/services/paymentService";
 
 export default function DeleteCardDialog({
 	open,
 	last4,
+	paymentMethodId,
 	confirmDeleteAction,
 }: Readonly<{
 	open: boolean;
 	last4: string;
+	paymentMethodId: string;
 	confirmDeleteAction: () => void;
 }>) {
 	const [isOpen] = useState(open);
 
 	async function confirmAction() {
-		//await paymentService.deleteCard(paymentMethodId);
+		await paymentService.deleteCard(paymentMethodId);
 		confirmDeleteAction();
 	}
 	return (

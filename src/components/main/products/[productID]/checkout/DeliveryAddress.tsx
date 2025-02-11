@@ -33,16 +33,16 @@ export default function DeliveryAddress({
 
 	async function onSubmit(e: FormData) {
 		const result = await usersService.addDeliveryAddress(
-			context?.user?.id || "",
+			context?.user?.id ?? "",
 			"SUPPLEMENT",
-			e.get("firstName")?.toString() || "",
-			e.get("lastName")?.toString() || "",
-			e.get("address")?.toString() || "",
-			e.get("address2")?.toString() || "",
-			e.get("city")?.toString() || "",
-			e.get("postalCode")?.toString() || "",
-			e.get("country")?.toString() || "",
-			e.get("mobileNumber")?.toString() || "",
+			e.get("firstName")?.toString() ?? "",
+			e.get("lastName")?.toString() ?? "",
+			e.get("address")?.toString() ?? "",
+			e.get("address2")?.toString() ?? "",
+			e.get("city")?.toString() ?? "",
+			e.get("postalCode")?.toString() ?? "",
+			e.get("country")?.toString() ?? "",
+			e.get("mobileNumber")?.toString() ?? "",
 		);
 
 		if (result?.statusCode === 200) {

@@ -36,7 +36,7 @@ type ShippingDialogProps = {
 export default function ShippingDetailsDialog({
 	user,
 	updateUserAction,
-}: ShippingDialogProps) {
+}: Readonly<ShippingDialogProps>) {
 	const [isOpen, setIsOpen] = useState(false);
 	const form = useForm<AddressFormData>({
 		resolver: zodResolver(shippingDetailsShema),
@@ -56,10 +56,10 @@ export default function ShippingDetailsDialog({
 
 	const onSubmit = async (values: z.infer<typeof shippingDetailsShema>) => {
 		await usersService.updateShippingInfo(
-			user.id || "",
+			user.id ?? "",
 			values.address,
 			values.address2,
-			values.buildingNo || "",
+			values.buildingNo ?? "",
 			values.city,
 			values.country,
 			values.postalCode,
@@ -74,7 +74,7 @@ export default function ShippingDetailsDialog({
 			<DialogTrigger onClick={() => setIsOpen(true)}>
 				<ManageAccountCard
 					title="Shipping address"
-					value={user?.shipping?.address || "Not set"}
+					value={user?.shipping?.address ?? "Not set"}
 					imageAlt="Home icon"
 					imageSrc="/images/icons/home-blue-icon.svg"
 				/>

@@ -195,7 +195,7 @@ export default async function Home() {
 						<Image
 							className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto md:w-full h-[420px] lg:h-[533px]"
 							src={productModel?.imageUrl}
-							alt={productModel?.imageKey || "main product"}
+							alt={productModel?.imageKey ?? "main product"}
 							width={308}
 							height={533}
 						/>

@@ -21,7 +21,7 @@ export default function Orders() {
 
 	useEffect(() => {
 		const fetchUserPastOrders = async () => {
-			const model = await usersService.getPastOrders(context?.user?.id || "");
+			const model = await usersService.getPastOrders(context?.user?.id ?? "");
 			setOrders(model);
 		};
 		fetchUserPastOrders();
@@ -75,7 +75,7 @@ export default function Orders() {
 										day: "numeric",
 										month: "long",
 										year: "numeric",
-									}).format(new Date(item?.order?.deadline || new Date()))}
+									}).format(new Date(item?.order?.deadline ?? new Date()))}
 								</div>
 							</div>
 						</div>

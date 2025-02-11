@@ -13,7 +13,7 @@ export default function Plans() {
 	useEffect(() => {
 		(async () => {
 			const response = await usersService.getSubscriptionPlans(
-				context?.user?.id || "",
+				context?.user?.id ?? "",
 			);
 			setSubscriptions(response);
 		})();

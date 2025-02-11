@@ -31,7 +31,7 @@ type EmailChangeDialogProps = {
 export default function EmailChangeDialog({
 	user,
 	updateUserAction,
-}: EmailChangeDialogProps) {
+}: Readonly<EmailChangeDialogProps>) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const form = useForm({

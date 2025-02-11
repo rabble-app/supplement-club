@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
 		mode: "onChange",
 	});
 	const [isPending, startTransition] = useTransition();
-	const [isResend, setResend] = useState(false);
+	const [resend, setResend] = useState(false);
 	const [email, setEmail] = useState<string>("");
 
 	async function postResetPassword(e: FormData) {
@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
 
 	return (
 		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
-			{!isResend && (
+			{!resend && (
 				<Form {...form}>
 					<form
 						action={(e) => startTransition(() => postResetPassword(e))}
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
 					</form>
 				</Form>
 			)}
-			{isResend && (
+			{resend && (
 				<div className="w-full px-[20px] grid gap-[24px] justify-center">
 					<h1 className="text-[40px] leading-[48px] font-hagerman text-center">
 						Link sent to your email

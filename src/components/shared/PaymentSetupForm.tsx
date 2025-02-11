@@ -63,10 +63,10 @@ export default function PaymentSetupForm({
 			);
 		} else if (setupIntent?.status === "succeeded") {
 			await paymentService.addCard(
-				(setupIntent.payment_method as string) || "",
-				context?.user?.stripeCustomerId || "",
+				(setupIntent.payment_method as string) ?? "",
+				context?.user?.stripeCustomerId ?? "",
 			);
-			await cardAction(setupIntent.payment_method);
+			cardAction(setupIntent.payment_method);
 		}
 	};
 

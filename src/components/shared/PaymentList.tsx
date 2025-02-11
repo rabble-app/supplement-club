@@ -34,16 +34,13 @@ export default function PaymentList({
 	const context = useUser();
 
 	const [defaultCard, setDefaultCard] = useState(
-		context?.user?.stripeDefaultPaymentMethodId || "",
+		context?.user?.stripeDefaultPaymentMethodId ?? "",
 	);
 	const [userCards, setUserCards] = useState<IUserPaymentOptionModel[]>([]);
 
 	useEffect(() => {
 		const fetchUserPaymentOptions = async () => {
-			const model = await paymentService.getUserPaymentOptions(
-				context?.user?.stripeCustomerId || "",
-			);
-			setUserCards(model);
+			await retrivePaymentOptions(context?.user?.stripeCustomerId);
 		};
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
@@ -56,7 +53,7 @@ export default function PaymentList({
 			const response = (await paymentService.addPaymentIntent(
 				totalPrice,
 				"gbp",
-				currectCard?.customer || "",
+				currectCard?.customer ?? "",
 				defaultCard,
 			)) as IPaymentIntentResponse;
 
@@ -78,9 +75,9 @@ export default function PaymentList({
 
 			const captureResponse = (await paymentService.addCapturePayment(
 				totalPrice,
-				context?.user?.teamId || "",
+				context?.user?.teamId ?? "",
 				response.paymentIntentId,
-				context?.user?.id || "",
+				context?.user?.id ?? "",
 			)) as IResponseModel;
 
 			if (captureResponse.error) {
@@ -92,8 +89,8 @@ export default function PaymentList({
 		}
 
 		const addTeamMemberResponse = (await teamsService.addTeamMember(
-			context?.user?.id || "",
-			context?.user?.teamId || "",
+			context?.user?.id ?? "",
+			context?.user?.teamId ?? "",
 		)) as IResponseModel;
 
 		if (addTeamMemberResponse.error) {
@@ -106,9 +103,9 @@ export default function PaymentList({
 		successAction();
 	}
 
-	async function addCardMethod() {
+	async function retrivePaymentOptions(stripeCustomerId?: string) {
 		const model = await paymentService.getUserPaymentOptions(
-			context?.user?.stripeCustomerId || "",
+			stripeCustomerId ?? "",
 		);
 		setUserCards(model);
 	}
@@ -180,7 +177,7 @@ export default function PaymentList({
 											<PaymentCard
 												model={item.card}
 												isDefault={
-													(context?.user?.stripeDefaultPaymentMethodId ||
+													(context?.user?.stripeDefaultPaymentMethodId ??
 														"") === item.id
 												}
 												topContent={
@@ -202,7 +199,11 @@ export default function PaymentList({
 							</div>
 						</div>
 
-						<AddPaymentDialog successAction={addCardMethod} />
+						<AddPaymentDialog
+							successAction={() =>
+								retrivePaymentOptions(context?.user?.stripeCustomerId)
+							}
+						/>
 					</div>
 					{ButtonSection}
 

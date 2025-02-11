@@ -76,7 +76,7 @@ export default function ReferalCard({
 						height={40}
 					/>
 					<p className="text-[16px] leading-[16px] font-[500] font-inconsolata">
-						{percentage?.toFixed(0) || 0}% Complete
+						{percentage?.toFixed(0) ?? 0}% Complete
 					</p>
 				</div>
 			)}

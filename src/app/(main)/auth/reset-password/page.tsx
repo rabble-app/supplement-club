@@ -9,7 +9,7 @@ export default function ResetPasswordPage() {
 	const context = useUser();
 
 	async function resetPassword() {
-		await authService.resetPassword(context?.user?.email || "");
+		await authService.resetPassword(context?.user?.email ?? "");
 	}
 
 	return (

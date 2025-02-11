@@ -26,7 +26,7 @@ export default function DesktopHeaderButtons() {
 	const context = useUser();
 	return (
 		<div className="hidden lg:flex lg:gap-x-[24px] lg:items-center">
-			<UserProfile user={context?.user || undefined} />
+			<UserProfile user={context?.user ?? undefined} />
 
 			{context?.user && (
 				<Button onClick={() => context?.logout()}>
