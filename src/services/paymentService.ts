@@ -1,6 +1,8 @@
 import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
+import type IPaymentBasketActiveRequest from "@/utils/models/api/request/IPaymentBasketActiveRequest";
+import type ITopUpSubscriptionRequest from "@/utils/models/api/request/ITopUpSubscriptionRequest";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type ISetupIntent from "@/utils/models/api/response/ISetupIntent";
 import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
@@ -59,25 +61,16 @@ export const paymentService = {
 			capsulePerDay,
 		}),
 
-	topUpSubscription: async (
-		amount: number,
-		teamId: string,
-		paymentIntentId: string,
-		userId: string,
-		productId: string,
-		quantity: number,
-		capsulePerDay: number,
-		price: number,
-	) =>
+	topUpSubscription: async (model: ITopUpSubscriptionRequest) =>
 		apiRequest(PAYMENT_ENDPOINTS.SUBSCRIPTION_TOPUP, "POST", {
-			amount,
-			teamId,
-			paymentIntentId,
-			userId,
-			productId,
-			quantity,
-			capsulePerDay,
-			price,
+			amount: model.amount,
+			teamId: model.teamId,
+			paymentIntentId: model.paymentIntentId,
+			userId: model.userId,
+			productId: model.productId,
+			quantity: model.quantity,
+			capsulePerDay: model.capsulePerDay,
+			price: model.price,
 		}),
 
 	updateSubscription: async (
@@ -90,25 +83,16 @@ export const paymentService = {
 			capsulePerDay,
 		}),
 
-	paymentBasketActive: async (
-		orderId: string,
-		teamId: string,
-		topupQuantity: string,
-		userId: string,
-		productId: string,
-		quantity: string,
-		capsulePerDay: string,
-		price: string,
-	) =>
+	paymentBasketActive: async (model: IPaymentBasketActiveRequest) =>
 		apiRequest(PAYMENT_ENDPOINTS.PAYMENT_BASKET_ACTIVE, "POST", {
-			orderId,
-			teamId,
-			topupQuantity,
-			userId,
-			productId,
-			quantity,
-			capsulePerDay,
-			price,
+			orderId: model.orderId,
+			teamId: model.teamId,
+			topupQuantity: model.topupQuantity,
+			userId: model.userId,
+			productId: model.productId,
+			quantity: model.quantity,
+			capsulePerDay: model.capsulePerDay,
+			price: model.price,
 		}),
 
 	paymentBasketPreOrder: async (

@@ -90,16 +90,16 @@ export default function TopUpCheckout({
 		setIsDialogOpen(val);
 
 		if (val) {
-			await paymentService.topUpSubscription(
-				weeks * 7 * capsulesPerDay,
-				managePlan?.team?.id ?? "",
-				context?.user?.stripeDefaultPaymentMethodId ?? "",
-				context?.user?.id ?? "",
-				managePlan?.team.basket[0].product.id ?? "",
-				weeks * capsulesPerDay,
-				capsulesPerDay,
-				totalPrice,
-			);
+			await paymentService.topUpSubscription({
+				amount: weeks * 7 * capsulesPerDay,
+				teamId: managePlan?.team?.id ?? "",
+				paymentIntentId: context?.user?.stripeDefaultPaymentMethodId ?? "",
+				userId: context?.user?.id ?? "",
+				productId: managePlan?.team.basket[0].product.id ?? "",
+				price: totalPrice,
+				quantity: weeks * capsulesPerDay,
+				capsulePerDay: capsulesPerDay,
+			});
 		} else {
 			router.push("/dashboard/manage-plans/");
 		}

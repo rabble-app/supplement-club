@@ -32,18 +32,18 @@ export default function DeliveryAddress({
 	const context = useUser();
 
 	async function onSubmit(e: FormData) {
-		const result = await usersService.addDeliveryAddress(
-			context?.user?.id ?? "",
-			"SUPPLEMENT",
-			e.get("firstName")?.toString() ?? "",
-			e.get("lastName")?.toString() ?? "",
-			e.get("address")?.toString() ?? "",
-			e.get("address2")?.toString() ?? "",
-			e.get("city")?.toString() ?? "",
-			e.get("postalCode")?.toString() ?? "",
-			e.get("country")?.toString() ?? "",
-			e.get("mobileNumber")?.toString() ?? "",
-		);
+		const result = await usersService.addDeliveryAddress({
+			userId: context?.user?.id ?? "",
+			channel: "SUPPLEMENT",
+			firstName: e.get("firstName")?.toString() ?? "",
+			lastName: e.get("lastName")?.toString() ?? "",
+			address: e.get("address")?.toString() ?? "",
+			address2: e.get("address2")?.toString() ?? "",
+			city: e.get("city")?.toString() ?? "",
+			postalCode: e.get("postalCode")?.toString() ?? "",
+			country: e.get("country")?.toString() ?? "",
+			phone: e.get("mobileNumber")?.toString() ?? "",
+		});
 
 		if (result?.statusCode === 200) {
 			updateStepAction(step + 1);

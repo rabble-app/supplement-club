@@ -3,6 +3,7 @@ import { USER_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
+import type IAddDeliveryAddressRequest from "@/utils/models/api/request/IAddDeliveryAddressRequest";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import type IDeliveryAddressApiResponse from "@/utils/models/services/IDeliveryAddressApiResponse";
@@ -32,31 +33,22 @@ export const usersService = {
 	},
 
 	addDeliveryAddress: async (
-		userId: string,
-		channel: string,
-		firstName: string,
-		lastName: string,
-		address: string,
-		address2: string,
-		city: string,
-		postalCode: string,
-		country: string,
-		phone: string,
+		model: IAddDeliveryAddressRequest,
 	): Promise<IResponseModel> => {
 		const response = (await apiRequest(
 			USER_ENDPOINTS.DELIVERY_ADDRESS,
 			"POST",
 			{
-				userId,
-				channel,
-				firstName,
-				lastName,
-				address,
-				address2,
-				city,
-				postalCode,
-				country,
-				phone,
+				userId: model.userId,
+				channel: model.channel,
+				firstName: model.firstName,
+				lastName: model.lastName,
+				address: model.address,
+				address2: model.address2,
+				city: model.city,
+				postalCode: model.postalCode,
+				country: model.country,
+				phone: model.phone,
 			},
 		)) as IDeliveryAddressApiResponse;
 		return response;
