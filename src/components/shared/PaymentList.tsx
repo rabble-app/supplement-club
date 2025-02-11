@@ -29,7 +29,7 @@ export default function PaymentList({
 	successAction: () => void;
 }>) {
 	const [policyTerms, setPolicyTerms] = useState(true);
-	const [saveAddress, setSameAddress] = useState(true);
+	const [address, setAddress] = useState(true);
 
 	const context = useUser();
 
@@ -144,8 +144,8 @@ export default function PaymentList({
 				<div className="flex items-center gap-[8px]">
 					<Checkbox
 						id="delivery"
-						checked={saveAddress}
-						onCheckedChange={(checked) => setSameAddress(checked === true)}
+						checked={address}
+						onCheckedChange={(checked) => setAddress(checked === true)}
 					/>
 					<label
 						htmlFor="delivery"
