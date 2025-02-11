@@ -18,11 +18,10 @@ export default function TeamPrice({
 	priceInfo: IPriceInfoModel[];
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
-
 	useEffect(() => {
-		priceInfo.map((p) => {
-			p.price = (price * p.percentageDiscount) / 100;
-		});
+		for (let i = 0; i < priceInfo.length; i++) {
+			priceInfo[i].price = (price * priceInfo[i].percentageDiscount) / 100;
+		}
 	}, [priceInfo, price]);
 
 	useEffect(() => {
