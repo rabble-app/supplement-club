@@ -1,208 +1,166 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
+import AddressAutocomplete, {
+	type AddressFormData,
+} from "@/components/shared/AddressAutocomplete";
+import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { usersService } from "@/services/usersService";
+import type IUserModel from "@/utils/models/api/IUserModel";
+import { shippingDetailsShema } from "@/validations";
 import { Separator } from "@radix-ui/react-separator";
+import { VisuallyHidden } from "@reach/visually-hidden";
+import { useState } from "react";
 import ManageAccountCard from "./ManageAccountCard";
 
-type AddressAutofillProps = {
-	accessToken: string;
-	children: React.ReactNode;
+type ShippingDialogProps = {
+	user: IUserModel;
+	updateUserAction: (user: IUserModel) => void;
 };
-const AddressAutofill = dynamic(
-	() =>
-		import("@mapbox/search-js-react").then(
-			(r) => r.AddressAutofill as React.ComponentType<AddressAutofillProps>,
-		),
-	{
-		ssr: false,
-	},
-);
 
-const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
-
-const formSchema = z.object({
-	address1: z.string({ required_error: "Field is required." }),
-	address2: z.string({ required_error: "Field is required." }),
-	city: z.string({ required_error: "Field is required." }),
-	postcode: z.string({ required_error: "Field is required." }),
-	country: z.string({ required_error: "Field is required." }),
-});
-
-export default function ShippingDetailsDialog() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+export default function ShippingDetailsDialog({
+	user,
+	updateUserAction,
+}: Readonly<ShippingDialogProps>) {
+	const [isOpen, setIsOpen] = useState(false);
+	const form = useForm<AddressFormData>({
+		resolver: zodResolver(shippingDetailsShema),
 		mode: "onChange",
-		defaultValues: {
-			address1: "Penthouse 4",
-			address2: "Rotherfield",
-			city: "UK",
-			country: "London",
-			postcode: " N1 3BU",
-		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// call api
-		console.log(values);
-	}
+	const updateShippingData = () => {
+		form.reset({
+			address: user.shipping?.address,
+			address2: user.shipping?.address2,
+			city: user.shipping?.city,
+			country: user.shipping?.country,
+			postalCode: user.shipping?.postalCode,
+			buildingNo: user.shipping?.buildingNo,
+		});
+	};
+
+	const onSubmit = async (values: z.infer<typeof shippingDetailsShema>) => {
+		await usersService.updateShippingInfo(
+			user.id ?? "",
+			values.address,
+			values.address2,
+			values.buildingNo ?? "",
+			values.city,
+			values.country,
+			values.postalCode,
+		);
+		user.shipping = values;
+		updateUserAction(user);
+		setIsOpen(false);
+	};
+
 	return (
-		<Dialog>
-			<DialogTrigger>
+		<Dialog open={isOpen} onOpenChange={updateShippingData}>
+			<DialogTrigger onClick={() => setIsOpen(true)}>
 				<ManageAccountCard
 					title="Shipping address"
-					value="Penthouse 4, Rotherfield Street, London, N1 3BU"
+					value={user?.shipping?.address ?? "Not set"}
 					imageAlt="Home icon"
 					imageSrc="/images/icons/home-blue-icon.svg"
 				/>
 			</DialogTrigger>
-			<DialogContent
-				border={"rounded"}
-				className="w-full h-full sm:h-auto sm:max-w-[600px] gap-[16px] p-[0]"
-			>
+			<DialogContent className="w-full h-full sm:h-auto sm:max-w-[600px] p-0 gap-4 rounded-md">
+				<AddressAutocomplete form={form} />
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-col gap-[16px] p-[16px] justify-between md:justify-start"
-					>
-						<div className="md:contents grid gap-[16px]">
-							<DialogHeader className="flex flex-row justify-between items-center">
-								<DialogTitle className="text-[18px] leading-[28px] font-inconsolata font-bold">
-									Shipping Details
-								</DialogTitle>
+					<form onSubmit={() => onSubmit} className="flex flex-col gap-4 p-4">
+						<DialogHeader className="flex flex-row justify-between items-center">
+							<DialogTitle className="text-lg font-bold font-inconsolata">
+								Shipping Details
+							</DialogTitle>
+							<DialogClose onClick={() => setIsOpen(false)}>
+								<div className="border border-grey32 w-10 h-10 rounded-full flex justify-center items-center">
+									<Image
+										src="/images/icons/close-black-icon.svg"
+										alt="Close icon"
+										width={16}
+										height={16}
+									/>
+								</div>
+							</DialogClose>
+						</DialogHeader>
 
-								<DialogClose>
-									<div className="border-[1px] border-grey32 w-[38px] h-[38px] rounded-[50%] flex justify-center">
-										<Image
-											src="/images/icons/close-black-icon.svg"
-											alt="Close icon"
-											width={16}
-											height={16}
-										/>
-									</div>
-								</DialogClose>
-							</DialogHeader>
+						<VisuallyHidden>
+							<DialogDescription />
+						</VisuallyHidden>
 
-							<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
+						<Separator className="h-px bg-grey32 -mx-4" />
 
-							<FormField
-								control={form.control}
-								name="postcode"
-								render={({ field }) => (
-									<FormItem className="grid">
-										<FormLabel>Postcode*</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												autoComplete="postal-code"
-												placeholder="SE167NX"
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							<AddressAutofill accessToken={MAPBOX_ACCESS_TOKEN}>
-								<FormField
-									control={form.control}
-									name="address1"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Address Line 1*</FormLabel>
-											<FormControl>
-												<Input
-													{...field}
-													autoComplete="address-line1"
-													placeholder="Somewhere around"
-												/>
-											</FormControl>
-										</FormItem>
-									)}
-								/>
-							</AddressAutofill>
+						<FormFieldComponent
+							form={form}
+							label="Address Line 1*"
+							name="address"
+							placeholder="Somewhere around"
+							id="address"
+						/>
 
-							<FormField
-								control={form.control}
-								name="address2"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Address Line 2*</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												placeholder="Near somewhere"
-												autoComplete="address-line2"
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+						<FormFieldComponent
+							form={form}
+							label="Address Line 2"
+							name="address2"
+							placeholder="Near somewhere"
+							id="address2"
+						/>
 
-							<FormField
-								control={form.control}
-								name="city"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>City*</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												placeholder="London"
-												autoComplete="address-level2"
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+						<FormFieldComponent
+							form={form}
+							label="Building No"
+							name="buildingNo"
+							placeholder="43"
+							id="building_number"
+						/>
 
-							<FormField
-								control={form.control}
-								name="country"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Country*</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												placeholder="United Kingdom"
-												autoComplete="address-level1"
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-						</div>
+						<FormFieldComponent
+							form={form}
+							label="City*"
+							name="city"
+							placeholder="London"
+							id="city"
+						/>
 
-						<div className="md:contents grid gap-[16px]">
-							<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
+						<FormFieldComponent
+							form={form}
+							label="Country*"
+							name="country"
+							placeholder="United Kingdom"
+							id="country"
+						/>
 
-							<Button
-								type="submit"
-								className={` text-white text[16px] md:text-[18px] md:leading-[27px] font-inconsolata w-[169px] flex ml-auto font-bold ${form.formState.isValid ? "bg-blue text-white" : "pointer-events-none bg-blue14 text-grey34"}`}
-							>
-								Save Changes
-							</Button>
-						</div>
+						<FormFieldComponent
+							form={form}
+							label="Postcode*"
+							name="postalCode"
+							placeholder="SE167NX"
+							id="postalCode"
+						/>
+
+						<Separator className="h-px bg-grey32 -mx-4" />
+
+						<Button
+							type="submit"
+							className="w-40 font-bold font-inconsolata text-lg flex ml-auto bg-blue text-white"
+						>
+							Save Changes
+						</Button>
 					</form>
 				</Form>
 			</DialogContent>

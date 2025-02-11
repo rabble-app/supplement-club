@@ -1,152 +1,131 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import ManageAccountCard from "./ManageAccountCard";
-
+import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { usersService } from "@/services/usersService";
+import type IUserModel from "@/utils/models/api/IUserModel";
+import { emailChangeDialogSchema } from "@/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@radix-ui/react-separator";
+import { VisuallyHidden } from "@reach/visually-hidden";
+import Image from "next/image";
+import { startTransition, useState } from "react";
+import { useForm } from "react-hook-form";
+import ManageAccountCard from "./ManageAccountCard";
 
-const formSchema = z.object({
-	email: z
-		.string({ required_error: "Field is required." })
-		.email({ message: "Invalid email address." }),
-	firstName: z.string({ required_error: "Field is required." }),
-	lastName: z.string({ required_error: "Field is required." }),
-});
+type EmailChangeDialogProps = {
+	user: IUserModel;
+	updateUserAction: (user: IUserModel) => void;
+};
 
-export default function EmailChangeDialog() {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+export default function EmailChangeDialog({
+	user,
+	updateUserAction,
+}: Readonly<EmailChangeDialogProps>) {
+	const [isOpen, setIsOpen] = useState(false);
+
+	const form = useForm({
+		resolver: zodResolver(emailChangeDialogSchema),
 		mode: "onChange",
-		defaultValues: {
-			firstName: "kate",
-			lastName: "evans",
-			email: "kate.evans@outlook.com",
-		},
 	});
+	const updateUserData = () => {
+		form.reset({
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.email,
+		});
+	};
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// call api
-		console.log(values);
-	}
+	const onSubmit = async () => {
+		const { firstName, lastName } = form.getValues();
+		await usersService.updateUserInfo(firstName, lastName);
+		const updatedUser = { ...user, firstName, lastName };
+		updateUserAction(updatedUser);
+		setIsOpen(false);
+	};
 
 	return (
-		<Dialog>
-			<DialogTrigger>
+		<Dialog open={isOpen} onOpenChange={updateUserData}>
+			<DialogTrigger onClick={() => setIsOpen(true)}>
 				<ManageAccountCard
 					title="Email"
-					value="kate.evans@outlook.com"
-					imageAlt="user profile"
+					value={user.email}
+					imageAlt="User profile"
 					imageSrc="/images/icons/user-profile-blue-icon.svg"
 				/>
 			</DialogTrigger>
-			<DialogContent
-				border={"rounded"}
-				className="w-full h-full sm:h-auto sm:max-w-[600px] gap-[16px] p-[0]"
-			>
+			<DialogContent className="w-full h-full sm:h-auto sm:max-w-[600px] gap-4 p-0 rounded">
 				<Form {...form}>
 					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-col gap-[16px] p-[16px] justify-between md:justify-start"
+						action={() => startTransition(() => onSubmit())}
+						className="flex flex-col gap-4 p-4 justify-between md:justify-start"
 					>
-						<div className="md:contents grid gap-[16px]">
-							<DialogHeader className="flex flex-row justify-between items-center">
-								<DialogTitle className="text-[18px] leading-[28px] font-inconsolata font-bold">
-									Email
-								</DialogTitle>
+						<DialogHeader className="flex flex-row justify-between items-center">
+							<DialogTitle className="text-[18px] leading-[28px] font-inconsolata font-bold">
+								Email
+							</DialogTitle>
+							<DialogClose onClick={() => setIsOpen(false)}>
+								<div className="border border-grey32 w-10 h-10 rounded-full flex justify-center items-center">
+									<Image
+										src="/images/icons/close-black-icon.svg"
+										alt="Close icon"
+										width={16}
+										height={16}
+									/>
+								</div>
+							</DialogClose>
+						</DialogHeader>
+						<VisuallyHidden>
+							<DialogDescription />
+						</VisuallyHidden>
+						<Separator className="h-px bg-grey32 mx-[-16px]" />
 
-								<DialogClose>
-									<div className="border-[1px] border-grey32 w-[38px] h-[38px] rounded-[50%] flex justify-center">
-										<Image
-											src="/images/icons/close-black-icon.svg"
-											alt="Close icon"
-											width={16}
-											height={16}
-										/>
-									</div>
-								</DialogClose>
-							</DialogHeader>
+						<FormFieldComponent
+							form={form}
+							label="First Name*"
+							name="firstName"
+							placeholder="Kate"
+							id="firstName"
+						/>
 
-							<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
+						<FormFieldComponent
+							form={form}
+							label="Last Name*"
+							name="lastName"
+							placeholder="Evans"
+							id="lastName"
+						/>
 
-							<FormField
-								control={form.control}
-								name="firstName"
-								render={({ field }) => (
-									<FormItem className="mb-[16px]">
-										<FormLabel className="text-[16px] font-bold font-inconsolata">
-											First Name*
-										</FormLabel>
-										<FormControl>
-											<Input {...field} placeholder="Kate" />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+						<FormFieldComponent
+							form={form}
+							label="Email*"
+							name="email"
+							readonly
+							placeholder="kate.evans@outlook.com"
+							id="email"
+						/>
 
-							<FormField
-								control={form.control}
-								name="lastName"
-								render={({ field, fieldState }) => (
-									<FormItem
-										className={`mb-[16px] ${fieldState.invalid ? "error" : ""}`}
-									>
-										<FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
-											Last Name*{" "}
-										</FormLabel>
-										<FormControl>
-											<Input {...field} placeholder="Evans" />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field, fieldState }) => (
-									<FormItem className={`${fieldState.invalid ? "error" : ""}`}>
-										<FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
-											Email{" "}
-										</FormLabel>
-										<FormControl>
-											<Input {...field} placeholder="Kate.evans@outlook.com" />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						<div className="md:contents grid gap-[16px]">
-							<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
-
-							<Button
-								type="submit"
-								className={` text-white text[16px] md:text-[18px] md:leading-[27px] font-inconsolata w-[169px] flex ml-auto font-bold ${form.formState.isValid ? "bg-blue text-white" : "pointer-events-none bg-blue14 text-grey34"}`}
-							>
-								Save Changes
-							</Button>
-						</div>
+						<Separator className="h-px bg-grey32 mx-[-16px]" />
+						<Button
+							type="submit"
+							className={`text-white text-[16px] md:text-[18px] font-inconsolata w-40 ml-auto font-bold ${
+								form.formState.isValid
+									? "bg-blue"
+									: "pointer-events-none bg-blue14 text-grey34"
+							}`}
+						>
+							Save Changes
+						</Button>
 					</form>
 				</Form>
 			</DialogContent>

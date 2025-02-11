@@ -1,14 +1,22 @@
+import type { IProducerModel } from "./api/IProducerModel";
+
 export default interface IProductCardModel {
-    id: number;
-    name: string;
-    description: string;
-    ingredient: string;
-    price: number;
-    src: string;
-    altSrc: string;
-    subscribers: number;
-    corporation: string;
-    rrpPrice: number;
-    rrpDiscount: number;
-    isComming?: boolean;
+	isComming?: boolean;
+	formulationSummary?: string[];
+	id: string;
+	status?: string;
+	name?: string;
+	description?: string;
+	imageUrl: string;
+	imageKey: string;
+	price: number;
+	rrp: number;
+	vat?: string;
+	tags?: string[];
+	wholesalePrice: number;
+	producer?: IProducerModel;
+
+	teamName?: string;
+	teamId?: string;
+	subscribers: number;
 }

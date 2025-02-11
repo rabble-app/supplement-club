@@ -1,42 +1,28 @@
+"use client";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 
 import ManagePlanCard from "@/components/dashboard/manage-plans/ManagePlanCard";
-
-const subscriptions = [
-	{
-		id: 1,
-		name: "CoQ10",
-		percent: 65,
-		price: 45,
-		pricePerCapsule: 0.25,
-		description: "2 Capsules per Day - 180 Capsules",
-		isActive: true,
-	},
-	{
-		id: 2,
-		name: "CoQ10",
-		percent: 65,
-		price: 45,
-		pricePerCapsule: 0.25,
-		description: "2 Capsules per Day - 180 Capsules",
-		isSkipped: true,
-	},
-	{
-		id: 3,
-		name: "CoQ10",
-		percent: 65,
-		price: 45,
-		pricePerCapsule: 0.25,
-		description: "2 Capsules per Day - 180 Capsules",
-		isActive: false,
-	},
-] as IManagePlanModel[];
+import { useUser } from "@/contexts/UserContext";
+import { usersService } from "@/services/usersService";
+import { useEffect, useState } from "react";
 
 export default function Plans() {
+	const context = useUser();
+	const [subscriptions, setSubscriptions] = useState<IManagePlanModel[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			const response = await usersService.getSubscriptionPlans(
+				context?.user?.id ?? "",
+			);
+			setSubscriptions(response);
+		})();
+	}, [context?.user]);
+
 	return (
 		<div className="mx-auto max-w-[600px] py-[16px] md:py-[50px] grid gap-[20px]">
 			{subscriptions.map((item) => (
-				<ManagePlanCard key={item.id} {...item} />
+				<ManagePlanCard model={item} key={item.id} />
 			))}
 		</div>
 	);

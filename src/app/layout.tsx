@@ -1,6 +1,8 @@
+import { UserProvider } from "@/contexts/UserContext";
 import type { Metadata } from "next";
 import { Figtree, Inconsolata, Inter, Roboto } from "next/font/google";
 import localFont from "next/font/local";
+import { cookies } from "next/headers";
 import { Toaster } from "sonner";
 import "./../../public/styles/globals.css";
 
@@ -45,21 +47,30 @@ const pro = localFont({
 	display: "block",
 });
 
+const poppins = localFont({
+	src: "./../../public/fonts/Poppins-Medium.ttf",
+	variable: "--poppins",
+	display: "block",
+});
+
 export const metadata: Metadata = {
 	title: "Supplement Club",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const cookiesStore = (await cookies()).get("session");
+	const state = cookiesStore ? JSON.parse(cookiesStore.value).state : null;
+
 	return (
 		<html lang="en">
 			<body
-				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} ${pro.variable} antialiased`}
+				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${poppins.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} ${pro.variable} antialiased`}
 			>
-				{children}
+				<UserProvider state={state}>{children}</UserProvider>
 
 				<Toaster richColors />
 			</body>

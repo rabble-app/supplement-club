@@ -1,63 +1,28 @@
-/** @format */
-
+import Faqs from "@/components/main/Faqs";
+import HomeCardComponent from "@/components/main/HomeCard";
+import ProductInfo from "@/components/main/ProductInfo";
+import ProductCardComponent from "@/components/shared/ProductCard";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-import Faqs from "@/components/Faqs";
-import ProductInfo from "@/components/ProductInfo";
-import HomeCardComponent from "@/components/cards/HomeCard";
-import ProductCardComponent from "@/components/cards/ProductCard";
-import { Button } from "@/components/ui/button";
-
+import { productService } from "@/services/productService";
 import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-
-const products = [
-	{
-		id: 1,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement ",
-		corporation: "Balchem Corporation ",
-		name: "Magnesium Bisglycinate TRAACS ",
-		description: "Supports Muscle Function & Relaxation ",
-		ingredient: "70% Magnesium Bisglycinate TRAACS ",
-		subscribers: 1034,
-		rrpPrice: 76.32,
-		rrpDiscount: 45,
-		price: 42.0,
-	},
-	{
-		id: 2,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "Kaneka Corporation ",
-		name: "COENZYME Q10 UBIQUINO L",
-		description: "Supports Cellular Energy & Heart Health ",
-		ingredient: "100% Kaneka Ubiquinol ",
-		subscribers: 678,
-		rrpPrice: 76.33,
-		rrpDiscount: 45,
-		price: 42.5,
-	},
-	{
-		id: 3,
-		src: "/images/supplement2.png",
-		altSrc: "Supplement",
-		corporation: "ASTAREAL1",
-		name: "ASTAREAL ASTAXANTHIN1",
-		description: "Powerful Antioxidant for Skin & Muscle Health1",
-		ingredient: "100% AstaReal Astaxanthin1",
-		subscribers: 0,
-		rrpPrice: 63.71,
-		rrpDiscount: 38,
-		price: 41,
-		isComming: true,
-	},
-] as IProductCardModel[];
+import { getQuarterInfo } from "@/utils/utils";
 
 const homeCards = [
 	{
 		id: 1,
+		src: "/images/labs.svg",
+		alt: "Labs",
+		title: "Straight from the Source",
+		subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
+		description:
+			"Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door..",
+	},
+	{
+		id: 2,
 		src: "/images/truck.svg",
 		alt: "Truck",
 		title: "Get Started Today",
@@ -66,22 +31,13 @@ const homeCards = [
 			"Choose the supplements you want today, and we'll ship you a 'sync package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
 	},
 	{
-		id: 2,
+		id: 3,
 		src: "/images/icons/people.svg",
 		alt: "People",
 		title: "There’s Savings in Numbers",
 		subtitle: "The More People Join the Cheaper it Gets",
 		description:
 			"Your sync package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of sync with the bulk ordering cycle.",
-	},
-	{
-		id: 3,
-		src: "/images/labs.svg",
-		alt: "Labs",
-		title: "Straight from the Source",
-		subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
-		description:
-			"Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door..",
 	},
 ] as IHomeCardModel[];
 
@@ -172,7 +128,20 @@ const images = [
 	},
 ];
 
-export default function Home() {
+export default async function Home() {
+	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID!;
+
+	const fetchProduct = async () => await productService.product(productId);
+
+	const fetchProducts = async () => await productService.productsLimit(3);
+
+	const { nextDeliveryText } = getQuarterInfo();
+
+	const [productModel, products] = await Promise.all([
+		fetchProduct(),
+		fetchProducts(),
+	]);
+
 	return (
 		<div className="min-h-screen container-width grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
 			<div className="relative mx-[-16px] lg:mx-[0] flex flex-col lg:flex-row justify-between w-full">
@@ -210,7 +179,7 @@ export default function Home() {
 				/>
 			</div>
 
-			<div className="grid lg:grid-cols-[632px_1fr] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
+			<div className="grid lg:grid-cols-[1fr_575px] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
 				<div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
 					<div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[73px] font-[400] font-hagerman text-blue">
 						How does it work?
@@ -220,13 +189,13 @@ export default function Home() {
 					))}
 				</div>
 
-				<div className="h-[700px] lg:h-[833px] bg-white">
+				<div className="md:w-[574px] h-[700px] lg:h-[833px] bg-white mx-auto">
 					<div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent" />
 					<div className="bg-blue h-[350px] lg:h-[453px] relative">
 						<Image
-							className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto  h-[420px] lg:h-[533px]"
-							src="/images/supplement2.png"
-							alt="Supplement"
+							className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto md:w-full h-[420px] lg:h-[533px]"
+							src={productModel?.imageUrl}
+							alt={productModel?.imageKey ?? "main product"}
 							width={308}
 							height={533}
 						/>
@@ -236,16 +205,19 @@ export default function Home() {
 									<div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
 										Ubiquinol{" "}
 										<span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
-											£45.00
+											£{Number(productModel?.price).toFixed(2)}{" "}
 										</span>
 									</div>
 									<div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-										BY KANEKA CORPRATION
+										{productModel.producer?.businessName}
 										<p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
 											<span className="text-[20px] leading-[23px] text-grey2 line-through">
-												£144
+												£{productModel?.wholesalePrice}
 											</span>{" "}
-											65% OFF
+											{productModel
+												? Number(productModel.price) / Number(productModel.rrp)
+												: 0}
+											% OFF
 										</p>
 									</div>
 								</div>
@@ -394,12 +366,12 @@ export default function Home() {
 							Products
 						</p>
 						<p className="bg-white leading-[18px] text-grey1 py-[4px] px-[10px]">
-							Next Drop: <span className="font-[700] ">January 1st 2025</span>
+							Next Drop: <span className="font-[700] ">{nextDeliveryText}</span>
 						</p>
 					</div>
 
 					<Link
-						href="#"
+						href="/products/"
 						className="underline text-[18px] leading-[20px] text-black font-inconsolata"
 					>
 						View All
@@ -407,8 +379,8 @@ export default function Home() {
 				</div>
 
 				<div className="grid lg:grid-cols-3 gap-[16px]">
-					{products.map((product) => (
-						<ProductCardComponent key={product.id} {...product} />
+					{products.map((item: IProductCardModel) => (
+						<ProductCardComponent key={item.id} {...item} />
 					))}
 				</div>
 			</div>
@@ -429,7 +401,7 @@ export default function Home() {
 				))}
 			</div>
 
-			<ProductInfo />
+			<ProductInfo product={productModel} />
 
 			<div className="pt-[48px] lg:pt-[0]">
 				<Faqs />

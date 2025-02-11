@@ -12,7 +12,11 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 
-export default function SubscriptionSkipDialog() {
+export default function SubscriptionSkipDialog({
+	confirmAction,
+}: Readonly<{
+	confirmAction: () => void;
+}>) {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -46,6 +50,7 @@ export default function SubscriptionSkipDialog() {
 				</div>
 
 				<Button
+					onClick={confirmAction}
 					className="text-white bg-blue h-[46px] flex justify-center items-center mx-auto text-[17px] leading-[22px] font-bold font-inconsolata"
 					type="submit"
 				>
