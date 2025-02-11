@@ -28,17 +28,14 @@ export default function AccountPaymentDetails() {
 
 	useEffect(() => {
 		const fetchUserPaymentOptions = async () => {
-			const model = await paymentService.getUserPaymentOptions(
-				context?.user?.stripeCustomerId ?? "",
-			);
-			setUserCards(model);
+			await retrivePaymentOptions(context?.user?.stripeCustomerId ?? "");
 		};
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
 
-	async function addCardMethod() {
+	async function retrivePaymentOptions(stripeCustomerId?: string) {
 		const model = await paymentService.getUserPaymentOptions(
-			context?.user?.stripeCustomerId ?? "",
+			stripeCustomerId ?? "",
 		);
 		setUserCards(model);
 	}
@@ -149,7 +146,11 @@ export default function AccountPaymentDetails() {
 						</div>
 					</div>
 
-					<AddPaymentDialog successAction={addCardMethod} />
+					<AddPaymentDialog
+						successAction={() =>
+							retrivePaymentOptions(context?.user?.stripeCustomerId ?? "")
+						}
+					/>
 				</div>
 			)}
 		</div>
