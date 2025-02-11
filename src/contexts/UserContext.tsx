@@ -22,19 +22,16 @@ interface UserProviderProps {
 export function UserProvider({ children, state }: Readonly<UserProviderProps>) {
 	const storeState = useUserStore((store) => store);
 
-	// Initialize state with `state` prop or default values
 	const [user, setUser] = useState<IUserResponse | null>(state?.user || null);
 	const setNewUser = (user: IUserResponse) => {
 		setUser(user);
 	};
 
-	// Logout function to clear user data
 	const logout = () => {
 		setUser(null);
 		Cookies.remove("session");
 	};
 
-	// Consolidate the new state
 	const contextValue: UserContextType = {
 		...storeState,
 		user,

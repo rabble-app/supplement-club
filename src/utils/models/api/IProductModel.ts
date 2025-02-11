@@ -21,7 +21,7 @@ export interface IProductModel extends IBaseTimestamps {
 	status?: string;
 	orderUnit?: string;
 	subUnit?: string;
-	quantityOfSubUnitPerOrder?: number;
+	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 	measuresPerSubUnit?: number;
 	approvalStatus?: string;

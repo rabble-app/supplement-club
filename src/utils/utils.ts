@@ -33,9 +33,8 @@ export function getQuarterInfo() {
 	const nextYear =
 		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;
 	const nextQuarterStart = new Date(nextYear, nextQuarterMonth % 12, 1);
-
 	// Calculate days remaining for the next quarter
-	const diffTime = nextQuarterStart - date;
+	const diffTime = nextQuarterStart.getTime() - date.getTime();
 	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
 	// Previous quarter calculations
@@ -59,10 +58,9 @@ export function getQuarterInfo() {
 		prevYear,
 		Math.floor(prevQuarterMonth / 3) + 1,
 	);
-
 	const remainsDaysToNextQuater = getDifferenceInDays(
-		new Date(nextYear, endDate.getMonth(), 1),
-		new Date(),
+		new Date(nextYear, endDate.getMonth(), 1).toISOString(),
+		new Date().toISOString(),
 	);
 
 	return {
@@ -158,7 +156,10 @@ export function getCardImage(brand: string) {
 
 export function formatDate(value: string) {
 	const date = new Date(value);
-	const options = { month: "long", year: "numeric" };
+	const options: Intl.DateTimeFormatOptions = {
+		month: "long",
+		year: "numeric",
+	};
 	const monthYear = date.toLocaleDateString("en-US", options);
 	const day = date.getDate();
 
@@ -248,6 +249,9 @@ export const mapSubscriptionModel = (
 		isSkipped: model.skipNextDelivery,
 		quantity: model.team.basket[0].quantity,
 		team: model.team,
+		price: model.team.basket[0].product.price,
+		capsulePerDay: model.team.basket[0].product?.capsulePerDay,
+		percent: model.team.basket[0].product.percent,
 	};
 };
 

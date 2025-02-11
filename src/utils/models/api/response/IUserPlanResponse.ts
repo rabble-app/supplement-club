@@ -25,8 +25,10 @@ export interface Product {
 	id: string;
 	name: string;
 	price: string;
+	capsulePerDay: number;
+	percent: number;
 	unitsOfMeasurePerSubUnit: string;
-	rrp: string;
+	rrp: number;
 	priceInfo: PriceInfo[];
 	capsuleInfo: CapsuleInfo[];
 	imageUrl: string;

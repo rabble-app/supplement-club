@@ -1,4 +1,4 @@
-import type { ITeamManagePlan } from "./ITeamManagePlan";
+import type { Team } from "../models/api/response/IUserPlanResponse";
 
 export default interface IManagePlanModel {
 	id: string;
@@ -9,5 +9,5 @@ export default interface IManagePlanModel {
 	isSkipped?: boolean;
 	subscriptionStatus?: string;
 	quantity: number;
-	team: ITeamManagePlan;
+	team: Team;
 }

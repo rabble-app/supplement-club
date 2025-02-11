@@ -7,7 +7,11 @@ import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryMod
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
-import type IUserPlanReponse from "@/utils/models/api/response/IUserPlanResponse";
+import type IDeliveryAddressApiResponse from "@/utils/models/services/IDeliveryAddressApiResponse";
+import type IPastOrdersApiResponse from "@/utils/models/services/IPastOrdersApiResponse";
+import type ISubscriptionPlanApiResponse from "@/utils/models/services/ISubscriptionPlanApiResponse";
+import type ISubscriptionPlansApiResponse from "@/utils/models/services/ISubscriptionPlansApiResponse";
+import type IUserInfoApiResponse from "@/utils/models/services/IUserInfoApiResponse";
 import {
 	mapSubscriptionModel,
 	mapUpcomingDelivery,
@@ -19,10 +23,11 @@ export const usersService = {
 	getUpcomingDeliveries: async (
 		userId: string,
 	): Promise<IUpcomingDeliveryModel[]> => {
-		const { data } = await apiRequest(
+		const response = await apiRequest(
 			USER_ENDPOINTS.UPCOMING_DELIVERIES(userId),
 			"GET",
 		);
+		const data = response as IUpcomingDeliveryResponse[];
 		return data?.map<IUpcomingDeliveryModel>(
 			(item: IUpcomingDeliveryResponse) => mapUpcomingDelivery(item),
 		);
@@ -40,49 +45,54 @@ export const usersService = {
 		country: string,
 		phone: string,
 	): Promise<IResponseModel> => {
-		const response = await apiRequest(USER_ENDPOINTS.DELIVERY_ADDRESS, "POST", {
-			userId,
-			channel,
-			firstName,
-			lastName,
-			address,
-			address2,
-			city,
-			postalCode,
-			country,
-			phone,
-		});
-		return response; // Assuming additional mapping may not be necessary
+		const response = (await apiRequest(
+			USER_ENDPOINTS.DELIVERY_ADDRESS,
+			"POST",
+			{
+				userId,
+				channel,
+				firstName,
+				lastName,
+				address,
+				address2,
+				city,
+				postalCode,
+				country,
+				phone,
+			},
+		)) as IDeliveryAddressApiResponse;
+		return response;
 	},
 
 	async getSubscriptionPlans(userId: string) {
-		const { data } = await apiRequest(
+		const { data } = (await apiRequest(
 			USER_ENDPOINTS.SUBSCRIPTION_PLANS(userId),
 			"GET",
-		);
-		return data?.map<IManagePlanModel>((r: IUserPlanReponse) =>
-			mapSubscriptionModel(r),
-		);
+		)) as ISubscriptionPlansApiResponse;
+		return data.map<IManagePlanModel>((r) => mapSubscriptionModel(r));
 	},
 
 	async getSubscriptionPlan(userId: string) {
-		const { data } = await apiRequest(
+		const { data } = (await apiRequest(
 			USER_ENDPOINTS.SUBSCRIPTION_PLAN(userId),
 			"GET",
-		);
+		)) as ISubscriptionPlanApiResponse;
 		return mapSubscriptionModel(data);
 	},
 
 	async getUserInfo(userId: string) {
-		const { data } = await apiRequest(USER_ENDPOINTS.INFO(userId), "GET");
+		const { data } = (await apiRequest(
+			USER_ENDPOINTS.INFO(userId),
+			"GET",
+		)) as IUserInfoApiResponse;
 		return mapUserInfoModel(data);
 	},
 
 	async getPastOrders(userId: string) {
-		const { data } = await apiRequest(
+		const { data } = (await apiRequest(
 			USER_ENDPOINTS.PAST_ORDERS(userId),
 			"GET",
-		);
+		)) as IPastOrdersApiResponse;
 		return data?.map<IUserPastOrderModel>((r: IUserPastOrderReponse) =>
 			mapUserPastOrder(r),
 		);
