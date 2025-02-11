@@ -209,7 +209,7 @@ export default async function Home() {
 										</span>
 									</div>
 									<div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-										{productModel.producer?.businessName}
+										{productModel?.producer?.businessName}
 										<p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
 											<span className="text-[20px] leading-[23px] text-grey2 line-through">
 												£{productModel?.wholesalePrice}
@@ -379,7 +379,7 @@ export default async function Home() {
 				</div>
 
 				<div className="grid lg:grid-cols-3 gap-[16px]">
-					{products.map((item: IProductCardModel) => (
+					{products?.map((item: IProductCardModel) => (
 						<ProductCardComponent key={item.id} {...item} />
 					))}
 				</div>
