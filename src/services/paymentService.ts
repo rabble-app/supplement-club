@@ -5,6 +5,8 @@ import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentInt
 import type ISetupIntent from "@/utils/models/api/response/ISetupIntent";
 import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
 import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
+import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
+import type IUserPaymentOptionsApiResponse from "@/utils/models/services/IUserPaymentOptionsApiResponse";
 import { mapUserPaymentOptionModel } from "@/utils/utils";
 
 export const paymentService = {
@@ -185,7 +187,7 @@ export const paymentService = {
 		customerId: string,
 		paymentMethodId: string,
 	) {
-		const response = await apiRequest(
+		const { data } = (await apiRequest(
 			PAYMENT_ENDPOINTS.PAYMENT_INTENT,
 			"POST",
 			{
@@ -194,9 +196,8 @@ export const paymentService = {
 				customerId,
 				paymentMethodId,
 			},
-		);
+		)) as IPaymentIntentApiResponse;
 
-		const data = response as IPaymentIntentResponse;
 		return {
 			paymentIntentId: data.paymentIntentId,
 			clientSecret: data.clientSecret,
@@ -204,11 +205,10 @@ export const paymentService = {
 	},
 
 	async getUserPaymentOptions(id: string) {
-		const response = await apiRequest(
+		const { data } = (await apiRequest(
 			PAYMENT_ENDPOINTS.GET_PAYMENT_OPTIONS(id),
 			"GET",
-		);
-		const data = response as IUserPaymentOptionResponse[];
+		)) as IUserPaymentOptionsApiResponse;
 		return data?.map<IUserPaymentOptionModel>((r: IUserPaymentOptionResponse) =>
 			mapUserPaymentOptionModel(r),
 		);

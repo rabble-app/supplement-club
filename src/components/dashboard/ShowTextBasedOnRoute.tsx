@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import { ChevronLeft } from "lucide-react";
@@ -34,12 +36,6 @@ const ShowTextBasedOnRoute = () => {
 				return null;
 		}
 	};
-
-	const routeText = getTextForRoute();
-
-	if (!routeText) {
-		return null;
-	}
 
 	return (
 		<div className="text-[16px] leading-[18px] md:text-[24px] md:leading-[27px] font-[400] font-hagerman flex items-center justify-center h-[62px] border-b-[1px] border-grey30 relative">

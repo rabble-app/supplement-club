@@ -244,14 +244,14 @@ export const mapSubscriptionModel = (
 ): IManagePlanModel => {
 	return {
 		id: model.id,
-		name: model.team.basket[0].product.producer.businessName,
+		name: model.team?.basket[0]?.product?.producer?.businessName,
 		subscriptionStatus: model.subscriptionStatus,
 		isSkipped: model.skipNextDelivery,
-		quantity: model.team.basket[0].quantity,
+		quantity: model.team?.basket[0]?.quantity,
 		team: model.team,
-		price: model.team.basket[0].product.price,
-		capsulePerDay: model.team.basket[0].product?.capsulePerDay,
-		percent: model.team.basket[0].product.percent,
+		price: model.team?.basket[0]?.product?.price,
+		capsulePerDay: model.team?.basket[0]?.product?.capsulePerDay,
+		percent: model.team?.basket[0]?.product?.percent,
 	};
 };
 
@@ -314,7 +314,7 @@ export const mapReferalInfoModel = (
 	return {
 		balance: model?.wallet?.balance ? Number(model.wallet.balance) : 0,
 		claimed: model?.wallet?.claimed ? Number(model.wallet.claimed) : 0,
-		bonuses: model?.bonuses || 0,
+		bonuses: model?.bonuses || [],
 		referralCode: model?.referralCode,
 		teams: model?.teams,
 		totalSaved: model?.totalSaved,
