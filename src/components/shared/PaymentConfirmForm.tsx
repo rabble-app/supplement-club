@@ -27,17 +27,12 @@ export default function PaymentConfirmForm({
 				totalPrice,
 				"gbp",
 				context?.user?.stripeCustomerId ?? "",
-				context?.user?.stripeDefaultPaymentMethodId ?? "",
 			);
 			setClientSecret(model.clientSecret);
 		};
 
 		fetchPaymentIntent();
-	}, [
-		context?.user?.stripeCustomerId,
-		context?.user?.stripeDefaultPaymentMethodId,
-		totalPrice,
-	]);
+	}, [context?.user?.stripeCustomerId, totalPrice]);
 
 	return (
 		<div className="mx-auto w-full">

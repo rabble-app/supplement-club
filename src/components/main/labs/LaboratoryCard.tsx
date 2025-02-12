@@ -6,13 +6,13 @@ export default function LaboratoryCard(card: Readonly<ILaboratoryCardModel>) {
 	return (
 		<div className="grid bg-grey8">
 			<Image
-				className="w-full h-full object-cover"
+				className="w-full h-full object-cover md:min-h-[260px]"
 				src={card.logo}
 				alt={card.altLogo}
 				width={390}
 				height={230}
 			/>
-			<div className="py-[32px] px-[24px] min-h-[430px]">
+			<div className="py-[32px] px-[24px] min-h-[460px]">
 				<div className=" grid gap-[8px]">
 					<div className="text-[24px] leading-[27px] text-black flex justify-between font-inconsolata font-bold">
 						{card.title}

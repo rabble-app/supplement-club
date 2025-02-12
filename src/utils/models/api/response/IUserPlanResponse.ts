@@ -1,3 +1,5 @@
+import type { ISupplementTeamProductsModel } from "../../ISupplementTeamProductsModel";
+
 export default interface IUserPlanReponse {
 	id: string;
 	subscriptionStatus: string;
@@ -10,7 +12,7 @@ export interface Team {
 	id: string;
 	name: string;
 	basket: Basket[];
-	supplementTeamProducts: SupplementTeamProducts;
+	supplementTeamProducts: ISupplementTeamProductsModel;
 	_count: Count;
 }
 
@@ -52,11 +54,6 @@ export interface CapsuleInfo {
 
 export interface Producer {
 	businessName: string;
-}
-
-export interface SupplementTeamProducts {
-	foundingMembersDiscount: string;
-	status: string;
 }
 
 export interface Count {

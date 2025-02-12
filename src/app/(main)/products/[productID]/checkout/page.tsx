@@ -50,6 +50,7 @@ export default function Checkout({
 	const productStore = useProductStore();
 
 	const [step, setStep] = useState<number>(1);
+	const [productId, setProductId] = useState<string>("");
 	const [totalPrice, setTotalPrice] = useState<number>(0);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
@@ -71,13 +72,36 @@ export default function Checkout({
 	useEffect(() => {
 		const fetchProductId = async () => {
 			const { productID } = await params;
+			setProductId(productID);
 			const response = await productService.product(productID);
 			setProduct(response);
 
 			const orders = [];
 			const subscriptions = [];
 
-			if (!response.isComming) {
+			if (response.isComming) {
+				orders.push({
+					price: 0, // Ensure price is included
+					id: "1",
+					alt: "supplement mockup",
+					description: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "Quarterly Subscription",
+					delivery: nextDeliveryProductText,
+					src: "/images/supplement-mockup.svg",
+					capsules: capsulePerDay * days,
+				});
+				orders.push({
+					id: "2",
+					alt: "supplement mockup",
+					description: "Startup Package",
+					name: "Glass Bottle Container",
+					src: "/images/ubiquinol.svg",
+					capsules: 0,
+					rrp: 18,
+					price: 0,
+					isFree: true,
+				});
+			} else {
 				orders.unshift({
 					id: "1",
 					alt: "",
@@ -108,28 +132,6 @@ export default function Checkout({
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
 					capsules: capsulePerDay * days,
-				});
-			} else {
-				orders.push({
-					price: 0, // Ensure price is included
-					id: "1",
-					alt: "supplement mockup",
-					description: `${capsulePerDay * days} Capsules Every 3 months`,
-					name: "Quarterly Subscription",
-					delivery: nextDeliveryProductText,
-					src: "/images/supplement-mockup.svg",
-					capsules: capsulePerDay * days,
-				});
-				orders.push({
-					id: "2",
-					alt: "supplement mockup",
-					description: "Startup Package",
-					name: "Glass Bottle Container",
-					src: "/images/ubiquinol.svg",
-					capsules: 0,
-					rrp: 18,
-					price: 0,
-					isFree: true,
 				});
 			}
 
@@ -171,10 +173,12 @@ export default function Checkout({
 				}
 				setStep(2);
 			} else {
-				router.push("/auth/email-verification");
+				router.push(
+					`/auth/email-verify?redirect=/products/${productId}/checkout`,
+				);
 			}
 		}
-	}, [context?.user, router]);
+	}, [context?.user, router, productId]);
 
 	async function successAction() {
 		const currentStep = step + 1;
@@ -201,7 +205,7 @@ export default function Checkout({
 						orderId={product?.orderId}
 						productId={product?.id}
 						teamId={product?.supplementTeamProducts?.team.id}
-						isComming={!product?.isComming}
+						isComming={product?.isComming}
 						totalPrice={totalPrice}
 						capsulePerDay={capsulePerDay}
 						successAction={successAction}

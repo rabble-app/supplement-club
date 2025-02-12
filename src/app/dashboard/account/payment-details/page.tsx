@@ -5,6 +5,7 @@ import AddPaymentDialog from "@/components/shared/AddPaymentDialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
+import { useUserStore } from "@/stores/userStore";
 import type { IPaymentCard } from "@/utils/models/api/IPaymentCard";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import {
@@ -20,7 +21,8 @@ import { useEffect, useState } from "react";
 
 export default function AccountPaymentDetails() {
 	const context = useUser();
-	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+	const { setUser } = useUserStore((state) => state);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [defaultCard, setDefaultCard] = useState(
 		context?.user?.stripeDefaultPaymentMethodId ?? "",
 	);
@@ -47,6 +49,11 @@ export default function AccountPaymentDetails() {
 			context?.user?.stripeCustomerId ?? "",
 		);
 		setDefaultCard(paymentId);
+
+		if (context?.user) {
+			context.user.stripeDefaultPaymentMethodId = paymentId;
+			setUser(context.user);
+		}
 	}
 
 	async function confirmDeleteAction(paymentId: string) {
@@ -90,6 +97,7 @@ export default function AccountPaymentDetails() {
 													<DropdownMenuContent
 														align="end"
 														className="bg-white rounded-[8px] shadow-3 px-[16px]"
+														hideWhenDetached
 													>
 														<DropdownMenuItem
 															onClick={() => setDefault(item.card, item.id)}
@@ -109,7 +117,7 @@ export default function AccountPaymentDetails() {
 														<DropdownMenuSeparator className="h-[1px] bg-grey18" />
 
 														<DropdownMenuItem
-															onClick={() => setShowDeleteDialog(true)}
+															onClick={() => setOpenDeleteDialog(true)}
 															className="py-[12px] flex items-center gap-[10px] cursor-pointer outline-none"
 														>
 															<Image
@@ -122,14 +130,6 @@ export default function AccountPaymentDetails() {
 																Delete Card
 															</div>
 														</DropdownMenuItem>
-														<DeleteCardDialog
-															paymentMethodId={item.id}
-															open={showDeleteDialog}
-															confirmDeleteAction={() =>
-																confirmDeleteAction(item.id)
-															}
-															last4={item.card.last4}
-														/>
 													</DropdownMenuContent>
 												</DropdownMenu>
 											)}
@@ -141,6 +141,14 @@ export default function AccountPaymentDetails() {
 											className="bg-grey37 h-[1px]"
 										/>
 									)}
+
+									<DeleteCardDialog
+										setIsOpen={setOpenDeleteDialog}
+										open={openDeleteDialog}
+										paymentMethodId={item.id}
+										confirmDeleteAction={confirmDeleteAction}
+										last4={item.card.last4}
+									/>
 								</div>
 							))}
 						</div>

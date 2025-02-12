@@ -4,17 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
-import Notify from "@/components/shared/Notify";
+import { ShowErrorToast } from "@/components/shared/ShowErrorToast";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
+import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 
 export default function CreateAccount({
 	step,
@@ -50,7 +49,7 @@ export default function CreateAccount({
 			e.get("password")?.toString() ?? "",
 			e.get("role")?.toString() ?? "USER",
 		)) as IResponseModel;
-		if (result.statusCode === 200) {
+		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;
 			setUser(userData);
 			context?.setNewUser(userData);
@@ -64,12 +63,7 @@ export default function CreateAccount({
 
 			updateStepAction(step + 1);
 		} else {
-			toast.custom(
-				() => <Notify message={JSON.parse(result.error).message} />,
-				{
-					position: "top-right",
-				},
-			);
+			ShowErrorToast(result?.error, "Unspecified error");
 		}
 	}
 

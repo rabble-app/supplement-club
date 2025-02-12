@@ -1,11 +1,12 @@
+import { useUser } from "@/contexts/UserContext";
+import { useUserStore } from "@/stores/userStore";
 import {
 	PaymentElement,
 	useElements,
 	useStripe,
 } from "@stripe/react-stripe-js";
 import type { PaymentMethod } from "@stripe/stripe-js";
-import { toast } from "sonner";
-import Notify from "./Notify";
+import { ShowErrorToast } from "./ShowErrorToast";
 
 export default function PaymentElements({
 	clientSecret,
@@ -19,6 +20,9 @@ export default function PaymentElements({
 	const stripe = useStripe();
 	const elements = useElements();
 
+	const context = useUser();
+	const { setUser } = useUserStore((state) => state);
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -26,16 +30,7 @@ export default function PaymentElements({
 
 		const submitResult = await elements.submit();
 		if (submitResult.error) {
-			toast.custom(
-				() => (
-					<Notify
-						message={`Payment Failed:" ${submitResult?.error?.message}`}
-					/>
-				),
-				{
-					position: "top-right",
-				},
-			);
+			ShowErrorToast(submitResult?.error?.message, "Elements Submit Failed");
 			return;
 		}
 
@@ -47,13 +42,14 @@ export default function PaymentElements({
 		});
 
 		if (error) {
-			toast.custom(
-				() => <Notify message={`Payment Failed:" ${error.message}`} />,
-				{
-					position: "top-right",
-				},
-			);
-		} else if (paymentIntent?.status === "succeeded") {
+			ShowErrorToast(`ConfirmPayment striple component:" ${error.message}`);
+		} else {
+			// set payment card by default
+			if (context?.user) {
+				context.user.stripeDefaultPaymentMethodId =
+					paymentIntent.payment_method as string;
+				setUser(context.user);
+			}
 			cardAction(paymentIntent.payment_method);
 		}
 	};

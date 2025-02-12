@@ -47,12 +47,16 @@ export default function TopUpCheckout({
 
 			const orders = [] as IOrderSummaryModel[];
 			for (const item of response.team.basket) {
-				const capsules = +item.capsulePerDay * remainsDaysToNextQuater;
+				if (capsulesPerDay === 1) {
+					setCapsulesPerDay(+item.capsulePerDay || 1);
+				}
+
+				const capsules = capsulesPerDay * remainsDaysToNextQuater;
 				orders.push({
 					alt: item.product.imageUrl,
 					description:
 						capsules > 0
-							? `${+item.capsulePerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
+							? `${capsulesPerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
 							: "",
 					capsules: capsules,
 					name: item.product.name,
@@ -78,7 +82,13 @@ export default function TopUpCheckout({
 			setSummary(model);
 		};
 		fetchParams();
-	}, [params, nextDeliveryText, nextQuater, remainsDaysToNextQuater]);
+	}, [
+		params,
+		nextDeliveryText,
+		nextQuater,
+		remainsDaysToNextQuater,
+		capsulesPerDay,
+	]);
 
 	function setCapsulePerWeek(capules: string, week: string) {
 		setCapsulesPerDay(+capules);

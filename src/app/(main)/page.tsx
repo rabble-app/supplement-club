@@ -129,7 +129,7 @@ const images = [
 ];
 
 export default async function Home() {
-	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID!;
+	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID as string;
 
 	const fetchProduct = async () => await productService.product(productId);
 
@@ -191,46 +191,51 @@ export default async function Home() {
 
 				<div className="md:w-[574px] h-[700px] lg:h-[833px] bg-white mx-auto">
 					<div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent" />
-					<div className="bg-blue h-[350px] lg:h-[453px] relative">
-						<Image
-							className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto md:w-full h-[420px] lg:h-[533px]"
-							src={productModel?.imageUrl}
-							alt={productModel?.imageKey ?? "main product"}
-							width={308}
-							height={533}
-						/>
-						<div className="px-[16px] py-[24px] lg:px-[32px] w-full grid items-end h-full lg:h-[453px]">
-							<div>
-								<div className="mb-[40px] text-white">
-									<div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
-										Ubiquinol{" "}
-										<span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
-											£{Number(productModel?.price).toFixed(2)}{" "}
-										</span>
+					{productModel && (
+						<div className="bg-blue h-[350px] lg:h-[453px] relative">
+							<Image
+								className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto md:w-full h-[420px] lg:h-[533px]"
+								src={productModel?.imageUrl ?? ""}
+								alt={productModel?.imageKey ?? "main product"}
+								width={308}
+								height={533}
+							/>
+							<div className="px-[16px] py-[24px] lg:px-[32px] w-full grid items-end h-full lg:h-[453px]">
+								<div>
+									<div className="mb-[40px] text-white">
+										<div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
+											Ubiquinol{" "}
+											<span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
+												£{Number(productModel?.price).toFixed(2)}{" "}
+											</span>
+										</div>
+										<div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
+											{productModel?.producer?.businessName}
+											<p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
+												<span className="text-[20px] leading-[23px] text-grey2 line-through">
+													£{Number(productModel?.wholesalePrice).toFixed(2)}
+												</span>{" "}
+												{productModel
+													? Number(
+															Number(productModel.price) /
+																Number(productModel.rrp),
+														).toFixed(2)
+													: 0}
+												% OFF
+											</p>
+										</div>
 									</div>
-									<div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-										{productModel?.producer?.businessName}
-										<p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
-											<span className="text-[20px] leading-[23px] text-grey2 line-through">
-												£{productModel?.wholesalePrice}
-											</span>{" "}
-											{productModel
-												? Number(productModel.price) / Number(productModel.rrp)
-												: 0}
-											% OFF
-										</p>
-									</div>
+									<Button
+										font={"bold"}
+										className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
+										asChild
+									>
+										<Link href="#">Buy Now</Link>
+									</Button>
 								</div>
-								<Button
-									font={"bold"}
-									className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
-									asChild
-								>
-									<Link href="#">Buy Now</Link>
-								</Button>
 							</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 
@@ -392,7 +397,12 @@ export default async function Home() {
 						className="p-[12px] border-grey10 border-[1px] grid gap-[4px]"
 					>
 						<div className="flex flex-col gap-[4px]">
-							<Image src={image.src} alt={image.alt} width={40} height={40} />
+							<Image
+								src={image.src ?? ""}
+								alt={image.alt}
+								width={40}
+								height={40}
+							/>
 							<p className="text-[18px] leading-[24px] text-black font-inconsolata">
 								{image.title}
 							</p>
@@ -401,7 +411,7 @@ export default async function Home() {
 				))}
 			</div>
 
-			<ProductInfo product={productModel} />
+			{productModel && <ProductInfo product={productModel} />}
 
 			<div className="pt-[48px] lg:pt-[0]">
 				<Faqs />

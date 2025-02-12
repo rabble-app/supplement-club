@@ -4,71 +4,29 @@ import {
 	DialogContent,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import type IViewTrakingModel from "@/utils/models/IViewTrakingModel";
+import { referalService } from "@/services/referalService";
+import type IEarningHistoryModel from "@/utils/models/IEarningHistoryModel";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import ViewTrakingCard from "./ViewTrakingCard";
-
-const viewTrakingList = [
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Magnesium Team",
-		price: 12500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-	{
-		name: "Ubiquinol Team",
-		price: 49500,
-	},
-] as IViewTrakingModel[];
 
 export default function ViewTrakingDialog({
 	open,
 	openAction,
 }: Readonly<{ open: boolean; openAction: (val: boolean) => void }>) {
 	const [show, setShow] = useState(open);
+
+	const [referalHistories, setReferalHistories] = useState<
+		IEarningHistoryModel[]
+	>([]);
+
+	useEffect(() => {
+		const fetchReferalRewars = async () => {
+			const model = await referalService.getReferralHistories();
+			setReferalHistories(model);
+		};
+		fetchReferalRewars();
+	}, []);
 
 	function hideDialog() {
 		setShow(false);
@@ -95,7 +53,7 @@ export default function ViewTrakingDialog({
 				</DialogTitle>
 
 				<div className="text-center flex flex-col gap-[16px] p-[16px] justify-start overflow-y-auto">
-					{viewTrakingList.map((item, i) => (
+					{referalHistories.map((item, i) => (
 						<ViewTrakingCard key={`view-${i + 1}`} model={item} />
 					))}
 				</div>

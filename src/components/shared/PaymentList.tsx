@@ -10,15 +10,15 @@ import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { teamsService } from "@/services/teamService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
-import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
+import type ICaptureApiResponse from "@/utils/models/services/ICaptureApiResponse";
+import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
 import { getQuarterInfo } from "@/utils/utils";
-import { toast } from "sonner";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
-import Notify from "./Notify";
 import PaymentConfirmForm from "./PaymentConfirmForm";
+import { ShowErrorToast } from "./ShowErrorToast";
 
 export default function PaymentList({
 	totalPrice,
@@ -57,30 +57,30 @@ export default function PaymentList({
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
 
-	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
+	async function onSubmit() {
 		const currectCard = userCards.find((u) => u.id === defaultCard);
 
-		if (!isComming) {
+		if (isComming) {
+			await paymentService.addPreorderBulkBasket(
+				teamId ?? "",
+				context?.user?.id ?? "",
+				productId ?? "",
+				quantity,
+				totalPrice,
+				capsulePerDay,
+			);
+		} else {
 			const response = (await paymentService.addPaymentIntent(
 				totalPrice,
 				"gbp",
 				currectCard?.customer ?? "",
 				defaultCard,
-			)) as IPaymentIntentResponse;
+			)) as IPaymentIntentApiResponse;
 
-			if (!response?.paymentIntentId) {
-				toast.custom(
-					() => (
-						<Notify
-							message={
-								"Cannot charge money from this card.Please chose another one"
-							}
-						/>
-					),
-					{
-						position: "top-right",
-					},
+			if (response.statusCode !== 200) {
+				ShowErrorToast(
+					response?.error,
+					"Cannot charge money from this card.Please chose another one",
 				);
 				return;
 			}
@@ -88,14 +88,12 @@ export default function PaymentList({
 			const captureResponse = (await paymentService.addCapturePayment(
 				totalPrice,
 				teamId ?? "",
-				response.paymentIntentId,
+				response.data.paymentIntentId,
 				context?.user?.id ?? "",
-			)) as IResponseModel;
+			)) as ICaptureApiResponse;
 
-			if (captureResponse.error) {
-				toast.custom(() => <Notify message={"Cannot add capture payment"} />, {
-					position: "top-right",
-				});
+			if (captureResponse.statusCode !== 200) {
+				ShowErrorToast(captureResponse?.error, "Cannot add capture payment");
 				return;
 			}
 
@@ -109,26 +107,15 @@ export default function PaymentList({
 				topupQuantity: topupQuantity,
 				userId: context?.user?.id ?? "",
 			});
-		} else {
-			await paymentService.addPreorderBulkBasket(
-				teamId ?? "",
-				context?.user?.id ?? "",
-				productId ?? "",
-				quantity,
-				totalPrice,
-				capsulePerDay,
-			);
 		}
 
 		const addTeamMemberResponse = (await teamsService.addTeamMember(
 			context?.user?.id ?? "",
-			context?.user?.teamId ?? "",
+			teamId ?? "",
 		)) as IResponseModel;
 
-		if (addTeamMemberResponse.error) {
-			toast.custom(() => <Notify message={"Cannot add team member"} />, {
-				position: "top-right",
-			});
+		if (addTeamMemberResponse.statusCode !== 200) {
+			ShowErrorToast(addTeamMemberResponse?.error, "Cannot add team member");
 			return;
 		}
 
@@ -167,6 +154,7 @@ export default function PaymentList({
 			</p>
 		</div>
 	);
+
 	return (
 		<div className="border-[1px] border-grey12 flex flex-col items-start p-[32px] gap-[24px]">
 			<div className="grid gap-[24px]">
@@ -240,7 +228,7 @@ export default function PaymentList({
 					{ButtonSection}
 
 					<Button
-						onClick={() => onSubmit}
+						onClick={() => onSubmit()}
 						className="bg-blue text-white w-full font-bold"
 					>
 						{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
@@ -259,7 +247,7 @@ export default function PaymentList({
 
 						<Button
 							type="submit"
-							className="bg-blue text-white w-full font-bold"
+							className="bg-blue text-white w-full font-bold mt-[20px]"
 						>
 							{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 							{/* Use a regular string */}

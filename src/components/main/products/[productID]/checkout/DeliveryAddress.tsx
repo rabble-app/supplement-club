@@ -4,16 +4,16 @@ import AddressAutocomplete, {
 	type AddressFormData,
 } from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
-import Notify from "@/components/shared/Notify";
+import { ShowErrorToast } from "@/components/shared/ShowErrorToast";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
+import { useUserStore } from "@/stores/userStore";
 import { deliveryAddressSchema } from "@/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export default function DeliveryAddress({
 	step,
@@ -30,6 +30,7 @@ export default function DeliveryAddress({
 	});
 
 	const context = useUser();
+	const { setUser } = useUserStore((state) => state);
 
 	async function onSubmit(e: FormData) {
 		const result = await usersService.addDeliveryAddress({
@@ -45,15 +46,16 @@ export default function DeliveryAddress({
 			phone: e.get("mobileNumber")?.toString() ?? "",
 		});
 
-		if (result?.statusCode === 200) {
+		// set payment card by default
+		if (context?.user) {
+			context.user.shipping = result.data;
+			setUser(context.user);
+		}
+
+		if (result?.statusCode === 201 || result?.statusCode === 200) {
 			updateStepAction(step + 1);
 		} else {
-			toast.custom(
-				() => <Notify message={JSON.parse(result.error).message} />,
-				{
-					position: "top-right",
-				},
-			);
+			ShowErrorToast(result?.error, "Unspecified error");
 		}
 	}
 

@@ -23,7 +23,7 @@ interface GetAddressEvent {
 		formatted_address: string[];
 		building_number: string;
 		sub_building_number: string;
-		postalCode: string;
+		postcode: string;
 		country: string;
 		town_or_city: string;
 		line_2: string;
@@ -95,7 +95,7 @@ export default function AddressAutocomplete({
 						);
 						form.setValue("city", e.address.town_or_city);
 						form.setValue("country", e.address.country);
-						form.setValue("postalCode", e.address.postalCode);
+						form.setValue("postalCode", e.address.postcode);
 					},
 				);
 			} catch (error) {
