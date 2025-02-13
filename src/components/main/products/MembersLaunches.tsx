@@ -91,7 +91,7 @@ export default function MembersLaunches({
 							<p
 								className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${getTextColor(index)}`}
 							>
-								£{item.price}.00{" "}
+								£{item.price.toFixed(2)}
 							</p>
 							<p
 								className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${getTextColor(index)}`}

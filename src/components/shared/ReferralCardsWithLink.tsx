@@ -2,6 +2,7 @@ import { useUser } from "@/contexts/UserContext";
 import { referalService } from "@/services/referalService";
 import type IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import type IReferalModel from "@/utils/models/api/IReferalModel";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import BalanceCard from "../dashboard/referral/BalanceCard";
@@ -84,8 +85,13 @@ export default function ReferralCardsWithLink() {
 				)}
 				<ReferalLinkCard refCode={context?.user?.refCode}>
 					{!isDashboard && (
-						<Button className="bg-blue text-white text[17px] font-inconsolata w-[146px">
-							Track Your Referral Rewards Here
+						<Button
+							asChild
+							className="bg-blue text-white text[17px] font-inconsolata w-[146px"
+						>
+							<Link href="/dashboard/referral">
+								Track Your Referral Rewards Here
+							</Link>
 						</Button>
 					)}
 				</ReferalLinkCard>

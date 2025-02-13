@@ -8,7 +8,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { paymentService } from "@/services/paymentService";
 
 export default function DeleteCardDialog({
@@ -16,20 +15,22 @@ export default function DeleteCardDialog({
 	last4,
 	paymentMethodId,
 	confirmDeleteAction,
+	setIsOpen,
 }: Readonly<{
 	open: boolean;
 	last4: string;
 	paymentMethodId: string;
-	confirmDeleteAction: () => void;
+	confirmDeleteAction: (paymentMethodId: string) => void;
+	setIsOpen: (val: boolean) => void;
 }>) {
-	const [isOpen] = useState(open);
-
 	async function confirmAction() {
 		await paymentService.deleteCard(paymentMethodId);
-		confirmDeleteAction();
+		confirmDeleteAction(paymentMethodId);
+		setIsOpen(false);
 	}
+
 	return (
-		<Dialog open={isOpen}>
+		<Dialog open={open}>
 			<DialogContent
 				border={"rounded"}
 				className="sm:max-w-[600px] gap-[24px] p-[24px] pt-[56px]"
@@ -41,7 +42,10 @@ export default function DeleteCardDialog({
 						</DialogTitle>
 					</div>
 
-					<DialogClose className="m-[0] p-[0] absolute top-[16px] right-[16px]">
+					<DialogClose
+						onClick={() => setIsOpen(false)}
+						className="m-[0] p-[0] absolute top-[16px] right-[16px]"
+					>
 						<div className="border-[1px] border-grey32 w-[38px] h-[38px] rounded-[50%] flex justify-center">
 							<Image
 								src="/images/icons/close-black-icon.svg"
@@ -67,7 +71,10 @@ export default function DeleteCardDialog({
 					</Button>
 
 					<DialogClose asChild>
-						<Button className="text-blue bg-[#7878801F]  flex justify-center items-center  w-full text-[17px] leading-[22px] font-bold font-inconsolata h-[46px]">
+						<Button
+							onClick={() => setIsOpen(false)}
+							className="text-blue bg-[#7878801F]  flex justify-center items-center  w-full text-[17px] leading-[22px] font-bold font-inconsolata h-[46px]"
+						>
 							Cancel
 						</Button>
 					</DialogClose>

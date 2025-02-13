@@ -188,7 +188,7 @@ export default function TeamPrice({
 				</div>
 				<div className="grid gap-[8px]">
 					<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
-						£{wholesalePrice}.00{" "}
+						£{Number(wholesalePrice).toFixed(2)}{" "}
 						<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
 							(£0.25 / capsule)
 						</span>
@@ -248,7 +248,10 @@ export default function TeamPrice({
 								<p
 									className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${item === teamPrice && activeMemberIndex > 0 ? "text-[24px] leading-[25px]" : ""}`}
 								>
-									£{price - price * (item.percentageDiscount / 100)}.00{" "}
+									£
+									{(price - price * (item.percentageDiscount / 100)).toFixed(
+										2,
+									)}{" "}
 								</p>
 								<p
 									className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center

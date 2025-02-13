@@ -27,7 +27,7 @@ export default async function Labs() {
 			description:
 				"Balchem is known for creating some of the highest-quality chelated minerals in the market, designed to optimize nutrient absorption. Balchem’s proprietary chelation technology binds essential minerals like zinc, copper, and magnesium to amino acids, significantly enhancing bioavailability and supporting various biological functions with superior efficiency.",
 		},
-		{
+		/*{
 			id: 2,
 			logo: "/images/astraReal.svg",
 			altLogo: "AstraReal logo",
@@ -35,27 +35,18 @@ export default async function Labs() {
 			country: "USA",
 			description:
 				"AstaReal is a leading global producer of natural astaxanthin, known for its high quality and extensive research backing. Their proprietary cultivation process uses Haematococcus pluvialis microalgae grown in fully enclosed, controlled environments to ensure optimal purity and stability.",
-		},
+		}, */
 		{
 			id: 3,
-			logo: "/images/kapeka.svg",
-			altLogo: "Kapeka logo",
-			title: "Kapeka Corporation",
-			country: "JAPAN",
+			logo: "/images/alzchem_480.png",
+			altLogo: "Alzchem Group AG logo",
+			title: "Alzchem Group AG",
+			country: "Germany",
 			description:
-				"Kaneka Corporation is a global leader in the development and production of high-performance materials, chemicals, and health products. Founded in Japan in 1949, the company has expanded into diverse industries, including pharmaceuticals, food products, and synthetic fibers. Kaneka is known for its focus on research and development, creating products that support better health, sustainability, and innovative solutions in various fields.",
+				"Alzchem is recognized for producing Creapure®, the highest-purity creatine monohydrate, designed to optimize muscle performance, cognitive function, and energy production. Manufactured in Trostberg, Germany, under cGMP and ISO 9001 standards, Creapure® undergoes rigorous quality control, ensuring it is free from contaminants like DCD and DHT. Its exceptional purity and efficacy make it the gold standard for longevity research, brain health, and athletic performance",
 		},
 		{
 			id: 4,
-			logo: "/images/astraReal.svg",
-			altLogo: "AstraReal logo",
-			title: "AstaReal Corporation",
-			country: "USA",
-			description:
-				"AstaReal is a leading global producer of natural astaxanthin, known for its high quality and extensive research backing. Their proprietary cultivation process uses Haematococcus pluvialis microalgae grown in fully enclosed, controlled environments to ensure optimal purity and stability.",
-		},
-		{
-			id: 5,
 			logo: "/images/kapeka.svg",
 			altLogo: "Kapeka logo",
 			title: "Kapeka Corporation",
@@ -194,7 +185,7 @@ export default async function Labs() {
 					<CarouselPrevious className="absolute left-[0] md:left-[calc(100%-160px)] top-[-55px] md:top-[-50px] h-[52px] w-[64px] rounded-[0] text-blue border-blue" />
 					<CarouselNext className="absolute right-[calc(100%-144px)] md:right-0 top-[-55px] md:top-[-50px] h-[52px] w-[64px] rounded-[0] text-blue border-blue" />
 
-					<CarouselContent className="md:-ml-1 max-h-[630px] md:max-h-auto">
+					<CarouselContent className="md:-ml-1 max-h-[680px] md:max-h-auto">
 						{laboratories.map((laboratory) => (
 							<CarouselItem
 								key={laboratory.id}

@@ -97,7 +97,7 @@ export default function ManagePlanCard({
 										£{totalRrp}
 									</span>{" "}
 									<span className="text-[12px] leading-[13px] font-inconsolata font-bold text-blue">
-										{percentage}% OFF
+										{Number(percentage).toFixed(2)}% OFF
 									</span>
 								</div>
 

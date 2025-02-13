@@ -55,12 +55,12 @@ export const AUTH_ENDPOINTS = {
 export const REFERAL_ENDPOINTS = {
 	REWARDS: "referrals/reward-categories",
 	REFERAL_INFO: "referrals/info",
-	CLAIM_REWARD: "referrals/reward-categories",
+	REFERAL_HISTORY: "referrals/tracking",
+	CLAIM_REWARD: "referrals/claim-rewards",
 };
 
 export const PRODUCT_ENDPOINTS = {
-	PRODUCT: (id: string) =>
-		`products/${id}?teamId=a621791d-1064-4fd3-ad11-7db0f9ff7d94`,
+	PRODUCT: (id: string) => `products/${id}`,
 	PRODUCTS: () => "products/supplement/list",
 	PRODUCTS_LIMIT: (limit?: number) => `products/supplement/list?limit=${limit}`,
 	PRODUCTTAGS: () => "products/supplement/tags",

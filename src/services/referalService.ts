@@ -3,8 +3,13 @@ import { apiRequest } from "@/utils/helpers";
 import type IReferalModel from "@/utils/models/api/IReferalModel";
 import type IReferalResponse from "@/utils/models/api/response/IReferalResponse";
 import type { default as IReferalInfoApiResponse } from "@/utils/models/services/IReferalInfoApiResponse";
+import type IReferralHistoryApiResponse from "@/utils/models/services/IReferralHistoryApiResponse";
 import type IRewardsApiResponse from "@/utils/models/services/IRewardsApiResponse";
-import { mapReferalInfoModel, mapReferalModel } from "@/utils/utils";
+import {
+	mapReferalHistoryModel,
+	mapReferalInfoModel,
+	mapReferalModel,
+} from "@/utils/utils";
 import orderBy from "lodash/orderBy";
 
 export const referalService = {
@@ -25,6 +30,15 @@ export const referalService = {
 		)) as IReferalInfoApiResponse;
 
 		return mapReferalInfoModel(response.data);
+	},
+
+	async getReferralHistories() {
+		const response = (await apiRequest(
+			REFERAL_ENDPOINTS.REFERAL_HISTORY,
+			"GET",
+		)) as IReferralHistoryApiResponse;
+
+		return mapReferalHistoryModel(response.data);
 	},
 	updateClaimReward: async (userId: string, amount: number) =>
 		await apiRequest(REFERAL_ENDPOINTS.CLAIM_REWARD, "POST", {

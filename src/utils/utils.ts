@@ -1,7 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type IEarningHistoryModel from "./models/IEarningHistoryModel";
 import type IManagePlanModel from "./models/IManagePlanModel";
 import type IProductCardModel from "./models/IProductCardModel";
+import type IReferralHistoryModel from "./models/IReferralHistoryModel";
 import type ISingleProductModel from "./models/ISingleProductModel";
 import type { IProductModel } from "./models/api/IProductModel";
 import type IReferalInfoModel from "./models/api/IReferalInfoModel";
@@ -131,9 +133,6 @@ export function dropNextDelivery() {
 
 export function getCardImage(brand: string) {
 	const value = brand.toLowerCase();
-	if (value === "visa") {
-		return "/images/payment-cards/visa.svg";
-	}
 
 	if (value === "mastercard") {
 		return "/images/payment-cards/mastercard.svg";
@@ -151,10 +150,14 @@ export function getCardImage(brand: string) {
 		return "/images/payment-cards/unionpay.svg";
 	}
 
+	if (value === "diners_club") {
+		return "/images/payment-cards/diners_club.svg";
+	}
+
 	if (value === "discover") {
 		return "/images/payment-cards/discover.svg";
 	}
-	return "";
+	return "/images/payment-cards/visa.svg";
 }
 
 export function formatDate(value: string) {
@@ -184,7 +187,9 @@ export function formatDate(value: string) {
 export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 	return {
 		id: model.productId || "",
-		isComming: model.status === "PREORDER",
+		isComming:
+			model?.supplementTeamProducts?.status === "PREORDER" ||
+			model?.status === "PREORDER",
 		status: model.status,
 		name: model.product.name,
 		teamName: model.product.producer?.businessName,
@@ -327,4 +332,10 @@ export const mapReferalInfoModel = (
 		totalSaved: model?.totalSaved,
 		referrer: model?.referrer,
 	};
+};
+
+export const mapReferalHistoryModel = (
+	model: IReferralHistoryModel,
+): IEarningHistoryModel[] => {
+	return model.earnings;
 };

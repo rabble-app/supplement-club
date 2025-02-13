@@ -33,8 +33,10 @@ export default function AddPaymentDialog({
 			setClientSecret(model.clientSecret);
 		};
 
-		fetchSetupIntent();
-	}, []);
+		if (isOpen) {
+			fetchSetupIntent();
+		}
+	}, [isOpen]);
 
 	function addNewCard(val: string | PaymentMethod | null) {
 		setIsOpen(false);
@@ -78,12 +80,16 @@ export default function AddPaymentDialog({
 				<div className="h-[1px] bg-grey w-full" />
 
 				<div className="mx-auto w-full">
-					<Elements options={{ clientSecret }} stripe={stripePromise}>
-						<PaymentSetupForm
-							cardAction={addNewCard}
-							clientSecret={clientSecret}
-						/>
-					</Elements>
+					{clientSecret ? (
+						<Elements options={{ clientSecret }} stripe={stripePromise}>
+							<PaymentSetupForm
+								cardAction={addNewCard}
+								clientSecret={clientSecret}
+							/>
+						</Elements>
+					) : (
+						<p>Loading...</p>
+					)}
 				</div>
 			</DialogContent>
 		</Dialog>
