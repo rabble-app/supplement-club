@@ -52,12 +52,12 @@ export default function CapsuleBox({
 			<RadioGroup
 				value={selectedState.toString()}
 				onValueChange={(value) => selectCapsulte(Number(value))}
-				className="md:grid-cols-4"
+				className="md:grid-cols-4 gap-[5px]"
 			>
 				{capsuleInfo?.map((option) => (
 					<label
 						key={option.capsuleCount}
-						className={`grid gap-[8px] p-[8px] relative cursor-pointer ${
+						className={`grid gap-[8px] p-[8px] relative cursor-pointer min-h-[239px] ${
 							selectedState === option.capsuleCount
 								? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
 								: "border-[1px] border-grey18"

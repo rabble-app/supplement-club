@@ -65,6 +65,7 @@ export function getQuarterInfo() {
 	);
 
 	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${date.getFullYear()}`;
+	const nextDeliveryTextShort = `${endDate.toLocaleString("en", { month: "short" })} 1st ${date.getFullYear()}`;
 
 	return {
 		currentQuarter,
@@ -84,6 +85,7 @@ export function getQuarterInfo() {
 		prevStartDate,
 		prevEndDate,
 		nextDeliveryText,
+		nextDeliveryTextShort,
 	};
 }
 
@@ -202,6 +204,7 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 		producer: model.team.producer,
 		formulationSummary: model.product.formulationSummary,
 		teamId: model.teamId,
+		tags: model.product.tags,
 	};
 };
 

@@ -112,6 +112,7 @@ export default function EmailChangeDialog({
 							name="email"
 							readonly
 							placeholder="kate.evans@outlook.com"
+							className="text-gray-500 bg-gray-200 cursor-not-allowed"
 							id="email"
 						/>
 

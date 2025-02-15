@@ -16,6 +16,7 @@ import ProductFaqs from "@/components/main/products/ProductFaqs";
 import ProfuctTable from "@/components/main/products/ProductTable";
 import TeamPrice from "@/components/main/products/TeamPrice";
 import ReferralCardsWithLink from "@/components/shared/ReferralCardsWithLink";
+import Spinner from "@/components/shared/Spinner";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import {
 	Breadcrumb,
@@ -82,6 +83,7 @@ const itemsMembers = [
 export default function ProductDetails({
 	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {
+	const [loading, setLoading] = useState(true);
 	const context = useUser();
 	const productStore = useProductStore();
 	const [api, setApi] = useState<CarouselApi>();
@@ -114,6 +116,7 @@ export default function ProductDetails({
 			const { productID } = await params;
 			const model = await productService.product(productID);
 			setProduct(model);
+			setLoading(false);
 		};
 		fetchProduct();
 	}, [params]);
@@ -179,6 +182,8 @@ export default function ProductDetails({
 		nextDeliveryProductText,
 		nextQuater,
 	]);
+
+	if (loading) return <Spinner />;
 
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">

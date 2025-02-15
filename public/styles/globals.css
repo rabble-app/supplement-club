@@ -41,3 +41,7 @@
 [data-state="open"] > .plus {
   display: none;
 }
+
+html {
+  scrollbar-gutter: stable;
+}

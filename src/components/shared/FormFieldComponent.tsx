@@ -17,6 +17,7 @@ type FormFieldComponentProps<T extends FieldValues> = {
 	type?: string;
 	labelContent?: React.ReactNode;
 	readonly?: boolean;
+	className?: string;
 };
 
 export default function FormFieldComponent<T extends FieldValues>({
@@ -28,6 +29,7 @@ export default function FormFieldComponent<T extends FieldValues>({
 	type,
 	labelContent,
 	readonly,
+	className,
 }: Readonly<FormFieldComponentProps<T>>) {
 	return (
 		<FormField
@@ -44,6 +46,7 @@ export default function FormFieldComponent<T extends FieldValues>({
 							{...field}
 							placeholder={placeholder}
 							id={id}
+							className={className}
 							type={type ?? "string"}
 						/>
 					</FormControl>

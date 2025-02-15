@@ -12,8 +12,10 @@ import ReferalCard from "../dashboard/referral/ReferalCard";
 import ReferalLinkCard from "../dashboard/referral/ReferalLinkCard";
 import ViewTrakingDialog from "../dashboard/referral/ViewTrakingDialog";
 import { Button } from "../ui/button";
+import Spinner from "./Spinner";
 
 export default function ReferralCardsWithLink() {
+	const [loading, setLoading] = useState(true);
 	const [nextMilestone, setNextMilestone] = useState<IReferalModel>();
 	const [openReferal, setOpenReferal] = useState(false);
 	const pathname = usePathname();
@@ -28,22 +30,27 @@ export default function ReferralCardsWithLink() {
 	} as IReferalInfoModel);
 
 	useEffect(() => {
-		const fetchReferalRewars = async () => {
-			const model = await referalService.getRewars();
-			setReferalRewars(model);
+		const fetchData = async () => {
+			try {
+				const [referalInfoResponse, referalRewardsResponse] = await Promise.all(
+					[referalService.getReferalInfo(), referalService.getRewars()],
+				);
 
-			const next = model.find((i) => i.amount > referalInfo?.balance);
-			setNextMilestone(next);
-		};
-		fetchReferalRewars();
-	}, [referalInfo?.balance]);
+				setReferalInfo(referalInfoResponse);
+				setReferalRewars(referalRewardsResponse);
 
-	useEffect(() => {
-		const fetchReferaInfo = async () => {
-			const model = await referalService.getReferalInfo();
-			setReferalInfo(model);
+				const next = referalRewardsResponse.find(
+					(i) => i.amount > referalInfoResponse?.balance,
+				);
+				setNextMilestone(next);
+			} catch (error) {
+				console.error("Error fetching referral data:", error);
+			} finally {
+				setLoading(false);
+			}
 		};
-		fetchReferaInfo();
+
+		fetchData();
 	}, []);
 
 	function claimReward(val: number) {
@@ -53,6 +60,8 @@ export default function ReferralCardsWithLink() {
 	function updateVisibility(val: boolean) {
 		setOpenReferal(val);
 	}
+
+	if (loading) return <Spinner />;
 
 	return (
 		<div className="max-w-[600px] mx-auto pt-[16px] pb-[100px] md:py-[35px]">

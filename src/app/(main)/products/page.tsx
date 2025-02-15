@@ -11,14 +11,15 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import Spinner from "@/components/shared/Spinner";
 import { productService } from "@/services/productService";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import type { IProductTagResponse } from "@/utils/models/api/response/IProductTagResponse";
 
 export default function Products() {
 	const [showAll, setShowAll] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [categories, setCategories] = useState<string[]>([]);
 	const [goals, setGoals] = useState<string[]>([]);
 	const [sortItems, setSortItems] = useState<string[]>([]);
@@ -28,64 +29,63 @@ export default function Products() {
 	// Toggle "show all" products
 	const toggleShowAll = () => setShowAll((prev) => !prev);
 
-	const processTags = useCallback(
-		(data: IProductTagResponse[], type: string) => {
-			return data.filter((tag) => tag.type === type).map((tag) => tag.name);
-		},
-		[],
-	);
-
-	const fetchAndSetTags = useCallback(
-		async (
-			setCategories: (categories: string[]) => void,
-			setGoals: (goals: string[]) => void,
-			setSortItems: (sortItems: string[]) => void,
-		) => {
-			const response = await productService.productTags();
-
-			setCategories(processTags(response, "CATEGORY"));
-			setGoals(processTags(response, "GOALS"));
-			setSortItems(processTags(response, "SORT"));
-		},
-		[processTags],
-	);
-
 	useEffect(() => {
-		fetchAndSetTags(setCategories, setGoals, setSortItems);
-	}, [fetchAndSetTags]);
+		const fetchData = async () => {
+			try {
+				const [productsResponse, tagsResponse] = await Promise.all([
+					productService.products(),
+					productService.productTags(),
+				]);
 
-	// Fetch and initialize products
-	useEffect(() => {
-		(async () => {
-			const products = await productService.products();
-			setProducts(products);
-			setInitProducts(products);
-		})();
+				setProducts(productsResponse);
+				setInitProducts(productsResponse);
+
+				console.log(productsResponse);
+
+				setCategories(
+					tagsResponse
+						.filter((tag) => tag.type === "CATEGORY")
+						.map((tag) => tag.name),
+				);
+				setGoals(
+					tagsResponse
+						.filter((tag) => tag.type === "GOALS")
+						.map((tag) => tag.name),
+				);
+				setSortItems(
+					tagsResponse
+						.filter((tag) => tag.type === "SORT")
+						.map((tag) => tag.name),
+				);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchData();
 	}, []);
 
-	// Update products based on selected tags
-	const updateProducts = useCallback(
-		(tags: string[]) => {
-			const filteredProducts = tags.length
+	const updateProducts = (tags: string[]) => {
+		setProducts(
+			tags.length
 				? initProducts.filter((product) =>
 						product.tags?.some((tag) => tags.includes(tag)),
 					)
-				: initProducts;
-			setProducts(filteredProducts);
-		},
-		[initProducts],
-	);
+				: initProducts,
+		);
+	};
 
-	// Sort products based on selected sort item
-	const sortProducts = useCallback(
-		(item: string) => {
-			const sortedProducts = item
+	const sortProducts = (item: string) => {
+		setProducts(
+			item
 				? initProducts.filter((product) => product.tags?.includes(item))
-				: initProducts;
-			setProducts(sortedProducts);
-		},
-		[initProducts],
-	);
+				: initProducts,
+		);
+	};
+
+	if (loading) return <Spinner />;
 
 	return (
 		<div className="pb-[50px] bg-grey11 md:bg-transparent">

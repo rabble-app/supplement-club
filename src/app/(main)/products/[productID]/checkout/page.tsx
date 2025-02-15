@@ -8,6 +8,7 @@ import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
 import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import PaymentList from "@/components/shared/PaymentList";
+import Spinner from "@/components/shared/Spinner";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
@@ -44,6 +45,7 @@ const PreOrderMessage = () => {
 export default function Checkout({
 	params,
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
+	const [loading, setLoading] = useState(true);
 	const router = useRouter();
 	const days = 90;
 	const context = useUser();
@@ -160,6 +162,7 @@ export default function Checkout({
 				unitsOfMeasurePerSubUnit: response?.unitsOfMeasurePerSubUnit,
 				orders: orders,
 			});
+			setLoading(false);
 		};
 		fetchProductId();
 	}, [params, capsulePerDay, capsulesPackage, nextDeliveryProductText, step]);
@@ -184,6 +187,8 @@ export default function Checkout({
 		const currentStep = step + 1;
 		setStep(currentStep);
 	}
+
+	if (loading) return <Spinner />;
 
 	return (
 		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">

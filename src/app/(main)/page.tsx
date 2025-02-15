@@ -181,7 +181,7 @@ export default async function Home() {
 
 			<div className="grid lg:grid-cols-[1fr_575px] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
 				<div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
-					<div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[73px] font-[400] font-hagerman text-blue">
+					<div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[64px] font-[400] font-hagerman text-blue">
 						How does it work?
 					</div>
 					{homeCards.map((card) => (

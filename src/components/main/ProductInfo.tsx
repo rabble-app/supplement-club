@@ -9,9 +9,11 @@ import { Button } from "../ui/button";
 export default function ProductInfo({
 	product,
 }: Readonly<{ product?: ISingleProductModel }>) {
-	const precentage = product ? Number(product.price) / Number(product.rrp) : 0;
+	const precentage = product
+		? Number(Number(product.price) / Number(product.rrp)).toFixed(2)
+		: 0;
 	return (
-		<div className="lg:container-width relative bg-blue w-auto lg:bg-transparent mx-[-16px] lg:mx-0">
+		<div className="lg:container-width relative bg-blue w-auto lg:bg-transparent mx-[-16px] lg:mx-0 overflow-hidden">
 			<div className="bg-blue px-[16px] lg:px-[32px] pt-[40px] pb-[76px] lg:mr-[270px] grid gap-[56px] lg:gap-[112px]">
 				<p className="max-w-[500px] text-[44px] lg:text-[50px] leading-[40px] lg:leading-[58px] text-white order-1 font-hagerman">
 					Get started on Supplement club
@@ -57,7 +59,7 @@ export default function ProductInfo({
 						className="bg-[#FBF89F] leading-[18px] text-blue w-full font-bold mb-[14px] font-inconsolata"
 						asChild
 					>
-						<Link href="#">Buy Now</Link>
+						<Link href={`/products/${product?.id}`}>Buy Now</Link>
 					</Button>
 
 					<div className="flex justify-between">
@@ -86,11 +88,11 @@ export default function ProductInfo({
 
 			{product && (
 				<Image
-					className="hidden lg:block lg:absolute lg:top-[50%] lg:left-[50%] lg:translate-y-[-50%] lg:translate-x-[50%] order-3"
+					className="hidden lg:block lg:absolute lg:top-[50%] lg:right-[-200px] lg:translate-y-[-50%] order-3"
 					src={product.imageUrl}
 					alt={product.imageKey ?? product.name}
-					width={380}
-					height={541}
+					width={736}
+					height={736}
 				/>
 			)}
 		</div>
