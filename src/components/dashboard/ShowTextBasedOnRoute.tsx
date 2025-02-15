@@ -15,7 +15,6 @@ const ShowTextBasedOnRoute = () => {
 
 	useEffect(() => {
 		setIsDashboard(pathname === "/dashboard");
-		console.log(pathname, "getTextForRoute");
 	}, [pathname]);
 
 	const getTextForRoute = () => {

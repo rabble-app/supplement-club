@@ -40,8 +40,6 @@ export default function Products() {
 				setProducts(productsResponse);
 				setInitProducts(productsResponse);
 
-				console.log(productsResponse);
-
 				setCategories(
 					tagsResponse
 						.filter((tag) => tag.type === "CATEGORY")
