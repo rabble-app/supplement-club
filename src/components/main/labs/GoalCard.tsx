@@ -16,7 +16,7 @@ export default function GoalCard(card: Readonly<IGoalCardModel>) {
 			<p className="text-grey6">{card.description}</p>
 			<Link
 				className="text-[18px] leading-[27px] font-[700] text-blue font-inconsolata"
-				href="#"
+				href={card.url}
 			>
 				Shop Now
 			</Link>

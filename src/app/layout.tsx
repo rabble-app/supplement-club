@@ -55,6 +55,37 @@ const poppins = localFont({
 
 export const metadata: Metadata = {
 	title: "Supplement Club",
+	icons: [
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "64x64",
+			url: "/images/favicon/64x64png",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "32x32",
+			url: "/images/favicon/32x32.png",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "24x24",
+			url: "/images/favicon/24x24.png",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "16x16",
+			url: "/images/favicon/16x16.png",
+		},
+		{
+			rel: "apple-touch-icon",
+			sizes: "180x180",
+			url: "/images/favicon/apple-touch-icon.png",
+		},
+	],
 };
 
 export default async function RootLayout({

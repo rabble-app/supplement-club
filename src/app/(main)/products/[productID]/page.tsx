@@ -186,7 +186,7 @@ export default function ProductDetails({
 	if (loading) return <Spinner />;
 
 	return (
-		<div className="grid md:grid-cols-2 gap-[16px] container-width relative">
+		<div className="grid md:grid-cols-2 gap-[32px] container-width relative">
 			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
