@@ -13,7 +13,10 @@ export const authService = {
 		}),
 
 	resetPassword: async (email: string) =>
-		await apiRequest(AUTH_ENDPOINTS.RESET_PASSWORD, "POST", { email }),
+		await apiRequest(AUTH_ENDPOINTS.RESET_PASSWORD, "POST", {
+			email,
+			role: "USER",
+		}),
 
 	emailVerify: async (token: string) =>
 		await apiRequest(AUTH_ENDPOINTS.EMAIL_VERIFY, "POST", {
@@ -22,7 +25,10 @@ export const authService = {
 		}),
 
 	resendEmailVerify: async (email: string) =>
-		await apiRequest(AUTH_ENDPOINTS.RESEND_EMAIL_VERIFY, "POST", { email }),
+		await apiRequest(AUTH_ENDPOINTS.RESEND_EMAIL_VERIFY, "POST", {
+			email,
+			role: "USER",
+		}),
 
 	changePassword: async (newPassword: string, token: string) =>
 		await apiRequest(AUTH_ENDPOINTS.CHANGE_PASSWORD, "POST", {
