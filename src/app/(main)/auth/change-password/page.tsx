@@ -46,46 +46,48 @@ export default function ChangePasswordPage() {
 	}
 
 	return (
-		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
-			<Form {...form}>
-				<form
-					action={(e) => startTransition(() => postChangePassword(e))}
-					className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
-				>
-					<p className="text-[20px] font-bold font-inconsolata">
-						Reset Your Password.
-					</p>
-
-					<FormFieldComponent
-						form={form}
-						label="New Password*"
-						placeholder="*************"
-						id="password"
-						name="password"
-						type="password"
-					/>
-
-					<FormFieldComponent
-						form={form}
-						label="Confirm Password*"
-						placeholder="*************"
-						id="confirmPassword"
-						name="confirmPassword"
-						type="password"
-					/>
-
-					<Button
-						type="submit"
-						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
+		<div className="flex justify-center items-center min-h-screen">
+			<div className="max-w-[632px] w-full px-[16px]">
+				<Form {...form}>
+					<form
+						action={(e) => startTransition(() => postChangePassword(e))}
+						className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
 					>
-						{isPending ? (
-							<Loader2 className="animate-spin" />
-						) : (
-							"Reset My Password"
-						)}
-					</Button>
-				</form>
-			</Form>
+						<p className="text-[20px] font-bold font-inconsolata">
+							Reset Your Password.
+						</p>
+
+						<FormFieldComponent
+							form={form}
+							label="New Password*"
+							placeholder="*************"
+							id="password"
+							name="password"
+							type="password"
+						/>
+
+						<FormFieldComponent
+							form={form}
+							label="Confirm Password*"
+							placeholder="*************"
+							id="confirmPassword"
+							name="confirmPassword"
+							type="password"
+						/>
+
+						<Button
+							type="submit"
+							className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
+						>
+							{isPending ? (
+								<Loader2 className="animate-spin" />
+							) : (
+								"Reset My Password"
+							)}
+						</Button>
+					</form>
+				</Form>
+			</div>
 		</div>
 	);
 }

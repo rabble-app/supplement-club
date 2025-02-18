@@ -87,46 +87,48 @@ export default function LoginPage() {
 	);
 
 	return (
-		<div className="max-w-[632px] mx-auto my-[24px] md:my-[200px] md:px-[16px] min-h-screen md:min-h-max">
-			<Form {...form}>
-				<form
-					action={(e) => startTransition(() => handleSubmit(e))}
-					className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
-				>
-					<div className="grid gap-[16px]">
-						<p className="text-[20px] font-bold font-inconsolata">
-							Login To Your Account
-						</p>
-						<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-							Welcome back! Please enter your details.
-						</p>
-					</div>
-
-					<FormFieldComponent
-						form={form}
-						label="Email*"
-						placeholder="e.g. newton@mail.com"
-						id="email"
-						name="email"
-					/>
-
-					<FormFieldComponent
-						form={form}
-						placeholder="e.g. newton@mail.com"
-						id="password"
-						name="password"
-						type="password"
-						labelContent={passwordLabelContent()}
-					/>
-
-					<Button
-						type="submit"
-						className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
+		<div className="flex justify-center items-center min-h-screen">
+			<div className="max-w-[632px] w-full px-[16px]">
+				<Form {...form}>
+					<form
+						action={(e) => startTransition(() => handleSubmit(e))}
+						className="grid gap-[24px] px-[16px] md:p-[32px] md:border-grey12 md:border-[1px] border-solid shadow-login"
 					>
-						{isPending ? <Loader2 className="animate-spin" /> : "Login"}
-					</Button>
-				</form>
-			</Form>
+						<div className="grid gap-[16px]">
+							<p className="text-[20px] font-bold font-inconsolata">
+								Login To Your Account
+							</p>
+							<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+								Welcome back! Please enter your details.
+							</p>
+						</div>
+
+						<FormFieldComponent
+							form={form}
+							label="Email*"
+							placeholder="e.g. newton@mail.com"
+							id="email"
+							name="email"
+						/>
+
+						<FormFieldComponent
+							form={form}
+							placeholder="e.g. newton@mail.com"
+							id="password"
+							name="password"
+							type="password"
+							labelContent={passwordLabelContent()}
+						/>
+
+						<Button
+							type="submit"
+							className={` text-white w-full text[16px] md:text-[18px] md:leading-[27px] font-inconsolata font-bold ${form.formState.isValid ? "bg-blue" : "pointer-events-none bg-grey25"}`}
+						>
+							{isPending ? <Loader2 className="animate-spin" /> : "Login"}
+						</Button>
+					</form>
+				</Form>
+			</div>
 		</div>
 	);
 }
