@@ -49,13 +49,13 @@ export default function Header() {
 						<div className="hidden lg:flex lg:gap-x-[24px]">
 							<Link
 								href="/products"
-								className="font-inconsolata font-bold text-base"
+								className="font-inconsolata font-bold text-[16px]"
 							>
 								Products
 							</Link>
 							<Link
 								href="/labs"
-								className="font-inconsolata font-bold text-base"
+								className="font-inconsolata font-bold text-[16px]"
 							>
 								Labs
 							</Link>

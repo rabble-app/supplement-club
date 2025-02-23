@@ -16,11 +16,14 @@ import { useEffect, useState } from "react";
 import Spinner from "@/components/shared/Spinner";
 import { productService } from "@/services/productService";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
+import { useSearchParams } from "next/navigation";
 
 export default function Products() {
+	const searchParams = useSearchParams();
 	const [showAll, setShowAll] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [categories, setCategories] = useState<string[]>([]);
+	const [defaultSelection, setDefaultSelection] = useState<string>();
 	const [goals, setGoals] = useState<string[]>([]);
 	const [sortItems, setSortItems] = useState<string[]>([]);
 	const [products, setProducts] = useState<IProductCardModel[]>([]);
@@ -83,6 +86,24 @@ export default function Products() {
 		);
 	};
 
+	useEffect(() => {
+		const category = searchParams.get("category");
+		if (category) {
+			const queryTag = categories?.find(
+				(tag) => tag.toLowerCase() === category.replaceAll("-", " "),
+			);
+			setDefaultSelection(queryTag);
+			setProducts(
+				initProducts.filter((product) =>
+					product.tags?.some((tag) => tag === queryTag),
+				),
+			);
+		} else {
+			setProducts(initProducts);
+			setDefaultSelection("");
+		}
+	}, [searchParams, initProducts, categories]);
+
 	if (loading) return <Spinner />;
 
 	return (
@@ -97,15 +118,11 @@ export default function Products() {
 					<Breadcrumb className="pt-[24px] md:pt-[50px]">
 						<BreadcrumbList>
 							<BreadcrumbItem>
-								<BreadcrumbLink href="/" className="breadcrumb-link">
-									Home
-								</BreadcrumbLink>
+								<BreadcrumbLink href="/">Home</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator>/</BreadcrumbSeparator>
 							<BreadcrumbItem>
-								<BreadcrumbPage className="breadcrumb-page">
-									Best Teams
-								</BreadcrumbPage>
+								<BreadcrumbPage>Best Teams</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
@@ -121,6 +138,7 @@ export default function Products() {
 						</p>
 						<div className="flex flex-col gap-[13px] md:gap-[16px]">
 							<ExpansionSelector
+								defaultSelection={defaultSelection}
 								title="Shop by Category"
 								updateItems={updateProducts}
 								categories={categories}

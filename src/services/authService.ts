@@ -2,14 +2,19 @@ import { AUTH_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 
 export const authService = {
-	login: async (email: string, password: string, role: string) =>
-		await apiRequest(AUTH_ENDPOINTS.LOGIN, "POST", { email, password, role }),
+	login: async (email: string, password: string) =>
+		await apiRequest(AUTH_ENDPOINTS.LOGIN, "POST", {
+			email,
+			password,
+			role: "USER",
+		}),
 
-	register: async (email: string, password: string, role: string) =>
+	register: async (email: string, password: string) =>
 		await apiRequest(AUTH_ENDPOINTS.REGISTER, "POST", {
 			email,
 			password,
-			role,
+			role: "USER",
+			referralCode: "1233444",
 		}),
 
 	resetPassword: async (email: string) =>

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { authService } from "@/services/authService";
 import { forgotPasswordSchema } from "@/validations";
 
@@ -30,8 +31,17 @@ export default function ForgotPasswordPage() {
 		setResend(true);
 	}
 
+	async function resetPassword() {
+		await authService.resetPassword(email);
+		CustomToast({
+			title: "A new link has been sent to your email",
+			status: StatusToast.SUCCESS,
+			position: "top-center",
+		});
+	}
+
 	return (
-		<div className="flex justify-center items-center min-h-screen">
+		<div className="flex justify-center items-center py-[40px] md:py-[80px]">
 			<div className="max-w-[632px] w-full px-[16px]">
 				{!resend && (
 					<Form {...form}>
@@ -87,7 +97,7 @@ export default function ForgotPasswordPage() {
 							check your spam folder
 						</div>
 						<Button
-							onClick={() => authService.resetPassword(email)}
+							onClick={() => resetPassword()}
 							className=" text-white w-[280px] text[16px] leading-[24px] mx-auto font-inconsolata font-bold bg-blue"
 						>
 							Request a New Link

@@ -10,11 +10,13 @@ export default function TeamPrice({
 	rrp,
 	wholesalePrice,
 	priceInfo,
+	isComming,
 }: Readonly<{
 	members: number;
 	price: number;
 	rrp: number;
 	wholesalePrice: number;
+	isComming: boolean;
 	priceInfo: IPriceInfoModel[];
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
@@ -34,12 +36,16 @@ export default function TeamPrice({
 	}, [priceInfo, members]);
 
 	function getCurrentClasses(index: number) {
-		let classes = " bg-grey19 my-[15px]";
+		let classes = !isComming
+			? " border-[1px] bg-grey19 my-[15px] border-grey20"
+			: "bg-white my-[15px] border-[0] border-none";
 
 		if (index === activeMemberIndex) {
-			classes = " bg-white h-[223px] rounded-[5px] my-[0]";
+			if (!isComming) classes = " bg-white h-[223px] rounded-[5px] my-[0]";
+			else classes = " bg-white h-[223px] rounded-[5px] my-[0] border-none";
 		} else if (index < activeMemberIndex) {
-			classes = "bg-grey14 my-[15px]";
+			if (!isComming) classes = " bg-grey14 my-[15px]";
+			else classes = " bg-white my-[15px] border-[0] border-none";
 		}
 
 		return classes;
@@ -52,31 +58,29 @@ export default function TeamPrice({
 	);
 
 	function getCellClasses(index: number, i: number) {
-		let result = "   ";
-		if (index === 0 && i === 3) {
-			result += " rounded-l-[20px]";
-		}
+		const classes = [];
 
-		if (index === priceInfo.length - 1 && i === 7) {
-			result += " rounded-r-[20px]";
+		if (index === 0 && i === 3) {
+			classes.push("rounded-l-[20px]");
 		}
+		if (index === priceInfo.length - 1 && i === 7)
+			classes.push("rounded-r-[20px]");
 
 		if ((index === 0 && i < 3) || (index === priceInfo.length - 1 && i > 7)) {
-			if (index <= activeMemberIndex) {
-				result += " bg-grey14";
-			} else result += " bg-grey19";
-
-			result += "  z-[20]";
+			classes.push(
+				index <= activeMemberIndex && !isComming
+					? "bg-grey14"
+					: isComming
+						? "bg-white"
+						: "bg-grey19",
+			);
+			classes.push("z-[20]");
 		} else {
 			if (isCellIncluded(index, i)) {
-				result += " bg-blue";
-				return result;
-			}
-
-			result += " bg-grey";
+				classes.push("bg-blue");
+			} else classes.push("bg-grey");
 		}
-
-		return result;
+		return classes.join(" ");
 	}
 
 	function isActiveIndex(infoIndex: number): boolean {
@@ -163,11 +167,17 @@ export default function TeamPrice({
 	}
 
 	return (
-		<div>
-			<p className="text-[24px] leading-[28px] font-bold font-inconsolata pt-[32px] md:pt-[0]">
-				Team Price
-			</p>
-			<div className="flex flex-col md:flex-row md:justify-between md:items-start pt-[16px] md:pb-[11px]">
+		<div
+			className={`${isComming ? "py-[24px] bg-white rounded-[4px] shadow-3 mx-[-32px] md:mx-[0]" : ""} `}
+		>
+			{!isComming && (
+				<p className="text-[24px] leading-[28px] font-bold font-inconsolata pt-[32px] md:pt-[0]">
+					Team Price
+				</p>
+			)}
+			<div
+				className={`flex flex-col md:flex-row md:justify-between md:items-start ${isComming ? "px-[16px] pb-[26px]" : " pt-[16px] md:pb-[11px]"} `}
+			>
 				<div className="grid gap-[4px]">
 					<div className="flex gap-[3px] items-center text-blue text-[24px] font-[600] leading-[25px] font-inconsolata">
 						<Image
@@ -179,34 +189,47 @@ export default function TeamPrice({
 						{members} Members
 					</div>
 
-					<p className="text-[16px] leading-[18px]">
-						{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
-						members unlocks{" "}
-						{priceInfo[activeMemberIndex + 1]?.percentageDiscount}% off for
-						everyone
-					</p>
+					{!isComming && (
+						<p className="text-[16px] leading-[18px]">
+							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
+							members unlocks{" "}
+							{priceInfo[activeMemberIndex + 1]?.percentageDiscount}% off for
+							everyone
+						</p>
+					)}
+					{isComming && (
+						<p className="text-[16px] leading-[18px]">
+							{priceInfo[0]?.teamMemberCount - members} more pre-orders until
+							product launches!
+						</p>
+					)}
 				</div>
-				<div className="grid gap-[8px]">
-					<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
-						£{Number(wholesalePrice).toFixed(2)}{" "}
-						<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
-							(£0.25 / capsule)
-						</span>
-					</div>
-					<div className="text-[16px] leading-[16px] text-grey4 pb-[34px] md:text-end font-inconsolata">
-						RRP{" "}
-						<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
-							£{rrp}
-						</span>{" "}
-						{activeMemberIndex > 0 && (
-							<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
-								{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
+				{!isComming && (
+					<div className="grid gap-[8px]">
+						<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
+							£{Number(wholesalePrice).toFixed(2)}{" "}
+							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
+								(£0.25 / capsule)
 							</span>
-						)}
+						</div>
+						<div className="text-[16px] leading-[16px] text-grey4 pb-[34px] md:text-end font-inconsolata">
+							RRP{" "}
+							<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
+								£{rrp}
+							</span>{" "}
+							{activeMemberIndex > 0 && (
+								<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
+									{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
+								</span>
+							)}
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
-			<div className="flex justify-center mb-[46px] relative mx-auto gap-[0]">
+
+			{isComming && <Separator className="bg-grey22 h-[1px]" />}
+
+			<div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mx-[-32px]">
 				{priceInfo.map((item, index) => (
 					<div
 						key={`info-${index + 1}`}
@@ -241,8 +264,8 @@ export default function TeamPrice({
 						)}
 
 						<div
-							className={`p-[10px] border-[1px] border-grey20 grid gap-[8px] z-[1] h-[192px] relative w-[148px]
-									${getCurrentClasses(index)}	`}
+							className={`p-[10px] grid gap-[8px] border-[1px] border-grey20 z-[1] h-[192px] relative w-full md:w-[148px]
+									${getCurrentClasses(index)}`}
 						>
 							<div className="grid gap-[4px] mx-auto">
 								<p
@@ -304,6 +327,13 @@ export default function TeamPrice({
 						</div>
 					</div>
 				))}
+
+				{isComming && members < priceInfo[0]?.teamMemberCount && (
+					<div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute top-[20px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1] md:left-[138px] md:top-[60px]">
+						When it gets to {priceInfo[0]?.teamMemberCount} people we will
+						launch the product
+					</div>
+				)}
 			</div>
 		</div>
 	);

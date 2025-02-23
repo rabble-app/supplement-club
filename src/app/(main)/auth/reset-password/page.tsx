@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
@@ -10,6 +11,12 @@ export default function ResetPasswordPage() {
 
 	async function resetPassword() {
 		await authService.resetPassword(context?.user?.email ?? "");
+
+		CustomToast({
+			title: "A new link has been sent to your email",
+			status: StatusToast.SUCCESS,
+			position: "top-center",
+		});
 	}
 
 	return (

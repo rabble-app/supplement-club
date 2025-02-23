@@ -4,7 +4,7 @@ import AddressAutocomplete, {
 	type AddressFormData,
 } from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
-import { ShowErrorToast } from "@/components/shared/ShowErrorToast";
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/UserContext";
@@ -55,7 +55,10 @@ export default function DeliveryAddress({
 		if (result?.statusCode === 201 || result?.statusCode === 200) {
 			updateStepAction(step + 1);
 		} else {
-			ShowErrorToast(result?.error, "Unspecified error");
+			CustomToast({
+				title: JSON.parse(result?.error).message,
+				status: StatusToast.ERROR,
+			});
 		}
 	}
 

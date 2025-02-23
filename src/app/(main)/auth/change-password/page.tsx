@@ -46,7 +46,7 @@ export default function ChangePasswordPage() {
 	}
 
 	return (
-		<div className="flex justify-center items-center min-h-screen">
+		<div className="flex justify-center items-center py-[40px] md:py-[80px]">
 			<div className="max-w-[632px] w-full px-[16px]">
 				<Form {...form}>
 					<form

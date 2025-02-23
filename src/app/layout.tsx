@@ -103,7 +103,7 @@ export default async function RootLayout({
 			>
 				<UserProvider state={state}>{children}</UserProvider>
 
-				<Toaster richColors />
+				<Toaster visibleToasts={1} />
 			</body>
 		</html>
 	);

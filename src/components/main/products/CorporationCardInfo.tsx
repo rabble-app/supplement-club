@@ -13,10 +13,10 @@ export default function CorporationCardInfo({
 }>) {
 	return (
 		<div className="grid gap-[8px]">
-			<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
+			<p className="text-[20px] leading-[24px] tracking-[-0.43px] md:font-[500] font-inconsolata md:text-grey4">
 				{businessName}
 			</p>
-			<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman">
+			<div className="text-[24px] md:text-[32px] leading-[28px] md:leading-[150%] font-hagerman">
 				{name}
 			</div>
 			<div className="flex items-center gap-[8px]">

@@ -1,18 +1,29 @@
-import { mapTagsToValues } from "@/utils/helpers";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { mapTagToValue } from "@/utils/helpers";
 import Image from "next/image";
 
 export default function ImageBox({ tags }: Readonly<{ tags?: string[] }>) {
-	const images = tags ? mapTagsToValues(tags) : [];
 	return (
 		<div className="h-[56px] border-[1px] border-grey18 flex justify-center items-center gap-[16px]">
-			{images?.map((image, idx) => (
-				<Image
-					key={`${image} ${idx * 2}`}
-					src={image}
-					alt={image}
-					width={24}
-					height={24}
-				/>
+			{tags?.map((image, idx) => (
+				<TooltipProvider key={`${image} ${idx * 2}`}>
+					<Tooltip>
+						<TooltipTrigger>
+							<Image
+								src={mapTagToValue(image)}
+								alt={image}
+								width={24}
+								height={24}
+							/>
+						</TooltipTrigger>
+						<TooltipContent>{image}</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			))}
 		</div>
 	);

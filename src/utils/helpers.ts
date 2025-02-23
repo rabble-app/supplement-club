@@ -39,56 +39,32 @@ export const apiRequest = async <T>(
 	}
 };
 
-export function mapTagsToValues(tags: string[]) {
+export function mapTagToValue(tag: string) {
 	const tagValueMap: { [key: string]: string } = {
-		"Improve Cellular Health": "/images/icons/water-drop-icon.svg",
-		"Cognitive function": "/images/icons/brain-icon.svg",
-		"Most Popular": "/images/icons/shield-icon.svg",
-		"Strengthen Immunity and Resilience": "/images/icons/heart-pulse-icon.svg",
-		"Women’s Health": "/images/icons/hourglass-icon.svg",
-		"Reduce Oxidative Stress": "/images/icons/heart-pulse-icon.svg",
-		"Improve Digestion": "/images/icons/heart-pulse-icon.svg",
-		"Athletes & Weight Trainers": "/images/icons/heart-pulse-icon.svg",
-		"Enhance Recovery": "/images/icons/heart-pulse-icon.svg",
-		"Build Strength and Endurance": "/images/icons/heart-pulse-icon.svg",
-		"North East": "/images/icons/heart-pulse-icon.svg",
-		"Age Gracefully and Healthily": "/images/icons/heart-pulse-icon.svg",
-		"Strengthen Joints and Skin": "/images/icons/heart-pulse-icon.svg",
-		"Improve Physical Performance and Recovery":
-			"/images/icons/heart-pulse-icon.svg",
-		"Improve Emotional Regulation": "/images/icons/heart-pulse-icon.svg",
-		Fetility: "/images/icons/heart-pulse-icon.svg",
-		"Boost Focus and Memory": "/images/icons/heart-pulse-icon.svg",
-		"Support Daily Wellness": "/images/icons/heart-pulse-icon.svg",
-		"Neurodivergent Support": "/images/icons/heart-pulse-icon.svg",
-		"Reduce Anxiety and Stress": "/images/icons/heart-pulse-icon.svg",
-		"Boost Mitochondrial Function": "/images/icons/heart-pulse-icon.svg",
-		"Support Hormonal Health": "/images/icons/heart-pulse-icon.svg",
-
+		"Heart Health": "/images/icons/heart-pulse-icon.svg",
 		Fertility: "/images/icons/baby-icon.svg",
-		"Enhance Energy and Vitality": "/images/icons/energy-icon.svg",
+		Sleep: "/images/icons/bed-icon.svg",
+		Energy: "/images/icons/energy-icon.svg",
 		"Healthy Aging": "/images/icons/hourglass-icon.svg",
 		Longevity: "/images/icons/tree-icon.svg",
-		"Longevity Enthusiasts": "/images/icons/tree-icon.svg",
 		"Weight Training": "/images/icons/dumbell-icon.svg",
-		Athletics: "/images/icons/athletes-icon.svg",
+		Athletes: "/images/icons/athletes-icon.svg",
 		Immunity: "/images/icons/shield-icon.svg",
 		"Cognitive Function": "/images/icons/brain-icon.svg",
-		"Skin Health": "/images/icons/water-drop-icon.svg",
-		"Mood and Anxiety": "/images/icons/flower-icon.svg",
-		"Gut Health": "/images/icons/intensine-icon.svg",
 		"Joint Health": "/images/icons/bones-icon.svg",
-		"Promote Relaxation and Sleep": "/images/icons/bed-icon.svg",
-		Sleep: "/images/icons/bed-icon.svg",
-		"Heart Health": "/images/icons/heart-pulse-icon.svg",
+		"Gut Health": "/images/icons/intensine-icon.svg",
+		"Skin Health": "/images/icons/water-drop-icon.svg",
+		"Mood & Anxiety": "/images/icons/flower-icon.svg",
+		"Brain Health": "/images/icons/brain-icon.svg",
+		"Energy and Fatigue": "/images/icons/energy-icon.svg",
+		"Energy & Fatigue": "/images/icons/energy-icon.svg",
+		"Muscle Recovery": "/images/icons/dumbell-icon.svg",
+		Athletics: "/images/icons/athletes-icon.svg",
+		"Strength & Endurance": "",
+		"": "",
 	};
 
-	type TagKeys = keyof typeof tagValueMap;
-
-	return tags.reduce<string[]>((acc, tag: TagKeys) => {
-		acc.push(tagValueMap[tag]);
-		return acc;
-	}, []);
+	return tagValueMap[tag];
 }
 
 export const mapFormDataToDeliveryRequest = (formData: FormData) => ({

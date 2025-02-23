@@ -8,9 +8,8 @@ import {
 } from "@stripe/react-stripe-js";
 import type { PaymentMethod } from "@stripe/stripe-js";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Button } from "../ui/button";
-import Notify from "./Notify";
+import { CustomToast, StatusToast } from "./Toast";
 
 export default function PaymentSetupForm({
 	clientSecret,
@@ -33,16 +32,10 @@ export default function PaymentSetupForm({
 
 		const submitResult = await elements.submit();
 		if (submitResult.error) {
-			toast.custom(
-				() => (
-					<Notify
-						message={`Payment Failed:" ${submitResult?.error?.message}`}
-					/>
-				),
-				{
-					position: "top-right",
-				},
-			);
+			CustomToast({
+				title: `Payment Failed:" ${submitResult?.error?.message}`,
+				status: StatusToast.ERROR,
+			});
 			return;
 		}
 
@@ -55,12 +48,10 @@ export default function PaymentSetupForm({
 		});
 
 		if (error) {
-			toast.custom(
-				() => <Notify message={`Payment Failed:" ${error.message}`} />,
-				{
-					position: "top-right",
-				},
-			);
+			CustomToast({
+				title: `Payment Failed:" ${error.message}`,
+				status: StatusToast.ERROR,
+			});
 		} else if (setupIntent?.status === "succeeded") {
 			await paymentService.addCard(
 				(setupIntent.payment_method as string) ?? "",

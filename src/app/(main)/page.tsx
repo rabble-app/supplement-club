@@ -143,9 +143,9 @@ export default async function Home() {
 	]);
 
 	return (
-		<div className="min-h-screen container-width grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
-			<div className="relative mx-[-16px] lg:mx-[0] flex flex-col lg:flex-row justify-between w-full">
-				<div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] px-[16px] lg:px-[0] lg:left-[68px] lg:w-[600px] h-full">
+		<div className="min-h-screen grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
+			<div className="relative lg:max-w-[1312px] lg:mx-[auto] w-full p-[16px] flex flex-col lg:flex-row justify-between">
+				<div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] lg:left-[68px] lg:w-[600px] h-full">
 					<div className="text-[48px] lg:text-[64px] leading-[48px] lg:leading-[74px] font-[400] font-hagerman text-blue mb-[23px]">
 						Pharmaceutical Grade Supplements at a Fraction of the Cost
 					</div>
@@ -154,13 +154,15 @@ export default async function Home() {
 						world-leading laboratories and get it delivered direct to you up to
 						73% cheaper.
 					</p>
-					<Image
-						className="lg:ml-[5px] lg:h-[160px] lg:w-[160px]  h-[97px] w-[97px]"
-						src="/images/buy.svg"
-						alt="Buy product"
-						width={160}
-						height={160}
-					/>
+					<a href="#products">
+						<Image
+							className="lg:ml-[5px] lg:h-[160px] lg:w-[160px]  h-[97px] w-[97px]"
+							src="/images/buy.svg"
+							alt="Buy product"
+							width={160}
+							height={160}
+						/>
+					</a>
 				</div>
 				<Image
 					className="hidden lg:block lg:mt-[20px]"
@@ -169,38 +171,42 @@ export default async function Home() {
 					width={754}
 					height={766}
 				/>
-
-				<Image
-					className="lg:hidden"
-					src="/images/ubiquinol.png"
-					alt="Buy product"
-					width={754}
-					height={760}
-				/>
+				<a href="#products">
+					<Image
+						className="lg:hidden"
+						src="/images/ubiquinol.png"
+						alt="Buy product"
+						width={754}
+						height={760}
+					/>
+				</a>
 			</div>
 
-			<div className="grid lg:grid-cols-[1fr_575px] gap-x-[73px] bg-white mx-[-16px] md:mx-[0]">
-				<div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
-					<div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[64px] font-[400] font-hagerman text-blue">
-						How does it work?
+			<div className="grid md:grid-cols-2 gap-x-[42px]">
+				<div className="max-w-[612px] ml-auto">
+					{" "}
+					<div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
+						<div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[64px] font-[400] font-hagerman text-blue">
+							How does it work?
+						</div>
+						{homeCards.map((card) => (
+							<HomeCardComponent key={card.id} {...card} />
+						))}
 					</div>
-					{homeCards.map((card) => (
-						<HomeCardComponent key={card.id} {...card} />
-					))}
 				</div>
-
-				<div className="md:w-[574px] h-[700px] lg:h-[833px] bg-white mx-auto">
-					<div className="h-[350px] lg:h-[380px] bg-grey11 lg:bg-transparent" />
-					{productModel && (
-						<div className="bg-blue h-[350px] lg:h-[453px] relative">
-							<Image
-								className="absolute bottom-[200px] left-0 right-0 w-fit mx-auto md:w-full h-[420px] lg:h-[533px]"
-								src={productModel?.imageUrl ?? ""}
-								alt={productModel?.imageKey ?? "main product"}
-								width={308}
-								height={533}
-							/>
-							<div className="px-[16px] py-[24px] lg:px-[32px] w-full grid items-end h-full lg:h-[453px]">
+				<div className="relative flex flex-col md:max-h-[750px]">
+					<div className="md:w-[574px] h-full">
+						<Image
+							className="w-max mx-auto h-max lg:absolute lg:left-[0] lg:top-[0px] lg:w-[574px]"
+							src={productModel?.imageUrl ?? ""}
+							alt={productModel?.imageKey ?? "main product"}
+							width={308}
+							height={533}
+						/>
+					</div>
+					<div className="bg-blue">
+						<div className="md:w-[574px] md:h-[450px] flex flex-col justify-end">
+							<div className="w-full grid items-end pt-[20px] px-[16px] lg:px-[32px] py-[32px]">
 								<div>
 									<div className="mb-[40px] text-white">
 										<div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
@@ -235,11 +241,11 @@ export default async function Home() {
 								</div>
 							</div>
 						</div>
-					)}
+					</div>
 				</div>
 			</div>
 
-			<div className="lg:container-width grid lg:grid-cols-2 gap-x-[42px] py-[23px] px-[16px] lg:pt-[32px] lg:pb-[32px] lg:px-[0] bg-white mx-[-16px] md:mx-[0]">
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[42px] py-[23px] px-[16px] pt-[23px] lg:pt-[32px] lg:pb-[32px] bg-white">
 				<div className="relative">
 					<Image
 						className="max-h-[716px] lg:h-[716px]"
@@ -357,14 +363,14 @@ export default async function Home() {
 						className="bg-blue text-white w-full font-bold h-[54px]"
 						asChild
 					>
-						<Link href="#" className="font-inconsolata font-bold">
+						<Link href="/labs" className="font-inconsolata font-bold">
 							Learn More About Supplement Club
 						</Link>
 					</Button>
 				</div>
 			</div>
 
-			<div className="grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px] lg:p-[0] mx-[-16px] md:mx-[0]">
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px] lg:py-[0]">
 				<div className="flex justify-between items-center">
 					<div className="grid gap-y-[16px]">
 						<p className="text-[32px] leading-[36px] font-[400] text-black font-hagerman">
@@ -383,14 +389,14 @@ export default async function Home() {
 					</Link>
 				</div>
 
-				<div className="grid lg:grid-cols-3 gap-[16px]">
+				<div id="products" className="grid lg:grid-cols-3 gap-[16px]">
 					{products?.map((item: IProductCardModel) => (
 						<ProductCardComponent key={item.id} {...item} />
 					))}
 				</div>
 			</div>
 
-			<div className="grid grid-cols-2 lg:grid-cols-7 px-[16px] py-[80px] lg:p-[0] mx-[-16px] md:mx-[0]">
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid grid-cols-2 lg:grid-cols-7 px-[16px] py-[80px]">
 				{images.map((image) => (
 					<div
 						key={image.id}
@@ -413,7 +419,10 @@ export default async function Home() {
 
 			{productModel && <ProductInfo product={productModel} />}
 
-			<div className="pt-[48px] lg:pt-[0]">
+			<div
+				id="faqs"
+				className="lg:max-w-[1312px] lg:mx-[auto] w-full pt-[48px] lg:pt-[0] p-[16px]"
+			>
 				<Faqs />
 			</div>
 		</div>

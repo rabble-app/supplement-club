@@ -1,4 +1,6 @@
+import type { IProductBenefits } from "./IProductBenefits";
 import type { ICapsuleInfoModel } from "./api/ICapsuleInfoModel";
+import type { IHealthCategories } from "./api/IHealthCategories";
 import type IPriceInfoModel from "./api/IPriceInfoModel";
 import type { IProducerModel } from "./api/IProducerModel";
 import type { ISupplementTeamProducts } from "./api/ISupplementTeamProducts";
@@ -28,6 +30,7 @@ export default interface ISingleProductModel {
 	priceInfo?: IPriceInfoModel[];
 	capsuleInfo?: ICapsuleInfoModel[];
 	formulationSummary?: string[];
+	productBenefits?: IProductBenefits[];
 	createdAt?: string;
 	updatedAt?: string;
 	type?: string;
@@ -38,4 +41,5 @@ export default interface ISingleProductModel {
 	gallery: string[];
 	orderId?: string;
 	supplementTeamProducts?: ISupplementTeamProducts;
+	healthCategories?: IHealthCategories[];
 }

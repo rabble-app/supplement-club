@@ -92,16 +92,16 @@ export default function ProfuctTable() {
 	return (
 		<div className="grid">
 			<div className="grid grid-cols-[1fr_100px_60px_60px] md:grid-cols-[1fr_140px_140px_140px] p-[10px] h-[50px] border-[1px] border-transparent">
-				<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center text-center">
+				<p className="font-helvetica text-blue text-[12px] leading-[12px] px-[10px] flex items-center text-center">
 					{productTableIHeader.colum1}
 				</p>
-				<p className="font-roboto text-white bg-blue my-[-11px] text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center rounded-t-[6px]">
+				<p className="font-helvetica text-white bg-blue my-[-11px] text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center rounded-t-[6px]">
 					{productTableIHeader.colum2}
 				</p>
-				<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center">
+				<p className="font-helvetica text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center">
 					{productTableIHeader.colum3}
 				</p>
-				<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center">
+				<p className="font-helvetica text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center">
 					{productTableIHeader.colum4}
 				</p>
 			</div>
@@ -116,14 +116,14 @@ export default function ProfuctTable() {
 								{item.colum1}
 							</p>
 							<p
-								className={`font-roboto text-white bg-blue my-[-11px] text-[12px] leading-[12px] px-[10px] break-words flex items-center justify-center text-center ${index === productTableItems.length - 1 ? "rounded-b-[6px] mb-[-20px] pb-[20px]" : ""}`}
+								className={`font-helvetica text-white bg-blue my-[-11px] text-[12px] leading-[12px] px-[10px] break-words flex items-center justify-center text-center ${index === productTableItems.length - 1 ? "rounded-b-[6px] mb-[-20px] pb-[20px]" : ""}`}
 							>
 								{item.colum2}
 							</p>
-							<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words">
+							<p className="font-helvetica text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words">
 								{item.colum3}
 							</p>
-							<p className="font-roboto text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words">
+							<p className="font-helvetica text-blue text-[12px] leading-[12px] px-[10px] flex items-center justify-center text-center break-words">
 								{item.colum4}
 							</p>
 						</div>

@@ -10,7 +10,6 @@ import BottomSection from "@/components/main/products/BottomSection";
 import CapsuleBox from "@/components/main/products/CapsuleBox";
 import CorporationBox from "@/components/main/products/CorporationBox";
 import MemberCard from "@/components/main/products/MemberCard";
-import MembersBox from "@/components/main/products/MembersBox";
 import PreOrderInfo from "@/components/main/products/PreOrderInfo";
 import ProductFaqs from "@/components/main/products/ProductFaqs";
 import ProfuctTable from "@/components/main/products/ProductTable";
@@ -186,7 +185,7 @@ export default function ProductDetails({
 	if (loading) return <Spinner />;
 
 	return (
-		<div className="grid md:grid-cols-2 gap-[32px] container-width relative">
+		<div className="grid lg:grid-cols-2 gap-[32px] container-width relative">
 			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
@@ -195,13 +194,13 @@ export default function ProductDetails({
 					<CarouselContent
 						className={`${product?.isComming ? "opacity-[40%]" : ""}`}
 					>
-						{product?.gallery.map((item, idx) => (
+						{product?.gallery?.map((item, idx) => (
 							<CarouselItem key={`img-${idx + 1}`} className="flex">
 								<Image
-									className="w-auto md:w-full object-cover"
+									className="w-auto md:w-full object-contain md:h-[700px]"
 									src={item}
 									alt={item}
-									width={700}
+									width={300}
 									height={700}
 								/>
 							</CarouselItem>
@@ -212,7 +211,7 @@ export default function ProductDetails({
 
 					<div className="hidden md:flex left-1/2 transform -translate-x-1/2 absolute bottom-[20px]">
 						<div className="flex gap-[8px]">
-							{product?.gallery.map((_, idx) => (
+							{product?.gallery?.map((_, idx) => (
 								<div
 									key={`dot-${idx + 1}`}
 									className={`h-[8px] w-[8px] rounded-[50%] ${
@@ -249,25 +248,23 @@ export default function ProductDetails({
 				</Carousel>
 
 				<div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
-					{product && !product.isComming && (
+					{product && (
 						<TeamPrice
 							rrp={product.rrp}
+							isComming={product.isComming}
 							members={product.members}
 							wholesalePrice={product.wholesalePrice}
 							price={product.price}
 							priceInfo={product?.priceInfo ?? []}
 						/>
 					)}
-					{product?.isComming && (
-						<div className="order-4 md:order-none">
-							<MembersBox />
-						</div>
-					)}
 
-					<div className="grid gap-[60px] mt-[51px] md:mt-[0]">
-						<PreOrderInfo />
+					<div
+						className={`grid gap-[60px] mt-[51px] ${product?.isComming ? "md:mt-[70px]" : "md:mt-[0]"}`}
+					>
+						<PreOrderInfo productBenefits={product?.productBenefits} />
 
-						<ProductFaqs />
+						<ProductFaqs healthCategories={product?.healthCategories} />
 
 						<ProfuctTable />
 
@@ -282,18 +279,11 @@ export default function ProductDetails({
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink
-								className="text-[14px] leading-[21px] font-[400] font-roboto text-black"
-								href="/"
-							>
-								Home
-							</BreadcrumbLink>
+							<BreadcrumbLink href="/">Home</BreadcrumbLink>
 						</BreadcrumbItem>
-						<BreadcrumbSeparator />
+						<BreadcrumbSeparator className="" />
 						<BreadcrumbItem>
-							<BreadcrumbPage className="text-[14px] leading-[21px] font-[600] font-roboto">
-								{product?.name}
-							</BreadcrumbPage>
+							<BreadcrumbPage>{product?.name}</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
@@ -387,7 +377,7 @@ export default function ProductDetails({
 							model={summary}
 						/>
 
-						<Button className="bg-blue text-white w-full font-bold">
+						<Button className="bg-blue text-white w-full font-bold font-inconsolata">
 							<Link href={`/products/${product?.id}/checkout`}>
 								{" "}
 								REGISTER PRE-ORDER
@@ -412,7 +402,7 @@ export default function ProductDetails({
 				)}
 
 				{context?.user && product?.isComming && (
-					<Button className="bg-blue text-white w-full font-bold">
+					<Button className="bg-blue text-white w-full font-bold font-inconsolata">
 						<Link href={`/products/${product?.id}/checkout`}>
 							{" "}
 							REGISTER PRE-ORDER
