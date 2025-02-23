@@ -196,7 +196,7 @@ export default function Checkout({
 				<Steps activeStep={step} steps={steps} />
 
 				{step === 1 && (
-					<CreateAccount step={step} updateStepAction={setStep} params={params}>
+					<CreateAccount params={params}>
 						{product?.isComming && <PreOrderMessage />}{" "}
 					</CreateAccount>
 				)}

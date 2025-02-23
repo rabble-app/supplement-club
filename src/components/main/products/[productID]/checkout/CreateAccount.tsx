@@ -13,17 +13,14 @@ import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
+import router from "next/router";
 import { useEffect, useState } from "react";
 
 export default function CreateAccount({
-	step,
 	params,
-	updateStepAction,
 	children,
 }: Readonly<{
-	step: number;
 	params: Promise<{ productID: string }>;
-	updateStepAction: (newValue: number) => void;
 	children?: React.ReactNode;
 }>) {
 	const context = useUser();
@@ -58,8 +55,9 @@ export default function CreateAccount({
 				e.get("email")?.toString() ?? "",
 				e.get("password")?.toString() ?? "",
 			);
-
-			updateStepAction(step + 1);
+			router.push(
+				`/auth/email-verify?redirect=/products/${productId}/checkout`,
+			);
 		} else {
 			CustomToast({
 				title: JSON.parse(result?.error).message,

@@ -373,7 +373,7 @@ export default function ProductDetails({
 
 						<SummaryProduct
 							showOnlyTotal={true}
-							className="bg-white"
+							className={`bg-white ${product?.isComming ? "md:p-[0]" : ""}`}
 							model={summary}
 						/>
 

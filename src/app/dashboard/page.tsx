@@ -51,7 +51,9 @@ import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryMod
 import { useEffect, useState } from "react";
 
 import { usersService } from "@/services/usersService";
+import Spinner from "@/components/shared/Spinner";
 export default function ManagerPage() {
+	const [loading, setLoading] = useState(true);
 	const context = useUser();
 	const [welcomeMessage, setWelcomeMessage] = useState("Welcome");
 	const [upcomingDeliveries, setUpcomingDeliveries] = useState<
@@ -70,9 +72,12 @@ export default function ManagerPage() {
 					`Welcome Back ${context?.user?.firstName} ${context?.user?.lastName?.slice(0, 1)}.`,
 				);
 			}
+			setLoading(false);
 		};
 		fetchUpcomingDeliveries();
 	}, [context?.user]);
+
+	if (loading) return <Spinner />;
 	return (
 		<div>
 			<div className="grid gap-[32px] black max-w-[600px] mx-auto py-[46px]">
