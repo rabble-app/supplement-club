@@ -60,11 +60,10 @@ export function mapTagToValue(tag: string) {
 		"Energy & Fatigue": "/images/icons/energy-icon.svg",
 		"Muscle Recovery": "/images/icons/dumbell-icon.svg",
 		Athletics: "/images/icons/athletes-icon.svg",
-		"Strength & Endurance": "",
-		"": "",
+		"Strength & Endurance": "/images/icons/athletes-icon.svg",
 	};
 
-	return tagValueMap[tag];
+	return tagValueMap[tag] ?? "/images/icons/athletes-icon.svg";
 }
 
 export const mapFormDataToDeliveryRequest = (formData: FormData) => ({

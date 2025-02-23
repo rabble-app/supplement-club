@@ -13,6 +13,7 @@ import ReferalLinkCard from "../dashboard/referral/ReferalLinkCard";
 import ViewTrakingDialog from "../dashboard/referral/ViewTrakingDialog";
 import { Button } from "../ui/button";
 import Spinner from "./Spinner";
+import { CustomToast, StatusToast } from "./Toast";
 
 export default function ReferralCardsWithLink() {
 	const [loading, setLoading] = useState(true);
@@ -44,7 +45,10 @@ export default function ReferralCardsWithLink() {
 				);
 				setNextMilestone(next);
 			} catch (error) {
-				console.error("Error fetching referral data:", error);
+				CustomToast({
+					title: `Error fetching referral data:${error}`,
+					status: StatusToast.ERROR,
+				});
 			} finally {
 				setLoading(false);
 			}
