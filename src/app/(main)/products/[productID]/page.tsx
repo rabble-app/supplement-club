@@ -311,6 +311,7 @@ export default function ProductDetails({
 					<div className="flex flex-col gap-[24px]">
 						<CapsuleBox
 							rrp={product?.rrp}
+							unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 							capsuleInfo={product?.capsuleInfo}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 						/>
@@ -361,6 +362,7 @@ export default function ProductDetails({
 					<div className="flex flex-col gap-[24px]">
 						<CapsuleBox
 							rrp={product?.rrp}
+							unitsOfMeasurePerSubUnit={product.unitsOfMeasurePerSubUnit}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 							capsuleInfo={product?.capsuleInfo}
 						/>

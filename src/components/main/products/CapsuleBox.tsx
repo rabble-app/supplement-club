@@ -29,10 +29,12 @@ const generateImage = (count: number) => (
 );
 
 export default function CapsuleBox({
+	unitsOfMeasurePerSubUnit,
 	capsuleInfo,
 	rrp,
 	selectCapsulePerDayAction,
 }: Readonly<{
+	unitsOfMeasurePerSubUnit?: string;
 	capsuleInfo?: ICapsuleInfoModel[];
 	rrp?: number;
 	selectCapsulePerDayAction: (val: number) => void;
@@ -40,12 +42,19 @@ export default function CapsuleBox({
 	const days = 90;
 	const [selectedState, setSelectedState] = useState(2);
 
+	const [units] = useState(
+		unitsOfMeasurePerSubUnit === "grams" ? "g" : "Capsules",
+	);
+
 	const capsules = useMemo(() => selectedState * days, [selectedState]);
 
 	function selectCapsulte(value: number) {
 		setSelectedState(value);
 		selectCapsulePerDayAction(value);
 	}
+
+	const getCapsuleLabel = (capsuleCount: number) =>
+		`${capsuleCount} ${units} per Day`;
 
 	return (
 		<div className="grid gap-[5px]">
@@ -78,9 +87,7 @@ export default function CapsuleBox({
 							{generateImage(option.capsuleCount)}
 						</div>
 						<p className="text-[12px] h-[14px] font-bold font-helvetica text-center">
-							{option.capsuleCount > 1 &&
-								`${option.capsuleCount} Capsules per Day`}
-							{option.capsuleCount === 1 && "1 Capsule per Day"}
+							{getCapsuleLabel(option.capsuleCount)}
 						</p>
 						<Separator className="bg-grey3 h-[1px]" />
 						<div className="grid gap-[4px]">
@@ -134,11 +141,10 @@ export default function CapsuleBox({
 								</div>
 								<div className="flex flex-col gap-[2px]">
 									<p className="text-grey7 text-[12px] leading-[13px]">
-										{(capsuleInfo?.find((c) => c.capsuleCount === selectedState)
-											?.capsuleCount ?? 0) > 1 &&
-											`${capsuleInfo?.find((c) => c.capsuleCount === selectedState)?.capsuleCount} Capsules per Day`}
-										{capsuleInfo?.find((c) => c.capsuleCount === selectedState)
-											?.capsuleCount === 1 && "1 Capsule per Day"}
+										{getCapsuleLabel(
+											capsuleInfo?.find((c) => c.capsuleCount === selectedState)
+												?.capsuleCount ?? 0,
+										)}
 									</p>
 									<p className="text-[12px] leading-[14px]">
 										{
@@ -155,7 +161,7 @@ export default function CapsuleBox({
 			<div className="hidden md:grid grid-cols-[132px_1fr] gap-[16px] outline outline-[2px] outline-blue p-[16px]">
 				<div className="grid gap-[7px]">
 					<p className="text-grey7 text-[12px] leading-[14px] font-helvetica">
-						3 Month Subscription <br />({capsules} Capsules)
+						3 Month Subscription <br />({capsules} {units})
 					</p>
 					<div className="flex items-center gap-[2px] text-[16px] font-bold">
 						£{(capsules * 0.25).toFixed(2)}{" "}
@@ -177,11 +183,10 @@ export default function CapsuleBox({
 				</div>
 				<div className="flex flex-col gap-[2px]">
 					<p className="text-grey7 text-[12px] leading-[13px]">
-						{(capsuleInfo?.find((c) => c.capsuleCount === selectedState)
-							?.capsuleCount ?? 0) > 1 &&
-							`${capsuleInfo?.find((c) => c.capsuleCount === selectedState)?.capsuleCount} Capsules per Day`}
-						{capsuleInfo?.find((c) => c.capsuleCount === selectedState)
-							?.capsuleCount === 1 && "1 Capsule per Day"}
+						{getCapsuleLabel(
+							capsuleInfo?.find((c) => c.capsuleCount === selectedState)
+								?.capsuleCount || 0,
+						)}
 					</p>
 					<p className="text-[12px] leading-[14px]">
 						{capsuleInfo?.find((c) => c.capsuleCount === selectedState)?.others}
