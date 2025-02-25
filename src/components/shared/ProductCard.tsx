@@ -6,9 +6,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import type IProductCardModel from "@/utils/models/IProductCardModel";
+import { getQuarterInfo } from "@/utils/utils";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
-	const precentage = Number(model.price) / Number(model.rrp);
+	const { nextDeliveryTextShort } = getQuarterInfo();
+	const precentage =
+		model.price && model.rrp
+			? Number(Number(model.price) / Number(model.rrp)).toFixed(2)
+			: 0;
 	const titleButton = model.isComming ? "Pre - Join Team" : "Join Team";
 	return (
 		<div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
@@ -71,7 +76,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 						£{model.wholesalePrice}
 					</span>{" "}
 					<span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
-						{precentage.toFixed(2)}% OFF
+						{precentage}% OFF
 					</span>
 				</div>
 
@@ -93,8 +98,8 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 					<p className="text-blue uppercase text-[16px] font-helvetica">
 						NEXT DAY DELIVERY
 					</p>
-					Join today and your start up package getting you to the Jan 1st Drop
-					will arrive tomorrow
+					Join today and your start up package getting you to the{" "}
+					{nextDeliveryTextShort} Drop will arrive tomorrow
 				</div>
 			</div>
 		</div>

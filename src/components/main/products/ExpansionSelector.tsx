@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -12,12 +12,14 @@ type ExpansionSelectorProps = {
 	title: string;
 	updateItems: (items: string[]) => void;
 	categories: string[];
+	defaultSelection?: string;
 };
 
 export default function ExpansionSelector({
 	title,
 	updateItems,
 	categories,
+	defaultSelection,
 }: Readonly<ExpansionSelectorProps>) {
 	// State to manage selected categories
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -26,12 +28,15 @@ export default function ExpansionSelector({
 	const handleCategoryChange = useCallback(
 		(category: string) => {
 			setSelectedCategories((prevSelected) => {
-				const isSelected = prevSelected.includes(category);
+				const isSelected = prevSelected.some(
+					(item) => item.toLowerCase() === category.toLowerCase(),
+				);
 				const updatedCategories = isSelected
-					? prevSelected.filter((value) => value !== category)
+					? prevSelected.filter(
+							(value) => value.toLowerCase() !== category.toLowerCase(),
+						)
 					: [...prevSelected, category];
 
-				// Defer updateItems call to avoid state update during rendering
 				setTimeout(() => {
 					updateItems(updatedCategories);
 				}, 0);
@@ -41,7 +46,14 @@ export default function ExpansionSelector({
 		[updateItems],
 	);
 
-	// CSS utility for consistent styling
+	useEffect(() => {
+		if (defaultSelection) {
+			setSelectedCategories([defaultSelection]);
+		} else {
+			setSelectedCategories([]);
+		}
+	}, [defaultSelection]);
+
 	const triggerClasses =
 		"text-[16px] leading-[18px] font-[700] font-helvetica gap-x-[16px] flex justify-between items-center w-full pb-[16px] [&[data-state=open]>svg]:rotate-180";
 	const chevronClasses =
@@ -55,21 +67,18 @@ export default function ExpansionSelector({
 				<ChevronDown className={chevronClasses} />
 			</CollapsibleTrigger>
 
-			{/* Collapsible content listing the categories */}
 			<CollapsibleContent className="grid gap-[16px]">
 				{categories.map((category, idx) => (
 					<div
 						key={`${category} ${idx + 1}`}
 						className="flex items-start gap-x-[10px]"
 					>
-						{/* Checkbox for category selection */}
 						<Checkbox
 							value={category}
-							checked={selectedCategories.includes(category)}
-							onChange={() => handleCategoryChange(category)}
+							checked={selectedCategories?.includes(category)}
+							onClick={() => handleCategoryChange(category)}
 						/>
 
-						{/* Label button for better accessibility */}
 						<button
 							type="button"
 							onClick={() => handleCategoryChange(category)}

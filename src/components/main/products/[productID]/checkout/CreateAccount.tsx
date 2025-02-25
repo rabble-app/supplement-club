@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
-import { ShowErrorToast } from "@/components/shared/ShowErrorToast";
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/UserContext";
@@ -13,17 +13,14 @@ import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
+import router from "next/router";
 import { useEffect, useState } from "react";
 
 export default function CreateAccount({
-	step,
 	params,
-	updateStepAction,
 	children,
 }: Readonly<{
-	step: number;
 	params: Promise<{ productID: string }>;
-	updateStepAction: (newValue: number) => void;
 	children?: React.ReactNode;
 }>) {
 	const context = useUser();
@@ -47,7 +44,6 @@ export default function CreateAccount({
 		const result = (await authService.register(
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
-			e.get("role")?.toString() ?? "USER",
 		)) as IResponseModel;
 		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;
@@ -58,12 +54,15 @@ export default function CreateAccount({
 			await authService.login(
 				e.get("email")?.toString() ?? "",
 				e.get("password")?.toString() ?? "",
-				e.get("role")?.toString() ?? "USER",
 			);
-
-			updateStepAction(step + 1);
+			router.push(
+				`/auth/email-verify?redirect=/products/${productId}/checkout`,
+			);
 		} else {
-			ShowErrorToast(result?.error, "Unspecified error");
+			CustomToast({
+				title: JSON.parse(result?.error).message,
+				status: StatusToast.ERROR,
+			});
 		}
 	}
 

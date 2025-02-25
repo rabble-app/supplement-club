@@ -26,7 +26,7 @@ export default function CorporationBox({
 			/>
 
 			<div className="flex flex-col gap-[16px] font-helvetica">
-				<p>{description}</p>
+				<p className="text-[16px] font-helvetica">{description}</p>
 				<ImageBox tags={tags} />
 			</div>
 		</div>

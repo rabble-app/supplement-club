@@ -6,7 +6,7 @@ import {
 	useStripe,
 } from "@stripe/react-stripe-js";
 import type { PaymentMethod } from "@stripe/stripe-js";
-import { ShowErrorToast } from "./ShowErrorToast";
+import { CustomToast, StatusToast } from "./Toast";
 
 export default function PaymentElements({
 	clientSecret,
@@ -30,7 +30,10 @@ export default function PaymentElements({
 
 		const submitResult = await elements.submit();
 		if (submitResult.error) {
-			ShowErrorToast(submitResult?.error?.message, "Elements Submit Failed");
+			CustomToast({
+				title: submitResult?.error?.message ?? "Elements Submit Failed",
+				status: StatusToast.ERROR,
+			});
 			return;
 		}
 
@@ -42,7 +45,10 @@ export default function PaymentElements({
 		});
 
 		if (error) {
-			ShowErrorToast(`ConfirmPayment striple component:" ${error.message}`);
+			CustomToast({
+				title: `ConfirmPayment striple component:" ${error.message}`,
+				status: StatusToast.ERROR,
+			});
 		} else {
 			// set payment card by default
 			if (context?.user) {

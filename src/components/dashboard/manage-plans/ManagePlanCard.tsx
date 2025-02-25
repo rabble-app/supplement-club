@@ -42,7 +42,7 @@ export default function ManagePlanCard({
 		);
 		const totalRRP = Math.round(
 			model?.team?.basket?.reduce(
-				(sum, item) => sum + (item?.product.rrp ?? 0),
+				(sum, item) => sum + (item?.product?.rrp ?? 0),
 				0,
 			),
 		);
@@ -52,7 +52,9 @@ export default function ManagePlanCard({
 		);
 
 		setTotalRrp(totalRRP);
-		setPercentage(totalSum / Number(totalRRP));
+		if (totalSum > 0 && +totalRRP > 0) {
+			setPercentage(totalSum / Number(totalRRP));
+		}
 		setTotalCount(totalSum);
 		setTotalCapsules(totalCaps);
 	}, [model]);
@@ -76,9 +78,11 @@ export default function ManagePlanCard({
 							</div>
 							<div className="flex flex-col gap-[2px] h-[64px]">
 								<div className="flex items-center gap-[2px]">
-									<span className="text-[12px] leading-[13px] font-hagerman text-grey4">
-										{model.name} -
-									</span>
+									{model.name && (
+										<span className="text-[12px] leading-[13px] font-hagerman text-grey4">
+											{model.name} -
+										</span>
+									)}
 									<span className="text-[12px] leading-[13px] font-inconsolata text-grey4">
 										Subscription
 									</span>
@@ -103,7 +107,7 @@ export default function ManagePlanCard({
 
 								<div className="text-[12px] leading-[13px] text-grey4 font-helvetica">
 									{totalCapsules} Capsules per Day -{" "}
-									{model.quantity * totalCapsules} Capsules
+									{(model.quantity ?? 0) * totalCapsules} Capsules
 								</div>
 							</div>
 						</div>

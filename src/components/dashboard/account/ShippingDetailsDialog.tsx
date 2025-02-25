@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 
 import AddressAutocomplete, {
 	type AddressFormData,
@@ -45,6 +44,7 @@ export default function ShippingDetailsDialog({
 
 	const updateShippingData = () => {
 		form.reset({
+			userId: user.shipping?.userId,
 			address: user.shipping?.address,
 			address2: user.shipping?.address2,
 			city: user.shipping?.city,
@@ -54,20 +54,22 @@ export default function ShippingDetailsDialog({
 		});
 	};
 
-	const onSubmit = async (values: z.infer<typeof shippingDetailsShema>) => {
+	async function onSave() {
+		const { userId, address, address2, buildingNo, city, country, postalCode } =
+			form.getValues();
 		await usersService.updateShippingInfo(
-			user.id ?? "",
-			values.address,
-			values.address2,
-			values.buildingNo ?? "",
-			values.city,
-			values.country,
-			values.postalCode,
+			userId || "",
+			address,
+			address2 || "",
+			buildingNo ?? "",
+			city,
+			country,
+			postalCode,
 		);
-		user.shipping = values;
+		user.shipping = form.getValues();
 		updateUserAction(user);
 		setIsOpen(false);
-	};
+	}
 
 	return (
 		<Dialog open={isOpen} onOpenChange={updateShippingData}>
@@ -82,7 +84,7 @@ export default function ShippingDetailsDialog({
 			<DialogContent className="w-full h-full sm:h-auto sm:max-w-[600px] p-0 gap-4 rounded-md">
 				<AddressAutocomplete form={form} />
 				<Form {...form}>
-					<form onSubmit={() => onSubmit} className="flex flex-col gap-4 p-4">
+					<div className="flex flex-col gap-4 p-4">
 						<DialogHeader className="flex flex-row justify-between items-center">
 							<DialogTitle className="text-lg font-bold font-inconsolata">
 								Shipping Details
@@ -156,12 +158,12 @@ export default function ShippingDetailsDialog({
 						<Separator className="h-px bg-grey32 -mx-4" />
 
 						<Button
-							type="submit"
+							onClick={onSave}
 							className="w-40 font-bold font-inconsolata text-lg flex ml-auto bg-blue text-white"
 						>
 							Save Changes
 						</Button>
-					</form>
+					</div>
 				</Form>
 			</DialogContent>
 		</Dialog>

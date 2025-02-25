@@ -15,6 +15,7 @@ export interface AddressFormData {
 	firstName?: string;
 	lastName?: string;
 	mobileNumber?: string;
+	userId?: string;
 	// Add other fields as necessary
 }
 

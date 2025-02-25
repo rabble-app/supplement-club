@@ -24,7 +24,7 @@ export default function RootLayout({
 	}
 	return (
 		<div>
-			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px] sticky top-[0] z-[1]">
+			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px] sticky top-[0] z-[2]">
 				<Link
 					href="/dashboard"
 					className="font-helvetica text-[16px] leading-[18px] font-bold text-base md:hidden flex gap-[8px] items-center absolute left-[16px]"

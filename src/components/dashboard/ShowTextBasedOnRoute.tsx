@@ -4,12 +4,19 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
 const ShowTextBasedOnRoute = () => {
 	const pathname = usePathname();
 	const params = useParams();
 	const router = useRouter();
+	const [isDashboard, setIsDashboard] = useState(true);
+
+	useEffect(() => {
+		setIsDashboard(pathname === "/dashboard");
+	}, [pathname]);
+
 	const getTextForRoute = () => {
 		switch (pathname) {
 			case `/dashboard/manage-plans/${params.subscriptionID}/reactivate-plan`:
@@ -38,15 +45,17 @@ const ShowTextBasedOnRoute = () => {
 	};
 
 	return (
-		<div className="text-[16px] leading-[18px] md:text-[24px] md:leading-[27px] font-[400] font-hagerman flex items-center justify-center h-[62px] border-b-[1px] border-grey30 relative">
-			<Button
-				className="absolute top-1/2 left-[16px] md:left-[32px] transform -translate-y-1/2 flex items-center gap-[8px] text-blue font-bold  text-[16px] leading-[18px] font-helvetica"
-				onClick={() => router.back()}
-			>
-				<ChevronLeft className="text-blue w-[20px] h-[20px]" /> Back
-			</Button>
-			{getTextForRoute()}
-		</div>
+		!isDashboard && (
+			<div className="text-[16px] leading-[18px] md:text-[24px] md:leading-[27px] font-[400] font-hagerman flex items-center justify-center h-[62px] border-b-[1px] border-grey30 relative">
+				<Button
+					className="absolute top-1/2 left-[16px] md:left-[32px] transform -translate-y-1/2 hidden md:flex items-center gap-[8px] text-blue font-bold text-[16px] leading-[18px] font-helvetica"
+					onClick={() => router.back()}
+				>
+					<ChevronLeft className="text-blue w-[20px] h-[20px]" /> Back
+				</Button>
+				{getTextForRoute()}
+			</div>
+		)
 	);
 };
 

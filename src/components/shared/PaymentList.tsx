@@ -18,7 +18,7 @@ import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
 import PaymentConfirmForm from "./PaymentConfirmForm";
-import { ShowErrorToast } from "./ShowErrorToast";
+import { CustomToast, StatusToast } from "./Toast";
 
 export default function PaymentList({
 	totalPrice,
@@ -78,10 +78,12 @@ export default function PaymentList({
 			)) as IPaymentIntentApiResponse;
 
 			if (response.statusCode !== 200) {
-				ShowErrorToast(
-					response?.error,
-					"Cannot charge money from this card.Please chose another one",
-				);
+				CustomToast({
+					title: response?.error
+						? JSON.parse(response?.error).message
+						: "Cannot charge money from this card.Please chose another one",
+					status: StatusToast.ERROR,
+				});
 				return;
 			}
 
@@ -93,7 +95,12 @@ export default function PaymentList({
 			)) as ICaptureApiResponse;
 
 			if (captureResponse.statusCode !== 200) {
-				ShowErrorToast(captureResponse?.error, "Cannot add capture payment");
+				CustomToast({
+					title: captureResponse?.error
+						? JSON.parse(captureResponse?.error).message
+						: "Cannot add capture payment",
+					status: StatusToast.ERROR,
+				});
 				return;
 			}
 
@@ -115,7 +122,12 @@ export default function PaymentList({
 		)) as IResponseModel;
 
 		if (addTeamMemberResponse.statusCode !== 200) {
-			ShowErrorToast(addTeamMemberResponse?.error, "Cannot add team member");
+			CustomToast({
+				title: addTeamMemberResponse?.error
+					? JSON.parse(addTeamMemberResponse?.error).message
+					: "Cannot add team member",
+				status: StatusToast.ERROR,
+			});
 			return;
 		}
 

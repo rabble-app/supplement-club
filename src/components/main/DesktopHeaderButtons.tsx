@@ -12,11 +12,18 @@ const UserProfile = ({ user }: { user?: IUserResponse }) => (
 			width={16}
 			height={16}
 		/>
-		<div className="font-inconsolata font-bold text-base">
-			{user ? (
-				`${user.firstName} ${user.lastName?.slice(0, 1)}.`
-			) : (
-				<Link href="/auth/login">Login</Link>
+		<div className="font-inconsolata font-bold text-[16px]">
+			{user &&
+				(user.firstName
+					? `${user.firstName} ${user.lastName?.slice(0, 1)}.`
+					: "Welcome")}
+			{!user && (
+				<Link
+					href="/auth/login"
+					className="font-inconsolata font-bold text-[16px]"
+				>
+					Login
+				</Link>
 			)}
 		</div>
 	</div>

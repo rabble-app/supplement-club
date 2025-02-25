@@ -7,7 +7,7 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 		"grid gap-[16px] p-[16px] md:px-[36px] items-center rounded-[8px] mx-auto w-full";
 	if (model.isActive) {
 		rootClass +=
-			" grid-cols-[52px_1fr_auto] bg-white shadow-3 h-[138px] mx-[-16px] md:mx-[0]";
+			" grid-cols-[52px_1fr] bg-white w-full shadow-3 h-[138px] mx-[-16px] md:mx-[0] py-[32px] md:px-[16px]";
 	} else {
 		rootClass += " bg-grey21 h-[106px] md:w-[calc(100%-72px)]";
 	}
@@ -24,31 +24,14 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 					/>
 				</div>
 			)}
-			<div className="flex flex-col justify-center gap-[8px]">
-				<div className=" flex justify-between">
+			<div className="flex justify-between">
+				<div className="flex flex-col gap-[8px] justify-center">
 					<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 						{model.doseTitle}
-					</p>{" "}
-					{model.doseValue && (
-						<p className="text-[14px] leading-[14px] text-blue font-inconsolata">
-							{model.doseValue}
-						</p>
-					)}
-				</div>
-				<div className=" flex justify-between">
+					</p>
 					<p className="text-[24px] leading-[27px] font-hagerman">
 						{model.name}
 					</p>
-					<div className="flex gap-[5px] items-center">
-						<span className="text-[20px] leading-[21px] font-bold font-inconsolata">
-							£{model.price.toFixed(2)}
-						</span>{" "}
-						<p className="text-[12px] leading-[13px] font-bold font-inconsolata text-grey1">
-							(£{model.capsulePrice} / capsule)
-						</p>
-					</div>
-				</div>
-				<div className="flex justify-between">
 					<div className="flex gap-[5px] items-center text-[14px] leading-[14px] font-inconsolata text-grey4">
 						{model.discountTitle}
 						{model.forever && (
@@ -59,8 +42,25 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 							</span>
 						)}
 					</div>
+				</div>
+
+				<div className="flex flex-col gap-[8px] justify-center">
+					{model.doseValue && (
+						<p className="text-[14px] leading-[14px] text-blue font-inconsolata text-end">
+							{model.doseValue}
+						</p>
+					)}
+					<div className="flex gap-[5px] items-center justify-end">
+						<span className="text-[20px] leading-[20px] font-bold font-inconsolata">
+							£{model.price.toFixed(2)}
+						</span>{" "}
+						<p className="text-[12px] my-[auto] font-bold font-inconsolata text-grey1">
+							(£{model.capsulePrice} / capsule)
+						</p>
+					</div>
+
 					{model.spotsRemainds && (
-						<p className="text-[14px] leading-[14px] font-inconsolata text-blue">
+						<p className="text-[14px] leading-[14px] font-inconsolata text-blue text-end">
 							<span className="text-[14px] leading-[14px] font-inconsolata font-bold">
 								{model.spotsRemainds}
 							</span>{" "}

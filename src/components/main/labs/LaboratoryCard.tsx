@@ -1,10 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
 
 export default function LaboratoryCard(card: Readonly<ILaboratoryCardModel>) {
 	return (
-		<div className="grid bg-grey8">
+		<Link href={card.url} target="_black" className="grid bg-grey8">
 			<Image
 				className="w-full h-full object-cover md:min-h-[260px]"
 				src={card.logo}
@@ -31,6 +32,6 @@ export default function LaboratoryCard(card: Readonly<ILaboratoryCardModel>) {
 					</div>
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 }

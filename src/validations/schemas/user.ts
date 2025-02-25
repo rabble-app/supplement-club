@@ -18,6 +18,7 @@ export const shippingDetailsShema = z.object({
 	city: z.string({ required_error: "Field is required." }),
 	postalCode: z.string({ required_error: "Field is required." }),
 	country: z.string({ required_error: "Field is required." }),
+	userId: z.string({ required_error: "Field is required." }).optional(),
 });
 
 export const emailChangeDialogSchema = z.object({

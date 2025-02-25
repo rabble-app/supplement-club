@@ -51,8 +51,11 @@ import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryMod
 import { useEffect, useState } from "react";
 
 import { usersService } from "@/services/usersService";
+import Spinner from "@/components/shared/Spinner";
 export default function ManagerPage() {
+	const [loading, setLoading] = useState(true);
 	const context = useUser();
+	const [welcomeMessage, setWelcomeMessage] = useState("Welcome");
 	const [upcomingDeliveries, setUpcomingDeliveries] = useState<
 		IUpcomingDeliveryModel[]
 	>([]);
@@ -63,15 +66,23 @@ export default function ManagerPage() {
 				context?.user?.id ?? "",
 			);
 			setUpcomingDeliveries(response);
+
+			if (context?.user?.firstName && context?.user?.lastName) {
+				setWelcomeMessage(
+					`Welcome Back ${context?.user?.firstName} ${context?.user?.lastName?.slice(0, 1)}.`,
+				);
+			}
+			setLoading(false);
 		};
 		fetchUpcomingDeliveries();
 	}, [context?.user]);
+
+	if (loading) return <Spinner />;
 	return (
 		<div>
 			<div className="grid gap-[32px] black max-w-[600px] mx-auto py-[46px]">
 				<h1 className="text-[24px] leading-[28px] font-bold font-hagerman">
-					Welcome Back{" "}
-					{`${context?.user?.firstName ?? ""} ${context?.user?.lastName?.slice(0, 1) ?? ""}.`}{" "}
+					{welcomeMessage}
 					👋🏻
 				</h1>
 				{upcomingDeliveries?.length > 0 && (

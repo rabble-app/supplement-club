@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
@@ -18,6 +19,18 @@ export default function EmailVerify() {
 			router.push(searchRedirect);
 		}
 	}, [searchParams, router, context]);
+
+	async function resendEmail() {
+		if (context?.user?.email != null) {
+			await authService.resendEmailVerify(context?.user.email);
+		}
+
+		CustomToast({
+			title: "A new link has been sent to your email",
+			status: StatusToast.SUCCESS,
+			position: "top-center",
+		});
+	}
 
 	return (
 		<div className="w-full md:w-[800px] mx-auto py-[200px] px-[20px] grid gap-[24px] justify-center">
@@ -41,11 +54,7 @@ export default function EmailVerify() {
 				spam folder
 			</div>
 			<Button
-				onClick={() =>
-					context?.user?.email != null
-						? authService.resendEmailVerify(context?.user.email)
-						: undefined
-				}
+				onClick={() => resendEmail()}
 				className=" text-white w-[280px] text[16px] leading-[24px] mx-auto font-inconsolata font-bold bg-blue"
 			>
 				Request a New Link

@@ -20,7 +20,7 @@ export default function SubscriptionSkipDialog({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className="text-blue bg-grey27/[12%] h-[40px] flex justify-center items-center w-full text-[17px] leading-[22px] font-sf-pro">
+				<Button className="text-blue bg-grey27/[12%] h-[40px] flex justify-center items-center w-full text-[17px] leading-[22px] font-inconsolata font-bold">
 					Skip Plan
 				</Button>
 			</DialogTrigger>

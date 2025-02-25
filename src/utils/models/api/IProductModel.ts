@@ -1,5 +1,7 @@
+import type { IProductBenefits } from "../IProductBenefits";
 import type { IBaseTimestamps } from "./IBaseTimestamps";
 import type { ICapsuleInfoModel } from "./ICapsuleInfoModel";
+import type { IHealthCategories } from "./IHealthCategories";
 import type IPriceInfoModel from "./IPriceInfoModel";
 import type { IProducerModel } from "./IProducerModel";
 import type { ISupplementTeamProducts } from "./ISupplementTeamProducts";
@@ -29,10 +31,12 @@ export interface IProductModel extends IBaseTimestamps {
 	tags?: string[];
 	priceInfo?: IPriceInfoModel[];
 	capsuleInfo?: ICapsuleInfoModel[];
+	productBenefits?: IProductBenefits[];
 	type?: string;
 	producer: IProducerModel;
 	partionedProducts?: [];
 	formulationSummary?: string[];
 	orderId?: string;
 	supplementTeamProducts: ISupplementTeamProducts;
+	healthCategories?: IHealthCategories[];
 }

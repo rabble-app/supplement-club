@@ -94,7 +94,7 @@ export default function SubscriptionPlan({
 					<Button
 						key={`len-${idx + 1}`}
 						onClick={() => changePlan && setInitCapsule(idx + 1)}
-						className={`border-[1px] border-grey31 font-sf-pro h-[33px] flex justify-center items-center ${getBoxClasses(idx)}`}
+						className={`border-[1px] border-grey31 font-helvetica h-[33px] flex justify-center items-center ${getBoxClasses(idx)}`}
 					>
 						{idx + 1}
 					</Button>

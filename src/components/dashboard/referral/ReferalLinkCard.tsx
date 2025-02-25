@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { toast } from "sonner";
-
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Input } from "@/components/ui/input";
 
 export default function ReferalLinkCard({
@@ -21,14 +20,17 @@ export default function ReferalLinkCard({
 	const copyToClipboard = async () => {
 		try {
 			await navigator.clipboard.writeText(link);
-
-			toast.custom(() => (
-				<div className="text-white bg-blue px-[10px] py-[2px]">
-					Copied the refer link
-				</div>
-			));
-		} catch (err) {
-			console.error("Failed to copy:", err);
+			CustomToast({
+				title: "Copied link",
+				status: StatusToast.SUCCESS,
+				position: "top-center",
+			});
+		} catch {
+			CustomToast({
+				title: "Failed to copy",
+				status: StatusToast.ERROR,
+				position: "top-right",
+			});
 		}
 	};
 

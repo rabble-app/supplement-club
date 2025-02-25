@@ -38,8 +38,8 @@ export default function SummaryProduct({
 			) ?? 0;
 		setTotalRrp(totalRRP);
 
-		let percentage = model?.percentage;
-		if (!percentage) {
+		let percentage = model?.percentage ?? 0;
+		if (totalSum > 0 && +totalRRP > 0) {
 			percentage = totalSum / Number(totalRRP);
 		}
 		setPercentage(percentage);
@@ -59,7 +59,7 @@ export default function SummaryProduct({
 	return (
 		<div
 			key={model?.id}
-			className={`grid gap-[24px] p-[16px] md:p-[24px] bg-grey12 ${className}`}
+			className={`grid gap-[24px] py-[16px] md:py-[24px] bg-grey12  p-[24px] ${className}`}
 		>
 			{!showOnlyTotal && (
 				<>
@@ -112,8 +112,11 @@ export default function SummaryProduct({
 						<Separator className="bg-grey3 h-[1px]" />
 					)}
 
-					{model?.referals?.map((referal) => (
-						<div key={`$idx + 1`} className="flex justify-between items-center">
+					{model?.referals?.map((referal, idx) => (
+						<div
+							key={`${idx + 1}`}
+							className="flex justify-between items-center"
+						>
 							<div className="grid gap-[8px]">
 								<p className="text-[20px] leading-[20px] font-[600] font-inconsolata">
 									Succesful Referal x {referal.count}
@@ -147,7 +150,7 @@ export default function SummaryProduct({
 			)}
 
 			<div>
-				<div className="grid gap-[7px] md:gap-0 md:grid-cols-[84px_1fr]">
+				<div className="grid gap-[7px] md:gap-0 grid-cols-[84px_1fr]">
 					<div>
 						<p className="text-[32px] leading-[33px] font-inconsolata font-bold text-black">
 							Total
@@ -157,10 +160,10 @@ export default function SummaryProduct({
 						</p>
 					</div>
 
-					<div className="grid gap-[7px]">
-						<div className="gap-[2px] text-[32px] leading-[34px] font-inconsolata font-bold flex md:justify-end items-center">
+					<div className="grid gap-[7px] text-right">
+						<div className="gap-[2px] text-[32px] font-inconsolata font-bold flex justify-end items-center">
 							£{totalCount?.toFixed(2)}{" "}
-							<span className="text-[12px] leading-[11.5px] font-inconsolata font-bold text-grey1">
+							<span className="text-[12px] my-[auto] font-inconsolata font-bold text-grey1">
 								(£0.25/capsule)
 							</span>
 						</div>
@@ -176,7 +179,7 @@ export default function SummaryProduct({
 					</div>
 				</div>
 
-				<div>{children}</div>
+				<div className="grid gap-[10px]">{children}</div>
 			</div>
 		</div>
 	);

@@ -2,6 +2,7 @@
 import DeleteCardDialog from "@/components/dashboard/account/payment-details/DeleteCardDialog";
 import PaymentCard from "@/components/dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "@/components/shared/AddPaymentDialog";
+import Spinner from "@/components/shared/Spinner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
@@ -20,6 +21,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function AccountPaymentDetails() {
+	const [loading, setLoading] = useState(true);
 	const context = useUser();
 	const { setUser } = useUserStore((state) => state);
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -31,6 +33,7 @@ export default function AccountPaymentDetails() {
 	useEffect(() => {
 		const fetchUserPaymentOptions = async () => {
 			await retrivePaymentOptions(context?.user?.stripeCustomerId ?? "");
+			setLoading(false);
 		};
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
@@ -60,6 +63,8 @@ export default function AccountPaymentDetails() {
 		await paymentService.deleteCard(paymentId);
 		setUserCards(userCards.filter((c) => c.id !== paymentId));
 	}
+
+	if (loading) return <Spinner />;
 	return (
 		<div className="mx-auto max-w-[600px]">
 			{userCards && userCards?.length > 0 && (

@@ -14,8 +14,10 @@ import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import { useEffect, useState } from "react";
+import Spinner from "@/components/shared/Spinner";
 
 export default function Orders() {
+	const [loading, setLoading] = useState(true);
 	const [orders, setOrders] = useState<IUserPastOrderReponse[]>([]);
 	const context = useUser();
 
@@ -23,9 +25,12 @@ export default function Orders() {
 		const fetchUserPastOrders = async () => {
 			const model = await usersService.getPastOrders(context?.user?.id ?? "");
 			setOrders(model);
+			setLoading(false);
 		};
 		fetchUserPastOrders();
 	}, [context?.user?.id]);
+
+	if (loading) return <Spinner />;
 
 	return (
 		<div className="grid gap-[16px] max-w-[600px] mx-auto py-[10px] md:py-[30px]">

@@ -2,6 +2,7 @@
 import EmailChangeDialog from "@/components/dashboard/account/EmailChangeDialog";
 import ManageAccountCard from "@/components/dashboard/account/ManageAccountCard";
 import ShippingDetailsDialog from "@/components/dashboard/account/ShippingDetailsDialog";
+import Spinner from "@/components/shared/Spinner";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { usersService } from "@/services/usersService";
@@ -11,35 +12,48 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Account() {
+	const [loading, setLoading] = useState(true);
 	const [userInfo, setUserInfo] = useState<IUserModel>();
 	const context = useUser();
 
 	const [defaultCard, setDefaultCard] = useState<IUserPaymentOptionModel>();
 
 	useEffect(() => {
-		const fetchUserInfo = async () => {
-			const model = await usersService.getUserInfo(context?.user?.id ?? "");
-			setUserInfo(model);
-		};
-		fetchUserInfo();
-	}, [context?.user?.id]);
+		const fetchData = async () => {
+			if (!context?.user?.id || !context?.user?.stripeCustomerId) {
+				setLoading(false);
+				return;
+			}
 
-	useEffect(() => {
-		const fetchUserPaymentOptions = async () => {
-			const model = await paymentService.getUserPaymentOptions(
-				context?.user?.stripeCustomerId ?? "",
-			);
-			const card = model.find(
-				(c: IUserPaymentOptionModel) =>
-					c.id === context?.user?.stripeDefaultPaymentMethodId,
-			);
-			setDefaultCard(card ?? model[0]);
+			try {
+				const [userInfoResponse, paymentOptionsResponse] = await Promise.all([
+					usersService.getUserInfo(context.user.id),
+					paymentService.getUserPaymentOptions(context.user.stripeCustomerId),
+				]);
+
+				setUserInfo(userInfoResponse);
+
+				const defaultCard = paymentOptionsResponse.find(
+					(c: IUserPaymentOptionModel) =>
+						c.id === context?.user?.stripeDefaultPaymentMethodId,
+				);
+
+				setDefaultCard(defaultCard ?? paymentOptionsResponse[0]);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			} finally {
+				setLoading(false); // Ensure loading is false once both requests are done
+			}
 		};
-		fetchUserPaymentOptions();
+
+		fetchData();
 	}, [
-		context?.user?.stripeDefaultPaymentMethodId,
+		context?.user?.id,
 		context?.user?.stripeCustomerId,
+		context?.user?.stripeDefaultPaymentMethodId,
 	]);
+
+	if (loading) return <Spinner />;
 
 	return (
 		<div className="mx-auto max-w-[600px] py-[16px] md:py-[46px] flex flex-col gap-[32px] min-h-screen justify-start">

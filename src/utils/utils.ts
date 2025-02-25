@@ -65,6 +65,7 @@ export function getQuarterInfo() {
 	);
 
 	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${date.getFullYear()}`;
+	const nextDeliveryTextShort = `${endDate.toLocaleString("en", { month: "short" })} 1st ${date.getFullYear()}`;
 
 	return {
 		currentQuarter,
@@ -84,6 +85,7 @@ export function getQuarterInfo() {
 		prevStartDate,
 		prevEndDate,
 		nextDeliveryText,
+		nextDeliveryTextShort,
 	};
 }
 
@@ -202,6 +204,7 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 		producer: model.team.producer,
 		formulationSummary: model.product.formulationSummary,
 		teamId: model.teamId,
+		tags: model.product.tags,
 	};
 };
 
@@ -210,7 +213,7 @@ export const mapSingleProductModel = (
 ): ISingleProductModel => {
 	return {
 		id: model.id,
-		isComming: model.supplementTeamProducts.status === "PREORDER",
+		isComming: model.supplementTeamProducts?.status === "PREORDER",
 		status: model.status,
 		imageKey: model.imageKey,
 		name: model.name,
@@ -223,7 +226,7 @@ export const mapSingleProductModel = (
 		rrp: model.rrp,
 		quantityOfSubUnitPerOrder: model.quantityOfSubUnitPerOrder,
 		unitsOfMeasurePerSubUnit: model.unitsOfMeasurePerSubUnit,
-		members: model.supplementTeamProducts.team._count.members,
+		members: model.supplementTeamProducts?.team._count?.members,
 		tags: model.tags,
 		priceInfo: model.priceInfo,
 		producer: model.producer,
@@ -231,6 +234,8 @@ export const mapSingleProductModel = (
 		gallery: [model.imageUrl, model.producer.imageUrl],
 		supplementTeamProducts: model.supplementTeamProducts,
 		orderId: model.orderId,
+		productBenefits: model.productBenefits,
+		healthCategories: model.healthCategories,
 	};
 };
 
