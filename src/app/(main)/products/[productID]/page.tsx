@@ -185,7 +185,7 @@ export default function ProductDetails({
 	if (loading) return <Spinner />;
 
 	return (
-		<div className="grid lg:grid-cols-2 gap-[32px] container-width relative">
+		<div className="grid lg:grid-cols-2 md:gap-[32px] container-width relative">
 			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
@@ -275,7 +275,7 @@ export default function ProductDetails({
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start pb-[50px]">
+			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start md:pb-[50px]">
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>

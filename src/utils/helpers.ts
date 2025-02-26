@@ -6,7 +6,7 @@ export const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export const apiRequest = async <T>(
 	endpoint: string,
 	method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-	data?: Record<string, string | unknown[] | boolean | number>,
+	data?: Record<string, string | unknown[] | boolean | number | unknown>,
 ): Promise<T | { error: string }> => {
 	const headers: { "Content-Type": string; Authorization?: string } = {
 		"Content-Type": "application/json",

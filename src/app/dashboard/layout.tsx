@@ -24,40 +24,41 @@ export default function RootLayout({
 	}
 	return (
 		<div>
-			<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px] sticky top-[0] z-[2]">
-				<Link
-					href="/dashboard"
-					className="font-helvetica text-[16px] leading-[18px] font-bold text-base md:hidden flex gap-[8px] items-center absolute left-[16px]"
-				>
-					<Image
-						src="/images/icons/home-icon.svg"
-						alt="Logout icon"
-						width={24}
-						height={24}
-					/>
-					Home
-				</Link>
-				<Link
-					href="/dashboard"
-					className="text-[24px] leading-[27px] font-hagerman"
-				>
-					Supplement Club
-				</Link>
+			<div className=" sticky top-[0] z-[2] bg-white">
+				<header className="w-full h-[52px] md:h-[62px] bg-blue text-white flex justify-center items-center m-auto px-[16px]">
+					<Link
+						href="/dashboard"
+						className="font-helvetica text-[16px] leading-[18px] font-bold text-base md:hidden flex gap-[8px] items-center absolute left-[16px]"
+					>
+						<Image
+							src="/images/icons/home-icon.svg"
+							alt="Logout icon"
+							width={24}
+							height={24}
+						/>
+						Home
+					</Link>
+					<Link
+						href="/dashboard"
+						className="text-[24px] leading-[27px] font-hagerman"
+					>
+						Supplement Club
+					</Link>
 
-				<Button
-					onClick={() => handleLogout()}
-					className="absolute right-[16px] p-[0]"
-				>
-					<Image
-						src="/images/logout.svg"
-						alt="Logout icon"
-						width={24}
-						height={24}
-					/>
-				</Button>
-			</header>
-			<ShowTextBasedOnRoute />
-
+					<Button
+						onClick={() => handleLogout()}
+						className="absolute right-[16px] p-[0]"
+					>
+						<Image
+							src="/images/logout.svg"
+							alt="Logout icon"
+							width={24}
+							height={24}
+						/>
+					</Button>
+				</header>
+				<ShowTextBasedOnRoute />
+			</div>
 			<div className="px-[16px] md:px-[0] bg-grey12 md:bg-transparent">
 				{children}
 			</div>

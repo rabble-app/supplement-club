@@ -26,14 +26,12 @@ export default function PaymentList({
 	capsulePerDay,
 	teamId,
 	productId,
-	orderId,
 	successAction,
 }: Readonly<{
 	totalPrice: number;
 	capsulePerDay: number;
 	teamId?: string;
 	productId?: string;
-	orderId?: string;
 	isComming?: boolean;
 	successAction: () => void;
 }>) {
@@ -106,7 +104,7 @@ export default function PaymentList({
 
 			await paymentService.paymentBasketActive({
 				capsulePerDay: capsulePerDay,
-				orderId: orderId ?? "",
+				orderId: captureResponse.data.orderId ?? "",
 				price: totalPrice,
 				productId: productId ?? "",
 				quantity: quantity,

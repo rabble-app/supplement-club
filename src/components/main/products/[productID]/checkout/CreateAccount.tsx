@@ -44,6 +44,7 @@ export default function CreateAccount({
 		const result = (await authService.register(
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
+			productId ?? "",
 		)) as IResponseModel;
 		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;

@@ -35,7 +35,7 @@ export default function ReferalLinkCard({
 	};
 
 	return (
-		<div className=" border-[1px] shadow-4 border-grey35 p-[16px] rounded-[5px] grid gap-[16px]">
+		<div className=" border-[1px] shadow-3 border-grey35 p-[16px] rounded-[5px] grid gap-[16px]">
 			<div className="grid gap-[8px]">
 				<p className="text-[16px] leading-[16px] font-bold font-inconsolata">
 					Earn 10% of your Friend’s Spend in Club Coins!

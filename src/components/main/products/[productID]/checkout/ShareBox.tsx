@@ -8,15 +8,15 @@ export default function ShareBox() {
 					<Image
 						src="/images/icons/facebook-icon.svg"
 						alt="facebook icon"
-						width={20}
-						height={20}
+						width={12}
+						height={12}
 					/>
 				</div>
 
 				<div className="w-[44px] h-[44px] rounded-[50%] mx-auto flex items-center justify-center bg-blue text-white">
 					<Image
 						src="/images/icons/instagram-icon.svg"
-						alt="facebook icon"
+						alt="instagram icon"
 						width={20}
 						height={20}
 					/>
@@ -24,7 +24,7 @@ export default function ShareBox() {
 				<div className="w-[44px] h-[44px] rounded-[50%] mx-auto flex items-center justify-center bg-blue text-white">
 					<Image
 						src="/images/icons/email-white-icon.svg"
-						alt="facebook icon"
+						alt="email icon"
 						width={20}
 						height={20}
 					/>
