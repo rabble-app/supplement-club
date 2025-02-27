@@ -11,7 +11,7 @@ import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
 import { getQuarterInfo } from "@/utils/utils";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ReactivatePlan({
 	params,
@@ -83,6 +83,11 @@ export default function ReactivatePlan({
 			router.push("/dashboard/manage-plans/");
 		}
 	}
+	const topupQuantity = useMemo(
+		() => remainsDaysToNextQuater * managePlan.capsulePerDay,
+		[remainsDaysToNextQuater, managePlan.capsulePerDay],
+	);
+
 	return (
 		<div className="grid gap-[16px] py-[24px] md:grid-cols-[600px_600px] md:justify-center">
 			<div>
@@ -93,6 +98,7 @@ export default function ReactivatePlan({
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 				/>
 				<PaymentList
+					topupQuantity={topupQuantity}
 					productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
 					teamId={managePlan?.team.id ?? ""}
 					capsulePerDay={managePlan.capsulePerDay}

@@ -10,21 +10,21 @@ import Image from "next/image";
 export default function ImageBox({ tags }: Readonly<{ tags?: string[] }>) {
 	return (
 		<div className="h-[56px] border-[1px] border-grey18 flex justify-center items-center gap-[16px]">
-			{tags?.map((image, idx) => (
-				<TooltipProvider key={`${image} ${idx * 2}`}>
-					<Tooltip>
-						<TooltipTrigger>
-							<Image
-								src={mapTagToValue(image)}
-								alt={image}
-								width={24}
-								height={24}
-							/>
-						</TooltipTrigger>
-						<TooltipContent>{image}</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
-			))}
+			{tags?.map((tag, idx) => {
+				const image = mapTagToValue(tag);
+				if (image) {
+					return (
+						<TooltipProvider key={`${tag} ${idx * 2}`}>
+							<Tooltip>
+								<TooltipTrigger>
+									<Image src={image} alt={image} width={24} height={24} />
+								</TooltipTrigger>
+								<TooltipContent>{image}</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					);
+				}
+			})}
 		</div>
 	);
 }

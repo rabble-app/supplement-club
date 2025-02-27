@@ -6,7 +6,7 @@ export const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export const apiRequest = async <T>(
 	endpoint: string,
 	method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
-	data?: Record<string, string | unknown[] | boolean | number | unknown>,
+	data?: Record<string, string | boolean | number | object>,
 ): Promise<T | { error: string }> => {
 	const headers: { "Content-Type": string; Authorization?: string } = {
 		"Content-Type": "application/json",
@@ -60,10 +60,9 @@ export function mapTagToValue(tag: string) {
 		"Energy & Fatigue": "/images/icons/energy-icon.svg",
 		"Muscle Recovery": "/images/icons/dumbell-icon.svg",
 		Athletics: "/images/icons/athletes-icon.svg",
-		"Strength & Endurance": "/images/icons/athletes-icon.svg",
 	};
 
-	return tagValueMap[tag] ?? "/images/icons/athletes-icon.svg";
+	return tagValueMap[tag] ?? null;
 }
 
 export const mapFormDataToDeliveryRequest = (formData: FormData) => ({

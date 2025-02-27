@@ -283,7 +283,15 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 						<BreadcrumbSeparator className="" />
 						<BreadcrumbItem>
-							<BreadcrumbPage>{product?.name}</BreadcrumbPage>
+							<BreadcrumbPage className="flex items-center gap-[5px]">
+								{product?.name}{" "}
+								<Image
+									src="/images/TM-blue.svg"
+									alt="TM corporation"
+									width={16}
+									height={16}
+								/>
+							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
@@ -319,7 +327,10 @@ export default function ProductDetails({
 						<SummaryProduct className="bg-white" model={summary} />
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-							<Link href={`/products/${product?.id}/checkout`}>
+							<Link
+								className="w-full h-full flex items-center justify-center"
+								href={`/products/${product?.id}/checkout`}
+							>
 								Start My Subscription
 							</Link>
 						</Button>
@@ -397,7 +408,10 @@ export default function ProductDetails({
 
 				{context?.user && !product?.isComming && (
 					<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-						<Link href={`/products/${product?.id}/checkout`}>
+						<Link
+							className="w-full h-full flex items-center justify-center"
+							href={`/products/${product?.id}/checkout`}
+						>
 							Start My Subscription
 						</Link>
 					</Button>

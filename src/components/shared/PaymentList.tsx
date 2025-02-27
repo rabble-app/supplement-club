@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
@@ -13,7 +13,6 @@ import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionM
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type ICaptureApiResponse from "@/utils/models/services/ICaptureApiResponse";
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
-import { getQuarterInfo } from "@/utils/utils";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
@@ -25,21 +24,20 @@ export default function PaymentList({
 	isComming,
 	capsulePerDay,
 	teamId,
+	topupQuantity,
 	productId,
 	successAction,
 }: Readonly<{
 	totalPrice: number;
 	capsulePerDay: number;
 	teamId: string;
+	topupQuantity: number;
 	productId: string;
 	isComming?: boolean;
 	successAction: () => void;
 }>) {
 	const [policyTerms, setPolicyTerms] = useState(true);
 	const [address, setAddress] = useState(true);
-	const { quarterly } = getQuarterInfo();
-	const topupQuantity = 2;
-	const quantity = topupQuantity * quarterly; // total quantity (quartely + topUp quantity)
 
 	const context = useUser();
 
@@ -66,7 +64,7 @@ export default function PaymentList({
 				teamId ?? "",
 				context?.user?.id ?? "",
 				productId ?? "",
-				quantity,
+				90 * capsulePerDay,
 				totalPrice,
 				capsulePerDay,
 			);
@@ -110,7 +108,7 @@ export default function PaymentList({
 				orderId: captureResponse.data.orderId ?? "",
 				price: totalPrice,
 				productId: productId,
-				quantity: quantity,
+				quantity: 90 * capsulePerDay + topupQuantity,
 				teamId: teamId,
 				topupQuantity: topupQuantity,
 				userId: context?.user?.id ?? "",
@@ -248,8 +246,8 @@ export default function PaymentList({
 					{ButtonSection}
 
 					<Button
-						onClick={() => processPayment(userCards)}
-						className="bg-blue text-white w-full font-bold"
+						onClick={() => startTransition(() => processPayment(userCards))}
+						className="bg-blue text-white font-bold w-full h-[51px]"
 					>
 						{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 						{/* Use a regular string */}
@@ -267,7 +265,7 @@ export default function PaymentList({
 
 						<Button
 							type="submit"
-							className="bg-blue text-white w-full font-bold mt-[20px]"
+							className="bg-blue text-white font-bold w-full h-[51px] mt-[20px]"
 						>
 							{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 							{/* Use a regular string */}

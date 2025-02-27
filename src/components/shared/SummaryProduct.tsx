@@ -52,9 +52,14 @@ export default function SummaryProduct({
 
 		setTotalCount(totalSum + totalSumOfSubs);
 
-		setTotalCapsules(
-			model?.orders?.reduce((sum, item) => sum + item.capsules, 0),
+		const totalSubsCapsules =
+			model?.subscriptions?.reduce((sum, item) => sum + item.capsules, 0) ?? 0;
+
+		const ordersSubsCapsules = model?.orders?.reduce(
+			(sum, item) => sum + item.capsules,
+			0,
 		);
+		setTotalCapsules(totalSubsCapsules + ordersSubsCapsules);
 	}, [model]);
 	return (
 		<div
@@ -74,8 +79,14 @@ export default function SummaryProduct({
 							<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
 								{model.corporation}
 							</p>
-							<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman">
+							<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman flex items-center gap-[5px]">
 								{model.name}
+								<Image
+									src="/images/TM-black.svg"
+									alt="TM corporation"
+									width={24}
+									height={24}
+								/>
 							</div>
 							{model.quantityOfSubUnitPerOrder &&
 								model.unitsOfMeasurePerSubUnit && (

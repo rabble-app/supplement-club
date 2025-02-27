@@ -46,29 +46,31 @@ export default function ReferalLinkCard({
 				</p>
 			</div>
 
-			<div className="grid gap-[8px]">
-				<p className="text-[16px] leading-[24px] font-helvetica">
-					Your Referal Link
-				</p>
-				<div className="relative">
-					<Input
-						readOnly
-						value={link}
-						placeholder="referal link"
-						className="pr-[40px] text-grey16"
-					/>
+			{!link && (
+				<div className="grid gap-[8px]">
+					<p className="text-[16px] leading-[24px] font-helvetica">
+						Your Referal Link
+					</p>
+					<div className="relative">
+						<Input
+							readOnly
+							value={link}
+							placeholder="referal link"
+							className="pr-[40px] text-grey16"
+						/>
 
-					<Image
-						src="/images/icons/copyright-icon.svg"
-						className="absolute right-[10px] top-[10px] cursor-pointer"
-						title="Copy and share your referral link"
-						onClick={copyToClipboard}
-						alt="copyright icon"
-						width={24}
-						height={24}
-					/>
+						<Image
+							src="/images/icons/copyright-icon.svg"
+							className="absolute right-[10px] top-[10px] cursor-pointer"
+							title="Copy and share your referral link"
+							onClick={copyToClipboard}
+							alt="copyright icon"
+							width={24}
+							height={24}
+						/>
+					</div>
 				</div>
-			</div>
+			)}
 			{children}
 		</div>
 	);

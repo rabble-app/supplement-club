@@ -12,7 +12,7 @@ import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
 import { getQuarterInfo } from "@/utils/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function OptBackIn({
 	params,
@@ -93,6 +93,11 @@ export default function OptBackIn({
 		}
 	}
 
+	const topupQuantity = useMemo(
+		() => remainsDaysToNextQuater * managePlan.capsulePerDay,
+		[remainsDaysToNextQuater, managePlan.capsulePerDay],
+	);
+
 	const bottomContent = (
 		<div className="flex gap-[8px] items-center justify-center text-blue h-[60px] text-[20px] leading-[23px] font-bold">
 			<div className="p-[13px] bg-blue6 rounded-[50px]">
@@ -118,6 +123,7 @@ export default function OptBackIn({
 					bottomContent={bottomContent}
 				/>
 				<PaymentList
+					topupQuantity={topupQuantity}
 					productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
 					teamId={managePlan?.team.id ?? ""}
 					capsulePerDay={managePlan.capsulePerDay}

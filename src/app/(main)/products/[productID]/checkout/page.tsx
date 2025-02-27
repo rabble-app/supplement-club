@@ -208,6 +208,7 @@ export default function Checkout({
 				{step === 3 && (
 					<PaymentList
 						productId={product?.id ?? ""}
+						topupQuantity={capsulesPackage}
 						teamId={product?.supplementTeamProducts?.team.id ?? ""}
 						isComming={product?.isComming}
 						totalPrice={totalPrice}

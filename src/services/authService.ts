@@ -1,15 +1,6 @@
 import { AUTH_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 
-const generateReferralCode = (length = 8) => {
-	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	let code = "";
-	for (let i = 0; i < length; i++) {
-		code += chars.charAt(Math.floor(Math.random() * chars.length));
-	}
-	return code;
-};
-
 export const authService = {
 	login: async (email: string, password: string) =>
 		await apiRequest(AUTH_ENDPOINTS.LOGIN, "POST", {
@@ -23,7 +14,6 @@ export const authService = {
 			email,
 			password,
 			role: "USER",
-			referralCode: generateReferralCode(),
 			metadata: { productId },
 		}),
 
