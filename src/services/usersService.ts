@@ -40,7 +40,7 @@ export const usersService = {
 			"POST",
 			{
 				userId: model.userId,
-				channel: model.channel,
+				channel: "SUPPLEMENT",
 				firstName: model.firstName,
 				lastName: model.lastName,
 				address: model.address,

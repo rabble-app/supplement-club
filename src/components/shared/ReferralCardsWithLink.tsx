@@ -17,7 +17,7 @@ import { CustomToast, StatusToast } from "./Toast";
 
 export default function ReferralCardsWithLink({
 	className,
-}: Readonly<{ className: string }>) {
+}: Readonly<{ className?: string }>) {
 	const [loading, setLoading] = useState(true);
 	const [nextMilestone, setNextMilestone] = useState<IReferalModel>();
 	const [openReferal, setOpenReferal] = useState(false);

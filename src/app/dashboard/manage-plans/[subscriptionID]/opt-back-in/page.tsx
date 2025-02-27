@@ -118,8 +118,8 @@ export default function OptBackIn({
 					bottomContent={bottomContent}
 				/>
 				<PaymentList
-					productId={managePlan?.team?.basket[0]?.product?.id}
-					teamId={managePlan?.team.id}
+					productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
+					teamId={managePlan?.team.id ?? ""}
 					capsulePerDay={managePlan.capsulePerDay}
 					successAction={() => onOpenChange(true)}
 					totalPrice={totalPrice}

@@ -51,11 +51,6 @@ export default function CreateAccount({
 			setUser(userData);
 			context?.setNewUser(userData);
 
-			// logged the user
-			await authService.login(
-				e.get("email")?.toString() ?? "",
-				e.get("password")?.toString() ?? "",
-			);
 			router.push(
 				`/auth/email-verify?redirect=/products/${productId}/checkout`,
 			);

@@ -3,6 +3,7 @@ import EmailChangeDialog from "@/components/dashboard/account/EmailChangeDialog"
 import ManageAccountCard from "@/components/dashboard/account/ManageAccountCard";
 import ShippingDetailsDialog from "@/components/dashboard/account/ShippingDetailsDialog";
 import Spinner from "@/components/shared/Spinner";
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { usersService } from "@/services/usersService";
@@ -40,7 +41,10 @@ export default function Account() {
 
 				setDefaultCard(defaultCard ?? paymentOptionsResponse[0]);
 			} catch (error) {
-				console.error("Error fetching data:", error);
+				CustomToast({
+					title: `Error fetching data - ${error}`,
+					status: StatusToast.ERROR,
+				});
 			} finally {
 				setLoading(false); // Ensure loading is false once both requests are done
 			}

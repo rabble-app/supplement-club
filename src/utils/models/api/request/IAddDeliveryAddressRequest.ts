@@ -1,6 +1,5 @@
 export default interface IAddDeliveryAddressRequest {
 	userId: string;
-	channel: string;
 	firstName: string;
 	lastName: string;
 	address: string;

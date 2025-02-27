@@ -124,8 +124,8 @@ export default function TopUpCheckout({
 				)}
 				{step !== 1 && (
 					<PaymentList
-						productId={managePlan?.team?.basket[0]?.product?.id}
-						teamId={managePlan?.team.id}
+						productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
+						teamId={managePlan?.team.id ?? ""}
 						capsulePerDay={capsulesPerDay}
 						successAction={() => onOpenChange(true)}
 						totalPrice={totalPrice}

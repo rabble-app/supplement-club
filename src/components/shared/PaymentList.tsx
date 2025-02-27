@@ -30,8 +30,8 @@ export default function PaymentList({
 }: Readonly<{
 	totalPrice: number;
 	capsulePerDay: number;
-	teamId?: string;
-	productId?: string;
+	teamId: string;
+	productId: string;
 	isComming?: boolean;
 	successAction: () => void;
 }>) {
@@ -55,8 +55,11 @@ export default function PaymentList({
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
 
-	async function onSubmit() {
-		const currectCard = userCards.find((u) => u.id === defaultCard);
+	async function processPayment(cards: IUserPaymentOptionModel[]) {
+		let currectCard = cards.find((u) => u.id === defaultCard);
+		if (!currectCard) {
+			currectCard = cards[0];
+		}
 
 		if (isComming) {
 			await paymentService.addPreorderBulkBasket(
@@ -70,9 +73,9 @@ export default function PaymentList({
 		} else {
 			const response = (await paymentService.addPaymentIntent(
 				totalPrice,
-				"gbp",
+				process.env.NEXT_PUBLIC_PRODUCT_CURRENCY as string,
 				currectCard?.customer ?? "",
-				defaultCard,
+				currectCard.id,
 			)) as IPaymentIntentApiResponse;
 
 			if (response.statusCode !== 200) {
@@ -87,7 +90,7 @@ export default function PaymentList({
 
 			const captureResponse = (await paymentService.addCapturePayment(
 				totalPrice,
-				teamId ?? "",
+				teamId,
 				response.data.paymentIntentId,
 				context?.user?.id ?? "",
 			)) as ICaptureApiResponse;
@@ -106,9 +109,9 @@ export default function PaymentList({
 				capsulePerDay: capsulePerDay,
 				orderId: captureResponse.data.orderId ?? "",
 				price: totalPrice,
-				productId: productId ?? "",
+				productId: productId,
 				quantity: quantity,
-				teamId: teamId ?? "",
+				teamId: teamId,
 				topupQuantity: topupQuantity,
 				userId: context?.user?.id ?? "",
 			});
@@ -116,7 +119,7 @@ export default function PaymentList({
 
 		const addTeamMemberResponse = (await teamsService.addTeamMember(
 			context?.user?.id ?? "",
-			teamId ?? "",
+			teamId,
 		)) as IResponseModel;
 
 		if (addTeamMemberResponse.statusCode !== 200) {
@@ -137,6 +140,13 @@ export default function PaymentList({
 			stripeCustomerId ?? "",
 		);
 		setUserCards(model);
+	}
+
+	async function addCreditCard() {
+		const cards = await paymentService.getUserPaymentOptions(
+			context?.user?.stripeCustomerId ?? "",
+		);
+		await processPayment(cards);
 	}
 
 	const ButtonSection = (
@@ -238,7 +248,7 @@ export default function PaymentList({
 					{ButtonSection}
 
 					<Button
-						onClick={() => onSubmit()}
+						onClick={() => processPayment(userCards)}
 						className="bg-blue text-white w-full font-bold"
 					>
 						{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
@@ -251,7 +261,7 @@ export default function PaymentList({
 				(userCards?.length === 0 && (
 					<PaymentConfirmForm
 						totalPrice={totalPrice}
-						successAction={successAction}
+						successAction={addCreditCard}
 					>
 						{ButtonSection}
 

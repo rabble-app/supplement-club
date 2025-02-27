@@ -3,4 +3,5 @@ export default interface IPaymentIntentResponse {
 	clientSecret: string;
 	orderId?: string;
 	status: string;
+	payment_method?: string;
 }

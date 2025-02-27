@@ -35,7 +35,6 @@ export default function DeliveryAddress({
 	async function onSubmit(e: FormData) {
 		const result = await usersService.addDeliveryAddress({
 			userId: context?.user?.id ?? "",
-			channel: "SUPPLEMENT",
 			firstName: e.get("firstName")?.toString() ?? "",
 			lastName: e.get("lastName")?.toString() ?? "",
 			address: e.get("address")?.toString() ?? "",
