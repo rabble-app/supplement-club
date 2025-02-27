@@ -45,7 +45,15 @@ const ShowTextBasedOnRoute = () => {
 	};
 
 	function goBack() {
-		router.back();
+		// Split the URL into segments by '/'
+		const segments = pathname.split("/");
+
+		// Remove the last segment
+		segments.pop();
+
+		// Join the remaining segments back together
+		const baseUrl = segments.join("/");
+		router.push(baseUrl);
 	}
 
 	return (
