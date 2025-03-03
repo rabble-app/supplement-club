@@ -236,7 +236,7 @@ export default async function Home() {
 										className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
 										asChild
 									>
-										<Link href="#">Buy Now</Link>
+										<Link href={`/products/${productId}`}>Buy Now</Link>
 									</Button>
 								</div>
 							</div>

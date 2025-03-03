@@ -34,6 +34,7 @@ export function getQuarterInfo() {
 	const nextYear =
 		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;
 	const nextQuarterStart = new Date(nextYear, nextQuarterMonth % 12, 1);
+	const nextQuarterEnd = new Date(nextYear, (nextQuarterMonth % 12) + 3, 1);
 	// Calculate days remaining for the next quarter
 	const diffTime = nextQuarterStart.getTime() - date.getTime();
 	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -64,8 +65,10 @@ export function getQuarterInfo() {
 		new Date().toISOString(),
 	);
 
-	const nextDeliveryText = `${endDate.toLocaleString("en", { month: "long" })} 1st ${date.getFullYear()}`;
-	const nextDeliveryTextShort = `${endDate.toLocaleString("en", { month: "short" })} 1st ${date.getFullYear()}`;
+	console.log(prevQuarterMonth, currentQuarter, nextQuarterMonth);
+
+	const nextDeliveryText = `${nextQuarterEnd.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
+	const nextDeliveryTextShort = `${nextQuarterEnd.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
 
 	return {
 		currentQuarter,
@@ -114,23 +117,6 @@ export function getDifferenceInDays(date1: string, date2: string) {
 	const diffInDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
 	return diffInDays;
-}
-
-export function dropNextDelivery() {
-	let quater = "";
-	const month = new Date().getMonth();
-	if (month > 9) {
-		quater = "January";
-	}
-	if (month >= 6 && month < 9) {
-		quater = "October";
-	}
-	if (month >= 3 && month < 6) {
-		quater = "July";
-	}
-	quater = "April";
-
-	return `${quater} 1st ${new Date().getFullYear()}`;
 }
 
 export function getCardImage(brand: string) {
