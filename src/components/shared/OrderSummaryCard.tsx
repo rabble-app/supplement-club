@@ -51,8 +51,15 @@ export default function OrderSummaryCard({
 				<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 					{model.description}
 				</p>
-				<p className="text-[16px] leading-[16px] font-[600] font-inconsolata">
+				<p className="text-[16px] leading-[16px] font-[600] font-inconsolata inline">
 					{model.name}
+					<Image
+						src="/images/TM-blue.svg"
+						alt="TM corporation"
+						className="ml-[5px] inline"
+						width={24}
+						height={24}
+					/>
 				</p>
 				{model.delivery && (
 					<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import TopUpCapsuleHeading from "@/components/dashboard/manage-plans/TopUpCapsuleHeading";
 import AvailablePayment from "@/components/shared/AvailablePayment";
@@ -25,7 +25,7 @@ export default function TopUpCheckout({
 	const context = useUser();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [totalPrice, setTotalPrice] = useState<number>(0);
-	const [topupQuantity, setTopupQuantity] = useState<number>(0);
+	const [totalCapsules, setTotalCapsules] = useState<number>(0);
 	const [capsulesPerDay, setCapsulesPerDay] = useState<number>(1);
 	const [weeks, setWeeks] = useState<number>(1);
 	const steps = ["Top Up Capsules", "Payment Details"];
@@ -36,13 +36,18 @@ export default function TopUpCheckout({
 		{} as ISummaryProductModel,
 	);
 
-	const { remainsDaysToNextQuater, nextDeliveryText, currentQuarter } =
+	const { nextDeliveryText, currentQuarter, remainsDaysToNextQuater } =
 		getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 
 	useEffect(
-		() => setTopupQuantity(remainsDaysToNextQuater * capsulesPerDay * weeks),
-		[remainsDaysToNextQuater, capsulesPerDay, weeks],
+		() => setTotalCapsules(capsulesPerDay * 7 * weeks),
+		[capsulesPerDay, weeks],
+	);
+
+	const topupQuantity = useMemo(
+		() => remainsDaysToNextQuater * capsulesPerDay,
+		[remainsDaysToNextQuater, capsulesPerDay],
 	);
 
 	useEffect(() => {
@@ -60,14 +65,14 @@ export default function TopUpCheckout({
 				orders.push({
 					alt: item.product.imageUrl,
 					description:
-						topupQuantity > 0
-							? `${capsulesPerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
+						totalCapsules > 0
+							? `${totalCapsules} Capsules to see you to Q${nextQuater}`
 							: "",
-					capsules: topupQuantity,
+					capsules: totalCapsules,
 					name: item.product.name,
 					delivery: nextDeliveryText,
 					src: item.product.imageUrl,
-					price: topupQuantity * 0.25,
+					price: totalCapsules * 0.25,
 					pricePerCapsule: 0.25,
 					rrp: item.product.rrp,
 					id: item.id,
@@ -87,14 +92,7 @@ export default function TopUpCheckout({
 			setSummary(model);
 		};
 		fetchParams();
-	}, [
-		params,
-		nextDeliveryText,
-		nextQuater,
-		remainsDaysToNextQuater,
-		capsulesPerDay,
-		topupQuantity,
-	]);
+	}, [params, nextDeliveryText, nextQuater, capsulesPerDay, totalCapsules]);
 
 	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
@@ -130,7 +128,7 @@ export default function TopUpCheckout({
 					<PaymentList
 						topupQuantity={topupQuantity}
 						productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
-						teamId={managePlan?.team.id ?? ""}
+						teamId={managePlan?.team?.id ?? ""}
 						capsulePerDay={capsulesPerDay}
 						successAction={() => onOpenChange(true)}
 						totalPrice={totalPrice}

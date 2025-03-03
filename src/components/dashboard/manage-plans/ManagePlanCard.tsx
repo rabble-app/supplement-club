@@ -4,11 +4,11 @@ import Link from "next/link";
 
 import { ChevronRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import { type ReactNode, useEffect, useState } from "react";
 import OptBackInDialog from "../subscription-managment/OptBackInDialog";
 import ReactivatePlanDialog from "../subscription-managment/ReactivatePlanDialog";
+import { getQuarterInfo } from "@/utils/utils";
 
 const ConditionalLink = ({
 	href,
@@ -34,6 +34,7 @@ export default function ManagePlanCard({
 	const [totalCapsules, setTotalCapsules] = useState(0);
 	const [totalRrp, setTotalRrp] = useState(0);
 	const [percentage, setPercentage] = useState(0);
+	const { nextDeliveryTextShort } = getQuarterInfo();
 
 	useEffect(() => {
 		const totalSum = model?.team?.basket?.reduce(
@@ -113,13 +114,13 @@ export default function ManagePlanCard({
 					<ChevronRight className="text-blue" />
 				</div>
 				{model.isSkipped && model.subscriptionStatus === "ACTIVE" && (
-					<Button className="contents">
+					<div className="contents">
 						<div className="h-[30px] rounded-[17px]  flex justify-center items-center text-center text-[16px] leading-[20px] font-hagerman text-blue bg-blue11/10">
-							You&apos;ve opted to skip the Jan 1 2025 Drop
+							You&apos;ve opted to skip the {nextDeliveryTextShort}
 						</div>
 
 						<OptBackInDialog model={model} />
-					</Button>
+					</div>
 				)}
 				{model.subscriptionStatus !== "ACTIVE" && (
 					<>

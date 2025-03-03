@@ -22,9 +22,8 @@ export default function ReactivatePlanDialog({
 	model: IManagePlanModel;
 }>) {
 	const [packageAlignment, setPackageAlignment] = useState(false);
-	const { remainsDaysToNextQuater, nextDeliveryText, currentQuarter } =
+	const { remainsDaysToNextQuater, nextDeliveryText, nextQuarterMonth } =
 		getQuarterInfo();
-	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -97,10 +96,17 @@ export default function ReactivatePlanDialog({
 						/>
 						<div className="grid gap-[8px]">
 							<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
-								{`${remainsDaysToNextQuater * model.capsulePerDay} Capsules to see you to Q${nextQuater}`}
+								{`${remainsDaysToNextQuater * model.capsulePerDay} Capsules to see you to Q${nextQuarterMonth}`}
 							</p>
-							<p className="text-[16px] leading-[16px] font-[600] font-inconsolata">
+							<p className="text-[16px] leading-[16px] font-[600] font-inconsolata inline">
 								{model.name}
+								<Image
+									src="/images/TM-blue.svg"
+									alt="TM corporation"
+									className="ml-[5px] inline"
+									width={24}
+									height={24}
+								/>
 							</p>
 							<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 								Delivered Tomorrow

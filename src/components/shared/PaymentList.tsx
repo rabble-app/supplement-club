@@ -66,7 +66,7 @@ export default function PaymentList({
 				productId ?? "",
 				90 * capsulePerDay,
 				totalPrice,
-				capsulePerDay,
+				+capsulePerDay,
 			);
 		} else {
 			const response = (await paymentService.addPaymentIntent(
@@ -104,11 +104,11 @@ export default function PaymentList({
 			}
 
 			await paymentService.paymentBasketActive({
-				capsulePerDay: capsulePerDay,
+				capsulePerDay: +capsulePerDay,
 				orderId: captureResponse.data.orderId ?? "",
 				price: totalPrice,
 				productId: productId,
-				quantity: 90 * capsulePerDay + topupQuantity,
+				quantity: 90 * +capsulePerDay + topupQuantity,
 				teamId: teamId,
 				topupQuantity: topupQuantity,
 				userId: context?.user?.id ?? "",

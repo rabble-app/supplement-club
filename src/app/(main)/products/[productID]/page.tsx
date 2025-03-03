@@ -283,13 +283,14 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 						<BreadcrumbSeparator className="" />
 						<BreadcrumbItem>
-							<BreadcrumbPage className="flex items-center gap-[5px]">
+							<BreadcrumbPage className="inline">
 								{product?.name}{" "}
 								<Image
 									src="/images/TM-blue.svg"
 									alt="TM corporation"
-									width={16}
-									height={16}
+									className="ml-[5px] inline"
+									width={24}
+									height={24}
 								/>
 							</BreadcrumbPage>
 						</BreadcrumbItem>
