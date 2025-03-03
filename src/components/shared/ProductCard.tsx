@@ -49,16 +49,24 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 				</div>
 
 				<div className="grid gap-y-[8px]">
-					<p className="leading-[18px] text-black font-inconsolata text-base font-normal uppercase">
-						{model.producer?.businessName}
-					</p>
-					<p className="text-[24px] leading-[23px] font-[400] text-black font-hagerman">
+					{model.producer?.businessName && (
+						<p className="leading-[18px] text-black font-inconsolata text-base font-normal uppercase">
+							{model.producer?.businessName}
+						</p>
+					)}
+					<div className="text-[24px] font-[400] text-black font-hagerman flex items-center gap-[5px]">
 						{model.name}
-					</p>
+						<Image
+							src="/images/TM-blue.svg"
+							alt="TM corporation"
+							width={20}
+							height={20}
+						/>
+					</div>
 					<p className="leading-[18px] text-grey5">{model.description}</p>
 				</div>
 
-				<div className="grid grid-cols-[18px_1fr] gap-x-[4px] items-center">
+				<div className="grid grid-cols-[18px_1fr] gap-x-[4px] items-start">
 					<Image
 						src="/images/icons/checkmark-icon.svg"
 						alt="Checkmark logomark"

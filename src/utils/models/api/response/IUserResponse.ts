@@ -26,4 +26,9 @@ export interface IUserResponse extends IBaseTimestamps {
 	employee?: [];
 	token?: string;
 	shipping?: IShippingResponse;
+	metadata?: IMetadata;
+}
+
+interface IMetadata {
+	productId?: string;
 }

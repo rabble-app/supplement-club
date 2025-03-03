@@ -233,7 +233,7 @@ export default function TeamPrice({
 				{priceInfo.map((item, index) => (
 					<div
 						key={`info-${index + 1}`}
-						className="relative grid overflow-hidden"
+						className="relative grid overflow-hidden max-w-[148px] w-full"
 					>
 						{index === activeMemberIndex && (
 							<Image

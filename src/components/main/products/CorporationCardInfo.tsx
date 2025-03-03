@@ -16,8 +16,14 @@ export default function CorporationCardInfo({
 			<p className="text-[20px] leading-[24px] tracking-[-0.43px] md:font-[500] font-inconsolata md:text-grey4">
 				{businessName}
 			</p>
-			<div className="text-[24px] md:text-[32px] leading-[28px] md:leading-[150%] font-hagerman">
+			<div className="text-[24px] md:text-[32px] leading-[28px] md:leading-[150%] font-hagerman flex items-center gap-[5px]">
 				{name}
+				<Image
+					src="/images/TM-blue.svg"
+					alt="TM corporation"
+					width={24}
+					height={24}
+				/>
 			</div>
 			<div className="flex items-center gap-[8px]">
 				<Image

@@ -25,6 +25,7 @@ export default function TopUpCheckout({
 	const context = useUser();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [totalPrice, setTotalPrice] = useState<number>(0);
+	const [topupQuantity, setTopupQuantity] = useState<number>(0);
 	const [capsulesPerDay, setCapsulesPerDay] = useState<number>(1);
 	const [weeks, setWeeks] = useState<number>(1);
 	const steps = ["Top Up Capsules", "Payment Details"];
@@ -39,6 +40,11 @@ export default function TopUpCheckout({
 		getQuarterInfo();
 	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 
+	useEffect(
+		() => setTopupQuantity(remainsDaysToNextQuater * capsulesPerDay * weeks),
+		[remainsDaysToNextQuater, capsulesPerDay, weeks],
+	);
+
 	useEffect(() => {
 		const fetchParams = async () => {
 			const { subscriptionID } = await params;
@@ -51,18 +57,17 @@ export default function TopUpCheckout({
 					setCapsulesPerDay(+item.capsulePerDay || 1);
 				}
 
-				const capsules = capsulesPerDay * remainsDaysToNextQuater;
 				orders.push({
 					alt: item.product.imageUrl,
 					description:
-						capsules > 0
+						topupQuantity > 0
 							? `${capsulesPerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
 							: "",
-					capsules: capsules,
+					capsules: topupQuantity,
 					name: item.product.name,
 					delivery: nextDeliveryText,
 					src: item.product.imageUrl,
-					price: capsules * 0.25,
+					price: topupQuantity * 0.25,
 					pricePerCapsule: 0.25,
 					rrp: item.product.rrp,
 					id: item.id,
@@ -88,13 +93,8 @@ export default function TopUpCheckout({
 		nextQuater,
 		remainsDaysToNextQuater,
 		capsulesPerDay,
+		topupQuantity,
 	]);
-
-	function setCapsulePerWeek(capules: string, week: string) {
-		setCapsulesPerDay(+capules);
-		setWeeks(+week);
-		setStep(step + 1);
-	}
 
 	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
@@ -120,12 +120,17 @@ export default function TopUpCheckout({
 			<div className="flex flex-col gap-[37px]">
 				<Steps activeStep={step} alignStart steps={steps} />
 				{step === 1 && (
-					<TopUpCapsuleHeading updateInfoAction={setCapsulePerWeek} />
+					<TopUpCapsuleHeading
+						updateCapsuleAction={(val) => setCapsulesPerDay(+val)}
+						updateWeekAction={(val) => setWeeks(+val)}
+						successAction={() => setStep(step + 1)}
+					/>
 				)}
 				{step !== 1 && (
 					<PaymentList
-						productId={managePlan?.team?.basket[0]?.product?.id}
-						teamId={managePlan?.team.id}
+						topupQuantity={topupQuantity}
+						productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
+						teamId={managePlan?.team.id ?? ""}
 						capsulePerDay={capsulesPerDay}
 						successAction={() => onOpenChange(true)}
 						totalPrice={totalPrice}

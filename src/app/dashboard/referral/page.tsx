@@ -15,7 +15,9 @@ export default function Refer() {
 					credited off your next payment
 				</div>
 			)}
-			<RererralCardsWithLink />
+			<div className="max-w-[600px] mx-auto">
+				<RererralCardsWithLink className="bg-transparent border-0" />
+			</div>
 		</>
 	);
 }

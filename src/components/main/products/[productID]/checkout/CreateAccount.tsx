@@ -44,17 +44,13 @@ export default function CreateAccount({
 		const result = (await authService.register(
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
+			productId ?? "",
 		)) as IResponseModel;
 		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;
 			setUser(userData);
 			context?.setNewUser(userData);
 
-			// logged the user
-			await authService.login(
-				e.get("email")?.toString() ?? "",
-				e.get("password")?.toString() ?? "",
-			);
 			router.push(
 				`/auth/email-verify?redirect=/products/${productId}/checkout`,
 			);

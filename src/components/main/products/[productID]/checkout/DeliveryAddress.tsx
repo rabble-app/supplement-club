@@ -35,7 +35,6 @@ export default function DeliveryAddress({
 	async function onSubmit(e: FormData) {
 		const result = await usersService.addDeliveryAddress({
 			userId: context?.user?.id ?? "",
-			channel: "SUPPLEMENT",
 			firstName: e.get("firstName")?.toString() ?? "",
 			lastName: e.get("lastName")?.toString() ?? "",
 			address: e.get("address")?.toString() ?? "",
@@ -49,7 +48,10 @@ export default function DeliveryAddress({
 		// set payment card by default
 		if (context?.user) {
 			context.user.shipping = result.data;
+			context.user.firstName = e.get("firstName")?.toString() ?? "";
+			context.user.lastName = e.get("lastName")?.toString() ?? "";
 			setUser(context.user);
+			context?.setNewUser(context.user);
 		}
 
 		if (result?.statusCode === 201 || result?.statusCode === 200) {

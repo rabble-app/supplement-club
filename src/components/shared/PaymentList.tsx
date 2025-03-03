@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
@@ -13,7 +13,6 @@ import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionM
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type ICaptureApiResponse from "@/utils/models/services/ICaptureApiResponse";
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
-import { getQuarterInfo } from "@/utils/utils";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
@@ -25,23 +24,20 @@ export default function PaymentList({
 	isComming,
 	capsulePerDay,
 	teamId,
+	topupQuantity,
 	productId,
-	orderId,
 	successAction,
 }: Readonly<{
 	totalPrice: number;
 	capsulePerDay: number;
-	teamId?: string;
-	productId?: string;
-	orderId?: string;
+	teamId: string;
+	topupQuantity: number;
+	productId: string;
 	isComming?: boolean;
 	successAction: () => void;
 }>) {
 	const [policyTerms, setPolicyTerms] = useState(true);
 	const [address, setAddress] = useState(true);
-	const { quarterly } = getQuarterInfo();
-	const topupQuantity = 2;
-	const quantity = topupQuantity * quarterly; // total quantity (quartely + topUp quantity)
 
 	const context = useUser();
 
@@ -57,24 +53,27 @@ export default function PaymentList({
 		fetchUserPaymentOptions();
 	}, [context?.user?.stripeCustomerId]);
 
-	async function onSubmit() {
-		const currectCard = userCards.find((u) => u.id === defaultCard);
+	async function processPayment(cards: IUserPaymentOptionModel[]) {
+		let currectCard = cards.find((u) => u.id === defaultCard);
+		if (!currectCard) {
+			currectCard = cards[0];
+		}
 
 		if (isComming) {
 			await paymentService.addPreorderBulkBasket(
 				teamId ?? "",
 				context?.user?.id ?? "",
 				productId ?? "",
-				quantity,
+				90 * capsulePerDay,
 				totalPrice,
 				capsulePerDay,
 			);
 		} else {
 			const response = (await paymentService.addPaymentIntent(
 				totalPrice,
-				"gbp",
+				process.env.NEXT_PUBLIC_PRODUCT_CURRENCY as string,
 				currectCard?.customer ?? "",
-				defaultCard,
+				currectCard.id,
 			)) as IPaymentIntentApiResponse;
 
 			if (response.statusCode !== 200) {
@@ -89,7 +88,7 @@ export default function PaymentList({
 
 			const captureResponse = (await paymentService.addCapturePayment(
 				totalPrice,
-				teamId ?? "",
+				teamId,
 				response.data.paymentIntentId,
 				context?.user?.id ?? "",
 			)) as ICaptureApiResponse;
@@ -106,11 +105,11 @@ export default function PaymentList({
 
 			await paymentService.paymentBasketActive({
 				capsulePerDay: capsulePerDay,
-				orderId: orderId ?? "",
+				orderId: captureResponse.data.orderId ?? "",
 				price: totalPrice,
-				productId: productId ?? "",
-				quantity: quantity,
-				teamId: teamId ?? "",
+				productId: productId,
+				quantity: 90 * capsulePerDay + topupQuantity,
+				teamId: teamId,
 				topupQuantity: topupQuantity,
 				userId: context?.user?.id ?? "",
 			});
@@ -118,7 +117,7 @@ export default function PaymentList({
 
 		const addTeamMemberResponse = (await teamsService.addTeamMember(
 			context?.user?.id ?? "",
-			teamId ?? "",
+			teamId,
 		)) as IResponseModel;
 
 		if (addTeamMemberResponse.statusCode !== 200) {
@@ -139,6 +138,13 @@ export default function PaymentList({
 			stripeCustomerId ?? "",
 		);
 		setUserCards(model);
+	}
+
+	async function addCreditCard() {
+		const cards = await paymentService.getUserPaymentOptions(
+			context?.user?.stripeCustomerId ?? "",
+		);
+		await processPayment(cards);
 	}
 
 	const ButtonSection = (
@@ -240,8 +246,8 @@ export default function PaymentList({
 					{ButtonSection}
 
 					<Button
-						onClick={() => onSubmit()}
-						className="bg-blue text-white w-full font-bold"
+						onClick={() => startTransition(() => processPayment(userCards))}
+						className="bg-blue text-white font-bold w-full h-[51px]"
 					>
 						{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 						{/* Use a regular string */}
@@ -253,13 +259,13 @@ export default function PaymentList({
 				(userCards?.length === 0 && (
 					<PaymentConfirmForm
 						totalPrice={totalPrice}
-						successAction={successAction}
+						successAction={addCreditCard}
 					>
 						{ButtonSection}
 
 						<Button
 							type="submit"
-							className="bg-blue text-white w-full font-bold mt-[20px]"
+							className="bg-blue text-white font-bold w-full h-[51px] mt-[20px]"
 						>
 							{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 							{/* Use a regular string */}

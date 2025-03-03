@@ -15,7 +15,9 @@ import { Button } from "../ui/button";
 import Spinner from "./Spinner";
 import { CustomToast, StatusToast } from "./Toast";
 
-export default function ReferralCardsWithLink() {
+export default function ReferralCardsWithLink({
+	className,
+}: Readonly<{ className?: string }>) {
 	const [loading, setLoading] = useState(true);
 	const [nextMilestone, setNextMilestone] = useState<IReferalModel>();
 	const [openReferal, setOpenReferal] = useState(false);
@@ -68,7 +70,9 @@ export default function ReferralCardsWithLink() {
 	if (loading) return <Spinner />;
 
 	return (
-		<div className="max-w-[600px] mx-auto pt-[16px] pb-[100px] md:py-[35px]">
+		<div
+			className={`mx-[-16px] px-[16px] md:mx-auto pt-[16px] md:py-[24px] border-grey12 border-[1px] md:px-[32px] bg-grey11 md:bg-white ${className}`}
+		>
 			<div className="grid gap-[24px]">
 				{isDashboard && (
 					<div className="grid md:grid-cols-2 gap-[16px]">

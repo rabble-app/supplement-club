@@ -1,7 +1,7 @@
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { type PaymentMethod, loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import PaymentElements from "./PaymentElements";
 import Spinner from "./Spinner";
@@ -17,7 +17,7 @@ export default function PaymentConfirmForm({
 }: Readonly<{
 	totalPrice: number;
 	children?: React.ReactNode;
-	successAction: () => void;
+	successAction: (paymentMethod: string | PaymentMethod | null) => void;
 }>) {
 	const [clientSecret, setClientSecret] = useState("");
 	const context = useUser();
@@ -26,7 +26,7 @@ export default function PaymentConfirmForm({
 		const fetchPaymentIntent = async () => {
 			const model = await paymentService.createPaymentIntent(
 				totalPrice,
-				"gbp",
+				process.env.NEXT_PUBLIC_PRODUCT_CURRENCY as string,
 				context?.user?.stripeCustomerId ?? "",
 			);
 			setClientSecret(model.clientSecret);
@@ -35,13 +35,17 @@ export default function PaymentConfirmForm({
 		fetchPaymentIntent();
 	}, [context?.user?.stripeCustomerId, totalPrice]);
 
+	function onCardAction(paymentMethod: string | PaymentMethod | null) {
+		successAction(paymentMethod);
+	}
+
 	return (
 		<div className="mx-auto w-full">
 			{clientSecret ? (
 				<Elements options={{ clientSecret }} stripe={stripePromise}>
 					<PaymentElements
 						clientSecret={clientSecret}
-						cardAction={successAction}
+						cardAction={onCardAction}
 					>
 						{children}
 					</PaymentElements>

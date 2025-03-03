@@ -5,29 +5,36 @@ import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
 import { useUserStore } from "@/stores/userStore";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-
 export default function EmailVerification() {
 	const searchParams = useSearchParams();
 	const context = useUser();
 	const token = searchParams.get("token");
 	const { setUser } = useUserStore((state) => state);
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchToken = async () => {
 			const response = (await authService.emailVerify(token as string)) as {
 				data: IUserResponse;
 			};
+
 			if (context?.user) {
 				context.user.isVerified = response.data.isVerified;
 				setUser(context.user);
+
+				if (response.data.metadata?.productId) {
+					router.push(
+						`/products/${response.data.metadata?.productId}/checkout/`,
+					);
+				}
 			}
 		};
 		if (token && !context?.user?.isVerified) {
 			fetchToken();
 		}
-	}, [token, context, setUser]);
+	}, [token, context, setUser, router]);
 
 	return (
 		<div className="w-full md:w-[800px] mx-auto py-[200px] px-[20px] grid gap-[24px] justify-center">

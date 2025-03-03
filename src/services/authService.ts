@@ -9,12 +9,12 @@ export const authService = {
 			role: "USER",
 		}),
 
-	register: async (email: string, password: string) =>
+	register: async (email: string, password: string, productId: string) =>
 		await apiRequest(AUTH_ENDPOINTS.REGISTER, "POST", {
 			email,
 			password,
 			role: "USER",
-			referralCode: "1233444",
+			metadata: { productId },
 		}),
 
 	resetPassword: async (email: string) =>

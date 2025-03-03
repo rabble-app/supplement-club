@@ -185,7 +185,7 @@ export default function ProductDetails({
 	if (loading) return <Spinner />;
 
 	return (
-		<div className="grid lg:grid-cols-2 gap-[32px] container-width relative">
+		<div className="grid lg:grid-cols-2 md:gap-[32px] container-width relative">
 			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
@@ -275,7 +275,7 @@ export default function ProductDetails({
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start pb-[50px]">
+			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start md:pb-[50px]">
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -283,7 +283,15 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 						<BreadcrumbSeparator className="" />
 						<BreadcrumbItem>
-							<BreadcrumbPage>{product?.name}</BreadcrumbPage>
+							<BreadcrumbPage className="flex items-center gap-[5px]">
+								{product?.name}{" "}
+								<Image
+									src="/images/TM-blue.svg"
+									alt="TM corporation"
+									width={16}
+									height={16}
+								/>
+							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
@@ -319,7 +327,10 @@ export default function ProductDetails({
 						<SummaryProduct className="bg-white" model={summary} />
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-							<Link href={`/products/${product?.id}/checkout`}>
+							<Link
+								className="w-full h-full flex items-center justify-center"
+								href={`/products/${product?.id}/checkout`}
+							>
 								Start My Subscription
 							</Link>
 						</Button>
@@ -397,7 +408,10 @@ export default function ProductDetails({
 
 				{context?.user && !product?.isComming && (
 					<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-						<Link href={`/products/${product?.id}/checkout`}>
+						<Link
+							className="w-full h-full flex items-center justify-center"
+							href={`/products/${product?.id}/checkout`}
+						>
 							Start My Subscription
 						</Link>
 					</Button>

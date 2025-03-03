@@ -78,19 +78,21 @@ const capsulesPerDay = [
 ] as IFilterModel[];
 
 export default function TopUpCapsuleHeading({
-	updateInfoAction,
+	updateWeekAction,
+	updateCapsuleAction,
+	successAction,
 }: Readonly<{
-	updateInfoAction: (capsules: string, weeks: string) => void;
+	updateWeekAction: (val: string) => void;
+	updateCapsuleAction: (val: string) => void;
+	successAction: () => void;
 }>) {
 	const form = useForm<z.infer<typeof step1FormSchema>>({
 		resolver: zodResolver(step1FormSchema),
 		mode: "onChange",
 	});
 
-	const onSubmit: SubmitHandler<z.infer<typeof step1FormSchema>> = async (
-		data,
-	) => {
-		updateInfoAction(data.capsules, data.weekly);
+	const onSubmit: SubmitHandler<z.infer<typeof step1FormSchema>> = async () => {
+		successAction();
 	};
 
 	return (
@@ -113,7 +115,13 @@ export default function TopUpCapsuleHeading({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Weeks Supply</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+							<Select
+								onValueChange={(value) => {
+									field.onChange(value); // Update form state
+									updateWeekAction(value); // Call your method
+								}}
+								defaultValue={field.value}
+							>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder="e.g 2 Weeks" />
@@ -137,7 +145,13 @@ export default function TopUpCapsuleHeading({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Capsules Per Day</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+							<Select
+								onValueChange={(value) => {
+									field.onChange(value); // Update form state
+									updateCapsuleAction(value); // Call your method
+								}}
+								defaultValue={field.value}
+							>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue placeholder="e.g. 2" />
