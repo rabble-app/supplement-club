@@ -71,7 +71,7 @@ export default function ReferralCardsWithLink({
 
 	return (
 		<div
-			className={`mx-[-16px] px-[16px] md:mx-auto pt-[16px] md:py-[24px] border-grey12 border-[1px] md:px-[32px] bg-grey11 md:bg-white ${className}`}
+			className={`mx-[-16px] px-[16px] md:mx-auto pt-[16px] md:py-[24px] md:px-[32px] bg-grey11 md:bg-white ${className}`}
 		>
 			<div className="grid gap-[24px]">
 				{isDashboard && (

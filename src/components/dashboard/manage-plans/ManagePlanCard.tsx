@@ -5,10 +5,9 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import { type ReactNode, useEffect, useState } from "react";
-import OptBackInDialog from "../subscription-managment/OptBackInDialog";
-import ReactivatePlanDialog from "../subscription-managment/ReactivatePlanDialog";
 import { getQuarterInfo } from "@/utils/utils";
+import { type ReactNode, useEffect, useState } from "react";
+import PlanDialog from "../subscription-managment/PlanDialog";
 
 const ConditionalLink = ({
 	href,
@@ -119,7 +118,12 @@ export default function ManagePlanCard({
 							You&apos;ve opted to skip the {nextDeliveryTextShort}
 						</div>
 
-						<OptBackInDialog model={model} />
+						<PlanDialog
+							model={model}
+							title="Are you sure you want to Opt back in?"
+							triggerText="Opt Back In"
+							apiRoute="opt-back-in"
+						/>
 					</div>
 				)}
 				{model.subscriptionStatus !== "ACTIVE" && (
@@ -127,7 +131,12 @@ export default function ManagePlanCard({
 						<div className="h-[30px] rounded-[17px]  flex justify-center items-center text-center text-[16px] leading-[20px] font-hagerman bg-[#FF3B301A] text-red3">
 							You&apos;ve cancelled this plan
 						</div>
-						<ReactivatePlanDialog model={model} />
+						<PlanDialog
+							model={model}
+							title="Are you sure you want to reactivate your plan?"
+							triggerText="Re-Activate Plan"
+							apiRoute="reactivate-plan"
+						/>
 					</>
 				)}
 			</div>

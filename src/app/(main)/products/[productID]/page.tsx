@@ -289,8 +289,8 @@ export default function ProductDetails({
 									src="/images/TM-blue.svg"
 									alt="TM corporation"
 									className="ml-[5px] inline"
-									width={24}
-									height={24}
+									width={16}
+									height={16}
 								/>
 							</BreadcrumbPage>
 						</BreadcrumbItem>
@@ -403,7 +403,7 @@ export default function ProductDetails({
 					<div className="grid gap-[28px] w-full">
 						<SummaryProduct model={summary} />
 
-						<ReferralCardsWithLink />
+						<ReferralCardsWithLink className="border-grey12 border-[1px] " />
 					</div>
 				)}
 

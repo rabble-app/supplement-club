@@ -57,8 +57,8 @@ export default function OrderSummaryCard({
 						src="/images/TM-blue.svg"
 						alt="TM corporation"
 						className="ml-[5px] inline"
-						width={24}
-						height={24}
+						width={16}
+						height={16}
 					/>
 				</p>
 				{model.delivery && (
