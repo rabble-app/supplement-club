@@ -42,6 +42,10 @@
   display: none;
 }
 
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+}
+
 html {
   scrollbar-gutter: stable;
 }
