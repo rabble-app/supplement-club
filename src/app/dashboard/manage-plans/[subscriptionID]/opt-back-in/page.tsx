@@ -32,14 +32,13 @@ export default function OptBackIn({
 
 	const {
 		remainsDaysToNextQuater,
-		currentQuarter,
+		nextQuarterMonth,
 		prevQuarterYear,
-		prevEndDate,
+		startDate,
 		nextDeliveryText,
 	} = getQuarterInfo();
-	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
-	const previousDelivery = `${prevEndDate.toLocaleString("en", { month: "long" })} ${prevQuarterYear}`;
-	const previousDeliveryWithDay = `1st ${prevEndDate.toLocaleString("en", { month: "long" })}, ${prevQuarterYear}`;
+	const previousDelivery = `${startDate.toLocaleString("en", { month: "long" })} ${prevQuarterYear}`;
+	const previousDeliveryWithDay = `1st ${startDate.toLocaleString("en", { month: "long" })}, ${prevQuarterYear}`;
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -55,7 +54,7 @@ export default function OptBackIn({
 					alt: item.product.imageUrl,
 					description:
 						capsules > 0
-							? `${+item.capsulePerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuater}`
+							? `${+item.capsulePerDay * remainsDaysToNextQuater} Capsules to see you to Q${nextQuarterMonth}`
 							: "",
 					capsules: capsules,
 					name: item.product.name,
@@ -81,7 +80,7 @@ export default function OptBackIn({
 			setSummary(model);
 		};
 		fetchParams();
-	}, [params, nextDeliveryText, nextQuater, remainsDaysToNextQuater]);
+	}, [params, nextDeliveryText, nextQuarterMonth, remainsDaysToNextQuater]);
 
 	async function onOpenChange(val: boolean) {
 		setIsDialogOpen(val);
@@ -125,7 +124,7 @@ export default function OptBackIn({
 				<PaymentList
 					topupQuantity={topupQuantity}
 					productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
-					teamId={managePlan?.team.id ?? ""}
+					teamId={managePlan?.team?.id ?? ""}
 					capsulePerDay={managePlan.capsulePerDay}
 					successAction={() => onOpenChange(true)}
 					totalPrice={totalPrice}

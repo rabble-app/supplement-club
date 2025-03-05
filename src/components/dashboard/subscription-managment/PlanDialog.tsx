@@ -1,6 +1,3 @@
-import { DialogClose } from "@radix-ui/react-dialog";
-import Image from "next/image";
-
 import PricePerCapsule from "@/components/shared/PricePerCapsule";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,30 +10,40 @@ import {
 } from "@/components/ui/dialog";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
 import { getQuarterInfo } from "@/utils/utils";
+import { DialogClose } from "@radix-ui/react-dialog";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ReactivatePlanDialog({
-	model,
-}: Readonly<{
+interface PlanDialogProps {
 	model: IManagePlanModel;
-}>) {
+	title: string;
+	triggerText: string;
+	apiRoute: string;
+}
+
+export default function PlanDialog({
+	model,
+	title,
+	triggerText,
+	apiRoute,
+}: PlanDialogProps) {
 	const [packageAlignment, setPackageAlignment] = useState(false);
-	const { remainsDaysToNextQuater, nextDeliveryText, currentQuarter } =
+	const { remainsDaysToNextQuater, nextQuarterMonth, nextDeliveryText } =
 		getQuarterInfo();
-	const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 
-	async function confirmAction() {
-		router.push(`/dashboard/manage-plans/${model.id}/reactivate-plan`);
+	function confirmAction() {
+		router.push(`/dashboard/manage-plans/${model.id}/${apiRoute}`);
 		setIsOpen(false);
 	}
+
 	return (
 		<Dialog open={isOpen}>
 			<DialogTrigger onClick={() => setIsOpen(true)}>
 				<div className="text-blue flex justify-center items-center text-center h-[50px] rounded-[2px] bg-grey27/[12%] text-[17px] leading-[22px] font-bold font-inconsolata cursor-pointer">
-					Re-Activate Plan
+					{triggerText}
 				</div>
 			</DialogTrigger>
 			<DialogContent
@@ -46,10 +53,10 @@ export default function ReactivatePlanDialog({
 				<DialogHeader className="flex flex-col justify-between items-center">
 					<div className="grid gap-[8px] w-full">
 						<DialogTitle className="text-[24px] leading-[28px] font-hagerman font-[400] mx-auto">
-							Are you sure you want to reactive your plan?
+							{title}
 						</DialogTitle>
 						<p className="text-[16px] leading-[24px] font-helvetica font-[400] text-center">
-							You are Re-Activating your plan and, the next delivery is on{" "}
+							You are reactivating your plan, and the next delivery is on{" "}
 							<span className="font-bold">{nextDeliveryText}</span>.
 						</p>
 					</div>
@@ -97,10 +104,17 @@ export default function ReactivatePlanDialog({
 						/>
 						<div className="grid gap-[8px]">
 							<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
-								{`${remainsDaysToNextQuater * model.capsulePerDay} Capsules to see you to Q${nextQuater}`}
+								{`${remainsDaysToNextQuater * model.capsulePerDay} Capsules to see you to Q${nextQuarterMonth}`}
 							</p>
-							<p className="text-[16px] leading-[16px] font-[600] font-inconsolata">
+							<p className="text-[16px] leading-[16px] font-[600] font-inconsolata inline">
 								{model.name}
+								<Image
+									src="/images/TM-blue.svg"
+									alt="TM corporation"
+									className="ml-[5px] inline"
+									width={16}
+									height={16}
+								/>
 							</p>
 							<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 								Delivered Tomorrow

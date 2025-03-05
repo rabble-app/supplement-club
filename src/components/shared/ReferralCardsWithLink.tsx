@@ -4,7 +4,7 @@ import type IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import type IReferalModel from "@/utils/models/api/IReferalModel";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BalanceCard from "../dashboard/referral/BalanceCard";
 import MilestoneCard from "../dashboard/referral/MilestoneCard";
 import ReferInfoCard from "../dashboard/referral/ReferInfoCard";
@@ -32,35 +32,37 @@ export default function ReferralCardsWithLink({
 		balance: 0,
 	} as IReferalInfoModel);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const [referalInfoResponse, referalRewardsResponse] = await Promise.all(
-					[referalService.getReferalInfo(), referalService.getRewars()],
-				);
+	const fetchReferralData = useCallback(async () => {
+		try {
+			setLoading(true);
+			const [referalInfoResponse, referalRewardsResponse] = await Promise.all([
+				referalService.getReferalInfo(),
+				referalService.getRewars(),
+			]);
 
-				setReferalInfo(referalInfoResponse);
-				setReferalRewars(referalRewardsResponse);
+			setReferalInfo(referalInfoResponse);
+			setReferalRewars(referalRewardsResponse);
 
-				const next = referalRewardsResponse.find(
-					(i) => i.amount > referalInfoResponse?.balance,
-				);
-				setNextMilestone(next);
-			} catch (error) {
-				CustomToast({
-					title: `Error fetching referral data:${error}`,
-					status: StatusToast.ERROR,
-				});
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchData();
+			const next = referalRewardsResponse.find(
+				(i) => i.amount > referalInfoResponse?.balance,
+			);
+			setNextMilestone(next);
+		} catch (error) {
+			CustomToast({
+				title: `Error fetching referral data: ${error}`,
+				status: StatusToast.ERROR,
+			});
+		} finally {
+			setLoading(false);
+		}
 	}, []);
 
-	function claimReward(val: number) {
-		console.log(val);
+	useEffect(() => {
+		fetchReferralData();
+	}, [fetchReferralData]);
+
+	async function claimReward(val: number) {
+		await fetchReferralData();
 	}
 
 	function updateVisibility(val: boolean) {
@@ -71,7 +73,7 @@ export default function ReferralCardsWithLink({
 
 	return (
 		<div
-			className={`mx-[-16px] px-[16px] md:mx-auto pt-[16px] md:py-[24px] border-grey12 border-[1px] md:px-[32px] bg-grey11 md:bg-white ${className}`}
+			className={`mx-[-16px] px-[16px] md:mx-auto pt-[16px] md:py-[24px] md:px-[32px] bg-grey11 md:bg-white ${className}`}
 		>
 			<div className="grid gap-[24px]">
 				{isDashboard && (

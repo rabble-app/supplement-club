@@ -64,7 +64,7 @@ const DialogContent = React.forwardRef<
 		ref,
 	) => (
 		<DialogPrimitive.Portal>
-			<DialogPrimitive.Overlay className="fixed inset-0 bg-black/50" />
+			<DialogPrimitive.Overlay className="fixed inset-0 bg-black/50 z-[10]" />
 			<DialogPrimitive.Content
 				ref={ref}
 				className={cn(dialogVariants({ align, border }), className)}
