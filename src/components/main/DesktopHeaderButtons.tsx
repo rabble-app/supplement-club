@@ -13,10 +13,16 @@ const UserProfile = ({ user }: { user?: IUserResponse }) => (
 			height={16}
 		/>
 		<div className="font-inconsolata font-bold text-[16px]">
-			{user &&
-				(user.firstName
-					? `${user.firstName} ${user.lastName?.slice(0, 1)}.`
-					: "Welcome")}
+			{user?.firstName && (
+				<Link
+					href="/dashboard"
+					className="font-inconsolata font-bold text-[16px]"
+				>
+					{user.firstName
+						? `${user.firstName} ${user.lastName?.slice(0, 1)}.`
+						: "Welcome"}
+				</Link>
+			)}
 			{!user && (
 				<Link
 					href="/auth/login"
