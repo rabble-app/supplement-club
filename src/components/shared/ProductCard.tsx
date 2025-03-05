@@ -54,14 +54,13 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 							{model.producer?.businessName}
 						</p>
 					)}
-					<div className="text-[24px] font-[400] text-black font-hagerman inline">
+					<div className="text-[24px] font-[400] text-black font-hagerman flex items-center gap-[5px]">
 						{model.name}
 						<Image
 							src="/images/TM-blue.svg"
 							alt="TM corporation"
-							className="ml-[5px] inline"
-							width={24}
-							height={24}
+							width={20}
+							height={20}
 						/>
 					</div>
 					<p className="leading-[18px] text-grey5">{model.description}</p>

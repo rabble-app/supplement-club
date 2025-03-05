@@ -56,24 +56,19 @@ export function getQuarterInfo() {
 		date.getFullYear(),
 		currentQuarter,
 	);
-
-	// Get quarter dates
-	const { startDate: startDateNext, endDate: endDateNext } = getQuarterDates(
-		date.getFullYear(),
-		nextQuarterMonth,
-	);
 	const { startDate: prevStartDate, endDate: prevEndDate } = getQuarterDates(
 		prevYear,
 		Math.floor(prevQuarterMonth / 3) + 1,
 	);
 	const remainsDaysToNextQuater = getDifferenceInDays(
-		new Date(nextYear, endDateNext.getMonth(), 1).toISOString(),
+		new Date(nextYear, endDate.getMonth(), 1).toISOString(),
 		new Date().toISOString(),
 	);
 
+	console.log(prevQuarterMonth, currentQuarter, nextQuarterMonth);
+
 	const nextDeliveryText = `${nextQuarterEnd.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
 	const nextDeliveryTextShort = `${nextQuarterEnd.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
-	const currentDeliveryTextShort = `${endDate.toLocaleString("en", { month: "short" })} 1st ${prevYear}`;
 
 	return {
 		currentQuarter,
@@ -82,10 +77,7 @@ export function getQuarterInfo() {
 		nextQuarterMonth,
 		startDate,
 		endDate,
-		currentDeliveryTextShort,
 		remainsDaysToNextQuater,
-		startDateNext,
-		endDateNext,
 		prevQuarterMonth,
 		prevQuarterYear: prevYear,
 		prevQuarterStart,
@@ -261,7 +253,7 @@ export const mapSubscriptionModel = (
 		quantity: model.team?.basket[0]?.quantity,
 		team: model.team,
 		price: model.team?.basket[0]?.product?.price,
-		capsulePerDay: model.team?.basket[0]?.capsulePerDay,
+		capsulePerDay: model.team?.basket[0]?.product?.capsulePerDay,
 		percent: model.team?.basket[0]?.product?.percent,
 	};
 };

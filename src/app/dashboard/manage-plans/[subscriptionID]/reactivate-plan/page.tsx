@@ -100,7 +100,7 @@ export default function ReactivatePlan({
 				<PaymentList
 					topupQuantity={topupQuantity}
 					productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
-					teamId={managePlan?.team?.id ?? ""}
+					teamId={managePlan?.team.id ?? ""}
 					capsulePerDay={managePlan.capsulePerDay}
 					successAction={() => onOpenChange(true)}
 					totalPrice={totalPrice}

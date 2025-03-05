@@ -42,14 +42,11 @@ export const apiRequest = async <T>(
 export function mapTagToValue(tag: string) {
 	const tagValueMap: { [key: string]: string } = {
 		"Heart Health": "/images/icons/heart-pulse-icon.svg",
-		"Aging (40+)": "/images/icons/aging.svg",
 		Fertility: "/images/icons/baby-icon.svg",
 		Sleep: "/images/icons/bed-icon.svg",
 		Energy: "/images/icons/energy-icon.svg",
-		"Anti-Aging": "/images/icons/hourglass-icon.svg",
 		"Healthy Aging": "/images/icons/hourglass-icon.svg",
 		Longevity: "/images/icons/tree-icon.svg",
-		"Training/Athletics": "/images/icons/dumbell-icon.svg",
 		"Weight Training": "/images/icons/dumbell-icon.svg",
 		Athletes: "/images/icons/athletes-icon.svg",
 		Immunity: "/images/icons/shield-icon.svg",

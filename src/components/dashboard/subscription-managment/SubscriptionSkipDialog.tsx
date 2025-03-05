@@ -11,14 +11,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { getQuarterInfo } from "@/utils/utils";
 
 export default function SubscriptionSkipDialog({
 	confirmAction,
 }: Readonly<{
 	confirmAction: () => void;
 }>) {
-	const { nextDeliveryTextShort } = getQuarterInfo();
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -47,8 +45,8 @@ export default function SubscriptionSkipDialog({
 				<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
 
 				<div className="text-[16px] leading-[24px] font-[400] font-helvetica text-grey6">
-					You are opting to skip the {nextDeliveryTextShort} Drop. Are you sure
-					you want to Skip?
+					You are opting to skip the Jan 1st 2025 Drop. Are you sure you want to
+					Skip?
 				</div>
 
 				<Button

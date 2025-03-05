@@ -40,9 +40,7 @@ export default function CapsuleBox({
 	selectCapsulePerDayAction: (val: number) => void;
 }>) {
 	const days = 90;
-	const [selectedState, setSelectedState] = useState(
-		capsuleInfo?.[0].capsuleCount ?? 0,
-	);
+	const [selectedState, setSelectedState] = useState(2);
 
 	const [units] = useState(
 		unitsOfMeasurePerSubUnit === "grams" ? "g" : "Capsules",
