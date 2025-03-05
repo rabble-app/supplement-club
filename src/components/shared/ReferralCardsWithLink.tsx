@@ -61,7 +61,7 @@ export default function ReferralCardsWithLink({
 		fetchReferralData();
 	}, [fetchReferralData]);
 
-	async function claimReward(val: number) {
+	async function claimReward() {
 		await fetchReferralData();
 	}
 
