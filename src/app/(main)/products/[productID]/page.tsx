@@ -283,12 +283,11 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 						<BreadcrumbSeparator className="" />
 						<BreadcrumbItem>
-							<BreadcrumbPage className="inline">
+							<BreadcrumbPage className="flex items-center gap-[5px]">
 								{product?.name}{" "}
 								<Image
 									src="/images/TM-blue.svg"
 									alt="TM corporation"
-									className="ml-[5px] inline"
 									width={16}
 									height={16}
 								/>
@@ -403,7 +402,7 @@ export default function ProductDetails({
 					<div className="grid gap-[28px] w-full">
 						<SummaryProduct model={summary} />
 
-						<ReferralCardsWithLink className="border-grey12 border-[1px] " />
+						<ReferralCardsWithLink />
 					</div>
 				)}
 

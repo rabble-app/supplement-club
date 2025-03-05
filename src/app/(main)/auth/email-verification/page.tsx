@@ -20,10 +20,15 @@ export default function EmailVerification() {
 				data: IUserResponse;
 			};
 
-			setUser(response.data);
+			if (context?.user) {
+				context.user.isVerified = response.data.isVerified;
+				setUser(context.user);
 
-			if (response.data.metadata?.productId) {
-				router.push(`/products/${response.data.metadata?.productId}/checkout/`);
+				if (response.data.metadata?.productId) {
+					router.push(
+						`/products/${response.data.metadata?.productId}/checkout/`,
+					);
+				}
 			}
 		};
 		if (token && !context?.user?.isVerified) {
