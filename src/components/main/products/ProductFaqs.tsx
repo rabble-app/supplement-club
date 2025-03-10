@@ -17,9 +17,9 @@ export default function ProductFaqs({
 	return (
 		healthCategories?.length && (
 			<div>
-				{healthCategories?.map((faq) => (
+				{healthCategories?.map((faq, idx) => (
 					<Accordion key={faq.category} type="single" collapsible>
-						<Separator className="bg-black h-[1px]" />
+						{idx !== 0 && <Separator className="bg-black h-[1px]" />}
 						<AccordionItem value="products">
 							<AccordionTrigger>
 								<div className="grid gap-[16px] grid-cols-[32px_1fr] items-center text-[20px] font-inconsolata font-bold text-black">
@@ -33,10 +33,7 @@ export default function ProductFaqs({
 								</div>
 							</AccordionTrigger>
 							<AccordionContent>
-								<div className="mt-[-8px]">
-									<p className="text-[20px] leading-[30px] font-bold font-inconsolata mb-[8px]">
-										{faq.category}
-									</p>
+								<div>
 									<div className="text-[16px] leading-[24px] font-helvetica mb-[16px]">
 										{faq.whyItMatters}
 									</div>

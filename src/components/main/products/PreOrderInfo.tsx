@@ -15,7 +15,7 @@ export default function PreOrderInfo({
 						<p className="font-helvetica">{item.whyItMatters}</p>
 					</div>
 
-					{index !== productBenefits.length && (
+					{index !== productBenefits.length - 1 && (
 						<Separator className="bg-black h-[1px] my-[23px]" />
 					)}
 				</div>

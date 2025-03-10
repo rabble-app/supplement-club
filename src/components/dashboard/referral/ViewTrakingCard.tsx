@@ -11,7 +11,7 @@ export default function ViewTrakingCard({
 				<span className="text-[20px] leading-[20px] font-[600] font-inconsolata text-left">
 					You earned {model.amount.toLocaleString()} CC for referring Tom!
 				</span>
-				{model.referral.firstName && (
+				{model.referral?.firstName && (
 					<span className="text-[16px] leading-[16px] font-bold font-inconsolata text-blue text-left">
 						{model.referral.firstName} {model.referral.lastName}
 					</span>
