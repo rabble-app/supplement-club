@@ -30,7 +30,6 @@ export default function ManagePlanCard({
 }: Readonly<{
 	model: IManagePlanModel;
 }>) {
-	const [totalCount, setTotalCount] = useState(0);
 	const [totalCapsules, setTotalCapsules] = useState(0);
 	const [totalRrp, setTotalRrp] = useState(0);
 	const [percentage, setPercentage] = useState(0);
@@ -55,7 +54,6 @@ export default function ManagePlanCard({
 		if (totalSum > 0 && +totalRRP > 0) {
 			setPercentage(totalSum / Number(totalRRP));
 		}
-		setTotalCount(totalSum);
 		setTotalCapsules(totalCaps);
 	}, [model]);
 	return (
@@ -88,7 +86,7 @@ export default function ManagePlanCard({
 							</div>
 
 							<div className="text-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
-								£{totalCount}{" "}
+								£{model.team?.basket[0]?.product?.price ?? 0}{" "}
 								<span className="text-[10px] leading-[11px] text-grey1 font-bold font-inconsolata">
 									(£0.25 / capsule)
 								</span>
@@ -105,8 +103,8 @@ export default function ManagePlanCard({
 							</div>
 
 							<div className="text-[12px] leading-[13px] text-grey4 font-helvetica">
-								{totalCapsules} Capsules per Day -{" "}
-								{(model.quantity ?? 0) * totalCapsules} Capsules
+								{totalCapsules} Capsules per Day - {model.quantity ?? 0}{" "}
+								Capsules
 							</div>
 						</div>
 					</div>

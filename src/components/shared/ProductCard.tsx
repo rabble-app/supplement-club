@@ -57,7 +57,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 					<div className="text-[24px] font-[400] text-black font-hagerman flex items-center gap-[5px]">
 						{model.name}
 						<Image
-							src="/images/TM-blue.svg"
+							src="/images/TM-black.svg"
 							alt="TM corporation"
 							width={20}
 							height={20}

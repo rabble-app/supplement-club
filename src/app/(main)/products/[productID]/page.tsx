@@ -286,7 +286,7 @@ export default function ProductDetails({
 							<BreadcrumbPage className="flex items-center gap-[5px]">
 								{product?.name}{" "}
 								<Image
-									src="/images/TM-blue.svg"
+									src="/images/TM-black.svg"
 									alt="TM corporation"
 									width={16}
 									height={16}

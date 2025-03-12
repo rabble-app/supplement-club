@@ -247,7 +247,7 @@ export const mapSubscriptionModel = (
 ): IManagePlanModel => {
 	return {
 		id: model.id,
-		name: model.team?.basket[0]?.product?.producer?.businessName,
+		name: model.team?.basket[0]?.product?.name,
 		subscriptionStatus: model.subscriptionStatus,
 		isSkipped: model.skipNextDelivery,
 		quantity: model.team?.basket[0]?.quantity,
