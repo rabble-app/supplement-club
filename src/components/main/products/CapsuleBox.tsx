@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
@@ -45,6 +45,10 @@ export default function CapsuleBox({
 	const [units] = useState(
 		unitsOfMeasurePerSubUnit === "grams" ? "g" : "Capsules",
 	);
+
+	useEffect(() => {
+		if (capsuleInfo) setSelectedState(capsuleInfo[1].capsuleCount);
+	}, [capsuleInfo]);
 
 	const capsules = useMemo(() => selectedState * days, [selectedState]);
 

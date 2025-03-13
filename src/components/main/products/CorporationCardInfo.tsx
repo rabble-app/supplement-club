@@ -11,19 +11,22 @@ export default function CorporationCardInfo({
 	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
+	const [firstWord, ...rest] = (name ?? "").split(" ");
 	return (
 		<div className="grid gap-[8px]">
 			<p className="text-[20px] leading-[24px] tracking-[-0.43px] md:font-[500] font-inconsolata md:text-grey4">
 				{businessName}
 			</p>
-			<div className="text-[24px] md:text-[32px] leading-[28px] md:leading-[150%] font-hagerman flex items-center gap-[5px]">
-				{name}
+			<div className="text-[24px] md:text-[32px] leading-[28px] md:leading-[150%] font-hagerman flex items-start gap-[5px]">
+				{firstWord}
 				<Image
 					src="/images/TM-black.svg"
 					alt="TM corporation"
-					width={24}
-					height={24}
+					className="pt-[5px]"
+					width={18}
+					height={18}
 				/>
+				{rest}
 			</div>
 			<div className="flex items-center gap-[8px]">
 				<Image

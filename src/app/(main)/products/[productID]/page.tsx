@@ -89,7 +89,9 @@ export default function ProductDetails({
 
 	const days = 90;
 
-	const [current, setCurrent] = useState(0);
+	const [current, setCurrent] = useState(1);
+	const [firstWord, setFirstWord] = useState<string>("");
+	const [rest, setRest] = useState<string>("");
 	const [capsulePerDay, setCapsulePerDay] = useState(2);
 	const [product, setProduct] = useState<ISingleProductModel>();
 
@@ -115,6 +117,10 @@ export default function ProductDetails({
 			const { productID } = await params;
 			const model = await productService.product(productID);
 			setProduct(model);
+
+			const [word, ...others] = (model.name ?? "").split(" ");
+			setFirstWord(word);
+			setRest(others.join(" "));
 			setLoading(false);
 		};
 		fetchProduct();
@@ -283,14 +289,15 @@ export default function ProductDetails({
 						</BreadcrumbItem>
 						<BreadcrumbSeparator className="" />
 						<BreadcrumbItem>
-							<BreadcrumbPage className="flex items-center gap-[5px]">
-								{product?.name}{" "}
+							<BreadcrumbPage className="flex items-start gap-[5px]">
+								{firstWord}
 								<Image
 									src="/images/TM-black.svg"
 									alt="TM corporation"
-									width={16}
-									height={16}
+									width={14}
+									height={14}
 								/>
+								{rest}
 							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
