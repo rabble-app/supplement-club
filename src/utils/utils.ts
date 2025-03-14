@@ -65,8 +65,6 @@ export function getQuarterInfo() {
 		new Date().toISOString(),
 	);
 
-	console.log(prevQuarterMonth, currentQuarter, nextQuarterMonth);
-
 	const nextDeliveryText = `${nextQuarterEnd.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
 	const nextDeliveryTextShort = `${nextQuarterEnd.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
 
@@ -247,7 +245,7 @@ export const mapSubscriptionModel = (
 ): IManagePlanModel => {
 	return {
 		id: model.id,
-		name: model.team?.basket[0]?.product?.producer?.businessName,
+		name: model.team?.basket[0]?.product?.name,
 		subscriptionStatus: model.subscriptionStatus,
 		isSkipped: model.skipNextDelivery,
 		quantity: model.team?.basket[0]?.quantity,

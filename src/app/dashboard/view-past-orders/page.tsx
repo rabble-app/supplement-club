@@ -10,11 +10,11 @@ import {
 } from "@radix-ui/react-collapsible";
 import { Separator } from "@radix-ui/react-separator";
 
+import Spinner from "@/components/shared/Spinner";
 import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
 import { useEffect, useState } from "react";
-import Spinner from "@/components/shared/Spinner";
 
 export default function Orders() {
 	const [loading, setLoading] = useState(true);
@@ -69,7 +69,7 @@ export default function Orders() {
 								</div>
 
 								<div className="text-[16px] leading-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
-									£{item.order?.basket[0]?.price}{" "}
+									£{item.order?.accumulatedAmount}{" "}
 									<span className="text-[10px] leading-[11px] text-grey1 font-[800] font-inconsolata">
 										(£{item.order?.basket[0]?.price} / capsule)
 									</span>
@@ -105,7 +105,7 @@ export default function Orders() {
 						</p>
 
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
-							Referral discounts{" "}
+							Credits Applicable{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
 								£{Number(item.discount).toFixed(2)}
 							</span>
@@ -121,7 +121,7 @@ export default function Orders() {
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
 							Total{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£{item.order?.basket[0]?.price}
+								£{item.order?.accumulatedAmount}
 							</span>
 						</p>
 					</CollapsibleContent>

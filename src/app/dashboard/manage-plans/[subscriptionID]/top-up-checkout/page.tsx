@@ -76,7 +76,7 @@ export default function TopUpCheckout({
 
 			const model = {
 				title: "Top Up Order Summary",
-				corporation: "KANEKA CORPRATION",
+				corporation: response.team.name,
 				name: response.name,
 				deliveryText: "NEXT DAY DELIVERY",
 				orders: orders,

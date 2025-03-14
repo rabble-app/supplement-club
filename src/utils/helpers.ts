@@ -46,7 +46,10 @@ export function mapTagToValue(tag: string) {
 		Sleep: "/images/icons/bed-icon.svg",
 		Energy: "/images/icons/energy-icon.svg",
 		"Healthy Aging": "/images/icons/hourglass-icon.svg",
+		"Aging (40+)": "/images/icons/hourglass-icon.svg",
+		"Anti-Aging": "/images/icons/hourglass-icon.svg",
 		Longevity: "/images/icons/tree-icon.svg",
+		"Training/Athletics": "/images/icons/dumbell-icon.svg",
 		"Weight Training": "/images/icons/dumbell-icon.svg",
 		Athletes: "/images/icons/athletes-icon.svg",
 		Immunity: "/images/icons/shield-icon.svg",
@@ -62,7 +65,7 @@ export function mapTagToValue(tag: string) {
 		Athletics: "/images/icons/athletes-icon.svg",
 	};
 
-	return tagValueMap[tag] ?? null;
+	return tagValueMap[tag] ?? "/images/icons/athletes-icon.svg";
 }
 
 export const mapFormDataToDeliveryRequest = (formData: FormData) => ({

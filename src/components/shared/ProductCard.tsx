@@ -15,6 +15,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 			? Number(Number(model.price) / Number(model.rrp)).toFixed(2)
 			: 0;
 	const titleButton = model.isComming ? "Pre - Join Team" : "Join Team";
+	const [firstWord, ...rest] = (model.name ?? "").split(" ");
 	return (
 		<div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
 			<span className="text=[16px] leading-[18px] font-helvetica text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px] z-[1]">
@@ -54,14 +55,15 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 							{model.producer?.businessName}
 						</p>
 					)}
-					<div className="text-[24px] font-[400] text-black font-hagerman flex items-center gap-[5px]">
-						{model.name}
+					<div className="text-[24px] font-[400] text-black font-hagerman flex items-start gap-[5px]">
+						{firstWord}
 						<Image
-							src="/images/TM-blue.svg"
+							src="/images/TM-black.svg"
 							alt="TM corporation"
-							width={20}
-							height={20}
+							width={14}
+							height={14}
 						/>
+						{rest}
 					</div>
 					<p className="leading-[18px] text-grey5">{model.description}</p>
 				</div>

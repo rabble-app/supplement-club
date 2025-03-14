@@ -23,6 +23,8 @@ export default function SummaryProduct({
 	const [totalRrp, setTotalRrp] = useState(0);
 	const [percentage, setPercentage] = useState(0);
 
+	const [firstWord, ...rest] = (model.name ?? "").split(" ");
+
 	useEffect(() => {
 		const totalSum = model?.orders?.reduce(
 			(sum, item) => sum + item.capsules * 0.25,
@@ -79,14 +81,15 @@ export default function SummaryProduct({
 							<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
 								{model.corporation}
 							</p>
-							<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman flex items-center gap-[5px]">
-								{model.name}
+							<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman flex items-start gap-[5px]">
+								{firstWord}
 								<Image
 									src="/images/TM-black.svg"
 									alt="TM corporation"
-									width={24}
-									height={24}
+									width={14}
+									height={14}
 								/>
+								{rest}
 							</div>
 							{model.quantityOfSubUnitPerOrder &&
 								model.unitsOfMeasurePerSubUnit && (
