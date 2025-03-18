@@ -8,7 +8,6 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { Separator } from "@radix-ui/react-separator";
 
 import Spinner from "@/components/shared/Spinner";
 import { useUser } from "@/contexts/UserContext";
@@ -69,7 +68,7 @@ export default function Orders() {
 								</div>
 
 								<div className="text-[16px] leading-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
-									£{item.order?.accumulatedAmount}{" "}
+									£{item.amount}{" "}
 									<span className="text-[10px] leading-[11px] text-grey1 font-[800] font-inconsolata">
 										(£{item.order?.basket[0]?.price} / capsule)
 									</span>
@@ -88,19 +87,10 @@ export default function Orders() {
 						<ChevronDown className="h-[22px] w-[22px] shrink-0 text-muted-foreground transition-transform duration-200 text-blue" />
 					</CollapsibleTrigger>
 					<CollapsibleContent className="grid gap-[16px] bg-white">
-						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4 pt-[16px]">
-							smol plan non-bio{" "}
-							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£0.00
-							</span>
-						</p>
-
-						<Separator className="bg-grey33/[55%] h-[1px]" />
-
-						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
+						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4  pt-[16px]">
 							Subtotal{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£0.00
+								£{(+item.amount - item.discount).toFixed(2)}
 							</span>
 						</p>
 
@@ -121,7 +111,7 @@ export default function Orders() {
 						<p className="flex justify-between items-center text-[12px] leading-[13px] font-inconsolata text-grey4">
 							Total{" "}
 							<span className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-								£{item.order?.accumulatedAmount}
+								£{Number(item.amount ?? 0).toFixed(2)}
 							</span>
 						</p>
 					</CollapsibleContent>
