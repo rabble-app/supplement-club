@@ -9,6 +9,9 @@ export default {
 	],
 	theme: {
 		extend: {
+			screens: {
+				lg: "1200px", // Custom large breakpoint
+			},
 			colors: {
 				red: "#B42318",
 				red2: "#FEE4E2",
