@@ -102,7 +102,9 @@ export default function ReferralCardsWithLink({
 				{isDashboard && (
 					<ViewTrakingDialog open={openReferal} openAction={updateVisibility} />
 				)}
-				<ReferalLinkCard refCode={context?.user?.refCode}>
+				<ReferalLinkCard
+					refCode={context?.user?.refCode ?? referalInfo?.referralCode}
+				>
 					{!isDashboard && (
 						<Button
 							asChild

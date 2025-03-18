@@ -13,6 +13,7 @@ import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
+import { cookies } from "next/headers";
 import router from "next/router";
 import { useEffect, useState } from "react";
 
@@ -24,6 +25,7 @@ export default function CreateAccount({
 	children?: React.ReactNode;
 }>) {
 	const context = useUser();
+	const cookieStore = cookies();
 	const { setUser } = useUserStore((state) => state);
 	const [productId, setProductId] = useState<string>();
 
@@ -45,6 +47,7 @@ export default function CreateAccount({
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
 			productId ?? "",
+			(await cookieStore).get("refCode")?.value ?? "",
 		)) as IResponseModel;
 		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;

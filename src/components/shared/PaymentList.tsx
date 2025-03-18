@@ -13,6 +13,7 @@ import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionM
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type ICaptureApiResponse from "@/utils/models/services/ICaptureApiResponse";
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
+import type { PaymentMethod } from "@stripe/stripe-js";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
@@ -140,7 +141,11 @@ export default function PaymentList({
 		setUserCards(model);
 	}
 
-	async function addCreditCard() {
+	async function addCreditCard(paymentMethod: string | PaymentMethod | null) {
+		await paymentService.addCard(
+			(paymentMethod as string) ?? "",
+			context?.user?.stripeCustomerId ?? "",
+		);
 		const cards = await paymentService.getUserPaymentOptions(
 			context?.user?.stripeCustomerId ?? "",
 		);
