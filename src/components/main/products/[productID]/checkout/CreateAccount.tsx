@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,19 +14,29 @@ import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
-import { cookies } from "next/headers";
+import type { GetServerSideProps } from "next";
 import router from "next/router";
 import { useEffect, useState } from "react";
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	const cookies = req.cookies; // Get all cookies
+	const refCode = cookies.refCode;
+
+	return {
+		props: { refCode },
+	};
+};
 
 export default function CreateAccount({
 	params,
 	children,
+	refCode,
 }: Readonly<{
 	params: Promise<{ productID: string }>;
 	children?: React.ReactNode;
+	refCode?: string;
 }>) {
 	const context = useUser();
-	const cookieStore = cookies();
 	const { setUser } = useUserStore((state) => state);
 	const [productId, setProductId] = useState<string>();
 
@@ -47,7 +58,7 @@ export default function CreateAccount({
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
 			productId ?? "",
-			(await cookieStore).get("refCode")?.value ?? "",
+			refCode ?? "",
 		)) as IResponseModel;
 		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;
