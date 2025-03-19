@@ -44,7 +44,13 @@ export default function OrderSummaryCard({
 			}`}
 		>
 			{model.src && (
-				<Image src={model.src} alt={model.alt ?? ""} width={61} height={61} />
+				<Image
+					src={model.src}
+					alt={model.alt ?? ""}
+					width={61}
+					height={61}
+					priority
+				/>
 			)}
 
 			<div className="grid gap-2">

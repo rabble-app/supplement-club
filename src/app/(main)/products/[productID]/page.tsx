@@ -3,20 +3,38 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
-import BottomSection from "@/components/main/products/BottomSection";
 import CapsuleBox from "@/components/main/products/CapsuleBox";
+import TeamPrice from "@/components/main/products/TeamPrice";
+import Spinner from "@/components/shared/Spinner";
+
 import CorporationBox from "@/components/main/products/CorporationBox";
 import MemberCard from "@/components/main/products/MemberCard";
 import PreOrderInfo from "@/components/main/products/PreOrderInfo";
-import ProductFaqs from "@/components/main/products/ProductFaqs";
-import ProfuctTable from "@/components/main/products/ProductTable";
-import TeamPrice from "@/components/main/products/TeamPrice";
-import ReferralCardsWithLink from "@/components/shared/ReferralCardsWithLink";
-import Spinner from "@/components/shared/Spinner";
-import SummaryProduct from "@/components/shared/SummaryProduct";
+
+const ProductFaqs = dynamic(
+	() => import("@/components/main/products/ProductFaqs"),
+);
+
+const ProfuctTable = dynamic(
+	() => import("@/components/main/products/ProductTable"),
+);
+
+const SummaryProduct = dynamic(
+	() => import("@/components/shared/SummaryProduct"),
+);
+
+const BottomSection = dynamic(
+	() => import("@/components/main/products/BottomSection"),
+);
+
+const ReferralCardsWithLink = dynamic(
+	() => import("@/components/shared/ReferralCardsWithLink"),
+);
+
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -190,6 +208,7 @@ export default function ProductDetails({
 			referals: [],
 			subscriptions: [],
 		};
+
 		setSummary(obj);
 	}, [
 		capsulePerDay,
@@ -219,7 +238,7 @@ export default function ProductDetails({
 									alt={item}
 									width={300}
 									height={700}
-									loading="lazy"
+									priority
 								/>
 							</CarouselItem>
 						))}
@@ -259,6 +278,7 @@ export default function ProductDetails({
 								alt="User profile group icon"
 								width={24}
 								height={24}
+								priority
 							/>
 							678
 						</div>
@@ -330,6 +350,7 @@ export default function ProductDetails({
 							alt="User badge"
 							width={15}
 							height={15}
+							priority
 						/>
 						YOU’RE A FOUNDING MEMBER!
 					</div>
@@ -362,6 +383,7 @@ export default function ProductDetails({
 									alt="delivery icon"
 									width={24}
 									height={24}
+									priority
 								/>
 								Free bext day delivery on all UK orders
 							</div>
@@ -372,6 +394,7 @@ export default function ProductDetails({
 									alt="edit contained"
 									width={24}
 									height={24}
+									priority
 								/>
 								Skip, pause or cancel your subscription any time
 							</div>
@@ -382,6 +405,7 @@ export default function ProductDetails({
 									alt="gift icon"
 									width={24}
 									height={24}
+									priority
 								/>
 								refer a friend and both get £5 off
 							</div>
