@@ -135,52 +135,50 @@ export default function ProductDetails({
 				capsules: capsulesPackage,
 				price: 0,
 			});
-		} else {
-			if (product) {
-				const members = [
-					{
-						id: 1,
-						doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
-						name: "FOUNDING MEMBER",
-						discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
-						doseValue: "First 50 Spots",
-						price: product?.supplementTeamProducts?.foundingMembersDiscount
-							? capsulesPackage -
-								(capsulesPackage *
-									product?.supplementTeamProducts?.foundingMembersDiscount) /
-									100
-							: capsulesPackage,
-						capsulePrice: 0.25,
-						spotsRemainds: 4,
-						forever: true,
-						isActive: true,
-					},
-					{
-						id: 2,
-						doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
-						name: "EARLY MEMBER",
-						doseValue: "Next 200 Spots",
-						discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
-						price: product?.supplementTeamProducts?.earlyMembersDiscount
-							? capsulesPackage -
-								(capsulesPackage *
-									product?.supplementTeamProducts?.earlyMembersDiscount) /
-									100
-							: capsulesPackage,
-						capsulePrice: 0.25,
-						forever: true,
-					},
-					{
-						id: 3,
-						doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
-						name: "MEMBER",
-						capsulePrice: 0.25,
-						discountTitle: "Standard Team Price",
-						price: capsulesPackage ?? 0,
-					},
-				];
-				setMembers(members);
-			}
+		} else if (product) {
+			const members = [
+				{
+					id: 1,
+					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "FOUNDING MEMBER",
+					discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
+					doseValue: "First 50 Spots",
+					price: product?.supplementTeamProducts?.foundingMembersDiscount
+						? capsulesPackage -
+							(capsulesPackage *
+								product?.supplementTeamProducts?.foundingMembersDiscount) /
+								100
+						: capsulesPackage,
+					capsulePrice: 0.25,
+					spotsRemainds: 4,
+					forever: true,
+					isActive: true,
+				},
+				{
+					id: 2,
+					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "EARLY MEMBER",
+					doseValue: "Next 200 Spots",
+					discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
+					price: product?.supplementTeamProducts?.earlyMembersDiscount
+						? capsulesPackage -
+							(capsulesPackage *
+								product?.supplementTeamProducts?.earlyMembersDiscount) /
+								100
+						: capsulesPackage,
+					capsulePrice: 0.25,
+					forever: true,
+				},
+				{
+					id: 3,
+					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "MEMBER",
+					capsulePrice: 0.25,
+					discountTitle: "Standard Team Price",
+					price: capsulesPackage ?? 0,
+				},
+			];
+			setMembers(members);
 		}
 		const obj = {
 			percentage: (capsulePerDay * days * 0.25) / Number(product?.rrp),

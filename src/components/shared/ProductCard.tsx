@@ -18,11 +18,13 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 			? Number(Number(model.price) / Number(model.rrp)).toFixed(2)
 			: 0;
 	const context = useUser();
-	const titleButton = model.isComming
-		? "Pre - Join Team"
-		: userProducts.includes(model.id)
-			? "See Team"
-			: "Join Team";
+	let titleButton = "Join Team";
+
+	if (model.isComming) {
+		titleButton = "Pre - Join Team";
+	} else if (userProducts.includes(model.id)) {
+		titleButton = "See Team";
+	}
 
 	const productLink = userProducts.includes(model.id)
 		? `/dashboard/manage-plans/${model.id}`
