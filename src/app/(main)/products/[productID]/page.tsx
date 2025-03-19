@@ -46,39 +46,6 @@ interface ProductDetailsProps {
 	productID: string;
 }
 
-const itemsMembers = [
-	{
-		id: 1,
-		doseTitle: "180 Capsules Every 3 months",
-		name: "FOUNDING MEMBER",
-		discountTitle: "10% OFF TEAM PRICE",
-		doseValue: "First 50 Spots",
-		price: 40.5,
-		capsulePrice: 0.22,
-		spotsRemainds: 4,
-		forever: true,
-		isActive: true,
-	},
-	{
-		id: 2,
-		doseTitle: "180 Capsules Every 3 months",
-		name: "EARLY MEMBER",
-		doseValue: "Next 200 Spots",
-		discountTitle: "5% Off Team Price",
-		price: 43,
-		capsulePrice: 0.23,
-		forever: true,
-	},
-	{
-		id: 3,
-		doseTitle: "180 Capsules Every 3 months",
-		name: "MEMBER",
-		capsulePrice: 0.25,
-		discountTitle: "Standard Team Price",
-		price: 45,
-	},
-] as IMemberCardModel[];
-
 export default function ProductDetails({
 	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {

@@ -12,7 +12,7 @@ export function middleware(req: NextRequest) {
 	const searchParams = req.nextUrl.searchParams;
 	if (searchParams.has("ref")) {
 		res.cookies.set("refCode", searchParams.get("ref") ?? "", {
-			httpOnly: true,
+			httpOnly: false,
 			secure: true,
 			path: "/",
 		});
