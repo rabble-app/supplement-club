@@ -7,30 +7,31 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
-import CapsuleBox from "@/components/main/products/CapsuleBox";
+import CorporationBox from "@/components/main/products/CorporationBox";
 import TeamPrice from "@/components/main/products/TeamPrice";
 import Spinner from "@/components/shared/Spinner";
 
-import CorporationBox from "@/components/main/products/CorporationBox";
-import MemberCard from "@/components/main/products/MemberCard";
-import PreOrderInfo from "@/components/main/products/PreOrderInfo";
-
+const CapsuleBox = dynamic(
+	() => import("@/components/main/products/CapsuleBox"),
+);
+const MemberCard = dynamic(
+	() => import("@/components/main/products/MemberCard"),
+);
+const PreOrderInfo = dynamic(
+	() => import("@/components/main/products/PreOrderInfo"),
+);
 const ProductFaqs = dynamic(
 	() => import("@/components/main/products/ProductFaqs"),
 );
-
 const ProfuctTable = dynamic(
 	() => import("@/components/main/products/ProductTable"),
 );
-
 const SummaryProduct = dynamic(
 	() => import("@/components/shared/SummaryProduct"),
 );
-
 const BottomSection = dynamic(
 	() => import("@/components/main/products/BottomSection"),
 );
-
 const ReferralCardsWithLink = dynamic(
 	() => import("@/components/shared/ReferralCardsWithLink"),
 );

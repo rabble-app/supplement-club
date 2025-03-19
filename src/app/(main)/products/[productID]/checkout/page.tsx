@@ -2,6 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { useRouter } from "next/navigation";
+
+import { useUser } from "@/contexts/UserContext";
+import { productService } from "@/services/productService";
+import { useProductStore } from "@/stores/productStore";
+import { getQuarterInfo } from "@/utils/utils";
+
+import type ISingleProductModel from "@/utils/models/ISingleProductModel";
+import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
+
 import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
 import CreateAccount from "@/components/main/products/[productID]/checkout/CreateAccount";
 import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
@@ -11,13 +21,6 @@ import PaymentList from "@/components/shared/PaymentList";
 import Spinner from "@/components/shared/Spinner";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
-import { useUser } from "@/contexts/UserContext";
-import { productService } from "@/services/productService";
-import { useProductStore } from "@/stores/productStore";
-import type ISingleProductModel from "@/utils/models/ISingleProductModel";
-import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
-import { getQuarterInfo } from "@/utils/utils";
-import { useRouter } from "next/navigation";
 
 const PreOrderMessage = () => {
 	return (
