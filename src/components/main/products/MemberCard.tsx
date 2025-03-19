@@ -52,7 +52,7 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 					)}
 					<div className="flex gap-[5px] items-center justify-end">
 						<span className="text-[20px] leading-[20px] font-bold font-inconsolata">
-							£{model.price.toFixed(2)}
+							£{model.price}
 						</span>{" "}
 						<p className="text-[12px] my-[auto] font-bold font-inconsolata text-grey1">
 							(£{model.capsulePrice} / capsule)
