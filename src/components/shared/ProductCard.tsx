@@ -1,21 +1,41 @@
 /** @format */
-
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
+import { useUser } from "@/contexts/UserContext";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 import { getQuarterInfo } from "@/utils/utils";
+import { useEffect, useState } from "react";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
 	const { nextDeliveryTextShort } = getQuarterInfo();
+	const [userProducts, setUserProducts] = useState<string[]>([]);
 	const precentage =
 		model.price && model.rrp
 			? Number(Number(model.price) / Number(model.rrp)).toFixed(2)
 			: 0;
-	const titleButton = model.isComming ? "Pre - Join Team" : "Join Team";
+	const context = useUser();
+	let titleButton = "Join Team";
+
+	if (model.isComming) {
+		titleButton = "Pre - Join Team";
+	} else if (userProducts.includes(model.id)) {
+		titleButton = "See Team";
+	}
+
+	const productLink = userProducts.includes(model.id)
+		? `/dashboard/manage-plans/${model.id}`
+		: `/products/${model.id}?teamId=${model.teamId}`;
+
 	const [firstWord, ...rest] = (model.name ?? "").split(" ");
+
+	useEffect(() => {
+		setUserProducts(context?.user?.basketsC?.map((c) => c.productId) || []);
+	}, [context]);
+
 	return (
 		<div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
 			<span className="text=[16px] leading-[18px] font-helvetica text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px] z-[1]">
@@ -92,7 +112,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 
 				<Button className="bg-blue font-bold" asChild>
 					<Link
-						href={`/products/${model.id}?teamId=${model.teamId}`}
+						href={productLink}
 						className="flex justify-between py-[16px] px-[24px] w-full"
 					>
 						<span className="leading-[18px] font-bold font-inconsolata text-lg">

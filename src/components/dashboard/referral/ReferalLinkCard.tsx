@@ -14,7 +14,7 @@ export default function ReferalLinkCard({
 	refCode?: string;
 }>) {
 	const [link] = useState(
-		`${process.env.NEXT_PUBLIC_API_ENDPOINT}/dashboard/referral?ref=${refCode}`,
+		`${process.env.NEXT_PUBLIC_WEBSITE_URL}?ref=${refCode}`,
 	);
 
 	const copyToClipboard = async () => {
@@ -46,31 +46,29 @@ export default function ReferalLinkCard({
 				</p>
 			</div>
 
-			{!link && (
-				<div className="grid gap-[8px]">
-					<p className="text-[16px] leading-[24px] font-helvetica">
-						Your Referal Link
-					</p>
-					<div className="relative">
-						<Input
-							readOnly
-							value={link}
-							placeholder="referal link"
-							className="pr-[40px] text-grey16"
-						/>
+			<div className="grid gap-[8px]">
+				<p className="text-[16px] leading-[24px] font-helvetica">
+					Your Referal Link
+				</p>
+				<div className="relative">
+					<Input
+						readOnly
+						value={link}
+						placeholder="referal link"
+						className="pr-[40px] text-grey16"
+					/>
 
-						<Image
-							src="/images/icons/copyright-icon.svg"
-							className="absolute right-[10px] top-[10px] cursor-pointer"
-							title="Copy and share your referral link"
-							onClick={copyToClipboard}
-							alt="copyright icon"
-							width={24}
-							height={24}
-						/>
-					</div>
+					<Image
+						src="/images/icons/copyright-icon.svg"
+						className="absolute right-[10px] top-[10px] cursor-pointer"
+						title="Copy and share your referral link"
+						onClick={copyToClipboard}
+						alt="copyright icon"
+						width={24}
+						height={24}
+					/>
 				</div>
-			)}
+			</div>
 			{children}
 		</div>
 	);

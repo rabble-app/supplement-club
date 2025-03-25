@@ -1,6 +1,10 @@
+"use client";
+import Cookies from "js-cookie";
 import Link from "next/link";
+import router from "next/router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
@@ -13,8 +17,6 @@ import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
-import router from "next/router";
-import { useEffect, useState } from "react";
 
 export default function CreateAccount({
 	params,
@@ -45,6 +47,7 @@ export default function CreateAccount({
 			e.get("email")?.toString() ?? "",
 			e.get("password")?.toString() ?? "",
 			productId ?? "",
+			Cookies.get("refCode") ?? "",
 		)) as IResponseModel;
 		if (result.statusCode === 200 || result.statusCode === 201) {
 			const userData = result.data as IUserResponse;
@@ -60,6 +63,9 @@ export default function CreateAccount({
 				status: StatusToast.ERROR,
 			});
 		}
+
+		// remove from browser
+		Cookies.remove("refCode");
 	}
 
 	return (

@@ -47,7 +47,13 @@ export default function BottomSection() {
 					key={item.id}
 					className="grid gap-[8px] grid-cols-[24px_1fr] items-start text-[12px] leading-[14px] font-helvetica"
 				>
-					<Image src={item.image} alt={item.imageAlt} width={24} height={24} />{" "}
+					<Image
+						src={item.image}
+						alt={item.imageAlt}
+						width={24}
+						height={24}
+						priority
+					/>{" "}
 					{item.title}
 				</div>
 			))}

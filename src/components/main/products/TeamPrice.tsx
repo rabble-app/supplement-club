@@ -329,7 +329,7 @@ export default function TeamPrice({
 				))}
 
 				{isComming && members < priceInfo[0]?.teamMemberCount && (
-					<div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute top-[20px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1] md:left-[138px] md:top-[60px]">
+					<div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1]">
 						When it gets to {priceInfo[0]?.teamMemberCount} people we will
 						launch the product
 					</div>

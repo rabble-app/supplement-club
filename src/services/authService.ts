@@ -9,11 +9,17 @@ export const authService = {
 			role: "USER",
 		}),
 
-	register: async (email: string, password: string, productId: string) =>
+	register: async (
+		email: string,
+		password: string,
+		productId: string,
+		referralCode: string,
+	) =>
 		await apiRequest(AUTH_ENDPOINTS.REGISTER, "POST", {
 			email,
 			password,
 			role: "USER",
+			referralCode: referralCode,
 			metadata: { productId },
 		}),
 

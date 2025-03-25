@@ -17,7 +17,13 @@ export default function ImageBox({ tags }: Readonly<{ tags?: string[] }>) {
 						<TooltipProvider key={`${tag} ${idx * 2}`}>
 							<Tooltip>
 								<TooltipTrigger>
-									<Image src={image} alt={image} width={24} height={24} />
+									<Image
+										src={image}
+										alt={image}
+										width={24}
+										height={24}
+										priority
+									/>
 								</TooltipTrigger>
 								<TooltipContent>{image}</TooltipContent>
 							</Tooltip>

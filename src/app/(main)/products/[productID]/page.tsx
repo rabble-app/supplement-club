@@ -3,20 +3,39 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
-import BottomSection from "@/components/main/products/BottomSection";
-import CapsuleBox from "@/components/main/products/CapsuleBox";
 import CorporationBox from "@/components/main/products/CorporationBox";
-import MemberCard from "@/components/main/products/MemberCard";
-import PreOrderInfo from "@/components/main/products/PreOrderInfo";
-import ProductFaqs from "@/components/main/products/ProductFaqs";
-import ProfuctTable from "@/components/main/products/ProductTable";
 import TeamPrice from "@/components/main/products/TeamPrice";
-import ReferralCardsWithLink from "@/components/shared/ReferralCardsWithLink";
 import Spinner from "@/components/shared/Spinner";
-import SummaryProduct from "@/components/shared/SummaryProduct";
+
+const CapsuleBox = dynamic(
+	() => import("@/components/main/products/CapsuleBox"),
+);
+const MemberCard = dynamic(
+	() => import("@/components/main/products/MemberCard"),
+);
+const PreOrderInfo = dynamic(
+	() => import("@/components/main/products/PreOrderInfo"),
+);
+const ProductFaqs = dynamic(
+	() => import("@/components/main/products/ProductFaqs"),
+);
+const ProfuctTable = dynamic(
+	() => import("@/components/main/products/ProductTable"),
+);
+const SummaryProduct = dynamic(
+	() => import("@/components/shared/SummaryProduct"),
+);
+const BottomSection = dynamic(
+	() => import("@/components/main/products/BottomSection"),
+);
+const ReferralCardsWithLink = dynamic(
+	() => import("@/components/shared/ReferralCardsWithLink"),
+);
+
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -46,39 +65,6 @@ interface ProductDetailsProps {
 	productID: string;
 }
 
-const itemsMembers = [
-	{
-		id: 1,
-		doseTitle: "180 Capsules Every 3 months",
-		name: "FOUNDING MEMBER",
-		discountTitle: "10% OFF TEAM PRICE",
-		doseValue: "First 50 Spots",
-		price: 40.5,
-		capsulePrice: 0.22,
-		spotsRemainds: 4,
-		forever: true,
-		isActive: true,
-	},
-	{
-		id: 2,
-		doseTitle: "180 Capsules Every 3 months",
-		name: "EARLY MEMBER",
-		doseValue: "Next 200 Spots",
-		discountTitle: "5% Off Team Price",
-		price: 43,
-		capsulePrice: 0.23,
-		forever: true,
-	},
-	{
-		id: 3,
-		doseTitle: "180 Capsules Every 3 months",
-		name: "MEMBER",
-		capsulePrice: 0.25,
-		discountTitle: "Standard Team Price",
-		price: 45,
-	},
-] as IMemberCardModel[];
-
 export default function ProductDetails({
 	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {
@@ -86,6 +72,7 @@ export default function ProductDetails({
 	const context = useUser();
 	const productStore = useProductStore();
 	const [api, setApi] = useState<CarouselApi>();
+	const [members, setMembers] = useState<IMemberCardModel[]>([]);
 
 	const days = 90;
 
@@ -117,7 +104,6 @@ export default function ProductDetails({
 			const { productID } = await params;
 			const model = await productService.product(productID);
 			setProduct(model);
-
 			const [word, ...others] = (model.name ?? "").split(" ");
 			setFirstWord(word);
 			setRest(others.join(" "));
@@ -168,6 +154,50 @@ export default function ProductDetails({
 				capsules: capsulesPackage,
 				price: 0,
 			});
+		} else if (product) {
+			const members = [
+				{
+					id: 1,
+					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "FOUNDING MEMBER",
+					discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
+					doseValue: "First 50 Spots",
+					price: product?.supplementTeamProducts?.foundingMembersDiscount
+						? capsulesPackage -
+							(capsulesPackage *
+								product?.supplementTeamProducts?.foundingMembersDiscount) /
+								100
+						: capsulesPackage,
+					capsulePrice: 0.25,
+					spotsRemainds: 4,
+					forever: true,
+					isActive: true,
+				},
+				{
+					id: 2,
+					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "EARLY MEMBER",
+					doseValue: "Next 200 Spots",
+					discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
+					price: product?.supplementTeamProducts?.earlyMembersDiscount
+						? capsulesPackage -
+							(capsulesPackage *
+								product?.supplementTeamProducts?.earlyMembersDiscount) /
+								100
+						: capsulesPackage,
+					capsulePrice: 0.25,
+					forever: true,
+				},
+				{
+					id: 3,
+					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					name: "MEMBER",
+					capsulePrice: 0.25,
+					discountTitle: "Standard Team Price",
+					price: capsulesPackage ?? 0,
+				},
+			];
+			setMembers(members);
 		}
 		const obj = {
 			percentage: (capsulePerDay * days * 0.25) / Number(product?.rrp),
@@ -179,6 +209,7 @@ export default function ProductDetails({
 			referals: [],
 			subscriptions: [],
 		};
+
 		setSummary(obj);
 	}, [
 		capsulePerDay,
@@ -208,6 +239,7 @@ export default function ProductDetails({
 									alt={item}
 									width={300}
 									height={700}
+									priority
 								/>
 							</CarouselItem>
 						))}
@@ -247,6 +279,7 @@ export default function ProductDetails({
 								alt="User profile group icon"
 								width={24}
 								height={24}
+								priority
 							/>
 							678
 						</div>
@@ -318,6 +351,7 @@ export default function ProductDetails({
 							alt="User badge"
 							width={15}
 							height={15}
+							priority
 						/>
 						YOU’RE A FOUNDING MEMBER!
 					</div>
@@ -350,6 +384,7 @@ export default function ProductDetails({
 									alt="delivery icon"
 									width={24}
 									height={24}
+									priority
 								/>
 								Free bext day delivery on all UK orders
 							</div>
@@ -360,6 +395,7 @@ export default function ProductDetails({
 									alt="edit contained"
 									width={24}
 									height={24}
+									priority
 								/>
 								Skip, pause or cancel your subscription any time
 							</div>
@@ -370,6 +406,7 @@ export default function ProductDetails({
 									alt="gift icon"
 									width={24}
 									height={24}
+									priority
 								/>
 								refer a friend and both get £5 off
 							</div>
@@ -385,11 +422,13 @@ export default function ProductDetails({
 							capsuleInfo={product?.capsuleInfo}
 						/>
 
-						<div className="grid gap-[16px] bg-white">
-							{itemsMembers.map((item) => (
-								<MemberCard key={item.id} {...item} />
-							))}
-						</div>
+						{members.length > 0 && (
+							<div className="grid gap-[16px] bg-white">
+								{members.map((item) => (
+									<MemberCard key={item.id} {...item} />
+								))}
+							</div>
+						)}
 
 						<SummaryProduct
 							showOnlyTotal={true}

@@ -15,7 +15,7 @@ export const TEAM_ENDPOINTS = {
 };
 
 export const PAYMENT_ENDPOINTS = {
-	ADD_CARD: "	payments/add-card",
+	ADD_CARD: "payments/add-card",
 	BULK_BASKET: "payments/basket-bulk",
 	SETUP_INTENT: "payments/setup-intent/",
 	PAYMENT_INTENT: "payments/intent",
@@ -61,7 +61,7 @@ export const REFERAL_ENDPOINTS = {
 
 export const PRODUCT_ENDPOINTS = {
 	PRODUCT: (id: string) => `products/${id}`,
-	PRODUCTS: () => "products/supplement/list",
+	PRODUCTS: (userId?: string) => `products/supplement/list?userId=${userId}`,
 	PRODUCTS_LIMIT: (limit?: number) => `products/supplement/list?limit=${limit}`,
 	PRODUCTTAGS: () => "products/supplement/tags",
 };

@@ -24,6 +24,7 @@ export interface IUserResponse extends IBaseTimestamps {
 	producer?: string;
 	partner?: string;
 	employee?: [];
+	basketsC: IBasketsC[];
 	token?: string;
 	shipping?: IShippingResponse;
 	metadata?: IMetadata;
@@ -31,4 +32,8 @@ export interface IUserResponse extends IBaseTimestamps {
 
 interface IMetadata {
 	productId?: string;
+}
+
+interface IBasketsC {
+	productId: string;
 }

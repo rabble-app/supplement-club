@@ -18,9 +18,9 @@ export const productService = {
 		)) as ISingleManagePlanApiResponse;
 		return data && mapSingleProductModel(data);
 	},
-	products: async (): Promise<IProductCardModel[]> => {
+	products: async (userId?: string): Promise<IProductCardModel[]> => {
 		const { data } = (await apiRequest(
-			PRODUCT_ENDPOINTS.PRODUCTS(),
+			PRODUCT_ENDPOINTS.PRODUCTS(userId),
 			"GET",
 		)) as IManagePlanApiResponse;
 		return data?.map<IProductCardModel>((r: IProductResponse) =>

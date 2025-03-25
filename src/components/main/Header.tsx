@@ -42,7 +42,7 @@ export default function Header() {
 					<div className="grid gap-[51px] w-max text-white md:grid-cols-[auto_123px]">
 						<Link
 							className="font-normal lg:text-[64px] text-[48px] font-hagerman"
-							href={context?.user ? "/dashboard" : "/"}
+							href="/"
 						>
 							Supplement Club
 						</Link>

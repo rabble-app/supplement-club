@@ -1,7 +1,10 @@
 "use client";
-import ExpansionSelector from "@/components/main/products/ExpansionSelector";
-import SortBy from "@/components/main/products/SortBy";
-import ProductCard from "@/components/shared/ProductCard";
+import { useEffect, useState } from "react";
+
+import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
+
+import Spinner from "@/components/shared/Spinner";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -11,12 +14,14 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-
-import Spinner from "@/components/shared/Spinner";
 import { productService } from "@/services/productService";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import { useSearchParams } from "next/navigation";
+
+const ExpansionSelector = dynamic(
+	() => import("@/components/main/products/ExpansionSelector"),
+);
+const SortBy = dynamic(() => import("@/components/main/products/SortBy"));
+const ProductCard = dynamic(() => import("@/components/shared/ProductCard"));
 
 export default function Products() {
 	const searchParams = useSearchParams();

@@ -16,7 +16,10 @@ export default function SortBy({
 	return (
 		<div className="text-[16px] leading-[18px] font-[700] font-helvetica hidden md:flex gap-x-[16px] items-center pt-[25px]">
 			Sort by
-			<Select onValueChange={(value) => updateItems(value)}>
+			<Select
+				onValueChange={(value) => updateItems(value)}
+				aria-label="Select a category"
+			>
 				<SelectTrigger className="w-[150px] border-none">
 					<SelectValue placeholder="Most Popular" />
 				</SelectTrigger>
