@@ -1,6 +1,7 @@
 import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
+import type IJoinTeamRequest from "@/utils/models/api/request/IJoinTeamRequest";
 import type ITopUpSubscriptionRequest from "@/utils/models/api/request/ITopUpSubscriptionRequest";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
@@ -81,29 +82,19 @@ export const paymentService = {
 		} as ISetupIntentResponse;
 	},
 
-	async joinTeam(
-		teamId: string,
-		userId: string,
-		productId: string,
-		quantity: number,
-		price: number,
-		capsulePerDay: number,
-		amount: number,
-		paymentMethodId: string,
-		topupQuantity: number,
-	) {
+	async joinTeam(model: IJoinTeamRequest) {
 		const resonse = await apiRequest(PAYMENT_ENDPOINTS.JOIN_TEAM, "POST", {
 			teamStatus: "ACTIVE",
 			currency: "gbp",
-			teamId,
-			userId,
-			productId,
-			quantity,
-			price,
-			capsulePerDay,
-			amount,
-			paymentMethodId,
-			topupQuantity,
+			teamId: model.teamId,
+			userId: model.userId,
+			productId: model.productId,
+			quantity: model.quantity,
+			price: model.price,
+			capsulePerDay: model.capsulePerDay,
+			amount: model.amount,
+			paymentMethodId: model.paymentMethodId,
+			topupQuantity: model.topupQuantity,
 		});
 
 		return resonse;

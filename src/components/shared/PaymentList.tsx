@@ -66,17 +66,17 @@ export default function PaymentList({
 				capsulePerDay,
 			);
 		} else {
-			const response = (await paymentService.joinTeam(
-				teamId ?? "",
-				context?.user?.id ?? "",
-				productId ?? "",
-				90 * capsulePerDay,
-				totalPrice,
+			const response = (await paymentService.joinTeam({
+				teamId: teamId ?? "",
+				userId: context?.user?.id ?? "",
+				productId: productId ?? "",
+				quantity: 90 * capsulePerDay,
+				price: totalPrice,
 				capsulePerDay,
-				totalPrice,
-				currectCard?.id,
-				topupQuantity,
-			)) as IPaymentIntentApiResponse;
+				amount: totalPrice,
+				paymentMethodId: currectCard?.id,
+				topupQuantity: topupQuantity,
+			})) as IPaymentIntentApiResponse;
 
 			if (response.statusCode !== 200) {
 				CustomToast({
