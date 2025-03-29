@@ -8,10 +8,7 @@ import { Checkbox } from "../ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
-import { teamsService } from "@/services/teamService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
-import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
-import type ICaptureApiResponse from "@/utils/models/services/ICaptureApiResponse";
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
 import type { PaymentMethod } from "@stripe/stripe-js";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
@@ -59,9 +56,8 @@ export default function PaymentList({
 		if (!currectCard) {
 			currectCard = cards[0];
 		}
-
 		if (isComming) {
-			await paymentService.addPreorderBulkBasket(
+			await paymentService.joinPreorderTeam(
 				teamId ?? "",
 				context?.user?.id ?? "",
 				productId ?? "",
@@ -70,65 +66,27 @@ export default function PaymentList({
 				capsulePerDay,
 			);
 		} else {
-			const response = (await paymentService.addPaymentIntent(
+			const response = (await paymentService.joinTeam(
+				teamId ?? "",
+				context?.user?.id ?? "",
+				productId ?? "",
+				90 * capsulePerDay,
 				totalPrice,
-				process.env.NEXT_PUBLIC_PRODUCT_CURRENCY as string,
-				currectCard?.customer ?? "",
-				currectCard.id,
+				capsulePerDay,
+				totalPrice,
+				currectCard?.id,
+				topupQuantity,
 			)) as IPaymentIntentApiResponse;
 
 			if (response.statusCode !== 200) {
 				CustomToast({
 					title: response?.error
 						? JSON.parse(response?.error).message
-						: "Cannot charge money from this card.Please chose another one",
+						: "Cannot join the team for some reason",
 					status: StatusToast.ERROR,
 				});
 				return;
 			}
-
-			const captureResponse = (await paymentService.addCapturePayment(
-				totalPrice,
-				teamId,
-				response.data.paymentIntentId,
-				context?.user?.id ?? "",
-			)) as ICaptureApiResponse;
-
-			if (captureResponse.statusCode !== 200) {
-				CustomToast({
-					title: captureResponse?.error
-						? JSON.parse(captureResponse?.error).message
-						: "Cannot add capture payment",
-					status: StatusToast.ERROR,
-				});
-				return;
-			}
-
-			await paymentService.paymentBasketActive({
-				capsulePerDay: capsulePerDay,
-				orderId: captureResponse.data.orderId ?? "",
-				price: totalPrice,
-				productId: productId,
-				quantity: 90 * capsulePerDay + topupQuantity,
-				teamId: teamId,
-				topupQuantity: topupQuantity,
-				userId: context?.user?.id ?? "",
-			});
-		}
-
-		const addTeamMemberResponse = (await teamsService.addTeamMember(
-			context?.user?.id ?? "",
-			teamId,
-		)) as IResponseModel;
-
-		if (addTeamMemberResponse.statusCode !== 200) {
-			CustomToast({
-				title: addTeamMemberResponse?.error
-					? JSON.parse(addTeamMemberResponse?.error).message
-					: "Cannot add team member",
-				status: StatusToast.ERROR,
-			});
-			return;
 		}
 
 		successAction();
@@ -262,10 +220,7 @@ export default function PaymentList({
 
 			{!userCards ||
 				(userCards?.length === 0 && (
-					<PaymentConfirmForm
-						totalPrice={totalPrice}
-						successAction={addCreditCard}
-					>
+					<PaymentConfirmForm successAction={addCreditCard}>
 						{ButtonSection}
 
 						<Button

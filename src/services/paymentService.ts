@@ -1,7 +1,6 @@
 import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
-import type IPaymentBasketActiveRequest from "@/utils/models/api/request/IPaymentBasketActiveRequest";
 import type ITopUpSubscriptionRequest from "@/utils/models/api/request/ITopUpSubscriptionRequest";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
@@ -16,49 +15,6 @@ export const paymentService = {
 		apiRequest(PAYMENT_ENDPOINTS.ADD_CARD, "POST", {
 			paymentMethodId,
 			stripeCustomerId,
-		}),
-
-	addCapturePayment: async (
-		amount: number,
-		teamId: string,
-		paymentIntentId: string,
-		userId: string,
-	) =>
-		apiRequest(PAYMENT_ENDPOINTS.CAPTURE_PAYMENT, "POST", {
-			amount,
-			teamId,
-			paymentIntentId,
-			userId,
-		}),
-
-	addPaymentIntent: async (
-		amount: number,
-		currency: string,
-		customerId: string,
-		paymentMethodId: string,
-	) =>
-		apiRequest(PAYMENT_ENDPOINTS.PAYMENT_INTENT, "POST", {
-			amount,
-			currency,
-			customerId,
-			paymentMethodId,
-		}),
-
-	addPreorderBulkBasket: async (
-		teamId: string,
-		userId: string,
-		productId: string,
-		quantity: number,
-		price: number,
-		capsulePerDay: number,
-	) =>
-		apiRequest(PAYMENT_ENDPOINTS.PREORDER_BASKET, "POST", {
-			teamId,
-			userId,
-			productId,
-			quantity,
-			price,
-			capsulePerDay,
 		}),
 
 	topUpSubscription: async (model: ITopUpSubscriptionRequest) =>
@@ -83,35 +39,6 @@ export const paymentService = {
 			capsulePerDay,
 		}),
 
-	paymentBasketActive: async (model: IPaymentBasketActiveRequest) =>
-		apiRequest(PAYMENT_ENDPOINTS.PAYMENT_BASKET_ACTIVE, "POST", {
-			orderId: model.orderId,
-			teamId: model.teamId,
-			topupQuantity: model.topupQuantity,
-			userId: model.userId,
-			productId: model.productId,
-			quantity: model.quantity,
-			capsulePerDay: model.capsulePerDay,
-			price: model.price,
-		}),
-
-	paymentBasketPreOrder: async (
-		teamId: string,
-		userId: string,
-		productId: string,
-		quantity: string,
-		capsulePerDay: string,
-		price: string,
-	) =>
-		apiRequest(PAYMENT_ENDPOINTS.PAYMENT_BASKET_PREORDER, "POST", {
-			teamId,
-			userId,
-			productId,
-			quantity,
-			capsulePerDay,
-			price,
-		}),
-
 	chargeUser: async (
 		amount: number,
 		currency: string,
@@ -124,19 +51,6 @@ export const paymentService = {
 			amount,
 			currency,
 			customerId,
-			paymentMethodId,
-			userId,
-			teamId,
-		}),
-
-	capturePayment: async (
-		amount: string,
-		paymentMethodId: string,
-		userId: string,
-		teamId: string,
-	) =>
-		apiRequest(PAYMENT_ENDPOINTS.CAPTURE_PAYMENT, "POST", {
-			amount,
 			paymentMethodId,
 			userId,
 			teamId,
@@ -165,6 +79,59 @@ export const paymentService = {
 		return {
 			clientSecret: response.data.client_secret,
 		} as ISetupIntentResponse;
+	},
+
+	async joinTeam(
+		teamId: string,
+		userId: string,
+		productId: string,
+		quantity: number,
+		price: number,
+		capsulePerDay: number,
+		amount: number,
+		paymentMethodId: string,
+		topupQuantity: number,
+	) {
+		const resonse = await apiRequest(PAYMENT_ENDPOINTS.JOIN_TEAM, "POST", {
+			teamStatus: "ACTIVE",
+			currency: "gbp",
+			teamId,
+			userId,
+			productId,
+			quantity,
+			price,
+			capsulePerDay,
+			amount,
+			paymentMethodId,
+			topupQuantity,
+		});
+
+		return resonse;
+	},
+
+	async joinPreorderTeam(
+		teamId: string,
+		userId: string,
+		productId: string,
+		quantity: number,
+		price: number,
+		capsulePerDay: number,
+	) {
+		const resonse = await apiRequest(
+			PAYMENT_ENDPOINTS.JOIN_PREORDER_TEAM,
+			"POST",
+			{
+				teamStatus: "PREORDER",
+				teamId,
+				userId,
+				productId,
+				quantity,
+				price,
+				capsulePerDay,
+			},
+		);
+
+		return resonse;
 	},
 
 	async createPaymentIntent(
