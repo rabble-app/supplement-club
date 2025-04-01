@@ -15,20 +15,19 @@ export const TEAM_ENDPOINTS = {
 };
 
 export const PAYMENT_ENDPOINTS = {
-	ADD_CARD: "payments/add-card",
+	ADD_CARD: "payments/add-card?isSupplementApp=true",
 	BULK_BASKET: "payments/basket-bulk",
+	JOIN_TEAM: "payments/supplement/join-team",
+	JOIN_PREORDER_TEAM: "payments/supplement/join-team",
 	SETUP_INTENT: "payments/setup-intent/",
 	PAYMENT_INTENT: "payments/intent",
-	CAPTURE_PAYMENT: "payments/intent/capture",
-	PREORDER_BASKET: "payments/basket",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",
 	UPDATE_SUBSCRIPTION: (id: string) => `payments/basketC/${id}`,
-	PAYMENT_BASKET_ACTIVE: "payments/basket",
-	PAYMENT_BASKET_PREORDER: "payments/basket",
 	CHARGE_USER: "payments/charge",
 	MAKE_CARD_DEFAULT: "payments/default-card",
-	REMOVE_CARD: "payments/remove-card",
-	GET_PAYMENT_OPTIONS: (id: string) => `payments/options/${id}`,
+	REMOVE_CARD: "payments/remove-card?isSupplementApp=true",
+	GET_PAYMENT_OPTIONS: (id: string) =>
+		`payments/options/${id}?isSupplementApp=true`,
 };
 
 export const USER_ENDPOINTS = {

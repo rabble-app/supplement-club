@@ -1,4 +1,3 @@
-import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { Elements } from "@stripe/react-stripe-js";
 import { type PaymentMethod, loadStripe } from "@stripe/stripe-js";
@@ -11,29 +10,22 @@ const stripePromise = loadStripe(
 );
 
 export default function PaymentConfirmForm({
-	totalPrice,
 	children,
 	successAction,
 }: Readonly<{
-	totalPrice: number;
 	children?: React.ReactNode;
 	successAction: (paymentMethod: string | PaymentMethod | null) => void;
 }>) {
 	const [clientSecret, setClientSecret] = useState("");
-	const context = useUser();
 
 	useEffect(() => {
 		const fetchPaymentIntent = async () => {
-			const model = await paymentService.createPaymentIntent(
-				totalPrice,
-				process.env.NEXT_PUBLIC_PRODUCT_CURRENCY as string,
-				context?.user?.stripeCustomerId ?? "",
-			);
+			const model = await paymentService.setupIntent();
 			setClientSecret(model.clientSecret);
 		};
 
 		fetchPaymentIntent();
-	}, [context?.user?.stripeCustomerId, totalPrice]);
+	}, []);
 
 	function onCardAction(paymentMethod: string | PaymentMethod | null) {
 		successAction(paymentMethod);

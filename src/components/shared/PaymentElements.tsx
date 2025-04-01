@@ -37,7 +37,7 @@ export default function PaymentElements({
 			return;
 		}
 
-		const { error, paymentIntent } = await stripe.confirmPayment({
+		const { error, setupIntent } = await stripe.confirmSetup({
 			elements,
 			clientSecret,
 			confirmParams: { return_url: "" },
@@ -46,17 +46,17 @@ export default function PaymentElements({
 
 		if (error) {
 			CustomToast({
-				title: `ConfirmPayment striple component:" ${error.message}`,
+				title: `SetupIntent striple component:" ${error.message}`,
 				status: StatusToast.ERROR,
 			});
 		} else {
 			// set payment card by default
 			if (context?.user) {
 				context.user.stripeDefaultPaymentMethodId =
-					paymentIntent.payment_method as string;
+					setupIntent.payment_method as string;
 				setUser(context.user);
 			}
-			cardAction(paymentIntent.payment_method);
+			cardAction(setupIntent.payment_method);
 		}
 	};
 
