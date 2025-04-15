@@ -81,7 +81,7 @@ export default function SummaryProduct({
 							<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
 								{model.corporation}
 							</p>
-							<div className="text-[24px] md:text-[40px] leading-[28px] md:leading-[48px] font-hagerman flex items-start gap-[5px]">
+							<div className="text-[24px] md:text-[30px] leading-[28px] md:leading-[48px] font-hagerman flex items-start gap-[5px]">
 								{firstWord}
 								<Image
 									src="/images/TM-black.svg"
