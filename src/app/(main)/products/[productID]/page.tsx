@@ -230,7 +230,6 @@ export default function ProductDetails({
 		const handleScroll = () => {
 		  if (!stickyRef.current || !bottomRef.current || !placeholderRef.current) return;
 	
-		  const stickyRect = stickyRef.current.getBoundingClientRect();
 		  const bottomRect = bottomRef.current.getBoundingClientRect();
 		  const placeholderRect = placeholderRef.current.getBoundingClientRect();
 	
