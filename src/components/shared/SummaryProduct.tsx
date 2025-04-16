@@ -89,7 +89,7 @@ export default function SummaryProduct({
 									width={14}
 									height={14}
 								/>
-								{rest}
+								{rest?.join(" ")}
 							</div>
 							{model.quantityOfSubUnitPerOrder &&
 								model.unitsOfMeasurePerSubUnit && (

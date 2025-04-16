@@ -83,7 +83,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 							width={14}
 							height={14}
 						/>
-						{rest}
+						{rest?.join(" ")}
 					</div>
 					<p className="leading-[18px] text-grey5">{model.description}</p>
 				</div>
@@ -103,7 +103,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 				<div className="text-[20px] leading-[23px] text-grey4 font-inconsolata">
 					RRP{" "}
 					<span className="text-[20px] leading-[23px] font-bold line-through font-inconsolata">
-						£{model.wholesalePrice}
+						£{model.price}
 					</span>{" "}
 					<span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
 						{precentage}% OFF

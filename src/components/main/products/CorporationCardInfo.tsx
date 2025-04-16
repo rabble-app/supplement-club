@@ -26,7 +26,7 @@ export default function CorporationCardInfo({
 					width={18}
 					height={18}
 				/>
-				{rest}
+				{rest?.join(" ")}
 			</div>
 			<div className="flex items-center gap-[8px]">
 				<Image
