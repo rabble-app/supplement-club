@@ -207,7 +207,7 @@ export default function TeamPrice({
 				{!isComming && (
 					<div className="grid gap-[8px]">
 						<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
-							£{Number(wholesalePrice).toFixed(2)}{" "}
+							£{Number(price).toFixed(2)}{" "}
 							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
 								(£0.25 / capsule)
 							</span>

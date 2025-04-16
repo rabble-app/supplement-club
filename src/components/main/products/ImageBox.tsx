@@ -19,13 +19,13 @@ export default function ImageBox({ tags }: Readonly<{ tags?: string[] }>) {
 								<TooltipTrigger>
 									<Image
 										src={image}
-										alt={image}
+										alt={tag}
 										width={24}
 										height={24}
 										priority
 									/>
 								</TooltipTrigger>
-								<TooltipContent>{image}</TooltipContent>
+								<TooltipContent>{tag}</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
 					);

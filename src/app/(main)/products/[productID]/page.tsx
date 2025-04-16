@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -219,11 +219,42 @@ export default function ProductDetails({
 		nextQuater,
 	]);
 
+	// implement sticky button
+	const stickyRef = useRef<HTMLDivElement | null>(null);
+    const bottomRef = useRef<HTMLDivElement | null>(null);
+    const placeholderRef = useRef<HTMLDivElement | null>(null);
+    const [isSticky, setIsSticky] = useState<boolean>(false);
+
+
+	useEffect(() => {
+		const handleScroll = () => {
+		  if (!stickyRef.current || !bottomRef.current || !placeholderRef.current) return;
+	
+		  const stickyRect = stickyRef.current.getBoundingClientRect();
+		  const bottomRect = bottomRef.current.getBoundingClientRect();
+		  const placeholderRect = placeholderRef.current.getBoundingClientRect();
+	
+		  const stickyHeight = stickyRef.current.offsetHeight;
+	
+		  const hasScrolledPast = placeholderRect.top <= 0;
+		  const isAboveBottom = bottomRect.top > stickyHeight;
+	
+		  if (hasScrolledPast && isAboveBottom) {
+			setIsSticky(true);
+		  } else {
+			setIsSticky(false);
+		  }
+		};
+	
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	  }, []);
+
 	if (loading) return <Spinner />;
 
 	return (
 		<div className="grid lg:grid-cols-2 md:gap-[32px] container-width relative">
-			<div className="contents md:grid gap-[32px]">
+			<div className="contents md:grid gap-[32px]">		
 				<Carousel
 					setApi={setApi}
 					className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0] h-[430px] md:h-auto"
@@ -307,14 +338,14 @@ export default function ProductDetails({
 
 						<ProfuctTable />
 
-						<div className="mb-[75px] md:mb-[84px]">
+						<div ref={bottomRef} className="mb-[75px] md:mb-[84px]">
 							<BottomSection />
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:sticky md:top-[0] md:items-start md:self-start md:pb-[50px]">
+			<div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:top-[0] md:items-start md:self-start md:pb-[50px]">
 				<Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -364,8 +395,15 @@ export default function ProductDetails({
 							capsuleInfo={product?.capsuleInfo}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 						/>
-
+                         {/* Placeholder keeps layout when sticky becomes fixed */}
+			            <div ref={placeholderRef} style={{ height: isSticky ? stickyRef.current?.offsetHeight : 0 }} />
 						<SummaryProduct className="bg-white" model={summary} />
+                        <div ref={stickyRef} style={{
+							position: isSticky ? 'fixed' : 'relative',
+							top: isSticky ? 0 : 'inherit',
+							zIndex: 1000,
+							width: isSticky ? 624 : 'inherit',
+							}}>
 
 						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
 							<Link
@@ -375,7 +413,7 @@ export default function ProductDetails({
 								Start My Subscription
 							</Link>
 						</Button>
-
+                        </div>
 						<div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
 							<div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
 								<Image
