@@ -15,7 +15,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 	const [userProducts, setUserProducts] = useState<string[]>([]);
 	const precentage =
 		model.price && model.rrp
-			? Number(Number(model.price) / Number(model.rrp)).toFixed(2)
+			? (Number(model.rrp) / Number(model.price) - 1).toFixed(2)
 			: 0;
 	const context = useUser();
 	let titleButton = "Join Team";
@@ -103,7 +103,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 				<div className="text-[20px] leading-[23px] text-grey4 font-inconsolata">
 					RRP{" "}
 					<span className="text-[20px] leading-[23px] font-bold line-through font-inconsolata">
-						£{model.price}
+						£{model.rrp}
 					</span>{" "}
 					<span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
 						{precentage}% OFF
