@@ -11,6 +11,7 @@ import { paymentService } from "@/services/paymentService";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
 import type { PaymentMethod } from "@stripe/stripe-js";
+import Link from "next/link";
 import PaymentCard from "../dashboard/account/payment-details/PaymentCard";
 import AddPaymentDialog from "./AddPaymentDialog";
 import EmailReminders from "./EmailReminders";
@@ -52,6 +53,15 @@ export default function PaymentList({
 	}, [context?.user?.stripeCustomerId]);
 
 	async function processPayment(cards: IUserPaymentOptionModel[]) {
+		if (!policyTerms) {
+			CustomToast({
+				title:
+					"You cannot signing up before agreeing the Terms & Conditions and Privacy Policy.",
+				status: StatusToast.ERROR,
+				position: "top-center",
+			});
+			return;
+		}
 		let currectCard = cards.find((u) => u.id === defaultCard);
 		if (!currectCard) {
 			currectCard = cards[0];
@@ -114,7 +124,7 @@ export default function PaymentList({
 		<div className="grid gap-[24px]">
 			<Separator className="bg-grey3 h-[1px] w-full" />
 
-			<div className="flex items-center gap-[8px]">
+			<div className="flex items-start gap-[10px]">
 				<Checkbox
 					id="policyTerms"
 					checked={policyTerms}
@@ -124,7 +134,20 @@ export default function PaymentList({
 					htmlFor="policyTerms"
 					className="text-[16px] leading-[19px] text-black5 cursor-pointer"
 				>
-					I accept the Terms of Service and Privacy Policy
+					By joining Supplement Club, you agree to our{" "}
+					<Link
+						target="_blank"
+						href="https://swift-thorium-bdb.notion.site/Supplement-Club-Terms-Conditions-1cfa72b529ea80bf941dd08f4db13fd2?pvs=4"
+					>
+						Terms & Conditions
+					</Link>{" "}
+					and{" "}
+					<Link
+						target="_blank"
+						href="https://swift-thorium-bdb.notion.site/Supplement-Club-Privacy-Policy-1cfa72b529ea805b8588d7bca35beff1?pvs=4"
+					>
+						Privacy Policy
+					</Link>
 				</label>
 			</div>
 
@@ -210,7 +233,7 @@ export default function PaymentList({
 
 					<Button
 						onClick={() => startTransition(() => processPayment(userCards))}
-						className="bg-blue text-white font-bold w-full h-[51px]"
+						className={` text-white font-bold w-full h-[51px] ${policyTerms ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 					>
 						{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 						{/* Use a regular string */}
@@ -225,7 +248,7 @@ export default function PaymentList({
 
 						<Button
 							type="submit"
-							className="bg-blue text-white font-bold w-full h-[51px] mt-[20px]"
+							className={` text-white font-bold w-full h-[51px] mt-[20px] ${policyTerms ? "bg-blue" : "pointer-events-none bg-grey25"}`}
 						>
 							{`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
 							{/* Use a regular string */}
