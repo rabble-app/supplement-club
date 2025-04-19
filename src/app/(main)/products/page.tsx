@@ -29,6 +29,7 @@ export default function Products() {
 	const [loading, setLoading] = useState(true);
 	const [categories, setCategories] = useState<string[]>([]);
 	const [defaultSelection, setDefaultSelection] = useState<string>();
+	const [defaultGoalSelection, setDefaultGoalSelection] = useState<string>();
 	const [goals, setGoals] = useState<string[]>([]);
 	const [sortItems, setSortItems] = useState<string[]>([]);
 	const [products, setProducts] = useState<IProductCardModel[]>([]);
@@ -108,6 +109,24 @@ export default function Products() {
 			setDefaultSelection("");
 		}
 	}, [searchParams, initProducts, categories]);
+
+	useEffect(() => {
+		const goal = searchParams.get("goal");
+		if (goal) {
+			const queryTag = goals?.find(
+				(tag) => tag.toLowerCase() === goal.replaceAll("-", " "),
+			);
+			setDefaultGoalSelection(queryTag);
+			setProducts(
+				initProducts.filter((product) =>
+					product.tags?.some((tag) => tag === queryTag),
+				),
+			);
+		} else {
+			setProducts(initProducts);
+			setDefaultGoalSelection("");
+		}
+	}, [searchParams, initProducts, goals]);
 
 	if (loading) return <Spinner />;
 
