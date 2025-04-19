@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { paymentService } from "@/services/paymentService";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
+import { getQuarterInfo } from "@/utils/utils";
 import {
 	Dialog,
 	DialogClose,
@@ -26,6 +27,7 @@ export default function SubscriptionPlan({
 	const [changePlan, setChangePlan] = useState(false);
 	const [initCapsule, setInitCapsule] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
+	const { nextEditableDrop } = getQuarterInfo();
 
 	useEffect(() => {
 		if (managePlan?.team?.basket[0]?.capsulePerDay)
@@ -164,10 +166,10 @@ export default function SubscriptionPlan({
 										Subscription Quantity updated
 									</p>
 									<p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center w-full font-[400]">
-										`You have changed your subscription quantity from $
-										{managePlan?.team?.basket[0]?.capsulePerDay} capsule to $
-										{initCapsule} capsules per day, the next delivery is on X
-										date.`
+										You have changed your subscription quantity from{" "}
+										{managePlan?.team?.basket[0]?.capsulePerDay} capsules to{" "}
+										{initCapsule} capsule per day. This update will apply from{" "}
+										{nextEditableDrop} onwards.
 									</p>
 								</div>
 							</div>

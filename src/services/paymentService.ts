@@ -9,7 +9,7 @@ import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPa
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
 import type ISetupIntentApiResponse from "@/utils/models/services/ISetupIntentApiResponse";
 import type IUserPaymentOptionsApiResponse from "@/utils/models/services/IUserPaymentOptionsApiResponse";
-import { mapUserPaymentOptionModel } from "@/utils/utils";
+import { mapUserPaymentOptionModel } from "@/utils/mapping";
 
 export const paymentService = {
 	addCard: async (paymentMethodId: string, stripeCustomerId: string) =>

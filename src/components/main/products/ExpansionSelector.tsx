@@ -1,46 +1,45 @@
-import { ChevronDown } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 type ExpansionSelectorProps = {
 	title: string;
 	updateItems: (items: string[]) => void;
-	categories: string[];
+	items: string[];
 	defaultSelection?: string;
 };
 
 export default function ExpansionSelector({
 	title,
 	updateItems,
-	categories,
+	items,
 	defaultSelection,
 }: Readonly<ExpansionSelectorProps>) {
-	// State to manage selected categories
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+	// State to manage selected items
+	const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
 	// Handle category selection and updates
-	const handleCategoryChange = useCallback(
-		(category: string) => {
-			setSelectedCategories((prevSelected) => {
+	const handleChange = useCallback(
+		(item: string) => {
+			setSelectedItems((prevSelected) => {
 				const isSelected = prevSelected.some(
-					(item) => item.toLowerCase() === category.toLowerCase(),
+					(i) => i.toLowerCase() === item.toLowerCase(),
 				);
-				const updatedCategories = isSelected
+				const updatedItems = isSelected
 					? prevSelected.filter(
-							(value) => value.toLowerCase() !== category.toLowerCase(),
+							(value) => value.toLowerCase() !== item.toLowerCase(),
 						)
-					: [...prevSelected, category];
+					: [...prevSelected, item];
 
 				setTimeout(() => {
-					updateItems(updatedCategories);
+					updateItems(updatedItems);
 				}, 0);
-				return updatedCategories;
+				return updatedItems;
 			});
 		},
 		[updateItems],
@@ -48,9 +47,9 @@ export default function ExpansionSelector({
 
 	useEffect(() => {
 		if (defaultSelection) {
-			setSelectedCategories([defaultSelection]);
+			setSelectedItems([defaultSelection]);
 		} else {
-			setSelectedCategories([]);
+			setSelectedItems([]);
 		}
 	}, [defaultSelection]);
 
@@ -60,7 +59,7 @@ export default function ExpansionSelector({
 		"h-[22px] w-[22px] shrink-0 text-muted-foreground transition-transform duration-200";
 
 	return (
-		<Collapsible defaultOpen={selectedCategories.length > 0}>
+		<Collapsible defaultOpen={selectedItems.length > 0}>
 			{/* Trigger to expand/collapse the content */}
 			<CollapsibleTrigger className={triggerClasses}>
 				<p className="font-bold">{title}</p>
@@ -68,23 +67,23 @@ export default function ExpansionSelector({
 			</CollapsibleTrigger>
 
 			<CollapsibleContent className="grid gap-[16px]">
-				{categories.map((category, idx) => (
+				{items.map((item, idx) => (
 					<div
-						key={`${category} ${idx + 1}`}
+						key={`${item} ${idx + 1}`}
 						className="flex items-start gap-x-[10px]"
 					>
 						<Checkbox
-							value={category}
-							checked={selectedCategories?.includes(category)}
-							onClick={() => handleCategoryChange(category)}
+							value={item}
+							checked={selectedItems?.includes(item)}
+							onClick={() => handleChange(item)}
 						/>
 
 						<button
 							type="button"
-							onClick={() => handleCategoryChange(category)}
+							onClick={() => handleChange(item)}
 							className="text-[16px] leading-[20px] font-[500] font-inter cursor-pointer text-left"
 						>
-							{category}
+							{item}
 						</button>
 					</div>
 				))}

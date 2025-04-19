@@ -146,12 +146,13 @@ export default function Products() {
 								defaultSelection={defaultSelection}
 								title="Shop by Category"
 								updateItems={updateProducts}
-								categories={categories}
+								items={categories}
 							/>
 							<ExpansionSelector
+								defaultSelection={defaultGoalSelection}
 								title="Shop by Goal"
 								updateItems={updateProducts}
-								categories={goals}
+								items={goals}
 							/>
 						</div>
 					</aside>
