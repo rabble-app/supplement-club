@@ -73,6 +73,7 @@ export default function ProductDetails({
 	const productStore = useProductStore();
 	const [api, setApi] = useState<CarouselApi>();
 	const [members, setMembers] = useState<IMemberCardModel[]>([]);
+	const [hasUserProduct, setHasUserProduct] = useState<boolean>();
 
 	const days = 90;
 
@@ -84,6 +85,15 @@ export default function ProductDetails({
 
 	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
 		getQuarterInfo();
+
+	useEffect(() => {
+		if (product) {
+			setHasUserProduct(
+				context?.user?.basketsC?.map((c) => c.productId).includes(product.id) ??
+					false,
+			);
+		}
+	}, [context, product]);
 
 	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 	const [nextQuater] = useState(
@@ -221,39 +231,39 @@ export default function ProductDetails({
 
 	// implement sticky button
 	const stickyRef = useRef<HTMLDivElement | null>(null);
-    const bottomRef = useRef<HTMLDivElement | null>(null);
-    const placeholderRef = useRef<HTMLDivElement | null>(null);
-    const [isSticky, setIsSticky] = useState<boolean>(false);
-
+	const bottomRef = useRef<HTMLDivElement | null>(null);
+	const placeholderRef = useRef<HTMLDivElement | null>(null);
+	const [isSticky, setIsSticky] = useState<boolean>(false);
 
 	useEffect(() => {
 		const handleScroll = () => {
-		  if (!stickyRef.current || !bottomRef.current || !placeholderRef.current) return;
-	
-		  const bottomRect = bottomRef.current.getBoundingClientRect();
-		  const placeholderRect = placeholderRef.current.getBoundingClientRect();
-	
-		  const stickyHeight = stickyRef.current.offsetHeight;
-	
-		  const hasScrolledPast = placeholderRect.top <= 0;
-		  const isAboveBottom = bottomRect.top > stickyHeight;
-	
-		  if (hasScrolledPast && isAboveBottom) {
-			setIsSticky(true);
-		  } else {
-			setIsSticky(false);
-		  }
+			if (!stickyRef.current || !bottomRef.current || !placeholderRef.current)
+				return;
+
+			const bottomRect = bottomRef.current.getBoundingClientRect();
+			const placeholderRect = placeholderRef.current.getBoundingClientRect();
+
+			const stickyHeight = stickyRef.current.offsetHeight;
+
+			const hasScrolledPast = placeholderRect.top <= 0;
+			const isAboveBottom = bottomRect.top > stickyHeight;
+
+			if (hasScrolledPast && isAboveBottom) {
+				setIsSticky(true);
+			} else {
+				setIsSticky(false);
+			}
 		};
-	
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
-	  }, []);
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
 	if (loading) return <Spinner />;
 
 	return (
 		<div className="grid lg:grid-cols-2 md:gap-[32px] container-width relative">
-			<div className="contents md:grid gap-[32px]">		
+			<div className="contents md:grid gap-[32px]">
 				<Carousel
 					setApi={setApi}
 					className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0] h-[430px] md:h-auto"
@@ -394,25 +404,30 @@ export default function ProductDetails({
 							capsuleInfo={product?.capsuleInfo}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 						/>
-                         {/* Placeholder keeps layout when sticky becomes fixed */}
-			            <div ref={placeholderRef} style={{ height: isSticky ? stickyRef.current?.offsetHeight : 0 }} />
+						{/* Placeholder keeps layout when sticky becomes fixed */}
+						<div
+							ref={placeholderRef}
+							style={{ height: isSticky ? stickyRef.current?.offsetHeight : 0 }}
+						/>
 						<SummaryProduct className="bg-white" model={summary} />
-                        <div ref={stickyRef} style={{
-							position: isSticky ? 'fixed' : 'relative',
-							top: isSticky ? 0 : 'inherit',
-							zIndex: 1000,
-							width: isSticky ? 624 : 'inherit',
-							}}>
-
-						<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-							<Link
-								className="w-full h-full flex items-center justify-center"
-								href={`/products/${product?.id}/checkout`}
-							>
-								Start My Subscription
-							</Link>
-						</Button>
-                        </div>
+						<div
+							ref={stickyRef}
+							style={{
+								position: isSticky ? "fixed" : "relative",
+								top: isSticky ? 0 : "inherit",
+								zIndex: 1000,
+								width: isSticky ? 624 : "inherit",
+							}}
+						>
+							<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
+								<Link
+									className="w-full h-full flex items-center justify-center"
+									href={`/products/${product?.id}/checkout`}
+								>
+									Start My Subscription
+								</Link>
+							</Button>
+						</div>
 						<div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
 							<div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
 								<Image
@@ -473,7 +488,9 @@ export default function ProductDetails({
 							model={summary}
 						/>
 
-						<Button className="bg-blue text-white w-full font-bold font-inconsolata">
+						<Button
+							className={` text-white w-full font-bold font-inconsolata ${hasUserProduct ? "pointer-events-none bg-grey25" : "bg-blue"}`}
+						>
 							<Link href={`/products/${product?.id}/checkout`}>
 								{" "}
 								REGISTER PRE-ORDER
@@ -485,12 +502,14 @@ export default function ProductDetails({
 					<div className="grid gap-[28px] w-full">
 						<SummaryProduct model={summary} />
 
-						<ReferralCardsWithLink />
+						{hasUserProduct && <ReferralCardsWithLink />}
 					</div>
 				)}
 
 				{context?.user && !product?.isComming && (
-					<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
+					<Button
+						className={`text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100] ${hasUserProduct ? "pointer-events-none bg-grey25" : "bg-blue"}`}
+					>
 						<Link
 							className="w-full h-full flex items-center justify-center"
 							href={`/products/${product?.id}/checkout`}
@@ -501,7 +520,9 @@ export default function ProductDetails({
 				)}
 
 				{context?.user && product?.isComming && (
-					<Button className="bg-blue text-white w-full font-bold font-inconsolata">
+					<Button
+						className={` text-white w-full font-bold font-inconsolata ${hasUserProduct ? "pointer-events-none bg-grey25" : "bg-blue"}`}
+					>
 						<Link href={`/products/${product?.id}/checkout`}>
 							{" "}
 							REGISTER PRE-ORDER
