@@ -165,19 +165,19 @@ export default async function Home() {
 					</a>
 				</div>
 				<Image
-					className="hidden lg:block lg:mt-[20px]"
-					src="/images/ubiquinol.png"
+					className="hidden lg:block lg:m-auto"
+					src="/images/hero-image.png"
 					alt="Vercel logomark"
 					width={754}
-					height={766}
+					height={465}
 				/>
 				<a href="#products">
 					<Image
-						className="lg:hidden"
-						src="/images/ubiquinol.png"
+						className="lg:hidden m-auto"
+						src="/images/hero-image.png"
 						alt="Buy product"
 						width={754}
-						height={760}
+						height={465}
 					/>
 				</a>
 			</div>
