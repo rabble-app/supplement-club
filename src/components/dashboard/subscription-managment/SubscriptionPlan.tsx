@@ -61,6 +61,10 @@ export default function SubscriptionPlan({
 		setIsOpen(val);
 	}
 
+	function pluralizeCapsule(count: number) {
+		return count === 1 ? "capsule" : "capsules";
+	}
+
 	return (
 		<div className="py-[16px] px-[12px] bg-white shadow-card rounded-[12px] grid gap-[16px]">
 			<div className="grid gap-[4px]">
@@ -167,9 +171,12 @@ export default function SubscriptionPlan({
 									</p>
 									<p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center w-full font-[400]">
 										You have changed your subscription quantity from{" "}
-										{managePlan?.team?.basket[0]?.capsulePerDay} capsules to{" "}
-										{initCapsule} capsule per day. This update will apply from{" "}
-										{nextEditableDrop} onwards.
+										{managePlan?.team?.basket[0]?.capsulePerDay}{" "}
+										{pluralizeCapsule(
+											managePlan?.team?.basket[0]?.capsulePerDay ?? 2,
+										)}{" "}
+										to {initCapsule} {pluralizeCapsule(initCapsule)} per day.
+										This update will apply from {nextEditableDrop} onwards.
 									</p>
 								</div>
 							</div>
