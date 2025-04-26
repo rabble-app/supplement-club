@@ -138,6 +138,7 @@ export default function PaymentList({
 					<Link
 						target="_blank"
 						href="https://swift-thorium-bdb.notion.site/Supplement-Club-Terms-Conditions-1cfa72b529ea80bf941dd08f4db13fd2?pvs=4"
+						className="underline text-bold text-blue"
 					>
 						Terms & Conditions
 					</Link>{" "}
@@ -145,6 +146,7 @@ export default function PaymentList({
 					<Link
 						target="_blank"
 						href="https://swift-thorium-bdb.notion.site/Supplement-Club-Privacy-Policy-1cfa72b529ea805b8588d7bca35beff1?pvs=4"
+						className="underline text-bold text-blue"
 					>
 						Privacy Policy
 					</Link>
