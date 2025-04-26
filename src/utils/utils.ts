@@ -34,7 +34,6 @@ export function getQuarterInfo() {
 	const nextYear =
 		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;
 	const nextQuarterStart = new Date(nextYear, nextQuarterMonth % 12, 1);
-	const nextQuarterEnd = new Date(nextYear, (nextQuarterMonth % 12) + 3, 1);
 	// Calculate days remaining for the next quarter
 	const diffTime = nextQuarterStart.getTime() - date.getTime();
 	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
