@@ -67,7 +67,10 @@ const BreadcrumbPage = React.forwardRef<
 	<button
 		ref={ref}
 		aria-disabled="true"
-		className={cn(" text-[14px] font-hagerman font-bold text-black", className)}
+		className={cn(
+			" text-[14px] font-hagerman font-[400] text-black",
+			className,
+		)}
 		{...props}
 	/>
 ));
