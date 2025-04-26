@@ -354,7 +354,7 @@ export default async function Home() {
 									width={32}
 									height={32}
 								/>
-								<p className="leading-[16px]">Overpackaging</p>
+								<p className="leading-[16px]">Warehousing</p>
 							</div>
 						</div>
 					</div>
