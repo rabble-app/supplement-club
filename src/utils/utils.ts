@@ -65,8 +65,8 @@ export function getQuarterInfo() {
 		new Date().toISOString(),
 	);
 
-	const nextDeliveryText = `${nextQuarterEnd.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
-	const nextDeliveryTextShort = `${nextQuarterEnd.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
+	const nextDeliveryText = `${nextQuarterStart.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
+	const nextDeliveryTextShort = `${nextQuarterStart.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
 
 	return {
 		currentQuarter,

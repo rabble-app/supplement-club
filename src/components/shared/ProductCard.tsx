@@ -126,7 +126,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 
 				<div className="flex flex-col text-center text-grey5 leading-[18px] font-helvetica">
 					<p className="text-blue uppercase text-[16px] font-helvetica">
-						NEXT DAY DELIVERY
+						FREE NEXT DAY DELIVERY
 					</p>
 					Join today and your start up package getting you to the{" "}
 					{nextDeliveryTextShort} Drop will arrive tomorrow
