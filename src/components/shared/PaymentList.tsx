@@ -56,7 +56,7 @@ export default function PaymentList({
 		if (!policyTerms) {
 			CustomToast({
 				title:
-					"You cannot signing up before agreeing the Terms & Conditions and Privacy Policy.",
+					"To continue, please agree to our Terms and Conditions and Privacy Policy.",
 				status: StatusToast.ERROR,
 				position: "top-center",
 			});
