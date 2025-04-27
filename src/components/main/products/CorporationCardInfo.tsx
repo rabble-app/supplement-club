@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 
 export default function CorporationCardInfo({
 	name,
@@ -12,6 +13,9 @@ export default function CorporationCardInfo({
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	const [firstWord, ...rest] = (name ?? "").split(" ");
+	const [units] = useState(
+		unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules",
+	);
 	return (
 		<div className="grid gap-[8px]">
 			<p className="text-[20px] leading-[24px] tracking-[-0.43px] md:font-[500] font-inconsolata md:text-grey4">
@@ -30,12 +34,12 @@ export default function CorporationCardInfo({
 			</div>
 			<div className="flex items-center gap-[8px]">
 				<Image
-					src="/images/icons/link-icon.svg"
+					src={`${unitsOfMeasurePerSubUnit !== "grams" ? "/images/icons/link-icon.svg" : "/images/icons/gram-link-icon.svg"}`}
 					alt="security-card-icon"
 					width={24}
 					height={24}
 				/>
-				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder} ${unitsOfMeasurePerSubUnit}`}</p>
+				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder}${units}`}</p>
 			</div>
 		</div>
 	);

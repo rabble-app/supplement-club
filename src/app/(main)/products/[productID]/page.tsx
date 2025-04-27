@@ -82,6 +82,7 @@ export default function ProductDetails({
 	const [rest, setRest] = useState<string>("");
 	const [capsulePerDay, setCapsulePerDay] = useState(2);
 	const [product, setProduct] = useState<ISingleProductModel>();
+	const [units, setUnits] = useState("g");
 
 	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
 		getQuarterInfo();
@@ -114,6 +115,7 @@ export default function ProductDetails({
 			const { productID } = await params;
 			const model = await productService.product(productID);
 			setProduct(model);
+			setUnits(model.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules");
 			const [word, ...others] = (model.name ?? "").split(" ");
 			setFirstWord(word);
 			setRest(others.join(" "));
@@ -144,7 +146,7 @@ export default function ProductDetails({
 			{
 				id: "2",
 				alt: "supplement mockup",
-				description: `${capsulePerDay * days} Capsules Every 3 months`,
+				description: `${capsulePerDay * days}${units} Every 3 months`,
 				name: "Quarterly Subscription",
 				delivery: nextDeliveryProductText,
 				src: "/images/supplement-mockup.svg",
@@ -157,7 +159,7 @@ export default function ProductDetails({
 			orders.unshift({
 				id: "1",
 				alt: "",
-				description: `${capsulesPackage} Capsules to see you to Q${nextQuater}`,
+				description: `${capsulesPackage}${units} to see you to Q${nextQuater}`,
 				name: "One time Alignment Package",
 				delivery: "Delivered Tomorrow ",
 				src: "/images/ubiquinol.svg",
@@ -168,7 +170,7 @@ export default function ProductDetails({
 			const members = [
 				{
 					id: 1,
-					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
 					name: "FOUNDING MEMBER",
 					discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
 					doseValue: "First 50 Spots",
@@ -185,7 +187,7 @@ export default function ProductDetails({
 				},
 				{
 					id: 2,
-					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
 					name: "EARLY MEMBER",
 					doseValue: "Next 200 Spots",
 					discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
@@ -200,7 +202,7 @@ export default function ProductDetails({
 				},
 				{
 					id: 3,
-					doseTitle: `${capsulePerDay * days} Capsules Every 3 months`,
+					doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
 					name: "MEMBER",
 					capsulePrice: 0.25,
 					discountTitle: "Standard Team Price",
@@ -227,6 +229,7 @@ export default function ProductDetails({
 		capsulesPackage,
 		nextDeliveryProductText,
 		nextQuater,
+		units,
 	]);
 
 	// implement sticky button
@@ -335,6 +338,7 @@ export default function ProductDetails({
 							wholesalePrice={product.wholesalePrice}
 							price={product.price}
 							priceInfo={product?.priceInfo ?? []}
+							unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 						/>
 					)}
 

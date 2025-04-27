@@ -2,7 +2,10 @@ import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
 
-function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
+function renderPrice(
+	model: IOrderSummaryModel | ISubscriptionSummaryModel,
+	unit: string,
+) {
 	if (model.isFree) {
 		return (
 			<div className="grid gap-[7px]">
@@ -26,7 +29,7 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 		<div className="text-lg font-bold text-black flex items-center gap-1 font-inconsolata">
 			£{model.capsules * 0.25}
 			<span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-				(£0.25/capsule)
+				(£0.25/{unit})
 			</span>
 		</div>
 	);
@@ -34,7 +37,11 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 
 export default function OrderSummaryCard({
 	model,
-}: Readonly<{ model: IOrderSummaryModel | ISubscriptionSummaryModel }>) {
+	unit,
+}: Readonly<{
+	model: IOrderSummaryModel | ISubscriptionSummaryModel;
+	unit: string;
+}>) {
 	return (
 		<div
 			className={`grid gap-2 items-center ${
@@ -66,10 +73,12 @@ export default function OrderSummaryCard({
 					</p>
 				)}
 
-				<div className="flex md:hidden">{renderPrice(model)}</div>
+				<div className="flex md:hidden">{renderPrice(model, unit)}</div>
 			</div>
 
-			<div className="hidden md:flex justify-end">{renderPrice(model)}</div>
+			<div className="hidden md:flex justify-end">
+				{renderPrice(model, unit)}
+			</div>
 		</div>
 	);
 }
