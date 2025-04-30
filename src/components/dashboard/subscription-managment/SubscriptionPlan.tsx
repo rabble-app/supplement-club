@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { paymentService } from "@/services/paymentService";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import { getQuarterInfo } from "@/utils/utils";
 import {
 	Dialog,
 	DialogClose,
@@ -27,7 +26,17 @@ export default function SubscriptionPlan({
 	const [changePlan, setChangePlan] = useState(false);
 	const [initCapsule, setInitCapsule] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
-	const { nextEditableDrop } = getQuarterInfo();
+	const [deadline, setDeadline] = useState<string>();
+
+	useEffect(() => {
+		const date = new Date(
+			managePlan?.team?.latestOrder?.deadline ?? Date.now(),
+		);
+
+		setDeadline(
+			`${date.toLocaleString("en", { month: "long" })} ${date.getDay()}, ${date.getFullYear()}`,
+		);
+	}, [managePlan]);
 
 	useEffect(() => {
 		if (managePlan?.team?.basket[0]?.capsulePerDay)
@@ -176,7 +185,7 @@ export default function SubscriptionPlan({
 											managePlan?.team?.basket[0]?.capsulePerDay ?? 2,
 										)}{" "}
 										to {initCapsule} {pluralizeCapsule(initCapsule)} per day.
-										This update will apply from {nextEditableDrop} onwards.
+										This update will apply from {deadline} onwards.
 									</p>
 								</div>
 							</div>
