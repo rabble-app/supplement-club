@@ -39,7 +39,7 @@ export default function CorporationCardInfo({
 					width={24}
 					height={24}
 				/>
-				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder}${units}`}</p>
+				<p className="text-[14px] leading-[16px] text-grey6">{`450${units}`}</p>
 			</div>
 		</div>
 	);
