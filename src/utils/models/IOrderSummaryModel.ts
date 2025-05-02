@@ -10,4 +10,5 @@ export default interface IOrderSummaryModel {
 	pricePerCapsule?: number;
 	rrp?: number;
 	isFree?: boolean;
+	imageBorder?: boolean;
 }

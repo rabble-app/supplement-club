@@ -75,7 +75,6 @@ export default function SummaryProduct({
 							{model.title}
 						</h1>
 					)}
-
 					{model?.corporation && model.name && (
 						<div className="grid gap-[8px]">
 							<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
@@ -95,7 +94,7 @@ export default function SummaryProduct({
 								model.unitsOfMeasurePerSubUnit && (
 									<div className="flex items-center gap-[8px]">
 										<Image
-											src="/images/icons/link-icon.svg"
+											src={`${model.unitsOfMeasurePerSubUnit !== "grams" && model.unitsOfMeasurePerSubUnit !== "mg" ? "/images/icons/link-icon.svg" : "/images/icons/gram-link-icon.svg"}`}
 											alt="security-card-icon"
 											width={24}
 											height={24}
@@ -109,23 +108,18 @@ export default function SummaryProduct({
 								)}
 						</div>
 					)}
-
 					{model?.deliveryText && (
 						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 							{model.deliveryText}
 						</p>
 					)}
-
 					{showTopLine && <Separator className="bg-grey3 h-[1px]" />}
-
 					{model?.orders?.map((order) => (
 						<OrderSummaryCard key={order.id} model={order} />
 					))}
-
 					{model?.referals?.length > 0 && (
 						<Separator className="bg-grey3 h-[1px]" />
 					)}
-
 					{model?.referals?.map((referal, idx) => (
 						<div
 							key={`${idx + 1}`}
@@ -144,11 +138,9 @@ export default function SummaryProduct({
 							</div>
 						</div>
 					))}
-
 					{model?.subscriptions?.length > 0 && (
 						<Separator className="bg-grey3 h-[1px]" />
 					)}
-
 					{model?.subscriptions?.length > 0 && (
 						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 							Quarterly Subscription
@@ -159,6 +151,25 @@ export default function SummaryProduct({
 						<OrderSummaryCard key={item.id} model={item} />
 					))}
 
+					{model?.membership?.length > 0 && (
+						<Separator className="bg-grey3 h-[1px]" />
+					)}
+
+					{model?.membership?.length > 0 && (
+						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+							Membership Subscription
+						</p>
+					)}
+
+					{model?.membership?.map((item) => (
+						<OrderSummaryCard key={item.id} model={item} />
+					))}
+					{model?.membership?.length > 0 && (
+						<div className="text-[12px] leading-[12px] font-helvetica italic mt-[-15px] text-grey4">
+							Membership gives you access to unlimited drops, premium-only
+							products, lab-direct pricing & free delivery on all orders
+						</div>
+					)}
 					<Separator className="bg-grey3 h-[1px]" />
 				</>
 			)}

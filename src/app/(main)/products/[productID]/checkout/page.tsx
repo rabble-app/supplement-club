@@ -83,6 +83,19 @@ export default function Checkout({
 
 			const orders = [];
 			const subscriptions = [];
+			const membership = [
+				{
+					id: "12",
+					alt: "supplement mockup",
+					description: "Free for your first 2 drops",
+					name: "Membership Subscription",
+					delivery: `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`,
+					src: "/images/membership-card.svg",
+					capsules: 0,
+					price: 0,
+					imageBorder: true,
+				},
+			];
 
 			if (response.isComming) {
 				orders.push({
@@ -161,6 +174,7 @@ export default function Checkout({
 				percentage: (capsulePerDay * days * 0.25) / Number(response.rrp),
 				rrp: response.rrp,
 				subscriptions: subscriptions,
+				membership: membership as [],
 				quantityOfSubUnitPerOrder: response?.quantityOfSubUnitPerOrder,
 				unitsOfMeasurePerSubUnit: response?.unitsOfMeasurePerSubUnit,
 				orders: orders,
@@ -168,7 +182,15 @@ export default function Checkout({
 			setLoading(false);
 		};
 		fetchProductId();
-	}, [params, capsulePerDay, capsulesPackage, nextDeliveryProductText, step]);
+	}, [
+		params,
+		capsulePerDay,
+		capsulesPackage,
+		nextDeliveryProductText,
+		step,
+		endDate,
+		year,
+	]);
 
 	useEffect(() => {
 		if (context?.user) {

@@ -1,3 +1,4 @@
+import type IMembershipSummaryModel from "@/utils/models/IMembershipSummaryModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
@@ -34,7 +35,12 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 
 export default function OrderSummaryCard({
 	model,
-}: Readonly<{ model: IOrderSummaryModel | ISubscriptionSummaryModel }>) {
+}: Readonly<{
+	model:
+		| IOrderSummaryModel
+		| ISubscriptionSummaryModel
+		| IMembershipSummaryModel;
+}>) {
 	return (
 		<div
 			className={`grid gap-2 items-center ${
@@ -47,6 +53,7 @@ export default function OrderSummaryCard({
 				<Image
 					src={model.src}
 					alt={model.alt ?? ""}
+					className={`object-none ${model.imageBorder ? "border-[1px] border-[#DDDDDD] rounded-[8px] py-[17px] px-[12px]" : ""}`}
 					width={61}
 					height={61}
 					priority
