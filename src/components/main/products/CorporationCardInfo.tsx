@@ -4,12 +4,10 @@ import { useState } from "react";
 export default function CorporationCardInfo({
 	name,
 	businessName,
-	quantityOfSubUnitPerOrder,
 	unitsOfMeasurePerSubUnit,
 }: Readonly<{
 	name?: string;
 	businessName?: string;
-	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	const [firstWord, ...rest] = (name ?? "").split(" ");

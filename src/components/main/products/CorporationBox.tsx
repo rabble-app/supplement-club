@@ -6,20 +6,17 @@ export default function CorporationBox({
 	businessName,
 	name,
 	description,
-	quantityOfSubUnitPerOrder,
 	unitsOfMeasurePerSubUnit,
 }: Readonly<{
 	tags?: string[];
 	name?: string;
 	businessName?: string;
 	description?: string;
-	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	return (
 		<div className="flex flex-col gap-[16px] md:gap-[24px] w-full">
 			<CorporationCardInfo
-				quantityOfSubUnitPerOrder={quantityOfSubUnitPerOrder}
 				unitsOfMeasurePerSubUnit={unitsOfMeasurePerSubUnit}
 				businessName={businessName}
 				name={name}
