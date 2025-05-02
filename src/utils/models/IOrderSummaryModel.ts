@@ -1,6 +1,7 @@
 export default interface IOrderSummaryModel {
 	id: string;
 	price?: number;
+	quantity?: number;
 	capsules: number;
 	src?: string;
 	alt?: string;

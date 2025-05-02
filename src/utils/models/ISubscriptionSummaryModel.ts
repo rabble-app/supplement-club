@@ -1,6 +1,7 @@
 export default interface ISubscriptionSummaryModel {
 	id: number;
 	src?: string;
+	quantity?: number;
 	alt?: string;
 	name?: string;
 	description?: string;

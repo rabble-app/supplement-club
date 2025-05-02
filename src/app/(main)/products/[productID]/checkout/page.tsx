@@ -107,6 +107,7 @@ export default function Checkout({
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
 					capsules: capsulePerDay * days,
+					count: 1,
 				});
 				orders.push({
 					id: "2",
@@ -126,20 +127,10 @@ export default function Checkout({
 					description: `${capsulesPackage} Capsules to align you with next drop`,
 					name: "Alignment Capsules",
 					src: "/images/supplement-mockup.svg",
+					delivery: "Delivered Tomorrow",
 					capsules: capsulesPackage,
 					price: 0,
-				});
-
-				orders.push({
-					id: "2",
-					alt: "",
-					description: "Startup package",
-					name: "Glass Bottle Container",
-					src: "/images/ubiquinol.svg",
-					capsules: 0,
-					isFree: true,
-					price: 0,
-					rrp: 0,
+					quantity: 1,
 				});
 
 				subscriptions.push({

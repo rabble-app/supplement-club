@@ -165,7 +165,7 @@ export default function SummaryProduct({
 						<OrderSummaryCard key={item.id} model={item} />
 					))}
 					{model?.membership?.length > 0 && (
-						<div className="text-[12px] leading-[12px] font-helvetica italic mt-[-15px] text-grey4">
+						<div className="text-[12px] leading-[16px] font-helvetica italic mt-[-12px] text-grey4">
 							Membership gives you access to unlimited drops, premium-only
 							products, lab-direct pricing & free delivery on all orders
 						</div>

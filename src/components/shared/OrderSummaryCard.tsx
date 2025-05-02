@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button";
 import type IMembershipSummaryModel from "@/utils/models/IMembershipSummaryModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
+import { useState } from "react";
 
 function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 	if (model.isFree) {
@@ -41,6 +43,12 @@ export default function OrderSummaryCard({
 		| ISubscriptionSummaryModel
 		| IMembershipSummaryModel;
 }>) {
+	const [value, setValue] = useState<number>(model.quantity ?? 0);
+
+	const increment = () =>
+		setValue((prev) => (typeof prev === "number" ? prev + 1 : 1));
+	const decrement = () =>
+		setValue((prev) => (typeof prev === "number" && prev > 0 ? prev - 1 : 0));
 	return (
 		<div
 			className={`grid gap-2 items-center ${
@@ -74,6 +82,27 @@ export default function OrderSummaryCard({
 				)}
 
 				<div className="flex md:hidden">{renderPrice(model)}</div>
+				{model.quantity! > 0 && (
+					<div className="flex items-center gap-[16px]">
+						<Button
+							type="button"
+							className="w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px]"
+							onClick={decrement}
+						>
+							-
+						</Button>
+						<span className="text-[20px] font-bold font-inconsolata">
+							{value}
+						</span>
+						<Button
+							type="button"
+							className="w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px]"
+							onClick={increment}
+						>
+							+
+						</Button>
+					</div>
+				)}
 			</div>
 
 			<div className="hidden md:flex justify-end">{renderPrice(model)}</div>
