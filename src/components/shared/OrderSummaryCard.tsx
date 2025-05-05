@@ -92,7 +92,7 @@ export default function OrderSummaryCard({
 				)}
 
 				<div className="flex md:hidden">{renderPrice(model)}</div>
-				{model.quantity > 0 && (
+				{model.quantity && model.quantity > 0 && (
 					<div className="flex items-center gap-[16px]">
 						<Button
 							type="button"
