@@ -21,47 +21,47 @@ export default function ExpansionSelector({
 	categories,
 	defaultSelection,
 }: Readonly<ExpansionSelectorProps>) {
-	// State to manage selected categories
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+	const [selectedCategories, setSelectedCategories] = useState<string[]>(
+		defaultSelection ? [defaultSelection] : [],
+	);
 
-	// Handle category selection and updates
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+
+	// Update selected categories when defaultSelection changes
+	useEffect(() => {
+		setSelectedCategories(defaultSelection ? [defaultSelection] : []);
+		if (!isOpen) {
+			setIsOpen(defaultSelection !== undefined);
+		}
+	}, [defaultSelection, isOpen]);
+
 	const handleCategoryChange = useCallback(
 		(category: string) => {
 			setSelectedCategories((prevSelected) => {
-				const isSelected = prevSelected.some(
-					(item) => item.toLowerCase() === category.toLowerCase(),
-				);
-				const updatedCategories = isSelected
-					? prevSelected.filter(
-							(value) => value.toLowerCase() !== category.toLowerCase(),
-						)
+				const isSelected = prevSelected.includes(category);
+				const updated = isSelected
+					? prevSelected.filter((c) => c !== category)
 					: [...prevSelected, category];
 
-				setTimeout(() => {
-					updateItems(updatedCategories);
-				}, 0);
-				return updatedCategories;
+				setIsOpen(true);
+
+				// Notify parent
+				setTimeout(() => updateItems(updated), 0);
+				return updated;
 			});
 		},
 		[updateItems],
 	);
-
-	useEffect(() => {
-		if (defaultSelection) {
-			setSelectedCategories([defaultSelection]);
-		} else {
-			setSelectedCategories([]);
-		}
-	}, [defaultSelection]);
 
 	const triggerClasses =
 		"text-[16px] leading-[18px] font-[700] font-helvetica gap-x-[16px] flex justify-between items-center w-full pb-[16px] [&[data-state=open]>svg]:rotate-180";
 	const chevronClasses =
 		"h-[22px] w-[22px] shrink-0 text-muted-foreground transition-transform duration-200";
 
+	const shouldShow = selectedCategories.length > 0;
+
 	return (
-		<Collapsible defaultOpen={selectedCategories.length > 0}>
-			{/* Trigger to expand/collapse the content */}
+		<Collapsible key={shouldShow.toString()} defaultOpen={shouldShow || isOpen}>
 			<CollapsibleTrigger className={triggerClasses}>
 				<p className="font-bold">{title}</p>
 				<ChevronDown className={chevronClasses} />
@@ -70,12 +70,12 @@ export default function ExpansionSelector({
 			<CollapsibleContent className="grid gap-[16px]">
 				{categories.map((category, idx) => (
 					<div
-						key={`${category} ${idx + 1}`}
+						key={`${category}-${idx + 1}`}
 						className="flex items-start gap-x-[10px]"
 					>
 						<Checkbox
 							value={category}
-							checked={selectedCategories?.includes(category)}
+							checked={selectedCategories.includes(category)}
 							onClick={() => handleCategoryChange(category)}
 						/>
 
