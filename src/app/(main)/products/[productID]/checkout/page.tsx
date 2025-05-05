@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -57,6 +57,7 @@ export default function Checkout({
 	const [step, setStep] = useState<number>(1);
 	const [productId, setProductId] = useState<string>("");
 	const [totalPrice, setTotalPrice] = useState<number>(0);
+	const [unitPerPouches, setUnitPerPouches] = useState<number>(0);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
 	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
@@ -69,9 +70,8 @@ export default function Checkout({
 
 	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 
-	const capsulesPackage = useMemo(
-		() => remainsDaysToNextQuater * capsulePerDay,
-		[remainsDaysToNextQuater, capsulePerDay],
+	const [capsulesPackage, setCapsulesPackage] = useState<number>(
+		remainsDaysToNextQuater * capsulePerDay,
 	);
 
 	useEffect(() => {
@@ -80,6 +80,12 @@ export default function Checkout({
 			setProductId(productID);
 			const response = await productService.product(productID);
 			setProduct(response);
+
+			const unit =
+				response.unitsOfMeasurePerSubUnit === "capsules" ? "capsules" : "g";
+
+			const unitPerPouches = unit === "capsules" ? 30 : 150;
+			setUnitPerPouches(unitPerPouches);
 
 			const orders = [];
 			const subscriptions = [];
@@ -130,7 +136,10 @@ export default function Checkout({
 					delivery: "Delivered Tomorrow",
 					capsules: capsulesPackage,
 					price: 0,
-					quantity: 1,
+					quantity:
+						Math.round(capsulesPackage / unitPerPouches) === 0
+							? 1
+							: Math.round(capsulesPackage / unitPerPouches),
 				});
 
 				subscriptions.push({
@@ -204,6 +213,14 @@ export default function Checkout({
 		setStep(currentStep);
 	}
 
+	const updateQuantityAction = useCallback(
+		(val: number) => {
+			console.log("page checkout", val * unitPerPouches);
+			setCapsulesPackage(val * unitPerPouches);
+		},
+		[unitPerPouches],
+	);
+
 	if (loading) return <Spinner />;
 
 	return (
@@ -236,7 +253,11 @@ export default function Checkout({
 			</div>
 
 			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<SummaryProduct model={summary} showTopLine={product?.isComming} />
+				<SummaryProduct
+					model={summary}
+					showTopLine={product?.isComming}
+					quantityAction={updateQuantityAction}
+				/>
 				{step === 4 && <Delivery />}
 				{step < 4 && <AvailablePayment />}
 			</div>

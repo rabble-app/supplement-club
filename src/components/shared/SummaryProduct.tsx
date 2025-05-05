@@ -2,7 +2,7 @@
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import OrderSummaryCard from "./OrderSummaryCard";
 
 export default function SummaryProduct({
@@ -11,12 +11,14 @@ export default function SummaryProduct({
 	children,
 	showOnlyTotal,
 	showTopLine,
+	quantityAction,
 }: Readonly<{
 	model: ISummaryProductModel;
 	className?: string;
 	showOnlyTotal?: boolean;
 	children?: React.ReactNode;
 	showTopLine?: boolean;
+	quantityAction?: (val: number) => void;
 }>) {
 	const [totalCount, setTotalCount] = useState(0);
 	const [totalCapsules, setTotalCapsules] = useState(0);
@@ -63,6 +65,14 @@ export default function SummaryProduct({
 		);
 		setTotalCapsules(totalSubsCapsules + ordersSubsCapsules);
 	}, [model]);
+
+	const updateQuantityAction = useCallback(
+		(val: number) => {
+			console.log("quantityAction", val);
+			if (quantityAction) quantityAction(val);
+		},
+		[quantityAction],
+	);
 	return (
 		<div
 			key={model?.id}
@@ -115,7 +125,11 @@ export default function SummaryProduct({
 					)}
 					{showTopLine && <Separator className="bg-grey3 h-[1px]" />}
 					{model?.orders?.map((order) => (
-						<OrderSummaryCard key={order.id} model={order} />
+						<OrderSummaryCard
+							updateQuantityAction={updateQuantityAction}
+							key={order.id}
+							model={order}
+						/>
 					))}
 					{model?.referals?.length > 0 && (
 						<Separator className="bg-grey3 h-[1px]" />

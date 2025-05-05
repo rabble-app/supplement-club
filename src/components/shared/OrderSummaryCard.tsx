@@ -3,7 +3,7 @@ import type IMembershipSummaryModel from "@/utils/models/IMembershipSummaryModel
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 	if (model.isFree) {
@@ -37,11 +37,14 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 
 export default function OrderSummaryCard({
 	model,
+	updateQuantityAction,
 }: Readonly<{
 	model:
 		| IOrderSummaryModel
 		| ISubscriptionSummaryModel
 		| IMembershipSummaryModel;
+
+	updateQuantityAction?: (val: number) => void;
 }>) {
 	const [value, setValue] = useState<number>(model.quantity ?? 0);
 
@@ -49,6 +52,13 @@ export default function OrderSummaryCard({
 		setValue((prev) => (typeof prev === "number" ? prev + 1 : 1));
 	const decrement = () =>
 		setValue((prev) => (typeof prev === "number" && prev > 0 ? prev - 1 : 0));
+
+	useEffect(() => {
+		console.log("useEffect", value);
+		if (updateQuantityAction) {
+			updateQuantityAction(value);
+		}
+	}, [updateQuantityAction, value]);
 	return (
 		<div
 			className={`grid gap-2 items-center ${
@@ -82,7 +92,7 @@ export default function OrderSummaryCard({
 				)}
 
 				<div className="flex md:hidden">{renderPrice(model)}</div>
-				{model.quantity! > 0 && (
+				{model.quantity > 0 && (
 					<div className="flex items-center gap-[16px]">
 						<Button
 							type="button"
