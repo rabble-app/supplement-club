@@ -335,6 +335,7 @@ export default function ProductDetails({
 							wholesalePrice={product.wholesalePrice}
 							price={product.price}
 							priceInfo={product?.priceInfo ?? []}
+							unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 						/>
 					)}
 

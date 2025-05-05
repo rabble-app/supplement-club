@@ -11,6 +11,7 @@ export default function TeamPrice({
 	wholesalePrice,
 	priceInfo,
 	isComming,
+	unitsOfMeasurePerSubUnit,
 }: Readonly<{
 	members: number;
 	price: number;
@@ -18,13 +19,19 @@ export default function TeamPrice({
 	wholesalePrice: number;
 	isComming: boolean;
 	priceInfo: IPriceInfoModel[];
+	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
+	const [unit, setUnit] = useState("g");
 	useEffect(() => {
 		for (const info of priceInfo) {
 			info.price = (price * info.percentageDiscount) / 100;
 		}
 	}, [priceInfo, price]);
+
+	useEffect(() => {
+		setUnit(unitsOfMeasurePerSubUnit === "grams" ? "g" : "capsule");
+	}, [unitsOfMeasurePerSubUnit]);
 
 	useEffect(() => {
 		const itemIdx = priceInfo.findIndex((p) => p.teamMemberCount > members);
@@ -209,7 +216,7 @@ export default function TeamPrice({
 						<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
 							£{Number(price).toFixed(2)}{" "}
 							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
-								(£0.25 / capsule)
+								(£0.25 / {unit})
 							</span>
 						</div>
 						<div className="text-[16px] leading-[16px] text-grey4 pb-[34px] md:text-end font-inconsolata">
