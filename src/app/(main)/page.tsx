@@ -316,7 +316,7 @@ export default async function Home() {
 						<p className="font-[700] mb-[32px] lg:mb-[18px]">
 							Supplement Club Subscribers don&apos;t pay for:
 						</p>
-						<div className="grid grid-cols-2 gap-[32px] lg:gap-[0] lg:grid-cols-4 items-center mb-[48px] lg:mb-[0px]">
+						<div className="grid grid-cols-2 gap-[32px] lg:gap-[0] lg:grid-cols-4 items-start mb-[48px] lg:mb-[0px]">
 							<div className="flex flex-col gap-[8px]">
 								<Image
 									src="/images/icons/buy-cashier-discount-icon.svg"
@@ -337,7 +337,7 @@ export default async function Home() {
 								<p className="leading-[16px]">Expensive Advertising</p>
 							</div>
 
-							<div className="flex flex-col gap-[8px]">
+							<div className="flex flex-col gap-[8px] max-w-[100px]">
 								<Image
 									src="/images/icons/buy-discount-shop-icon.svg"
 									alt="Checkmark icon"
@@ -347,7 +347,7 @@ export default async function Home() {
 								<p className="leading-[16px]">Retailer Markups</p>
 							</div>
 
-							<div className="flex flex-col gap-[8px]">
+							<div className="flex flex-col gap-[8px] max-w-[100px]">
 								<Image
 									src="/images/icons/buy-discount-shop-2-icon.svg"
 									alt="Checkmark icon"
