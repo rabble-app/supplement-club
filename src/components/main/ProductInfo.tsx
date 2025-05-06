@@ -13,9 +13,9 @@ export default function ProductInfo({
 		? Number(Number(product.price) / Number(product.rrp)).toFixed(2)
 		: 0;
 	return (
-		<div className="grid md:grid-cols-2">
-			<div className="bg-blue ml-auto w-full">
-				<div className="grid gap-[56px] lg:gap-[112px] px-[16px] lg:px-[32px] pt-[40px] pb-[76px] justify-end">
+		<div className="grid lg:grid-cols-2">
+			<div className="bg-blue lg:ml-auto w-full">
+				<div className="grid gap-[56px] lg:gap-[112px] px-[16px] lg:px-[32px] pt-[40px] pb-[76px] lg:justify-end">
 					<p className="max-w-[612px] text-[44px] lg:text-[50px] leading-[40px] lg:leading-[58px] text-white order-1 font-hagerman">
 						Get started on Supplement club
 					</p>
@@ -34,7 +34,7 @@ export default function ProductInfo({
 							height={541}
 						/>
 					)}
-					<div className="max-w-[410px] order-4">
+					<div className="w-full mx-auto lg:m-0 lg:max-w-[410px] order-4">
 						<p className="leading-[18px] text-grey9 mb-[2px]">
 							Quarterly Subscription
 						</p>
@@ -87,10 +87,12 @@ export default function ProductInfo({
 					</div>
 				</div>
 			</div>
-			<div className="max-w-[736px] mr-auto">
+			<div className="max-w-[736px] mr-auto relative hidden w-0 lg:w-full lg:grid lg:grid-cols-2">
+				<div className="bg-blue" />
+				<div />
 				{product && (
 					<Image
-						className="hidden lg:block order-3 lg:h-full"
+						className="hidden lg:block order-3 lg:h-full absolute"
 						src={product.imageUrl}
 						alt={product.imageKey ?? product.name}
 						width={736}

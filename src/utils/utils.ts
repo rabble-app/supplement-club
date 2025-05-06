@@ -47,14 +47,12 @@ export function getQuarterInfo() {
 
 	const nextDeliveryText = `${nextQuarterStart.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
 	const nextDeliveryTextShort = `${nextQuarterStart.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
-	const nextEditableDrop = `${nextQuarterStart.toLocaleString("en", { month: "long" })} 1st`;
 
 	return {
 		currentQuarter,
 		daysToNextQuarter: diffDays,
 		year: date.getFullYear(),
 		nextQuarterMonth,
-		nextEditableDrop,
 		startDate,
 		endDate,
 		remainsDaysToNextQuater,

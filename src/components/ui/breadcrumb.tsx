@@ -51,7 +51,7 @@ const BreadcrumbLink = React.forwardRef<
 		<Comp
 			ref={ref}
 			className={cn(
-				" text-[14px] font-helvetica font-[400] text-black",
+				" text-[14px] font-hagerman font-[400] text-black",
 				className,
 			)}
 			{...props}
@@ -68,7 +68,7 @@ const BreadcrumbPage = React.forwardRef<
 		ref={ref}
 		aria-disabled="true"
 		className={cn(
-			" text-[14px] font-helvetica font-bold text-black",
+			" text-[14px] font-hagerman font-[400] text-black",
 			className,
 		)}
 		{...props}
