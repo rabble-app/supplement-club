@@ -115,17 +115,6 @@ export default function Checkout({
 					capsules: capsulePerDay * days,
 					count: 1,
 				});
-				orders.push({
-					id: "2",
-					alt: "supplement mockup",
-					description: "Startup Package",
-					name: "Glass Bottle Container",
-					src: "/images/ubiquinol.svg",
-					capsules: 0,
-					rrp: 18,
-					price: 0,
-					isFree: true,
-				});
 			} else {
 				orders.unshift({
 					id: "1",
