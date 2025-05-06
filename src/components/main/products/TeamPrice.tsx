@@ -199,8 +199,8 @@ export default function TeamPrice({
 					)}
 					{isComming && (
 						<p className="text-[16px] leading-[18px]">
-							{priceInfo[0]?.teamMemberCount - members} more pre-orders until
-							product launches!
+							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
+							pre-orders until product launches!
 						</p>
 					)}
 				</div>

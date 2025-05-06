@@ -20,47 +20,47 @@ export default function ExpansionSelector({
 	items,
 	defaultSelection,
 }: Readonly<ExpansionSelectorProps>) {
-	// State to manage selected items
-	const [selectedItems, setSelectedItems] = useState<string[]>([]);
+	const [selectedItems, setSelectedItems] = useState<string[]>(
+		defaultSelection ? [defaultSelection] : [],
+	);
 
-	// Handle category selection and updates
-	const handleChange = useCallback(
-		(item: string) => {
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+
+	// Update selected categories when defaultSelection changes
+	useEffect(() => {
+		setSelectedItems(defaultSelection ? [defaultSelection] : []);
+		if (!isOpen) {
+			setIsOpen(defaultSelection !== undefined);
+		}
+	}, [defaultSelection, isOpen]);
+
+	const handleItemChange = useCallback(
+		(category: string) => {
 			setSelectedItems((prevSelected) => {
-				const isSelected = prevSelected.some(
-					(i) => i.toLowerCase() === item.toLowerCase(),
-				);
-				const updatedItems = isSelected
-					? prevSelected.filter(
-							(value) => value.toLowerCase() !== item.toLowerCase(),
-						)
-					: [...prevSelected, item];
+				const isSelected = prevSelected.includes(category);
+				const updated = isSelected
+					? prevSelected.filter((c) => c !== category)
+					: [...prevSelected, category];
 
-				setTimeout(() => {
-					updateItems(updatedItems);
-				}, 0);
-				return updatedItems;
+				setIsOpen(true);
+
+				// Notify parent
+				setTimeout(() => updateItems(updated), 0);
+				return updated;
 			});
 		},
 		[updateItems],
 	);
-
-	useEffect(() => {
-		if (defaultSelection) {
-			setSelectedItems([defaultSelection]);
-		} else {
-			setSelectedItems([]);
-		}
-	}, [defaultSelection]);
 
 	const triggerClasses =
 		"text-[16px] leading-[18px] font-[700] font-helvetica gap-x-[16px] flex justify-between items-center w-full pb-[16px] [&[data-state=open]>svg]:rotate-180";
 	const chevronClasses =
 		"h-[22px] w-[22px] shrink-0 text-muted-foreground transition-transform duration-200";
 
+	const shouldShow = selectedItems.length > 0;
+
 	return (
-		<Collapsible defaultOpen={selectedItems.length > 0}>
-			{/* Trigger to expand/collapse the content */}
+		<Collapsible key={shouldShow.toString()} defaultOpen={shouldShow || isOpen}>
 			<CollapsibleTrigger className={triggerClasses}>
 				<p className="font-bold">{title}</p>
 				<ChevronDown className={chevronClasses} />
@@ -69,18 +69,18 @@ export default function ExpansionSelector({
 			<CollapsibleContent className="grid gap-[16px]">
 				{items.map((item, idx) => (
 					<div
-						key={`${item} ${idx + 1}`}
+						key={`${item}-${idx + 1}`}
 						className="flex items-start gap-x-[10px]"
 					>
 						<Checkbox
 							value={item}
-							checked={selectedItems?.includes(item)}
-							onClick={() => handleChange(item)}
+							checked={selectedItems.includes(item)}
+							onClick={() => handleItemChange(item)}
 						/>
 
 						<button
 							type="button"
-							onClick={() => handleChange(item)}
+							onClick={() => handleItemChange(item)}
 							className="text-[16px] leading-[20px] font-[500] font-inter cursor-pointer text-left"
 						>
 							{item}

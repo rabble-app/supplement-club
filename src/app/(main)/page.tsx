@@ -47,84 +47,98 @@ const images = [
 		src: "/images/icons/heart-pulse-icon.svg",
 		alt: "Checkmark icon",
 		title: "Heart Health",
+		url: "/products?category=heart-health",
 	},
 	{
 		id: 2,
 		src: "/images/icons/baby-icon.svg",
 		alt: "Baby icon",
 		title: "Fertility",
+		url: "/products?category=fertility",
 	},
 	{
 		id: 3,
 		src: "/images/icons/bed-icon.svg",
 		alt: "Bed icon",
 		title: "Sleep",
+		url: "/products?category=sleep",
 	},
 	{
 		id: 4,
 		src: "/images/icons/energy-icon.svg",
 		alt: "Energy icon",
 		title: "Energy",
+		url: "/products?category=energy",
 	},
 	{
 		id: 5,
 		src: "/images/icons/hourglass-icon.svg",
 		alt: "Hourglass icon",
 		title: "Healthy Aging",
+		url: "/products?category=healthy-aging",
 	},
 	{
 		id: 6,
 		src: "/images/icons/tree-icon.svg",
 		alt: "Tree icon",
 		title: "Longevity",
+		url: "/products?category=longevity",
 	},
 	{
 		id: 7,
 		src: "/images/icons/dumbell-icon.svg",
 		alt: "Dumbell icon",
 		title: "Weight Training",
+		url: "/products?category=weight-training",
 	},
 	{
 		id: 8,
 		src: "/images/icons/athletes-icon.svg",
 		alt: "Athletes icon",
 		title: "Athletes",
+		url: "/products?category=athletes",
 	},
 	{
 		id: 9,
 		src: "/images/icons/shield-icon.svg",
 		alt: "Shield icon",
 		title: "Immunity",
+		url: "/products?category=immunity",
 	},
 	{
 		id: 10,
 		src: "/images/icons/brain-icon.svg",
 		alt: "Brain icon",
 		title: "Cognitive Function",
+		url: "/products?category=cognitive-function",
 	},
 	{
 		id: 11,
 		src: "/images/icons/bones-icon.svg",
 		alt: "Bones icon",
 		title: "Joint Health",
+		url: "/products?category=joint-health",
 	},
 	{
 		id: 12,
 		src: "/images/icons/intensine-icon.svg",
 		alt: "Intensine icon",
 		title: "Gut Health",
+		url: "/products?category=gut-health",
 	},
 	{
 		id: 13,
 		src: "/images/icons/water-drop-icon.svg",
 		alt: "Water drop icon",
 		title: "Skin Health",
+		url: "/products?category=skin-health",
 	},
 	{
 		id: 14,
 		src: "/images/icons/flower-icon.svg",
 		alt: "Flower icon",
 		title: "Mood & Anxiety",
+		url: "/products?category=mood-&-anxiety",
 	},
 ];
 
@@ -398,8 +412,9 @@ export default async function Home() {
 
 			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid grid-cols-2 lg:grid-cols-7 px-[16px] py-[80px]">
 				{images.map((image) => (
-					<div
+					<Link
 						key={image.id}
+						href={image.url}
 						className="p-[12px] border-grey10 border-[1px] grid gap-[4px]"
 					>
 						<div className="flex flex-col gap-[4px]">
@@ -413,7 +428,7 @@ export default async function Home() {
 								{image.title}
 							</p>
 						</div>
-					</div>
+					</Link>
 				))}
 			</div>
 
