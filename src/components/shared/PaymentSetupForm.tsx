@@ -49,15 +49,23 @@ export default function PaymentSetupForm({
 
 		if (error) {
 			CustomToast({
-				title: `Payment Failed:" ${error.message}`,
+				title: error.message ?? "Payment failed",
 				status: StatusToast.ERROR,
 			});
 		} else if (setupIntent?.status === "succeeded") {
-			await paymentService.addCard(
+			const addCardResponse = (await paymentService.addCard(
 				(setupIntent.payment_method as string) ?? "",
 				context?.user?.stripeCustomerId ?? "",
-			);
-			cardAction(setupIntent.payment_method);
+			)) as { error?: string } | null;
+			if (addCardResponse?.error) {
+				CustomToast({
+					title: JSON.parse(addCardResponse.error)?.message,
+					status: StatusToast.ERROR,
+				});
+				cardAction(null);
+			} else {
+				cardAction(setupIntent.payment_method);
+			}
 		}
 	};
 
