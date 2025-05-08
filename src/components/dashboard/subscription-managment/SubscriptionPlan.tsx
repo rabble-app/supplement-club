@@ -34,7 +34,12 @@ export default function SubscriptionPlan({
 		);
 
 		setDeadline(
-			`${date.toLocaleString("en", { month: "long" })} ${date.getDay()}, ${date.getFullYear()}`,
+			`${date.toLocaleString("en", {
+				month: "long",
+				day: "numeric",
+				year: "numeric",
+				timeZone: "UTC",
+			})}`,
 		);
 	}, [managePlan]);
 
