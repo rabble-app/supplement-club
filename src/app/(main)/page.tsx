@@ -468,7 +468,7 @@ export default async function Home() {
 								className="bg-[#FBF89F] text-blue w-full text-[18px] font-helvetica text-base font-bold h-[49px]"
 								asChild
 							>
-								<Link href="#">Join Supplement Club</Link>
+								<Link href="/products">Join Supplement Club</Link>
 							</Button>
 							<div className="text-center text-[16px] font-helvetica italic tracking-[-0.43px]">
 								Try it free — no membership fee on your first 2 drops
