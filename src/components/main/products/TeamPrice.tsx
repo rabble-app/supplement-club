@@ -160,8 +160,19 @@ export default function TeamPrice({
 			shouldIncludeFirstInactive(infoIndex, idx, members)
 		)
 			return true;
+
 		if (shouldIncludePreviousActive(infoIndex)) return true;
 		if (shouldIncludeFirstValue(infoIndex, idx, members)) return true;
+
+		if (
+			activeMemberIndex === -1 &&
+			(members / priceInfo[0].teamMemberCount < 0.5 ||
+				members / priceInfo[0].teamMemberCount < 1) &&
+			idx < 4 &&
+			infoIndex === 0 &&
+			members !== 0
+		)
+			return true;
 
 		return false;
 	}
@@ -188,19 +199,20 @@ export default function TeamPrice({
 						/>
 						{members} Members
 					</div>
-
 					{!isComming && (
 						<p className="text-[16px] leading-[18px]">
-							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
-							members unlocks{" "}
-							{priceInfo[activeMemberIndex + 1]?.percentageDiscount}% off for
-							everyone
+							{priceInfo[activeMemberIndex]?.teamMemberCount - members} more
+							members unlocks {priceInfo[activeMemberIndex]?.percentageDiscount}
+							% off for everyone
 						</p>
 					)}
-					{isComming && (
+					{isComming && activeMemberIndex + 1 < priceInfo.length && (
 						<p className="text-[16px] leading-[18px]">
-							{priceInfo[0]?.teamMemberCount - members} more pre-orders until
-							product launches!
+							{Math.abs(
+								priceInfo[activeMemberIndex === -1 ? 0 : activeMemberIndex + 1]
+									?.teamMemberCount - members,
+							)}{" "}
+							more pre-orders until product launches!
 						</p>
 					)}
 				</div>
