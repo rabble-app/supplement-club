@@ -385,6 +385,7 @@ export default function ProductDetails({
 					businessName={product?.producer?.businessName}
 					description={product?.description}
 					name={product?.name}
+					quantityOfSubUnitPerOrder={product?.quantityOfSubUnitPerOrder}
 					unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 				/>
 				{context?.user && product?.isComming && (

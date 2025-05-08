@@ -5,10 +5,12 @@ export default function CorporationCardInfo({
 	name,
 	businessName,
 	unitsOfMeasurePerSubUnit,
+	quantityOfSubUnitPerOrder,
 }: Readonly<{
 	name?: string;
 	businessName?: string;
 	unitsOfMeasurePerSubUnit?: string;
+	quantityOfSubUnitPerOrder?: string;
 }>) {
 	const [firstWord, ...rest] = (name ?? "").split(" ");
 	const [units] = useState(
@@ -37,7 +39,7 @@ export default function CorporationCardInfo({
 					width={24}
 					height={24}
 				/>
-				<p className="text-[14px] leading-[16px] text-grey6">{`450${units}`}</p>
+				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder}${units}`}</p>
 			</div>
 		</div>
 	);
