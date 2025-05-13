@@ -20,8 +20,8 @@ export default function ImageBox({ tags }: Readonly<{ tags?: string[] }>) {
 									<Image
 										src={image}
 										alt={tag}
-										width={24}
-										height={24}
+										width={32}
+										height={32}
 										priority
 									/>
 								</TooltipTrigger>
