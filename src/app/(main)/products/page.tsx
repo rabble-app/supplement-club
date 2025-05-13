@@ -123,6 +123,24 @@ export default function Products() {
 		}
 	}, [searchParams, initProducts, categories, goals]);
 
+	useEffect(() => {
+		const goal = searchParams.get("goal");
+		if (goal) {
+			const queryTag = goals?.find(
+				(tag) => tag.toLowerCase() === goal.replaceAll("-", " "),
+			);
+			setDefaultGoalSelection(queryTag);
+			setProducts(
+				initProducts.filter((product) =>
+					product.tags?.some((tag) => tag === queryTag),
+				),
+			);
+		} else {
+			setProducts(initProducts);
+			setDefaultGoalSelection("");
+		}
+	}, [searchParams, initProducts, goals]);
+
 	if (loading) return <Spinner />;
 
 	return (
@@ -160,13 +178,13 @@ export default function Products() {
 								defaultSelection={defaultCategorySelection}
 								title="Shop by Category"
 								updateItems={updateProducts}
-								categories={categories}
+								items={categories}
 							/>
 							<ExpansionSelector
 								defaultSelection={defaultGoalSelection}
 								title="Shop by Goal"
 								updateItems={updateProducts}
-								categories={goals}
+								items={goals}
 							/>
 						</div>
 					</aside>

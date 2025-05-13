@@ -9,7 +9,7 @@ import {
 	mapReferalHistoryModel,
 	mapReferalInfoModel,
 	mapReferalModel,
-} from "@/utils/utils";
+} from "@/utils/mapping";
 import orderBy from "lodash/orderBy";
 
 export const referalService = {

@@ -71,7 +71,7 @@ export default function SummaryProduct({
 	return (
 		<div
 			key={model?.id}
-			className={`grid gap-[24px] py-[16px] md:py-[24px] bg-grey12  p-[24px] ${className}`}
+			className={`grid gap-[24px] py-[16px] md:py-[24px] bg-grey12  p-[24px] ${className} h-max`}
 		>
 			{!showOnlyTotal && (
 				<>

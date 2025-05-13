@@ -1,27 +1,26 @@
-import { ChevronDown } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 type ExpansionSelectorProps = {
 	title: string;
 	updateItems: (items: string[]) => void;
-	categories: string[];
+	items: string[];
 	defaultSelection?: string;
 };
 
 export default function ExpansionSelector({
 	title,
 	updateItems,
-	categories,
+	items,
 	defaultSelection,
 }: Readonly<ExpansionSelectorProps>) {
-	const [selectedCategories, setSelectedCategories] = useState<string[]>(
+	const [selectedItems, setSelectedItems] = useState<string[]>(
 		defaultSelection ? [defaultSelection] : [],
 	);
 
@@ -29,15 +28,15 @@ export default function ExpansionSelector({
 
 	// Update selected categories when defaultSelection changes
 	useEffect(() => {
-		setSelectedCategories(defaultSelection ? [defaultSelection] : []);
+		setSelectedItems(defaultSelection ? [defaultSelection] : []);
 		if (!isOpen) {
 			setIsOpen(defaultSelection !== undefined);
 		}
 	}, [defaultSelection, isOpen]);
 
-	const handleCategoryChange = useCallback(
+	const handleItemChange = useCallback(
 		(category: string) => {
-			setSelectedCategories((prevSelected) => {
+			setSelectedItems((prevSelected) => {
 				const isSelected = prevSelected.includes(category);
 				const updated = isSelected
 					? prevSelected.filter((c) => c !== category)
@@ -58,7 +57,7 @@ export default function ExpansionSelector({
 	const chevronClasses =
 		"h-[22px] w-[22px] shrink-0 text-muted-foreground transition-transform duration-200";
 
-	const shouldShow = selectedCategories.length > 0;
+	const shouldShow = selectedItems.length > 0;
 
 	return (
 		<Collapsible key={shouldShow.toString()} defaultOpen={shouldShow || isOpen}>
@@ -68,23 +67,23 @@ export default function ExpansionSelector({
 			</CollapsibleTrigger>
 
 			<CollapsibleContent className="grid gap-[16px]">
-				{categories.map((category, idx) => (
+				{items.map((item, idx) => (
 					<div
-						key={`${category}-${idx + 1}`}
+						key={`${item}-${idx + 1}`}
 						className="flex items-start gap-x-[10px]"
 					>
 						<Checkbox
-							value={category}
-							checked={selectedCategories.includes(category)}
-							onClick={() => handleCategoryChange(category)}
+							value={item}
+							checked={selectedItems.includes(item)}
+							onClick={() => handleItemChange(item)}
 						/>
 
 						<button
 							type="button"
-							onClick={() => handleCategoryChange(category)}
+							onClick={() => handleItemChange(item)}
 							className="text-[16px] leading-[20px] font-[500] font-inter cursor-pointer text-left"
 						>
-							{category}
+							{item}
 						</button>
 					</div>
 				))}
