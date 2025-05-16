@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
+import MembershipBox from "@/components/main/MembershipBox";
 import { productService } from "@/services/productService";
 import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
@@ -142,6 +143,27 @@ const images = [
 	},
 ];
 
+const membershipData = [
+	{
+		src: "/images/membership-1.svg",
+		alt: "membership1",
+		width: 200,
+		height: 66,
+	},
+	{
+		src: "/images/membership-2.svg",
+		alt: "membership2",
+		width: 163,
+		height: 72,
+	},
+	{
+		src: "/images/membership-3.svg",
+		alt: "membership3",
+		width: 244,
+		height: 71,
+	},
+];
+
 export default async function Home() {
 	const productId = process.env.NEXT_PUBLIC_PRODUCT_ID as string;
 
@@ -157,7 +179,7 @@ export default async function Home() {
 	]);
 
 	return (
-		<div className="min-h-screen grid lg:gap-y-[120px] bg-grey11 lg:bg-transparent">
+		<div className="min-h-screen grid gap-[32px] bg-grey11 lg:bg-transparent">
 			<div className="relative lg:max-w-[1312px] lg:mx-[auto] w-full p-[16px] flex flex-col lg:flex-row justify-between">
 				<div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] lg:left-[68px] lg:w-[600px] h-full">
 					<div className="text-[48px] lg:text-[64px] leading-[48px] lg:leading-[74px] font-[400] font-hagerman text-blue mb-[23px]">
@@ -196,7 +218,7 @@ export default async function Home() {
 				</a>
 			</div>
 
-			<div className="grid md:grid-cols-2 gap-x-[42px]">
+			<div className="grid md:grid-cols-2 gap-x-[42px] lg:pt-[100px]">
 				<div className="max-w-[612px] ml-auto">
 					{" "}
 					<div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
@@ -208,6 +230,7 @@ export default async function Home() {
 						))}
 					</div>
 				</div>
+
 				<div className="relative flex flex-col md:max-h-[750px]">
 					<div className="md:w-[574px] h-full">
 						<Image
@@ -259,7 +282,7 @@ export default async function Home() {
 				</div>
 			</div>
 
-			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[42px] py-[23px] px-[16px] pt-[23px] lg:pt-[32px] lg:pb-[32px] bg-white">
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[42px] px-[16px] bg-white">
 				<div className="relative">
 					<Image
 						className="max-h-[716px] lg:h-[716px]"
@@ -384,7 +407,84 @@ export default async function Home() {
 				</div>
 			</div>
 
-			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px] lg:py-[0]">
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid lg:grid-cols-2 gap-[16px] px-[16px] ">
+				<div className="bg-blue w-full py-[60px] px-[32px] text-white flex flex-col gap-[24px]">
+					<div className="flex gap-[20px] flex-col">
+						<div className="text-[48px] leading-[48px] font-hagerman">
+							Supplement club Membership
+						</div>
+						<div className="text-[16px] leading-[18px] font-helvetica tracking-[-0.43px]">
+							Access the world’s best supplement labs — in Japan, Germany, the
+							US & more
+						</div>
+					</div>
+					<div className="flex flex-col gap-[48px]">
+						<div className="flex items-center gap-[8px] text-[56px] font-bold font-inconsolata">
+							£29.00
+							<div className="text-[16px] font-bold font-inconsolata text-[#D1D1D1]">
+								Per Year (Less than £2.50 per month)
+							</div>
+						</div>
+						<div className="flex flex-col gap-[32px] max-w-[604px] w-full mx-auto">
+							<div className="text-left text-[32px] leading-[34px] font-hagerman uppercase">
+								Membership Benefits
+							</div>
+							<div className="flex flex-col gap-[24px]">
+								<div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
+									<Image
+										src="/images/icons/verified-icon.svg"
+										className="mb-auto"
+										alt="Snowflake icon"
+										width={24}
+										height={24}
+									/>{" "}
+									Direct access to the world’s best labs
+								</div>
+								<div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
+									<Image
+										src="/images/icons/verified-icon.svg"
+										className="mb-auto"
+										alt="Snowflake icon"
+										width={24}
+										height={24}
+									/>{" "}
+									Free delivery on all orders
+								</div>
+								<div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
+									<Image
+										src="/images/icons/verified-icon.svg"
+										className="mb-auto"
+										alt="Snowflake icon"
+										width={24}
+										height={24}
+									/>{" "}
+									Unlimited drops
+								</div>
+							</div>
+						</div>
+						<div className="flex flex-col gap-[16px] mx-auto w-full">
+							<Button
+								font={"bold"}
+								className="bg-[#FBF89F] text-blue w-full text-[18px] font-helvetica text-base font-bold h-[49px]"
+								asChild
+							>
+								<Link href="/products">Join Supplement Club</Link>
+							</Button>
+							<div className="text-center text-[16px] font-helvetica italic tracking-[-0.43px]">
+								Try it free — no membership fee on your first 2 drops
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid gap-[16px]">
+					{membershipData.map((item, index) => (
+						<MembershipBox key={`membership-${index + 1}`} {...item} />
+					))}
+				</div>
+			</div>
+
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px]">
 				<div className="flex justify-between items-center">
 					<div className="grid gap-y-[16px]">
 						<p className="text-[32px] leading-[36px] font-[400] text-black font-hagerman">
@@ -410,7 +510,7 @@ export default async function Home() {
 				</div>
 			</div>
 
-			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid grid-cols-2 lg:grid-cols-7 px-[16px] py-[80px]">
+			<div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid grid-cols-2 lg:grid-cols-7 px-[16px] py-[48px]">
 				{images.map((image) => (
 					<Link
 						key={image.id}
