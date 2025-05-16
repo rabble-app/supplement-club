@@ -23,6 +23,15 @@
   }
 }
 
+::placeholder {
+  color: #666666;
+}
+
+.border-red [value="0000 0000 0000 0000"],
+.border-red::placeholder {
+  color: #B42318;
+}
+
 [data-state="closed"] > .plus,
 [data-state="open"] > .minus {
   display: block;
@@ -31,4 +40,17 @@
 [data-state="closed"] > .minus,
 [data-state="open"] > .plus {
   display: none;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+}
+
+.inner-border-box::before {
+  content: '';
+  @apply absolute inset-5 border-2 border-white pointer-events-none;
 }

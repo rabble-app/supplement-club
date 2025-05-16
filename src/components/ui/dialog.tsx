@@ -5,6 +5,7 @@ import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "@/utils/utils";
+import { type VariantProps, cva } from "class-variance-authority";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -29,24 +30,51 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+const dialogVariants = cva(
+	"fixed left-[50%] z-50 grid w-full translate-x-[-50%] gap-4 bg-white p-[16px] border-[1px] border-grey32 w-[calc(100%-32px)]",
+	{
+		variants: {
+			align: {
+				top: "top-0 translate-y-[0]",
+				center: "top-[50%] translate-y-[-50%]",
+			},
+			border: {
+				square: "rounded-[0]",
+				rounded: "rounded-[8px]",
+			},
+		},
+		defaultVariants: {
+			align: "center",
+		},
+	},
+);
+
+export interface DialogProps
+	extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+		VariantProps<typeof dialogVariants> {
+	asChild?: boolean;
+}
+
 const DialogContent = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Content>,
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-	<DialogPortal>
-		<DialogOverlay />
-		<DialogPrimitive.Content
-			ref={ref}
-			className={cn(
-				"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-neutral-200 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-neutral-800 dark:bg-neutral-950",
-				className,
-			)}
-			{...props}
-		>
-			{children}
-		</DialogPrimitive.Content>
-	</DialogPortal>
-));
+	DialogProps
+>(
+	(
+		{ className, children, align = "center", border = "square", ...props },
+		ref,
+	) => (
+		<DialogPrimitive.Portal>
+			<DialogPrimitive.Overlay className="fixed inset-0 bg-black/50 z-[3]" />
+			<DialogPrimitive.Content
+				ref={ref}
+				className={cn(dialogVariants({ align, border }), className)}
+				{...props}
+			>
+				{children}
+			</DialogPrimitive.Content>
+		</DialogPrimitive.Portal>
+	),
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
@@ -97,6 +125,7 @@ const DialogDescription = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
 	<DialogPrimitive.Description
+		aria-describedby="_"
 		ref={ref}
 		className={cn("text-sm text-neutral-500 dark:text-neutral-400", className)}
 		{...props}
