@@ -1,6 +1,7 @@
 export default interface ISubscriptionSummaryModel {
 	id: number;
 	src?: string;
+	quantity?: number;
 	alt?: string;
 	name?: string;
 	description?: string;
@@ -10,4 +11,5 @@ export default interface ISubscriptionSummaryModel {
 	rrp?: number;
 	capsules: number;
 	isFree?: boolean;
+	imageBorder?: boolean;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -57,6 +57,7 @@ export default function Checkout({
 	const [step, setStep] = useState<number>(1);
 	const [productId, setProductId] = useState<string>("");
 	const [totalPrice, setTotalPrice] = useState<number>(0);
+	const [unitPerPouches, setUnitPerPouches] = useState<number>(0);
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
 	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
@@ -70,9 +71,8 @@ export default function Checkout({
 
 	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
 
-	const capsulesPackage = useMemo(
-		() => remainsDaysToNextQuater * capsulePerDay,
-		[remainsDaysToNextQuater, capsulePerDay],
+	const [capsulesPackage, setCapsulesPackage] = useState<number>(
+		remainsDaysToNextQuater * capsulePerDay,
 	);
 
 	useEffect(() => {
@@ -85,8 +85,27 @@ export default function Checkout({
 			);
 			setProduct(response);
 
+			const unit =
+				response.unitsOfMeasurePerSubUnit === "capsules" ? "capsules" : "g";
+
+			const unitPerPouches = unit === "capsules" ? 30 : 150;
+			setUnitPerPouches(unitPerPouches);
+
 			const orders = [];
 			const subscriptions = [];
+			const membership = [
+				{
+					id: "12",
+					alt: "supplement mockup",
+					description: "Free for your first 2 drops",
+					name: "Membership Subscription",
+					delivery: `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`,
+					src: "/images/membership-card.svg",
+					capsules: 0,
+					price: 0,
+					imageBorder: true,
+				},
+			];
 
 			if (response.isComming) {
 				orders.push({
@@ -98,17 +117,7 @@ export default function Checkout({
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
 					capsules: capsulePerDay * days,
-				});
-				orders.push({
-					id: "2",
-					alt: "supplement mockup",
-					description: "Startup Package",
-					name: "Glass Bottle Container",
-					src: "/images/ubiquinol.svg",
-					capsules: 0,
-					rrp: 18,
-					price: 0,
-					isFree: true,
+					count: 1,
 				});
 			} else {
 				orders.unshift({
@@ -117,20 +126,13 @@ export default function Checkout({
 					description: `${capsulesPackage}${units} to align you with next drop`,
 					name: "Alignment Capsules",
 					src: "/images/supplement-mockup.svg",
+					delivery: "Delivered Tomorrow",
 					capsules: capsulesPackage,
 					price: 0,
-				});
-
-				orders.push({
-					id: "2",
-					alt: "",
-					description: "Startup package",
-					name: "Glass Bottle Container",
-					src: "/images/ubiquinol.svg",
-					capsules: 0,
-					isFree: true,
-					price: 0,
-					rrp: 0,
+					quantity:
+						Math.round(capsulesPackage / unitPerPouches) === 0
+							? 1
+							: Math.round(capsulesPackage / unitPerPouches),
 				});
 
 				subscriptions.push({
@@ -165,6 +167,7 @@ export default function Checkout({
 				percentage: (capsulePerDay * days * 0.25) / Number(response.rrp),
 				rrp: response.rrp,
 				subscriptions: subscriptions,
+				membership: membership as [],
 				quantityOfSubUnitPerOrder: response?.quantityOfSubUnitPerOrder,
 				unitsOfMeasurePerSubUnit: response?.unitsOfMeasurePerSubUnit,
 				orders: orders,
@@ -178,6 +181,8 @@ export default function Checkout({
 		capsulesPackage,
 		nextDeliveryProductText,
 		step,
+		endDate,
+		year,
 		units,
 	]);
 
@@ -201,6 +206,14 @@ export default function Checkout({
 		const currentStep = step + 1;
 		setStep(currentStep);
 	}
+
+	const updateQuantityAction = useCallback(
+		(val: number) => {
+			console.log("page checkout", val * unitPerPouches);
+			setCapsulesPackage(val * unitPerPouches);
+		},
+		[unitPerPouches],
+	);
 
 	if (loading) return <Spinner />;
 
@@ -234,7 +247,11 @@ export default function Checkout({
 			</div>
 
 			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<SummaryProduct model={summary} showTopLine={product?.isComming} />
+				<SummaryProduct
+					model={summary}
+					showTopLine={product?.isComming}
+					quantityAction={updateQuantityAction}
+				/>
 				{step === 4 && <Delivery />}
 				{step < 4 && <AvailablePayment />}
 			</div>

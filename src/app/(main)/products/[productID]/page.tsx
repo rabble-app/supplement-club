@@ -220,6 +220,7 @@ export default function ProductDetails({
 			id: 1,
 			referals: [],
 			subscriptions: [],
+			membership: [],
 		};
 
 		setSummary(obj);
