@@ -5,7 +5,10 @@ import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryM
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
+function renderPrice(
+	model: IOrderSummaryModel | ISubscriptionSummaryModel,
+	unit: string,
+) {
 	if (model.isFree) {
 		return (
 			<div className="grid gap-[7px]">
@@ -29,7 +32,7 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 		<div className="text-lg font-bold text-black flex items-center gap-1 font-inconsolata">
 			£{model.capsules * 0.25}
 			<span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-				(£0.25/capsule)
+				(£0.25/{unit})
 			</span>
 		</div>
 	);
@@ -38,6 +41,7 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 export default function OrderSummaryCard({
 	model,
 	updateQuantityAction,
+	unit,
 }: Readonly<{
 	model:
 		| IOrderSummaryModel
@@ -45,6 +49,7 @@ export default function OrderSummaryCard({
 		| IMembershipSummaryModel;
 
 	updateQuantityAction?: (val: number) => void;
+	unit: string;
 }>) {
 	const [value, setValue] = useState<number>(model.quantity ?? 0);
 
@@ -91,7 +96,7 @@ export default function OrderSummaryCard({
 					</p>
 				)}
 
-				<div className="flex md:hidden">{renderPrice(model)}</div>
+				<div className="flex md:hidden">{renderPrice(model, unit)}</div>
 				{model.quantity && model.quantity > 0 && (
 					<div className="flex items-center gap-[16px]">
 						<Button
@@ -115,7 +120,9 @@ export default function OrderSummaryCard({
 				)}
 			</div>
 
-			<div className="hidden md:flex justify-end">{renderPrice(model)}</div>
+			<div className="hidden md:flex justify-end">
+				{renderPrice(model, unit)}
+			</div>
 		</div>
 	);
 }

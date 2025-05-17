@@ -43,7 +43,11 @@ export default function CapsuleBox({
 	const [selectedState, setSelectedState] = useState(2);
 
 	const [units] = useState(
-		unitsOfMeasurePerSubUnit === "grams" ? "g" : "Capsules",
+		unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules",
+	);
+
+	const [unit] = useState(
+		unitsOfMeasurePerSubUnit === "grams" ? "g" : "capsule",
 	);
 
 	useEffect(() => {
@@ -58,7 +62,7 @@ export default function CapsuleBox({
 	}
 
 	const getCapsuleLabel = (capsuleCount: number) =>
-		`${capsuleCount} ${units} per Day`;
+		`${capsuleCount}${units} per Day`;
 
 	return (
 		<div className="grid gap-[5px]">
@@ -121,13 +125,14 @@ export default function CapsuleBox({
 							>
 								<div className="flex justify-between gap-[7px]">
 									<p className="text-grey7 text-[12px] leading-[14px] max-w-[132px]">
-										3 Month Subscription <br />({capsules} Capsules)
+										3 Month Subscription <br />({capsules}
+										{units})
 									</p>
 									<div className="max-w-[164px] grid grid-cols-2 gap-[7px]">
 										<div className="flex flex-col gap-[7px] text-[16px] leading-[18px] font-bold">
 											£{(capsules * 0.25)?.toFixed(2)}
 											<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-												(£0.25/capsule)
+												(£0.25/{unit})
 											</span>
 										</div>
 										<div>
@@ -165,12 +170,13 @@ export default function CapsuleBox({
 			<div className="hidden md:grid grid-cols-[132px_1fr] gap-[16px] outline outline-[2px] outline-blue p-[16px]">
 				<div className="grid gap-[7px]">
 					<p className="text-grey7 text-[12px] leading-[14px] font-helvetica">
-						3 Month Subscription <br />({capsules} {units})
+						3 Month Subscription <br />({capsules}
+						{units})
 					</p>
 					<div className="flex items-center gap-[2px] text-[16px] font-bold">
 						£{(capsules * 0.25).toFixed(2)}{" "}
 						<span className="text-[10px] my-[auto] font-bold text-grey1">
-							(£0.25/capsule)
+							(£0.25/{unit})
 						</span>
 					</div>
 					<div>

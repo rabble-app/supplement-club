@@ -162,7 +162,7 @@ export default function PaymentList({
 	);
 
 	return (
-		<div className="border-[1px] border-grey12 flex flex-col items-start p-[32px] gap-[24px]">
+		<div className="border-[1px] border-grey12 flex flex-col items-start p-[32px] gap-[24px] mx-[-30px] md:mx-[0]">
 			<div className="grid gap-[24px]">
 				<p className="text-[24px] leading-[27px] font-hagerman uppercase">
 					Billing Address
