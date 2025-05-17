@@ -8,7 +8,7 @@ import type { IProductTagResponse } from "@/utils/models/api/response/IProductTa
 import type IManagePlanApiResponse from "@/utils/models/services/IManagePlanApiResponse";
 import type IProductTagsApiResponse from "@/utils/models/services/IProductTagsApiResponse";
 import type ISingleManagePlanApiResponse from "@/utils/models/services/ISingleManagePlanApiResponse";
-import { mapProductModel, mapSingleProductModel } from "@/utils/utils";
+import { mapProductModel, mapSingleProductModel } from "@/utils/mapping";
 
 export const productService = {
 	product: async (id: string): Promise<ISingleProductModel> => {
