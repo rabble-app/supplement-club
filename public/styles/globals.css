@@ -54,3 +54,8 @@ html body[data-scroll-locked] {
   content: '';
   @apply absolute inset-5 border-2 border-white pointer-events-none;
 }
+
+.inner-border-box:hover::before {
+  content: '';
+  @apply absolute inset-5 border-2 border-blue pointer-events-none;
+}
