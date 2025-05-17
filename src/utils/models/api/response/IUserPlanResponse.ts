@@ -14,6 +14,12 @@ export interface Team {
 	basket: Basket[];
 	supplementTeamProducts: ISupplementTeamProductsModel;
 	_count: Count;
+	latestOrder?: ILatestOrder;
+}
+
+export interface ILatestOrder {
+	id: string;
+	deadline: string;
 }
 
 export interface Basket {

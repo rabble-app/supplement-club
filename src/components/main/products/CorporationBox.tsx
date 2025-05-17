@@ -6,21 +6,21 @@ export default function CorporationBox({
 	businessName,
 	name,
 	description,
-	quantityOfSubUnitPerOrder,
 	unitsOfMeasurePerSubUnit,
+	quantityOfSubUnitPerOrder,
 }: Readonly<{
 	tags?: string[];
 	name?: string;
 	businessName?: string;
 	description?: string;
-	quantityOfSubUnitPerOrder?: string;
 	unitsOfMeasurePerSubUnit?: string;
+	quantityOfSubUnitPerOrder?: string;
 }>) {
 	return (
 		<div className="flex flex-col gap-[16px] md:gap-[24px] w-full">
 			<CorporationCardInfo
-				quantityOfSubUnitPerOrder={quantityOfSubUnitPerOrder}
 				unitsOfMeasurePerSubUnit={unitsOfMeasurePerSubUnit}
+				quantityOfSubUnitPerOrder={quantityOfSubUnitPerOrder}
 				businessName={businessName}
 				name={name}
 			/>

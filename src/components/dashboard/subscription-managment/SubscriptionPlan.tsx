@@ -26,6 +26,22 @@ export default function SubscriptionPlan({
 	const [changePlan, setChangePlan] = useState(false);
 	const [initCapsule, setInitCapsule] = useState(1);
 	const [isOpen, setIsOpen] = useState(false);
+	const [deadline, setDeadline] = useState<string>();
+
+	useEffect(() => {
+		const date = new Date(
+			managePlan?.team?.latestOrder?.deadline ?? Date.now(),
+		);
+
+		setDeadline(
+			`${date.toLocaleString("en", {
+				month: "long",
+				day: "numeric",
+				year: "numeric",
+				timeZone: "UTC",
+			})}`,
+		);
+	}, [managePlan]);
 
 	useEffect(() => {
 		if (managePlan?.team?.basket[0]?.capsulePerDay)
@@ -57,6 +73,10 @@ export default function SubscriptionPlan({
 			);
 		}
 		setIsOpen(val);
+	}
+
+	function pluralizeCapsule(count: number) {
+		return count === 1 ? "capsule" : "capsules";
 	}
 
 	return (
@@ -164,10 +184,13 @@ export default function SubscriptionPlan({
 										Subscription Quantity updated
 									</p>
 									<p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center w-full font-[400]">
-										`You have changed your subscription quantity from $
-										{managePlan?.team?.basket[0]?.capsulePerDay} capsule to $
-										{initCapsule} capsules per day, the next delivery is on X
-										date.`
+										You have changed your subscription quantity from{" "}
+										{managePlan?.team?.basket[0]?.capsulePerDay}{" "}
+										{pluralizeCapsule(
+											managePlan?.team?.basket[0]?.capsulePerDay ?? 2,
+										)}{" "}
+										to {initCapsule} {pluralizeCapsule(initCapsule)} per day.
+										This update will apply from {deadline} onwards.
 									</p>
 								</div>
 							</div>
