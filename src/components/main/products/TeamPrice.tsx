@@ -22,25 +22,25 @@ export default function TeamPrice({
 	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
-
-	const isGrams = unitsOfMeasurePerSubUnit === "grams";
-
-	const unit = isGrams ? "g" : "capsule";
-
+	const [unit, setUnit] = useState("g");
 	useEffect(() => {
 		for (const info of priceInfo) {
-			info.price = (price * info.percentageDiscount) / 100;
+			info.price = (info.percentageDiscount * price) / 100;
 		}
 	}, [priceInfo, price]);
 
 	useEffect(() => {
-		const itemIdx = priceInfo.findIndex((p) => p.teamMemberCount > members);
+		setUnit(unitsOfMeasurePerSubUnit === "grams" ? "g" : "capsule");
+	}, [unitsOfMeasurePerSubUnit]);
+
+	useEffect(() => {
+		const itemIdx = priceInfo.findIndex((p) => p.price ?? 0 >= price);
 		if (itemIdx === -1) {
 			setActiveMemberIndex(priceInfo.length);
 		} else {
 			setActiveMemberIndex(itemIdx - 1);
 		}
-	}, [priceInfo, members]);
+	}, [priceInfo, price]);
 
 	function getCurrentClasses(index: number) {
 		let classes = !isComming
@@ -219,7 +219,7 @@ export default function TeamPrice({
 								(£0.25 / {unit})
 							</span>
 						</div>
-						<div className="text-[16px] leading-[16px] text-grey4 pb-[34px] md:text-end font-inconsolata">
+						<div className="text-[16px] leading-[16px] text-grey4 md:text-end font-inconsolata">
 							RRP{" "}
 							<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
 								£{rrp}
