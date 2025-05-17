@@ -17,7 +17,7 @@ import {
 	mapUpcomingDelivery,
 	mapUserInfoModel,
 	mapUserPastOrder,
-} from "@/utils/utils";
+} from "@/utils/mapping";
 
 export const usersService = {
 	getUpcomingDeliveries: async (

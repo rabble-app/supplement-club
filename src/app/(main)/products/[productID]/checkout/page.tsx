@@ -60,6 +60,7 @@ export default function Checkout({
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
 	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
+	const [units, setUnits] = useState("g");
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,
@@ -79,6 +80,9 @@ export default function Checkout({
 			const { productID } = await params;
 			setProductId(productID);
 			const response = await productService.product(productID);
+			setUnits(
+				response.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules",
+			);
 			setProduct(response);
 
 			const orders = [];
@@ -89,7 +93,7 @@ export default function Checkout({
 					price: 0, // Ensure price is included
 					id: "1",
 					alt: "supplement mockup",
-					description: `${capsulePerDay * days} Capsules Every 3 months`,
+					description: `${capsulePerDay * days}${units} Every 3 months`,
 					name: "Quarterly Subscription",
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
@@ -110,7 +114,7 @@ export default function Checkout({
 				orders.unshift({
 					id: "1",
 					alt: "",
-					description: `${capsulesPackage} Capsules to align you with next drop`,
+					description: `${capsulesPackage}${units} to align you with next drop`,
 					name: "Alignment Capsules",
 					src: "/images/supplement-mockup.svg",
 					capsules: capsulesPackage,
@@ -132,7 +136,7 @@ export default function Checkout({
 				subscriptions.push({
 					id: 2,
 					alt: "supplement mockup",
-					description: `${capsulePerDay * days} Capsules Every 3 months`,
+					description: `${capsulePerDay * days}${units} Every 3 months`,
 					name: "Quarterly Subscription",
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
@@ -168,7 +172,14 @@ export default function Checkout({
 			setLoading(false);
 		};
 		fetchProductId();
-	}, [params, capsulePerDay, capsulesPackage, nextDeliveryProductText, step]);
+	}, [
+		params,
+		capsulePerDay,
+		capsulesPackage,
+		nextDeliveryProductText,
+		step,
+		units,
+	]);
 
 	useEffect(() => {
 		if (context?.user) {

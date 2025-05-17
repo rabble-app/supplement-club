@@ -68,7 +68,7 @@ export default async function Labs() {
 			image: "/images/bed.svg",
 			altImage: "Bed image",
 			description: "Optimize your sleep patterns.",
-			url: "/products?category=sleep",
+			url: "/products?goal=reduce-anxiety-and-stress",
 		},
 		{
 			id: 2,
@@ -78,7 +78,7 @@ export default async function Labs() {
 			image: "/images/brain.svg",
 			altImage: "Brain image",
 			description: "Enhance your brain’s performance and connectivity.",
-			url: "/products?category=cognitive-function",
+			url: "/products?goal=boost-focus-and-memory",
 		},
 		{
 			id: 3,
@@ -88,7 +88,7 @@ export default async function Labs() {
 			image: "/images/health.svg",
 			altImage: "Health image",
 			description: "Promoting healthy, natural deep sleep day to day.",
-			url: "/products?category=sleep",
+			url: "/products?goal=age-gracefully-and-healthily",
 		},
 		{
 			id: 4,
@@ -98,7 +98,7 @@ export default async function Labs() {
 			image: "/images/athlete.svg",
 			altImage: "Athlete image",
 			description: "Increase your health tissue, muscle, and energy.",
-			url: "/products?category=Athletics",
+			url: "/products?goal=Athletics",
 		},
 		{
 			id: 5,
@@ -108,7 +108,7 @@ export default async function Labs() {
 			image: "/images/lightning.svg",
 			altImage: "Lightning image",
 			description: "Boost your mood, libido, and vitality.",
-			url: "/products?category=mood-and-anxiety",
+			url: "/products?goal=mood-and-anxiety",
 		},
 	] as IGoalCardModel[];
 

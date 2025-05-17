@@ -28,7 +28,9 @@ export default function Products() {
 	const [showAll, setShowAll] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [categories, setCategories] = useState<string[]>([]);
-	const [defaultSelection, setDefaultSelection] = useState<string>();
+	const [defaultCategorySelection, setDefaultCategorySelection] =
+		useState<string>();
+	const [defaultGoalSelection, setDefaultGoalSelection] = useState<string>();
 	const [goals, setGoals] = useState<string[]>([]);
 	const [sortItems, setSortItems] = useState<string[]>([]);
 	const [products, setProducts] = useState<IProductCardModel[]>([]);
@@ -93,11 +95,22 @@ export default function Products() {
 
 	useEffect(() => {
 		const category = searchParams.get("category");
+		const goal = searchParams.get("goal");
 		if (category) {
 			const queryTag = categories?.find(
 				(tag) => tag.toLowerCase() === category.replaceAll("-", " "),
 			);
-			setDefaultSelection(queryTag);
+			setDefaultCategorySelection(queryTag);
+			setProducts(
+				initProducts.filter((product) =>
+					product.tags?.some((tag) => tag === queryTag),
+				),
+			);
+		} else if (goal) {
+			const queryTag = goals?.find(
+				(tag) => tag.toLowerCase().replaceAll(" ", "-") === goal,
+			);
+			setDefaultGoalSelection(queryTag);
 			setProducts(
 				initProducts.filter((product) =>
 					product.tags?.some((tag) => tag === queryTag),
@@ -105,9 +118,28 @@ export default function Products() {
 			);
 		} else {
 			setProducts(initProducts);
-			setDefaultSelection("");
+			setDefaultCategorySelection("");
+			setDefaultGoalSelection("");
 		}
-	}, [searchParams, initProducts, categories]);
+	}, [searchParams, initProducts, categories, goals]);
+
+	useEffect(() => {
+		const goal = searchParams.get("goal");
+		if (goal) {
+			const queryTag = goals?.find(
+				(tag) => tag.toLowerCase() === goal.replaceAll("-", " "),
+			);
+			setDefaultGoalSelection(queryTag);
+			setProducts(
+				initProducts.filter((product) =>
+					product.tags?.some((tag) => tag === queryTag),
+				),
+			);
+		} else {
+			setProducts(initProducts);
+			setDefaultGoalSelection("");
+		}
+	}, [searchParams, initProducts, goals]);
 
 	if (loading) return <Spinner />;
 
@@ -143,15 +175,16 @@ export default function Products() {
 						</p>
 						<div className="flex flex-col gap-[13px] md:gap-[16px]">
 							<ExpansionSelector
-								defaultSelection={defaultSelection}
+								defaultSelection={defaultCategorySelection}
 								title="Shop by Category"
 								updateItems={updateProducts}
-								categories={categories}
+								items={categories}
 							/>
 							<ExpansionSelector
+								defaultSelection={defaultGoalSelection}
 								title="Shop by Goal"
 								updateItems={updateProducts}
-								categories={goals}
+								items={goals}
 							/>
 						</div>
 					</aside>

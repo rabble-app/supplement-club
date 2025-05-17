@@ -25,6 +25,11 @@ export default function SummaryProduct({
 
 	const [firstWord, ...rest] = (model.name ?? "").split(" ");
 
+	const isGrams = model.unitsOfMeasurePerSubUnit === "grams";
+
+	const units = isGrams ? "g" : " Capsules";
+	const unit = isGrams ? "g" : "capsule";
+
 	useEffect(() => {
 		const totalSum = model?.orders?.reduce(
 			(sum, item) => sum + item.capsules * 0.25,
@@ -66,7 +71,7 @@ export default function SummaryProduct({
 	return (
 		<div
 			key={model?.id}
-			className={`grid gap-[24px] py-[16px] md:py-[24px] bg-grey12  p-[24px] ${className}`}
+			className={`grid gap-[24px] py-[16px] md:py-[24px] bg-grey12  p-[24px] ${className} h-max`}
 		>
 			{!showOnlyTotal && (
 				<>
@@ -119,7 +124,7 @@ export default function SummaryProduct({
 					{showTopLine && <Separator className="bg-grey3 h-[1px]" />}
 
 					{model?.orders?.map((order) => (
-						<OrderSummaryCard key={order.id} model={order} />
+						<OrderSummaryCard key={order.id} model={order} unit={unit} />
 					))}
 
 					{model?.referals?.length > 0 && (
@@ -156,7 +161,7 @@ export default function SummaryProduct({
 					)}
 
 					{model?.subscriptions?.map((item) => (
-						<OrderSummaryCard key={item.id} model={item} />
+						<OrderSummaryCard key={item.id} model={item} unit={unit} />
 					))}
 
 					<Separator className="bg-grey3 h-[1px]" />
@@ -170,7 +175,8 @@ export default function SummaryProduct({
 							Total
 						</p>
 						<p className="text-[14px] leading-[15px] text-grey4 font-inconsolata">
-							{totalCapsules} Capsules
+							{totalCapsules}
+							{units}
 						</p>
 					</div>
 
@@ -178,7 +184,7 @@ export default function SummaryProduct({
 						<div className="gap-[2px] text-[32px] font-inconsolata font-bold flex justify-end items-center">
 							£{totalCount?.toFixed(2)}{" "}
 							<span className="text-[12px] my-[auto] font-inconsolata font-bold text-grey1">
-								(£0.25/capsule)
+								(£0.25/{unit})
 							</span>
 						</div>
 						<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">

@@ -206,8 +206,8 @@ export default function TeamPrice({
 					)}
 					{isComming && (
 						<p className="text-[16px] leading-[18px]">
-							{priceInfo[0]?.teamMemberCount - members} more pre-orders until
-							product launches!
+							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
+							pre-orders until product launches!
 						</p>
 					)}
 				</div>
@@ -215,7 +215,7 @@ export default function TeamPrice({
 					<div className="grid gap-[8px]">
 						<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
 							£{Number(price).toFixed(2)}{" "}
-							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-[#565656] ml-[2px]">
+							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
 								(£0.25 / {unit})
 							</span>
 						</div>
