@@ -1,11 +1,15 @@
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
+import { Button } from "@/components/ui/button";
+import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
+import Link from "next/link";
 
 const generateImage = (count: number) => (
 	<div
@@ -32,34 +36,61 @@ export default function CapsuleBox({
 	unitsOfMeasurePerSubUnit,
 	capsuleInfo,
 	rrp,
+	isComming,
+	orders,
+	productId,
+	price,
 	selectCapsulePerDayAction,
 }: Readonly<{
 	unitsOfMeasurePerSubUnit?: string;
 	capsuleInfo?: ICapsuleInfoModel[];
-	rrp?: number;
+	rrp: number;
+	price: number;
+	isComming?: boolean;
+	productId?: string;
+	orders?: IOrderSummaryModel[];
 	selectCapsulePerDayAction: (val: number) => void;
 }>) {
 	const days = 90;
 	const [selectedState, setSelectedState] = useState(2);
+	const [capsuleCount, setCapsuleCount] = useState(0);
+	const [calculatedRrp, setCalculatedRrp] = useState(0);
 
 	const [units] = useState(
-		unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules",
+		["grams", "gm"].includes(unitsOfMeasurePerSubUnit ?? "")
+			? "g"
+			: " Capsules",
 	);
 
-	const [unit] = useState(
-		unitsOfMeasurePerSubUnit === "grams" ? "g" : "capsule",
+	const capsules = useMemo(() => selectedState * days, [selectedState]);
+	const discount = useMemo(
+		() => Math.abs(price / rrp - 1).toFixed(2),
+		[price, rrp],
 	);
 
 	useEffect(() => {
 		if (capsuleInfo) setSelectedState(capsuleInfo[1].capsuleCount);
 	}, [capsuleInfo]);
 
-	const capsules = useMemo(() => selectedState * days, [selectedState]);
+	useEffect(() => {
+		setCapsuleCount(
+			capsuleInfo?.find((c) => c.capsuleCount === selectedState)
+				?.capsuleCount ?? 0,
+		);
+	}, [capsuleInfo, selectedState]);
+	useEffect(() => {
+		const response = (capsules * 0.25) / (1 - Number.parseFloat(discount));
+		setCalculatedRrp(response);
+	}, [discount, capsules]);
 
 	function selectCapsulte(value: number) {
 		setSelectedState(value);
 		selectCapsulePerDayAction(value);
 	}
+
+	const updateQuantityAction = useCallback((val: number) => {
+		console.log(val);
+	}, []);
 
 	const getCapsuleLabel = (capsuleCount: number) =>
 		`${capsuleCount}${units} per Day`;
@@ -132,28 +163,25 @@ export default function CapsuleBox({
 										<div className="flex flex-col gap-[7px] text-[16px] leading-[18px] font-bold">
 											£{(capsules * 0.25)?.toFixed(2)}
 											<span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-												(£0.25/{unit})
+												(£0.25/count)
 											</span>
 										</div>
 										<div>
 											<div className="text-[16px] leading-[18px] text-grey4">
 												RRP{" "}
 												<span className="text-[16px] leading-[18px] font-bold">
-													£{rrp}{" "}
+													£{calculatedRrp.toFixed(2)}{" "}
 												</span>
 											</div>
 											<div className="text-[16px] leading-[18px] font-bold text-blue">
-												{((capsules * 0.25) / Number(rrp)).toFixed(2)}% OFF
+												{(Number.parseFloat(discount) * 100).toFixed(0)}% OFF
 											</div>
 										</div>
 									</div>
 								</div>
 								<div className="flex flex-col gap-[2px]">
 									<p className="text-grey7 text-[12px] leading-[13px]">
-										{getCapsuleLabel(
-											capsuleInfo?.find((c) => c.capsuleCount === selectedState)
-												?.capsuleCount ?? 0,
-										)}
+										{getCapsuleLabel(capsuleCount)}
 									</p>
 									<p className="text-[12px] leading-[14px]">
 										{
@@ -167,32 +195,9 @@ export default function CapsuleBox({
 					</label>
 				))}
 			</RadioGroup>
-			<div className="hidden md:grid grid-cols-[132px_1fr] gap-[16px] outline outline-[2px] outline-blue p-[16px]">
-				<div className="grid gap-[7px]">
-					<p className="text-grey7 text-[12px] leading-[14px] font-helvetica">
-						3 Month Subscription <br />({capsules}
-						{units})
-					</p>
-					<div className="flex items-center gap-[2px] text-[16px] font-bold">
-						£{(capsules * 0.25).toFixed(2)}{" "}
-						<span className="text-[10px] my-[auto] font-bold text-grey1">
-							(£0.25/{unit})
-						</span>
-					</div>
-					<div>
-						<div className="text-[16px] leading-[18px] text-grey4">
-							RRP{" "}
-							<span className="text-[16px] leading-[18px] font-bold line-through">
-								£{rrp}{" "}
-							</span>
-						</div>
-						<div className="text-[16px] leading-[18px] font-bold text-blue">
-							{((capsules * 0.25) / Number(rrp)).toFixed(2)}% OFF
-						</div>
-					</div>
-				</div>
+			<div className="hidden md:grid gap-[16px] outline outline-[2px] outline-blue p-[16px]">
 				<div className="flex flex-col gap-[2px]">
-					<p className="text-grey7 text-[12px] leading-[13px]">
+					<p className="text-grey7 text-[12px] leading-[12px]">
 						{getCapsuleLabel(
 							capsuleInfo?.find((c) => c.capsuleCount === selectedState)
 								?.capsuleCount || 0,
@@ -201,6 +206,24 @@ export default function CapsuleBox({
 					<p className="text-[12px] leading-[14px]">
 						{capsuleInfo?.find((c) => c.capsuleCount === selectedState)?.others}
 					</p>
+				</div>
+
+				<div className="grid gap-[16px]">
+					{orders?.map((order) => (
+						<OrderSummaryCard
+							updateQuantityAction={updateQuantityAction}
+							key={order.id}
+							model={order}
+						/>
+					))}
+					<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
+						<Link
+							className="w-full h-full flex items-center justify-center"
+							href={`/products/${productId}/checkout`}
+						>
+							{isComming ? "REGISTER PRE-ORDER" : "Start My Subscription"}
+						</Link>
+					</Button>
 				</div>
 			</div>
 		</div>

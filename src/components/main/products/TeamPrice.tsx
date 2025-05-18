@@ -11,7 +11,6 @@ export default function TeamPrice({
 	wholesalePrice,
 	priceInfo,
 	isComming,
-	unitsOfMeasurePerSubUnit,
 }: Readonly<{
 	members: number;
 	price: number;
@@ -19,19 +18,13 @@ export default function TeamPrice({
 	wholesalePrice: number;
 	isComming: boolean;
 	priceInfo: IPriceInfoModel[];
-	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
-	const [unit, setUnit] = useState("g");
 	useEffect(() => {
 		for (const info of priceInfo) {
 			info.price = (info.percentageDiscount * price) / 100;
 		}
 	}, [priceInfo, price]);
-
-	useEffect(() => {
-		setUnit(unitsOfMeasurePerSubUnit === "grams" ? "g" : "capsule");
-	}, [unitsOfMeasurePerSubUnit]);
 
 	useEffect(() => {
 		const itemIdx = priceInfo.findIndex((p) => p.price ?? 0 >= price);
@@ -208,7 +201,7 @@ export default function TeamPrice({
 					</div>
 					{!isComming && (
 						<p className="text-[16px] leading-[18px]">
-							{priceInfo[activeMemberIndex]?.teamMemberCount - members} more
+							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
 							members unlocks {priceInfo[activeMemberIndex]?.percentageDiscount}
 							% off for everyone
 						</p>
@@ -223,27 +216,25 @@ export default function TeamPrice({
 						</p>
 					)}
 				</div>
-				{!isComming && (
-					<div className="grid gap-[8px]">
-						<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
-							£{Number(price).toFixed(2)}{" "}
-							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
-								(£0.25 / {unit})
-							</span>
-						</div>
-						<div className="text-[16px] leading-[16px] text-grey4 md:text-end font-inconsolata">
-							RRP{" "}
-							<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
-								£{rrp}
-							</span>{" "}
-							{activeMemberIndex > 0 && (
-								<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
-									{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
-								</span>
-							)}
-						</div>
+				<div className="grid gap-[8px]">
+					<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
+						£{Number(price).toFixed(2)}{" "}
+						<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
+							(£0.25 / count)
+						</span>
 					</div>
-				)}
+					<div className="text-[16px] leading-[16px] text-grey4 md:text-end font-inconsolata">
+						RRP{" "}
+						<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
+							£{rrp}
+						</span>{" "}
+						{activeMemberIndex > 0 && (
+							<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
+								{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
+							</span>
+						)}
+					</div>
+				</div>
 			</div>
 
 			{isComming && <Separator className="bg-grey22 h-[1px]" />}

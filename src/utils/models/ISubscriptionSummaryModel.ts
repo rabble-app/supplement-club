@@ -12,4 +12,5 @@ export default interface ISubscriptionSummaryModel {
 	capsules: number;
 	isFree?: boolean;
 	imageBorder?: boolean;
+	isFoundingMember?: boolean;
 }

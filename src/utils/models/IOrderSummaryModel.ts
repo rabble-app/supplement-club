@@ -12,4 +12,5 @@ export default interface IOrderSummaryModel {
 	rrp?: number;
 	isFree?: boolean;
 	imageBorder?: boolean;
+	isFoundingMember?: boolean;
 }
