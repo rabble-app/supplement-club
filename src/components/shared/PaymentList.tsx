@@ -102,9 +102,11 @@ export default function PaymentList({
 		successAction();
 	}
 
-	async function retrivePaymentOptions(stripeCustomerId?: string) {
+	async function retrivePaymentOptions(
+		stripeCustomerId?: string | PaymentMethod | null,
+	) {
 		const model = await paymentService.getUserPaymentOptions(
-			stripeCustomerId ?? "",
+			(stripeCustomerId as string) ?? "",
 		);
 		setUserCards(model);
 	}
@@ -226,8 +228,8 @@ export default function PaymentList({
 						</div>
 
 						<AddPaymentDialog
-							successAction={() =>
-								retrivePaymentOptions(context?.user?.stripeCustomerId)
+							successAction={(val) =>
+								retrivePaymentOptions(val || context?.user?.stripeCustomerId)
 							}
 						/>
 					</div>

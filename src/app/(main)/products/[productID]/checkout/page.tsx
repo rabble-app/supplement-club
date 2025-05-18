@@ -80,14 +80,14 @@ export default function Checkout({
 			const { productID } = await params;
 			setProductId(productID);
 			const response = await productService.product(productID);
-			setUnits(
-				response.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules",
-			);
+
+			const localUnits =
+				response.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
+			setUnits(localUnits);
 			setProduct(response);
 
 			const unit =
 				response.unitsOfMeasurePerSubUnit === "capsules" ? "capsules" : "g";
-
 			const unitPerPouches = unit === "capsules" ? 30 : 150;
 			setUnitPerPouches(unitPerPouches);
 
@@ -109,10 +109,10 @@ export default function Checkout({
 
 			if (response.isComming) {
 				orders.push({
-					price: 0, // Ensure price is included
+					price: 0,
 					id: "1",
 					alt: "supplement mockup",
-					description: `${capsulePerDay * days}${units} Every 3 months`,
+					description: `${capsulePerDay * days}${localUnits} Every 3 months`,
 					name: "Quarterly Subscription",
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
@@ -123,7 +123,7 @@ export default function Checkout({
 				orders.unshift({
 					id: "1",
 					alt: "",
-					description: `${capsulesPackage}${units} to align you with next drop`,
+					description: `${capsulesPackage}${localUnits} to align you with next drop`,
 					name: "Alignment Capsules",
 					src: "/images/supplement-mockup.svg",
 					delivery: "Delivered Tomorrow",
@@ -138,7 +138,7 @@ export default function Checkout({
 				subscriptions.push({
 					id: 2,
 					alt: "supplement mockup",
-					description: `${capsulePerDay * days}${units} Every 3 months`,
+					description: `${capsulePerDay * days}${localUnits} Every 3 months`,
 					name: "Quarterly Subscription",
 					delivery: nextDeliveryProductText,
 					src: "/images/supplement-mockup.svg",
@@ -174,7 +174,10 @@ export default function Checkout({
 			});
 			setLoading(false);
 		};
-		fetchProductId();
+
+		if (!product) {
+			fetchProductId();
+		}
 	}, [
 		params,
 		capsulePerDay,
@@ -183,7 +186,7 @@ export default function Checkout({
 		step,
 		endDate,
 		year,
-		units,
+		product,
 	]);
 
 	useEffect(() => {
@@ -209,7 +212,6 @@ export default function Checkout({
 
 	const updateQuantityAction = useCallback(
 		(val: number) => {
-			console.log("page checkout", val * unitPerPouches);
 			setCapsulesPackage(val * unitPerPouches);
 		},
 		[unitPerPouches],

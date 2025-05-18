@@ -62,7 +62,6 @@ export default function PaymentSetupForm({
 					title: JSON.parse(addCardResponse.error)?.message,
 					status: StatusToast.ERROR,
 				});
-				cardAction(null);
 			} else {
 				cardAction(setupIntent.payment_method);
 			}
