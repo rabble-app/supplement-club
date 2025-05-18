@@ -61,7 +61,6 @@ export default function Checkout({
 	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
 	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
-	const [units, setUnits] = useState("g");
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const [summary, setSummary] = useState<ISummaryProductModel>(
 		{} as ISummaryProductModel,
@@ -83,7 +82,6 @@ export default function Checkout({
 
 			const localUnits =
 				response.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
-			setUnits(localUnits);
 			setProduct(response);
 
 			const unit =
