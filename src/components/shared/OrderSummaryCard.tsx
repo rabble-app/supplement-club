@@ -1,6 +1,9 @@
+import { Button } from "@/components/ui/button";
+import type IMembershipSummaryModel from "@/utils/models/IMembershipSummaryModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 function renderPrice(
 	model: IOrderSummaryModel | ISubscriptionSummaryModel,
@@ -37,11 +40,30 @@ function renderPrice(
 
 export default function OrderSummaryCard({
 	model,
+	updateQuantityAction,
 	unit,
 }: Readonly<{
-	model: IOrderSummaryModel | ISubscriptionSummaryModel;
+	model:
+		| IOrderSummaryModel
+		| ISubscriptionSummaryModel
+		| IMembershipSummaryModel;
+
+	updateQuantityAction?: (val: number) => void;
 	unit: string;
 }>) {
+	const [value, setValue] = useState<number>(model.quantity ?? 0);
+
+	const increment = () =>
+		setValue((prev) => (typeof prev === "number" ? prev + 1 : 1));
+	const decrement = () =>
+		setValue((prev) => (typeof prev === "number" && prev > 0 ? prev - 1 : 0));
+
+	useEffect(() => {
+		console.log("useEffect", value);
+		if (updateQuantityAction) {
+			updateQuantityAction(value);
+		}
+	}, [updateQuantityAction, value]);
 	return (
 		<div
 			className={`grid gap-2 items-center ${
@@ -54,6 +76,7 @@ export default function OrderSummaryCard({
 				<Image
 					src={model.src}
 					alt={model.alt ?? ""}
+					className={`object-none ${model.imageBorder ? "border-[1px] border-[#DDDDDD] rounded-[8px] py-[17px] px-[12px]" : ""}`}
 					width={61}
 					height={61}
 					priority
@@ -74,6 +97,27 @@ export default function OrderSummaryCard({
 				)}
 
 				<div className="flex md:hidden">{renderPrice(model, unit)}</div>
+				{model.quantity && model.quantity > 0 && (
+					<div className="flex items-center gap-[16px]">
+						<Button
+							type="button"
+							className="w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px]"
+							onClick={decrement}
+						>
+							-
+						</Button>
+						<span className="text-[20px] font-bold font-inconsolata">
+							{value}
+						</span>
+						<Button
+							type="button"
+							className="w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px]"
+							onClick={increment}
+						>
+							+
+						</Button>
+					</div>
+				)}
 			</div>
 
 			<div className="hidden md:flex justify-end">
