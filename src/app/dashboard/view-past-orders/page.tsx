@@ -70,7 +70,7 @@ export default function Orders() {
 								<div className="text-[16px] leading-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
 									£{item.amount}{" "}
 									<span className="text-[10px] leading-[11px] text-grey1 font-[800] font-inconsolata">
-										(£{item.order?.basket[0]?.price} / capsule)
+										(£{item.order?.basket[0]?.price} / count)
 									</span>
 								</div>
 

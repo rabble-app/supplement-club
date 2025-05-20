@@ -55,7 +55,7 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 							£{model.price}
 						</span>{" "}
 						<p className="text-[12px] my-[auto] font-bold font-inconsolata text-grey1">
-							(£{model.capsulePrice} / capsule)
+							(£{model.capsulePrice} / count)
 						</p>
 					</div>
 

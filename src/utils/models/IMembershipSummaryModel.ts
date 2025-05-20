@@ -12,4 +12,5 @@ export default interface IMembershipSummaryModel {
 	rrp?: number;
 	isFree?: boolean;
 	imageBorder?: boolean;
+	isFoundingMember?: boolean;
 }

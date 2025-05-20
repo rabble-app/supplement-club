@@ -88,7 +88,7 @@ export default function ManagePlanCard({
 							<div className="text-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
 								£{model.team?.basket[0]?.product?.price ?? 0}{" "}
 								<span className="text-[10px] leading-[11px] text-grey1 font-bold font-inconsolata">
-									(£0.25 / capsule)
+									(£0.25 / count)
 								</span>
 							</div>
 

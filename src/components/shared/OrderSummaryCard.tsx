@@ -5,10 +5,7 @@ import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryM
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-function renderPrice(
-	model: IOrderSummaryModel | ISubscriptionSummaryModel,
-	unit: string,
-) {
+function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 	if (model.isFree) {
 		return (
 			<div className="grid gap-[7px]">
@@ -28,11 +25,19 @@ function renderPrice(
 		);
 	}
 
+	if (model.isFoundingMember) {
+		return (
+			<div className="gap-[2px] text-[20px] leading-[20px] font-inconsolata font-bold flex md:justify-end items-center">
+				£{model.price?.toFixed(2)}{" "}
+			</div>
+		);
+	}
+
 	return (
 		<div className="text-lg font-bold text-black flex items-center gap-1 font-inconsolata">
 			£{model.capsules * 0.25}
 			<span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-				(£0.25/{unit})
+				(£0.25/count)
 			</span>
 		</div>
 	);
@@ -41,7 +46,6 @@ function renderPrice(
 export default function OrderSummaryCard({
 	model,
 	updateQuantityAction,
-	unit,
 }: Readonly<{
 	model:
 		| IOrderSummaryModel
@@ -49,7 +53,6 @@ export default function OrderSummaryCard({
 		| IMembershipSummaryModel;
 
 	updateQuantityAction?: (val: number) => void;
-	unit: string;
 }>) {
 	const [value, setValue] = useState<number>(model.quantity ?? 0);
 
@@ -59,7 +62,6 @@ export default function OrderSummaryCard({
 		setValue((prev) => (typeof prev === "number" && prev > 0 ? prev - 1 : 0));
 
 	useEffect(() => {
-		console.log("useEffect", value);
 		if (updateQuantityAction) {
 			updateQuantityAction(value);
 		}
@@ -87,7 +89,7 @@ export default function OrderSummaryCard({
 				<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 					{model.description}
 				</p>
-				<p className="text-[16px] leading-[16px] font-[600] font-inconsolata">
+				<p className="text-[16px] leading-[16px] font-[600] font-inconsolata uppercase">
 					{model.name}
 				</p>
 				{model.delivery && (
@@ -96,7 +98,7 @@ export default function OrderSummaryCard({
 					</p>
 				)}
 
-				<div className="flex md:hidden">{renderPrice(model, unit)}</div>
+				<div className="flex md:hidden">{renderPrice(model)}</div>
 				{model.quantity && model.quantity > 0 && (
 					<div className="flex items-center gap-[16px]">
 						<Button
@@ -120,9 +122,7 @@ export default function OrderSummaryCard({
 				)}
 			</div>
 
-			<div className="hidden md:flex justify-end">
-				{renderPrice(model, unit)}
-			</div>
+			<div className="hidden md:flex justify-end">{renderPrice(model)}</div>
 		</div>
 	);
 }
