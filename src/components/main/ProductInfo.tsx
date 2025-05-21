@@ -42,7 +42,7 @@ export default function ProductInfo({
 						<div className="text-[40px] leading-[46px] font-[700] text-white mb-[2px] flex items-center font-inconsolata">
 							£{Number(product?.price ?? 0).toFixed(2)}{" "}
 							<span className="text-[16px] leading-[18px] text-grey9 ml-[2px]">
-								(£0.25 / capsule)
+								(£0.25 / count)
 							</span>
 						</div>
 

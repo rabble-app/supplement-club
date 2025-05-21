@@ -43,67 +43,74 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 export const mapSingleProductModel = (
 	model: IProductModel,
 ): ISingleProductModel => {
-	return {
-		id: model.id,
-		isComming: model.supplementTeamProducts?.status === "PREORDER",
-		status: model.status,
-		imageKey: model.imageKey,
-		name: model.name,
-		teamName: model.producer?.businessName,
-		description: model.description,
-		wholesalePrice: model.wholesalePrice,
-		capsuleInfo: model.capsuleInfo,
-		imageUrl: model.imageUrl,
-		price: model.price,
-		rrp: model.rrp,
-		quantityOfSubUnitPerOrder: model.quantityOfSubUnitPerOrder,
-		unitsOfMeasurePerSubUnit: model.unitsOfMeasurePerSubUnit,
-		members: model.supplementTeamProducts?.team._count?.members,
-		tags: model.tags,
-		priceInfo: model.priceInfo,
-		producer: model.producer,
-		formulationSummary: model.formulationSummary,
-		gallery: [model.imageUrl, model.producer.imageUrl],
-		supplementTeamProducts: model.supplementTeamProducts,
-		orderId: model.orderId,
-		productBenefits: model.productBenefits,
-		healthCategories: model.healthCategories,
-	};
+	return model
+		? {
+				id: model.id,
+				isComming: model.supplementTeamProducts?.status === "PREORDER",
+				status: model.status,
+				imageKey: model.imageKey,
+				name: model.name,
+				teamName: model.producer?.businessName,
+				description: model.description,
+				wholesalePrice: model.wholesalePrice,
+				capsuleInfo: model.capsuleInfo,
+				imageUrl: model.imageUrl,
+				price: model.price,
+				rrp: model.rrp,
+				quantityOfSubUnitPerOrder: model.quantityOfSubUnitPerOrder,
+				unitsOfMeasurePerSubUnit: model.unitsOfMeasurePerSubUnit,
+				members: model.supplementTeamProducts?.team._count?.members,
+				tags: model.tags,
+				approvalStatus: model.approvalStatus,
+				priceInfo: model.priceInfo,
+				producer: model.producer,
+				formulationSummary: model.formulationSummary,
+				gallery: [model.imageUrl, model.producer.imageUrl],
+				supplementTeamProducts: model.supplementTeamProducts,
+				orderId: model.orderId,
+				productBenefits: model.productBenefits,
+				healthCategories: model.healthCategories,
+			}
+		: ({} as ISingleProductModel);
 };
 
 export const mapUpcomingDelivery = (
 	model: IUpcomingDeliveryResponse,
 ): IUpcomingDeliveryModel => {
-	return {
-		id: model.id,
-		deliveryDate: model.deliveryDate,
-		businessName: model.team.producer.businessName,
-		name: model.team.name,
-		quantity: model.basket[0]?.quantity || 0,
-		address: model.team.members[0].user.shipping.address,
-		city: model.team.members[0].user.shipping.city,
-		country: model.team.members[0].user.shipping.country,
-		postalCode: model.team.members[0].user.postalCode,
-		buildingNo: model.team.members[0].user.shipping.buildingNo,
-	};
+	return model
+		? {
+				id: model.id,
+				deliveryDate: model.deliveryDate,
+				businessName: model.team.producer.businessName,
+				name: model.team.name,
+				quantity: model.basket[0]?.quantity || 0,
+				address: model.team.members[0].user.shipping.address,
+				city: model.team.members[0].user.shipping.city,
+				country: model.team.members[0].user.shipping.country,
+				postalCode: model.team.members[0].user.postalCode,
+				buildingNo: model.team.members[0].user.shipping.buildingNo,
+			}
+		: ({} as IUpcomingDeliveryModel);
 };
 
 export const mapSubscriptionModel = (
 	model: IUserPlanReponse,
 ): IManagePlanModel => {
-	return {
-		id: model.id,
-		name: model.team?.basket[0]?.product?.name,
-		subscriptionStatus: model.subscriptionStatus,
-		isSkipped: model.skipNextDelivery,
-		quantity: model.team?.basket[0]?.quantity,
-		team: model.team,
-		price: model.team?.basket[0]?.product?.price,
-		capsulePerDay:
-			+model.team?.basket[0]?.product?.capsulePerDay ||
-			+model.team?.basket[0]?.capsulePerDay,
-		percent: model.team?.basket[0]?.product?.percent,
-	};
+	return model
+		? {
+				id: model.id,
+				name: model.team?.basket[0]?.product?.name,
+				subscriptionStatus: model.subscriptionStatus,
+				isSkipped: model.skipNextDelivery,
+				quantity: model.team?.basket[0]?.quantity,
+				team: model.team,
+				price: model.team?.basket[0]?.product?.price,
+				capsulePerDay:
+					+model.team?.basket[0]?.product?.capsulePerDay ||
+					+model.team?.basket[0]?.capsulePerDay,
+				percent: model.team?.basket[0]?.product?.percent,
+			}
+		: ({} as IManagePlanModel);
 };
 
 export const mapUserInfoModel = (model: IUserResponse): IUserModel => {

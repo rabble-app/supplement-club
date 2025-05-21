@@ -11,7 +11,6 @@ export default function TeamPrice({
 	wholesalePrice,
 	priceInfo,
 	isComming,
-	unitsOfMeasurePerSubUnit,
 }: Readonly<{
 	members: number;
 	price: number;
@@ -19,28 +18,22 @@ export default function TeamPrice({
 	wholesalePrice: number;
 	isComming: boolean;
 	priceInfo: IPriceInfoModel[];
-	unitsOfMeasurePerSubUnit?: string;
 }>) {
 	const [activeMemberIndex, setActiveMemberIndex] = useState(1);
-
-	const isGrams = unitsOfMeasurePerSubUnit === "grams";
-
-	const unit = isGrams ? "g" : "capsule";
-
 	useEffect(() => {
 		for (const info of priceInfo) {
-			info.price = (price * info.percentageDiscount) / 100;
+			info.price = (info.percentageDiscount * price) / 100;
 		}
 	}, [priceInfo, price]);
 
 	useEffect(() => {
-		const itemIdx = priceInfo.findIndex((p) => p.teamMemberCount > members);
+		const itemIdx = priceInfo.findIndex((p) => p.price ?? 0 >= price);
 		if (itemIdx === -1) {
 			setActiveMemberIndex(priceInfo.length);
 		} else {
 			setActiveMemberIndex(itemIdx - 1);
 		}
-	}, [priceInfo, members]);
+	}, [priceInfo, price]);
 
 	function getCurrentClasses(index: number) {
 		let classes = !isComming
@@ -167,8 +160,19 @@ export default function TeamPrice({
 			shouldIncludeFirstInactive(infoIndex, idx, members)
 		)
 			return true;
+
 		if (shouldIncludePreviousActive(infoIndex)) return true;
 		if (shouldIncludeFirstValue(infoIndex, idx, members)) return true;
+
+		if (
+			activeMemberIndex === -1 &&
+			(members / priceInfo[0].teamMemberCount < 0.5 ||
+				members / priceInfo[0].teamMemberCount < 1) &&
+			idx < 4 &&
+			infoIndex === 0 &&
+			members !== 0
+		)
+			return true;
 
 		return false;
 	}
@@ -195,43 +199,42 @@ export default function TeamPrice({
 						/>
 						{members} Members
 					</div>
-
 					{!isComming && (
 						<p className="text-[16px] leading-[18px]">
 							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
-							members unlocks{" "}
-							{priceInfo[activeMemberIndex + 1]?.percentageDiscount}% off for
-							everyone
+							members unlocks {priceInfo[activeMemberIndex]?.percentageDiscount}
+							% off for everyone
 						</p>
 					)}
-					{isComming && (
+					{isComming && activeMemberIndex + 1 < priceInfo.length && (
 						<p className="text-[16px] leading-[18px]">
-							{priceInfo[activeMemberIndex + 1]?.teamMemberCount - members} more
-							pre-orders until product launches!
+							{Math.abs(
+								priceInfo[activeMemberIndex === -1 ? 0 : activeMemberIndex + 1]
+									?.teamMemberCount - members,
+							)}{" "}
+							more pre-orders until product launches!
 						</p>
 					)}
 				</div>
-				{!isComming && (
-					<div className="grid gap-[8px]">
-						<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
-							£{Number(price).toFixed(2)}{" "}
-							<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
-								(£0.25 / {unit})
-							</span>
-						</div>
-						<div className="text-[16px] leading-[16px] text-grey4 pb-[34px] md:text-end font-inconsolata">
-							RRP{" "}
-							<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
-								£{rrp}
-							</span>{" "}
-							{activeMemberIndex > 0 && (
-								<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
-									{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
-								</span>
-							)}
-						</div>
+				<div className="grid gap-[8px]">
+					<div className="text-[32px] leading-[34px] font-[900] font-inconsolata flex items-center">
+						£{Number(price).toFixed(2)}{" "}
+						<span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px]">
+							(£0.25 / count)
+						</span>
 					</div>
-				)}
+					<div className="text-[16px] leading-[16px] text-grey4 md:text-end font-inconsolata">
+						RRP{" "}
+						<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
+							£{rrp}
+						</span>{" "}
+						{activeMemberIndex > 0 && (
+							<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
+								{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
+							</span>
+						)}
+					</div>
+				</div>
 			</div>
 
 			{isComming && <Separator className="bg-grey22 h-[1px]" />}

@@ -8,15 +8,16 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 import { getQuarterInfo } from "@/utils/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
 	const { nextDeliveryTextShort } = getQuarterInfo();
 	const [userProducts, setUserProducts] = useState<string[]>([]);
-	const precentage =
-		model.price && model.rrp
-			? (Number(model.rrp) / Number(model.price) - 1).toFixed(2)
-			: 0;
+
+	const discount = useMemo(
+		() => Math.abs((model.price / model.rrp - 1) * 100).toFixed(0),
+		[model],
+	);
 	const context = useUser();
 	let titleButton = "Join Team";
 
@@ -26,9 +27,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 		titleButton = "See Team";
 	}
 
-	const productLink = userProducts.includes(model.id)
-		? `/dashboard/manage-plans/${model.id}`
-		: `/products/${model.id}?teamId=${model.teamId}`;
+	const productLink = `/products/${model.id}?teamId=${model.teamId}`;
 
 	const [firstWord, ...rest] = (model.name ?? "").split(" ");
 
@@ -106,7 +105,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 						£{model.rrp}
 					</span>{" "}
 					<span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
-						{precentage}% OFF
+						{discount}% OFF
 					</span>
 				</div>
 

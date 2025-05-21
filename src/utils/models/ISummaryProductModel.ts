@@ -1,3 +1,4 @@
+import type IMembershipSummaryModel from "./IMembershipSummaryModel";
 import type IOrderSummaryModel from "./IOrderSummaryModel";
 import type IReferalSummaryModel from "./IReferalSummaryModel";
 import type ISubscriptionSummaryModel from "./ISubscriptionSummaryModel";
@@ -15,4 +16,5 @@ export default interface ISummaryProductModel {
 	orders: IOrderSummaryModel[];
 	referals: IReferalSummaryModel[];
 	subscriptions: ISubscriptionSummaryModel[];
+	membership: IMembershipSummaryModel[];
 }

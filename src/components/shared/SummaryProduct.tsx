@@ -2,7 +2,7 @@
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import OrderSummaryCard from "./OrderSummaryCard";
 
 export default function SummaryProduct({
@@ -11,12 +11,14 @@ export default function SummaryProduct({
 	children,
 	showOnlyTotal,
 	showTopLine,
+	quantityAction,
 }: Readonly<{
 	model: ISummaryProductModel;
 	className?: string;
 	showOnlyTotal?: boolean;
 	children?: React.ReactNode;
 	showTopLine?: boolean;
+	quantityAction?: (val: number) => void;
 }>) {
 	const [totalCount, setTotalCount] = useState(0);
 	const [totalCapsules, setTotalCapsules] = useState(0);
@@ -24,11 +26,6 @@ export default function SummaryProduct({
 	const [percentage, setPercentage] = useState(0);
 
 	const [firstWord, ...rest] = (model.name ?? "").split(" ");
-
-	const isGrams = model.unitsOfMeasurePerSubUnit === "grams";
-
-	const units = isGrams ? "g" : " Capsules";
-	const unit = isGrams ? "g" : "capsule";
 
 	useEffect(() => {
 		const totalSum = model?.orders?.reduce(
@@ -68,6 +65,13 @@ export default function SummaryProduct({
 		);
 		setTotalCapsules(totalSubsCapsules + ordersSubsCapsules);
 	}, [model]);
+
+	const updateQuantityAction = useCallback(
+		(val: number) => {
+			if (quantityAction) quantityAction(val);
+		},
+		[quantityAction],
+	);
 	return (
 		<div
 			key={model?.id}
@@ -80,7 +84,6 @@ export default function SummaryProduct({
 							{model.title}
 						</h1>
 					)}
-
 					{model?.corporation && model.name && (
 						<div className="grid gap-[8px]">
 							<p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4">
@@ -100,7 +103,7 @@ export default function SummaryProduct({
 								model.unitsOfMeasurePerSubUnit && (
 									<div className="flex items-center gap-[8px]">
 										<Image
-											src="/images/icons/link-icon.svg"
+											src={`${model.unitsOfMeasurePerSubUnit !== "grams" && model.unitsOfMeasurePerSubUnit !== "mg" ? "/images/icons/link-icon.svg" : "/images/icons/gram-link-icon.svg"}`}
 											alt="security-card-icon"
 											width={24}
 											height={24}
@@ -114,23 +117,22 @@ export default function SummaryProduct({
 								)}
 						</div>
 					)}
-
 					{model?.deliveryText && (
 						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 							{model.deliveryText}
 						</p>
 					)}
-
 					{showTopLine && <Separator className="bg-grey3 h-[1px]" />}
-
 					{model?.orders?.map((order) => (
-						<OrderSummaryCard key={order.id} model={order} unit={unit} />
+						<OrderSummaryCard
+							key={order.id}
+							model={order}
+							updateQuantityAction={updateQuantityAction}
+						/>
 					))}
-
 					{model?.referals?.length > 0 && (
 						<Separator className="bg-grey3 h-[1px]" />
 					)}
-
 					{model?.referals?.map((referal, idx) => (
 						<div
 							key={`${idx + 1}`}
@@ -149,11 +151,9 @@ export default function SummaryProduct({
 							</div>
 						</div>
 					))}
-
 					{model?.subscriptions?.length > 0 && (
 						<Separator className="bg-grey3 h-[1px]" />
 					)}
-
 					{model?.subscriptions?.length > 0 && (
 						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
 							Quarterly Subscription
@@ -161,9 +161,28 @@ export default function SummaryProduct({
 					)}
 
 					{model?.subscriptions?.map((item) => (
-						<OrderSummaryCard key={item.id} model={item} unit={unit} />
+						<OrderSummaryCard key={item.id} model={item} />
 					))}
 
+					{model?.membership?.length > 0 && (
+						<Separator className="bg-grey3 h-[1px]" />
+					)}
+
+					{model?.membership?.length > 0 && (
+						<p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+							Membership Subscription
+						</p>
+					)}
+
+					{model?.membership?.map((item) => (
+						<OrderSummaryCard key={item.id} model={item} />
+					))}
+					{model?.membership?.length > 0 && (
+						<div className="text-[12px] leading-[16px] font-helvetica italic mt-[-12px] text-grey4">
+							Membership gives you access to unlimited drops, premium-only
+							products, lab-direct pricing & free delivery on all orders
+						</div>
+					)}
 					<Separator className="bg-grey3 h-[1px]" />
 				</>
 			)}
@@ -175,8 +194,7 @@ export default function SummaryProduct({
 							Total
 						</p>
 						<p className="text-[14px] leading-[15px] text-grey4 font-inconsolata">
-							{totalCapsules}
-							{units}
+							{totalCapsules} Count
 						</p>
 					</div>
 
@@ -184,7 +202,7 @@ export default function SummaryProduct({
 						<div className="gap-[2px] text-[32px] font-inconsolata font-bold flex justify-end items-center">
 							£{totalCount?.toFixed(2)}{" "}
 							<span className="text-[12px] my-[auto] font-inconsolata font-bold text-grey1">
-								(£0.25/{unit})
+								(£0.25/count)
 							</span>
 						</div>
 						<div className="text-[24px] leading-[25px] font-inconsolata font-[400] text-grey4 md:text-end">

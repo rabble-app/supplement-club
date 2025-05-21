@@ -148,18 +148,26 @@ const membershipData = [
 		src: "/images/membership-1.svg",
 		alt: "membership1",
 		width: 200,
+		description:
+			"Alzchem is recognized for producing Creapure®, the highest-purity creatine monohydrate, designed to optimize muscle performance, cognitive function, and energy production. Manufactured in Trostberg, Germany, under cGMP and ISO 9001 standards, Creapure® undergoes rigorous quality control, ensuring it is free from contaminants like DCD and DHT. Its exceptional purity and efficacy make it the gold standard for longevity research, brain health, and athletic performance",
+
 		height: 66,
 	},
 	{
 		src: "/images/membership-2.svg",
 		alt: "membership2",
 		width: 163,
+		description:
+			"Kaneka Corporation is a global leader in the development and production of high-performance materials, chemicals, and health products. Founded in Japan in 1949, the company has expanded into diverse industries, including pharmaceuticals, food products, and synthetic fibers. Kaneka is known for its focus on research and development, creating products that support better health, sustainability, and innovative solutions in various fields.",
+
 		height: 72,
 	},
 	{
 		src: "/images/membership-3.svg",
 		alt: "membership3",
 		width: 244,
+		description:
+			"Balchem is known for creating some of the highest-quality chelated minerals in the market, designed to optimize nutrient absorption. Balchem’s proprietary chelation technology binds essential minerals like zinc, copper, and magnesium to amino acids, significantly enhancing bioavailability and supporting various biological functions with superior efficiency.",
 		height: 71,
 	},
 ];

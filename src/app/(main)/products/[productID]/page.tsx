@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
 
 import CorporationBox from "@/components/main/products/CorporationBox";
 import TeamPrice from "@/components/main/products/TeamPrice";
@@ -44,7 +43,6 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
 import {
 	Carousel,
 	type CarouselApi,
@@ -57,9 +55,12 @@ import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
 import { useProductStore } from "@/stores/productStore";
 import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
+import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { getQuarterInfo } from "@/utils/utils";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface ProductDetailsProps {
 	productID: string;
@@ -73,6 +74,7 @@ export default function ProductDetails({
 	const productStore = useProductStore();
 	const [api, setApi] = useState<CarouselApi>();
 	const [members, setMembers] = useState<IMemberCardModel[]>([]);
+	const [orders, setOrders] = useState<IOrderSummaryModel[]>([]);
 	const [hasUserProduct, setHasUserProduct] = useState<boolean>();
 
 	const days = 90;
@@ -83,10 +85,12 @@ export default function ProductDetails({
 	const [capsulePerDay, setCapsulePerDay] = useState(2);
 	const [product, setProduct] = useState<ISingleProductModel>();
 	const [units, setUnits] = useState("g");
+	const [summary, setSummary] = useState<ISummaryProductModel>(
+		{} as ISummaryProductModel,
+	);
 
 	const { currentQuarter, year, endDate, remainsDaysToNextQuater } =
 		getQuarterInfo();
-
 	useEffect(() => {
 		if (product) {
 			setHasUserProduct(
@@ -97,19 +101,23 @@ export default function ProductDetails({
 	}, [context, product]);
 
 	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+
+	const discount = useMemo(
+		() =>
+			product
+				? (Math.abs(product?.price / product.rrp - 1) * 100).toFixed(0)
+				: 0,
+		[product],
+	);
+
+	const nextDeliveryText = `Next Drop: 1st ${endDate.toLocaleString("en", { month: "long" })} ${year}`;
 	const [nextQuater] = useState(
 		currentQuarter + 1 > 4 ? 1 : currentQuarter + 1,
 	);
-
 	const capsulesPackage = useMemo(
 		() => remainsDaysToNextQuater * capsulePerDay,
 		[remainsDaysToNextQuater, capsulePerDay],
 	);
-
-	const [summary, setSummary] = useState<ISummaryProductModel>(
-		{} as ISummaryProductModel,
-	);
-
 	useEffect(() => {
 		const fetchProduct = async () => {
 			const { productID } = await params;
@@ -142,21 +150,32 @@ export default function ProductDetails({
 	}
 
 	useEffect(() => {
-		const orders = [
-			{
-				id: "2",
-				alt: "supplement mockup",
-				description: `${capsulePerDay * days}${units} Every 3 months`,
-				name: "Quarterly Subscription",
-				delivery: nextDeliveryProductText,
-				src: "/images/supplement-mockup.svg",
-				capsules: capsulePerDay * days,
-				price: 0,
-			},
-		];
+		const order = {
+			id: "2",
+			alt: "supplement mockup",
+			description: `${capsulePerDay * days} ${units} Every 3 months`,
+			name: "Quarterly Subscription",
+			delivery: nextDeliveryProductText,
+			src: "/images/supplement-mockup.svg",
+			capsules: capsulePerDay * days,
+			price: 0,
+		};
+		const summaryOrders = [order];
+		const orders = [order];
 
-		if (!product?.isComming) {
+		if (product?.isComming) {
 			orders.unshift({
+				id: "1",
+				alt: "Founding Member Badge",
+				name: "Founding Member 10% Discount",
+				delivery: "Forever",
+				src: "/images/icons/user-badge-icon.svg",
+				capsules: 0,
+				isFoundingMember: true,
+				price: -4.5,
+			} as never);
+		} else if (!product?.isComming) {
+			summaryOrders.unshift({
 				id: "1",
 				alt: "",
 				description: `${capsulesPackage}${units} to see you to Q${nextQuater}`,
@@ -165,7 +184,7 @@ export default function ProductDetails({
 				src: "/images/ubiquinol.svg",
 				capsules: capsulesPackage,
 				price: 0,
-			});
+			} as never);
 		} else if (product) {
 			const members = [
 				{
@@ -216,13 +235,15 @@ export default function ProductDetails({
 			rrp: product?.rrp,
 			quantityOfSubUnitPerOrder: product?.unitsOfMeasurePerSubUnit,
 			unitsOfMeasurePerSubUnit: product?.unitsOfMeasurePerSubUnit,
-			orders: orders,
+			orders: summaryOrders,
 			id: 1,
 			referals: [],
 			subscriptions: [],
+			membership: [],
 		};
-
 		setSummary(obj);
+
+		setOrders(orders);
 	}, [
 		capsulePerDay,
 		product,
@@ -231,7 +252,6 @@ export default function ProductDetails({
 		nextQuater,
 		units,
 	]);
-
 	// implement sticky button
 	const stickyRef = useRef<HTMLDivElement | null>(null);
 	const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -338,7 +358,6 @@ export default function ProductDetails({
 							wholesalePrice={product.wholesalePrice}
 							price={product.price}
 							priceInfo={product?.priceInfo ?? []}
-							unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 						/>
 					)}
 
@@ -388,6 +407,64 @@ export default function ProductDetails({
 					quantityOfSubUnitPerOrder={product?.quantityOfSubUnitPerOrder}
 					unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 				/>
+				{context?.user && hasUserProduct && (
+					<div className="bg-white rounded-[12px] shadow-card py-[16px] px-[12px] w-full">
+						<div
+							className="text-[16px] leading-[18px] font-[700] font-helvetica gap-x-[16px]
+					gap-[10px] flex justify-between items-center w-full [&[data-state=open]>svg]:rotate-180"
+						>
+							<div className="grid grid-cols-[69px_1fr] gap-[8px]">
+								<div className="rounded-[8px] border-[1px] border-grey28 w-[69px] p-[4px]">
+									<Image
+										src={product?.gallery[0] ?? ""}
+										alt="supplement icon"
+										width={61}
+										height={61}
+									/>
+								</div>
+
+								<div className="flex flex-col gap-[6px]">
+									<div className="flex items-center gap-[2px] text-grey4 leading-[13px]">
+										<span className="text-[12px] leading-[13px] font-inconsolata font-[700] text-grey4">
+											{product?.producer?.businessName}
+										</span>
+										{" - "}
+										<span className="text-[12px] leading-[13px] font-[300] font-inconsolata text-grey4 capitalize">
+											{product?.approvalStatus}
+										</span>
+									</div>
+									<div className="text-[16px] leading-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
+										£{product?.price}{" "}
+										<span className="text-[10px] leading-[11px] text-grey1 font-[800] font-inconsolata">
+											(£25 / count)
+										</span>
+									</div>
+
+									<div className="text-[16px] leading-[16px] text-grey4 font-inconsolata">
+										RRP{" "}
+										<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
+											£{product?.rrp}
+										</span>{" "}
+										<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
+											{discount}% OFF
+										</span>
+									</div>
+									<div className="text-xs leading-[13px] text-grey4 font-helvetica text-left">
+										{`${product?.quantityOfSubUnitPerOrder ? +product.quantityOfSubUnitPerOrder / 90 : 0} ${product?.unitsOfMeasurePerSubUnit} per Day - ${product?.quantityOfSubUnitPerOrder} ${product?.unitsOfMeasurePerSubUnit}`}
+									</div>
+								</div>
+							</div>
+							<div className=" flex items-center gap-[16px]">
+								<div className="bg-[#F6F6FF] rounded-[12px] text-[#00038F] text-[16px] font-hagerman px-[12px] py-[4px]">
+									{nextDeliveryText}
+								</div>
+								<Link href={`/dashboard/manage-plans/${product?.id}`}>
+									<ChevronRight className="h-[22px] w-[22px] shrink-0 text-muted-foreground transition-transform duration-200 text-blue" />
+								</Link>
+							</div>
+						</div>
+					</div>
+				)}
 				{context?.user && product?.isComming && (
 					<div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
 						<Image
@@ -403,9 +480,12 @@ export default function ProductDetails({
 				{!context?.user && !product?.isComming && (
 					<div className="flex flex-col gap-[24px]">
 						<CapsuleBox
-							rrp={product?.rrp}
+							rrp={product?.rrp ?? 0}
+							price={product?.price ?? 0}
 							unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
 							capsuleInfo={product?.capsuleInfo}
+							orders={orders}
+							productId={product?.id}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 						/>
 						{/* Placeholder keeps layout when sticky becomes fixed */}
@@ -413,25 +493,6 @@ export default function ProductDetails({
 							ref={placeholderRef}
 							style={{ height: isSticky ? stickyRef.current?.offsetHeight : 0 }}
 						/>
-						<SummaryProduct className="bg-white" model={summary} />
-						<div
-							ref={stickyRef}
-							style={{
-								position: isSticky ? "fixed" : "relative",
-								top: isSticky ? 0 : "inherit",
-								zIndex: 1000,
-								width: isSticky ? 624 : "inherit",
-							}}
-						>
-							<Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
-								<Link
-									className="w-full h-full flex items-center justify-center"
-									href={`/products/${product?.id}/checkout`}
-								>
-									Start My Subscription
-								</Link>
-							</Button>
-						</div>
 						<div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
 							<div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
 								<Image
@@ -472,10 +533,13 @@ export default function ProductDetails({
 				{!context?.user && product?.isComming && (
 					<div className="flex flex-col gap-[24px]">
 						<CapsuleBox
-							rrp={product?.rrp}
+							rrp={product?.rrp ?? 0}
+							price={product?.price ?? 0}
+							orders={orders}
 							unitsOfMeasurePerSubUnit={product.unitsOfMeasurePerSubUnit}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 							capsuleInfo={product?.capsuleInfo}
+							productId={product?.id}
 						/>
 
 						{members.length > 0 && (
@@ -485,53 +549,20 @@ export default function ProductDetails({
 								))}
 							</div>
 						)}
-
-						<SummaryProduct
-							showOnlyTotal={true}
-							className={`bg-white ${product?.isComming ? "md:p-[0]" : ""}`}
-							model={summary}
-						/>
-
-						<Button
-							className={` text-white w-full font-bold font-inconsolata ${hasUserProduct ? "pointer-events-none bg-grey25" : "bg-blue"}`}
-						>
-							<Link href={`/products/${product?.id}/checkout`}>
-								{" "}
-								REGISTER PRE-ORDER
-							</Link>
-						</Button>
 					</div>
 				)}
 				{context?.user && (
 					<div className="grid gap-[28px] w-full">
-						<SummaryProduct model={summary} />
+						{hasUserProduct && (
+							<ReferralCardsWithLink className="border-[1px]" />
+						)}
 
-						{hasUserProduct && <ReferralCardsWithLink />}
+						<SummaryProduct
+							showOnlyTotal={false}
+							className={`bg-[#F6F6F6] ${product?.isComming ? "md:p-[24px]" : ""}`}
+							model={summary}
+						/>
 					</div>
-				)}
-
-				{context?.user && !product?.isComming && (
-					<Button
-						className={`text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100] ${hasUserProduct ? "pointer-events-none bg-grey25" : "bg-blue"}`}
-					>
-						<Link
-							className="w-full h-full flex items-center justify-center"
-							href={`/products/${product?.id}/checkout`}
-						>
-							Start My Subscription
-						</Link>
-					</Button>
-				)}
-
-				{context?.user && product?.isComming && (
-					<Button
-						className={` text-white w-full font-bold font-inconsolata ${hasUserProduct ? "pointer-events-none bg-grey25" : "bg-blue"}`}
-					>
-						<Link href={`/products/${product?.id}/checkout`}>
-							{" "}
-							REGISTER PRE-ORDER
-						</Link>
-					</Button>
 				)}
 			</div>
 		</div>
