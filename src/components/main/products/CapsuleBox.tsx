@@ -11,24 +11,36 @@ import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
 import Link from "next/link";
 
-const generateImage = (count: number) => (
+const generateImage = (count: number, unitsOfMeasurePerSubUnit?: string) => (
 	<div
 		className="flex justify-center mx-auto relative h-[24px]"
 		style={{ width: `${20 * count}px` }}
 	>
-		{Array.from({ length: count }).map((_, index) => (
+		{unitsOfMeasurePerSubUnit === "grams" && (
 			<Image
-				key={`pill-${index + 1 * count}`}
+				key={`pill-${1 * count}`}
 				className="absolute"
-				style={{
-					left: `${index * 20}px`,
-				}}
-				src="/images/icons/pillow-icon.svg"
-				alt={`pillow icon ${index + 1}`}
+				src="/images/icons/gram-link-icon.svg"
+				alt="pillow icon "
 				width={24}
 				height={24}
 			/>
-		))}
+		)}
+
+		{unitsOfMeasurePerSubUnit !== "grams" &&
+			Array.from({ length: count }).map((_, index) => (
+				<Image
+					key={`pill-${index + 1 * count}`}
+					className="absolute"
+					style={{
+						left: `${index * 20}px`,
+					}}
+					src={`${unitsOfMeasurePerSubUnit !== "grams" ? "/images/icons/pillow-icon.svg" : "/images/icons/gram-link-icon.svg"}`}
+					alt={`pillow icon ${index + 1}`}
+					width={24}
+					height={24}
+				/>
+			))}
 	</div>
 );
 
@@ -123,7 +135,7 @@ export default function CapsuleBox({
 								value={option.capsuleCount.toString()}
 								className="mx-auto"
 							/>
-							{generateImage(option.capsuleCount)}
+							{generateImage(option.capsuleCount, unitsOfMeasurePerSubUnit)}
 						</div>
 						<p className="text-[12px] h-[14px] font-bold font-helvetica text-center">
 							{getCapsuleLabel(option.capsuleCount)}
@@ -224,6 +236,13 @@ export default function CapsuleBox({
 							{isComming ? "REGISTER PRE-ORDER" : "Start My Subscription"}
 						</Link>
 					</Button>
+
+					{isComming && (
+						<div className="text-[14px] leading-[16px] text-grey6 text-center px-[30px] font-helvetica">
+							You’ll be notified when your team launches. You’ll have 24 hours
+							to withdraw before payment is taken.
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

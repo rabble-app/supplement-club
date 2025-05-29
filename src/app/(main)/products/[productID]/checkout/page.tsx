@@ -16,6 +16,7 @@ import ConfirmJoining from "@/components/main/products/[productID]/checkout/Conf
 import CreateAccount from "@/components/main/products/[productID]/checkout/CreateAccount";
 import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
 import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
+import RegisterMemberDialog from "@/components/main/products/[productID]/checkout/RegisterMemberDialog";
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import PaymentList from "@/components/shared/PaymentList";
 import Spinner from "@/components/shared/Spinner";
@@ -221,6 +222,8 @@ export default function Checkout({
 		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
 			<div className="flex flex-col gap-[40px] md:mb-[40px]">
 				<Steps activeStep={step} steps={steps} />
+
+				<RegisterMemberDialog />
 
 				{step === 1 && (
 					<CreateAccount params={params}>

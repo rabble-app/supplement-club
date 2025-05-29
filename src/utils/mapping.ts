@@ -6,6 +6,7 @@ import type ISingleProductModel from "./models/ISingleProductModel";
 import type { IProductModel } from "./models/api/IProductModel";
 import type IReferalInfoModel from "./models/api/IReferalInfoModel";
 import type IReferalModel from "./models/api/IReferalModel";
+import type { IUpcomingDeliveryBasket } from "./models/api/IUpcomingDeliveryBasket";
 import type IUpcomingDeliveryModel from "./models/api/IUpcomingDeliveryModel";
 import type IUserModel from "./models/api/IUserModel";
 import type IUserPaymentOptionModel from "./models/api/IUserPaymentOptionModel";
@@ -89,6 +90,7 @@ export const mapUpcomingDelivery = (
 				country: model.team.members[0].user.shipping.country,
 				postalCode: model.team.members[0].user.postalCode,
 				buildingNo: model.team.members[0].user.shipping.buildingNo,
+				basket: model.basket as IUpcomingDeliveryBasket[],
 			}
 		: ({} as IUpcomingDeliveryModel);
 };

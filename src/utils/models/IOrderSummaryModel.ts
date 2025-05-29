@@ -8,6 +8,8 @@ export default interface IOrderSummaryModel {
 	name?: string;
 	description?: string;
 	delivery?: string;
+	topRight?: string;
+	bottomRight?: string;
 	pricePerCapsule?: number;
 	rrp?: number;
 	isFree?: boolean;

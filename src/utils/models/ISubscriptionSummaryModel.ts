@@ -13,4 +13,6 @@ export default interface ISubscriptionSummaryModel {
 	isFree?: boolean;
 	imageBorder?: boolean;
 	isFoundingMember?: boolean;
+	topRight?: string;
+	bottomRight?: string;
 }

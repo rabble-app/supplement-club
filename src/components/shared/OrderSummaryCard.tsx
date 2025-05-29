@@ -27,8 +27,21 @@ function renderPrice(model: IOrderSummaryModel | ISubscriptionSummaryModel) {
 
 	if (model.isFoundingMember) {
 		return (
-			<div className="gap-[2px] text-[20px] leading-[20px] font-inconsolata font-bold flex md:justify-end items-center">
-				£{model.price?.toFixed(2)}{" "}
+			<div className="grid gap-[8px]">
+				<div className="text-[14px] leading-[14px] text-blue font-[400] font-inconsolata text-right">
+					{model.topRight}
+				</div>
+				<div>
+					<div className="text-[32px] font-bold text-black flex justify-end items-center font-inconsolata">
+						£{model.price?.toFixed(2)}{" "}
+						<span className="text-[12px] leading-3 text-grey1 font-inconsolata font-bold">
+							(£0.25/count)
+						</span>
+					</div>
+				</div>
+				<div className="text-[14px] leading-[14px] text-blue font-[400] font-inconsolata text-right">
+					{model.bottomRight}
+				</div>
 			</div>
 		);
 	}

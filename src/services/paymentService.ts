@@ -1,15 +1,17 @@
 import { PAYMENT_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
+import { mapUserPaymentOptionModel } from "@/utils/mapping";
+import type ISubsriptionStatusModel from "@/utils/models/api/ISubsriptionStatusModel";
 import type IUserPaymentOptionModel from "@/utils/models/api/IUserPaymentOptionModel";
 import type IJoinTeamRequest from "@/utils/models/api/request/IJoinTeamRequest";
 import type ITopUpSubscriptionRequest from "@/utils/models/api/request/ITopUpSubscriptionRequest";
 import type IPaymentIntentResponse from "@/utils/models/api/response/IPaymentIntentResponse";
 import type ISetupIntentResponse from "@/utils/models/api/response/ISetupIntentResponse";
+import type { ISubsriptionStatusApiResponse } from "@/utils/models/api/response/ISubsriptionStatusApiResponse";
 import type IUserPaymentOptionResponse from "@/utils/models/api/response/IUserPaymentOptionResponse";
 import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentIntentApiResponse";
 import type ISetupIntentApiResponse from "@/utils/models/services/ISetupIntentApiResponse";
 import type IUserPaymentOptionsApiResponse from "@/utils/models/services/IUserPaymentOptionsApiResponse";
-import { mapUserPaymentOptionModel } from "@/utils/mapping";
 
 export const paymentService = {
 	addCard: async (paymentMethodId: string, stripeCustomerId: string) =>
@@ -154,5 +156,17 @@ export const paymentService = {
 		return data?.map<IUserPaymentOptionModel>((r: IUserPaymentOptionResponse) =>
 			mapUserPaymentOptionModel(r),
 		);
+	},
+
+	async getSubscriptionStatus(id: string) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.SUBSCRIPTION_STATUS(id),
+			"GET",
+		)) as ISubsriptionStatusApiResponse;
+		return {
+			subscriptionAmount: data.subscriptionAmount,
+			subscriptionDiscount: data.subscriptionDiscount,
+			subscriptionRRP: data.subscriptionRRP,
+		} as ISubsriptionStatusModel;
 	},
 };

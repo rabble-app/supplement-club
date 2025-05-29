@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import type IPriceInfoModel from "@/utils/models/api/IPriceInfoModel";
 import { Separator } from "@radix-ui/react-separator";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function TeamPrice({
 	members,
@@ -71,7 +71,7 @@ export default function TeamPrice({
 				index <= activeMemberIndex && !isComming
 					? "bg-grey14"
 					: isComming
-						? "bg-white"
+						? "bg-[#EEEEEE]"
 						: "bg-grey19",
 			);
 			classes.push("z-[20]");
@@ -176,11 +176,13 @@ export default function TeamPrice({
 
 		return false;
 	}
+	const discount = useMemo(
+		() => (Math.abs(price / rrp - 1) * 100).toFixed(0),
+		[price, rrp],
+	);
 
 	return (
-		<div
-			className={`${isComming ? "py-[24px] bg-white rounded-[4px] shadow-3 mx-[-32px] md:mx-[0]" : ""} `}
-		>
+		<div className={`${isComming ? "py-[24px] mx-[-32px] md:mx-[0]" : ""} `}>
 			{!isComming && (
 				<p className="text-[24px] leading-[28px] font-bold font-inconsolata pt-[32px] md:pt-[0]">
 					Team Price
@@ -197,7 +199,7 @@ export default function TeamPrice({
 							width={30}
 							height={30}
 						/>
-						{members} Members
+						{members} {isComming ? "Pre-Orders" : "Members"}
 					</div>
 					{!isComming && (
 						<p className="text-[16px] leading-[18px]">
@@ -223,27 +225,31 @@ export default function TeamPrice({
 							(£0.25 / count)
 						</span>
 					</div>
-					<div className="text-[16px] leading-[16px] text-grey4 md:text-end font-inconsolata">
+
+					<div className="text-[20px] leading-[20px] text-grey4 font-inconsolata ml-auto">
 						RRP{" "}
-						<span className="text-[16px] leading-[16px] line-through font-bold font-inconsolata">
+						<span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
 							£{rrp}
 						</span>{" "}
-						{activeMemberIndex > 0 && (
-							<span className="text-[16px] leading-[16px] font-bold text-blue font-inconsolata">
-								{priceInfo[activeMemberIndex]?.percentageDiscount}% OFF
-							</span>
-						)}
+						<span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata">
+							{discount}% OFF
+						</span>
 					</div>
 				</div>
 			</div>
 
-			{isComming && <Separator className="bg-grey22 h-[1px]" />}
+			{isComming && members < priceInfo[0]?.teamMemberCount && (
+				<div className="text-[16px] leading-[16px] text-blue font-bold font-inconsolata text-center bg-blue10 h-[33px] py-[8px] w-[calc(100%-32px)] mb-[10px] mx-auto">
+					When it gets to {priceInfo[0]?.teamMemberCount} people we will launch
+					the product
+				</div>
+			)}
 
-			<div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mx-[-32px]">
+			<div className="flex justify-center relative md:mx-auto gap-[0] px-[16px]">
 				{priceInfo.map((item, index) => (
 					<div
 						key={`info-${index + 1}`}
-						className="relative grid overflow-hidden max-w-[148px] w-full"
+						className={`relative grid overflow-hidden max-w-[148px] w-full ${isComming ? "bg-[#EEEEEE]" : ""}`}
 					>
 						{index === activeMemberIndex && (
 							<Image
@@ -274,7 +280,7 @@ export default function TeamPrice({
 						)}
 
 						<div
-							className={`p-[10px] grid gap-[8px] border-[1px] border-grey20 z-[1] h-[192px] relative w-full md:w-[148px]
+							className={`p-[10px] grid gap-[8px] border-[1px] border-grey20 z-[1] h-[192px] relative w-full md:w-[148px] ${isComming ? "bg-[#EEEEEE]" : ""}
 									${getCurrentClasses(index)}`}
 						>
 							<div className="grid gap-[4px] mx-auto">
@@ -337,13 +343,6 @@ export default function TeamPrice({
 						</div>
 					</div>
 				))}
-
-				{isComming && members < priceInfo[0]?.teamMemberCount && (
-					<div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1]">
-						When it gets to {priceInfo[0]?.teamMemberCount} people we will
-						launch the product
-					</div>
-				)}
 			</div>
 		</div>
 	);

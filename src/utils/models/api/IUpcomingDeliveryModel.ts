@@ -1,3 +1,5 @@
+import type { Basket } from "./IUserPlanResponse";
+
 export default interface IUpcomingDeliveryResponse {
 	id: string;
 	deliveryDate: string;
@@ -9,4 +11,5 @@ export default interface IUpcomingDeliveryResponse {
 	country: string;
 	buildingNo: string;
 	postalCode: string;
+	basket?: Basket[];
 }

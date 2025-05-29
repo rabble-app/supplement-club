@@ -44,14 +44,12 @@ export function mapTagToValue(tag: string) {
 		"Heart Health": "/images/icons/heart-pulse-icon.svg",
 		Fertility: "/images/icons/baby-icon.svg",
 		Sleep: "/images/icons/bed-icon.svg",
-		Energy: "/images/icons/energy-icon.svg",
 		"Healthy Aging": "/images/icons/hourglass-icon.svg",
 		"Aging (40+)": "/images/icons/hourglass-icon.svg",
 		"Anti-Aging": "/images/icons/hourglass-icon.svg",
 		Longevity: "/images/icons/tree-icon.svg",
 		"Training/Athletics": "/images/icons/dumbell-icon.svg",
 		"Weight Training": "/images/icons/dumbell-icon.svg",
-		Athletes: "/images/icons/athletes-icon.svg",
 		Immunity: "/images/icons/shield-icon.svg",
 		"Cognitive Function": "/images/icons/brain-icon.svg",
 		"Joint Health": "/images/icons/bones-icon.svg",
@@ -60,12 +58,14 @@ export function mapTagToValue(tag: string) {
 		"Mood & Anxiety": "/images/icons/flower-icon.svg",
 		"Brain Health": "/images/icons/brain-icon.svg",
 		"Energy and Fatigue": "/images/icons/energy-icon.svg",
+		Energy: "/images/icons/energy-icon.svg",
 		"Energy & Fatigue": "/images/icons/energy-icon.svg",
 		"Muscle Recovery": "/images/icons/dumbell-icon.svg",
+		Athletes: "/images/icons/athletes-icon.svg",
 		Athletics: "/images/icons/athletes-icon.svg",
 	};
 
-	return tagValueMap[tag] ?? "/images/icons/athletes-icon.svg";
+	return tagValueMap[tag] ?? null;
 }
 
 export const mapFormDataToDeliveryRequest = (formData: FormData) => ({

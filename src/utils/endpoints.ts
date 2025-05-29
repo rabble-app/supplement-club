@@ -19,6 +19,7 @@ export const PAYMENT_ENDPOINTS = {
 	BULK_BASKET: "payments/basket-bulk",
 	JOIN_TEAM: "payments/supplement/join-team",
 	JOIN_PREORDER_TEAM: "payments/supplement/join-team",
+	SUBSCRIPTION_STATUS: (id: string) => `payments/subscription/status/${id}`,
 	SETUP_INTENT: "payments/setup-intent/",
 	PAYMENT_INTENT: "payments/intent",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",

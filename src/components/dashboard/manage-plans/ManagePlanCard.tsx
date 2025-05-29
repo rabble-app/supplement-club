@@ -6,7 +6,7 @@ import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import OptBackInDialog from "../subscription-managment/OptBackInDialog";
 import ReactivatePlanDialog from "../subscription-managment/ReactivatePlanDialog";
 
@@ -32,13 +32,9 @@ export default function ManagePlanCard({
 }>) {
 	const [totalCapsules, setTotalCapsules] = useState(0);
 	const [totalRrp, setTotalRrp] = useState(0);
-	const [percentage, setPercentage] = useState(0);
+	const [calcUnit, setCalcUnit] = useState<string>("0.25");
 
 	useEffect(() => {
-		const totalSum = model?.team?.basket?.reduce(
-			(sum, item) => sum + (item?.capsulePerDay ?? 0) * 0.25,
-			0,
-		);
 		const totalRRP = Math.round(
 			model?.team?.basket?.reduce(
 				(sum, item) => sum + (item?.product?.rrp ?? 0),
@@ -50,12 +46,26 @@ export default function ManagePlanCard({
 			0,
 		);
 
-		setTotalRrp(totalRRP);
-		if (totalSum > 0 && +totalRRP > 0) {
-			setPercentage(totalSum / Number(totalRRP));
+		if (model?.team?.basket[0]) {
+			const unitPrice = (
+				+model.price / model?.team?.basket[0].quantity
+			).toFixed(2);
+			setCalcUnit(unitPrice);
 		}
+
+		setTotalRrp(totalRRP);
 		setTotalCapsules(totalCaps);
 	}, [model]);
+
+	const discount = useMemo(
+		() =>
+			model
+				? (
+						Math.abs(+model?.price / model.team.basket[0].product.rrp - 1) * 100
+					).toFixed(0)
+				: 0,
+		[model],
+	);
 	return (
 		<ConditionalLink
 			href={`/dashboard/manage-plans/${model.id}`}
@@ -88,7 +98,7 @@ export default function ManagePlanCard({
 							<div className="text-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
 								£{model.team?.basket[0]?.product?.price ?? 0}{" "}
 								<span className="text-[10px] leading-[11px] text-grey1 font-bold font-inconsolata">
-									(£0.25 / count)
+									(£{calcUnit} / count)
 								</span>
 							</div>
 
@@ -98,7 +108,7 @@ export default function ManagePlanCard({
 									£{totalRrp}
 								</span>{" "}
 								<span className="text-[12px] leading-[13px] font-inconsolata font-bold text-blue">
-									{Number(percentage).toFixed(2)}% OFF
+									{discount}% OFF
 								</span>
 							</div>
 

@@ -150,31 +150,35 @@ export default function ProductDetails({
 	}
 
 	useEffect(() => {
-		const order = {
-			id: "2",
-			alt: "supplement mockup",
-			description: `${capsulePerDay * days} ${units} Every 3 months`,
-			name: "Quarterly Subscription",
-			delivery: nextDeliveryProductText,
-			src: "/images/supplement-mockup.svg",
-			capsules: capsulePerDay * days,
-			price: 0,
-		};
-		const summaryOrders = [order];
-		const orders = [order];
+		const summaryOrders = [];
 
 		if (product?.isComming) {
-			orders.unshift({
-				id: "1",
-				alt: "Founding Member Badge",
-				name: "Founding Member 10% Discount",
-				delivery: "Forever",
-				src: "/images/icons/user-badge-icon.svg",
-				capsules: 0,
-				isFoundingMember: true,
-				price: -4.5,
-			} as never);
+			setOrders([
+				{
+					id: "1",
+					alt: "Founding Member Badge",
+					description: `${capsulePerDay * days} ${units} Every 3 months`,
+					name: "FOUNDING MEMBER",
+					delivery: `${product.supplementTeamProducts?.foundingMembersDiscount?.toString() || 10}% OFF TEAM PRICE. FOREVER                                              `,
+					src: "/images/icons/user-badge-icon.svg",
+					capsules: capsulePerDay * days,
+					isFoundingMember: true,
+					topRight: "First 50 Spots",
+					bottomRight: "4 Founder Spots Remaining!",
+					price: capsulePerDay * days * 0.25,
+				},
+			]);
 		} else if (!product?.isComming) {
+			summaryOrders.push({
+				id: "2",
+				alt: "supplement mockup",
+				description: `${capsulePerDay * days} ${units} Every 3 months`,
+				name: "Quarterly Subscription",
+				delivery: nextDeliveryProductText,
+				src: "/images/supplement-mockup.svg",
+				capsules: capsulePerDay * days,
+				price: 0,
+			});
 			summaryOrders.unshift({
 				id: "1",
 				alt: "",
@@ -185,50 +189,40 @@ export default function ProductDetails({
 				capsules: capsulesPackage,
 				price: 0,
 			} as never);
-		} else if (product) {
-			const members = [
-				{
+		}
+		if (product) {
+			const members = [];
+
+			if (product.isComming) {
+				members.push({
 					id: 1,
-					doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-					name: "FOUNDING MEMBER",
-					discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
-					doseValue: "First 50 Spots",
-					price: product?.supplementTeamProducts?.foundingMembersDiscount
-						? capsulesPackage -
-							(capsulesPackage *
-								product?.supplementTeamProducts?.foundingMembersDiscount) /
-								100
-						: capsulesPackage,
-					capsulePrice: 0.25,
-					spotsRemainds: 4,
-					forever: true,
-					isActive: true,
-				},
-				{
-					id: 2,
 					doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
 					name: "EARLY MEMBER",
 					doseValue: "Next 200 Spots",
 					discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
-					price: product?.supplementTeamProducts?.earlyMembersDiscount
-						? capsulesPackage -
-							(capsulesPackage *
-								product?.supplementTeamProducts?.earlyMembersDiscount) /
-								100
-						: capsulesPackage,
+					price: (
+						product.price -
+						product.price *
+							(Number(
+								product?.supplementTeamProducts?.earlyMembersDiscount || 0,
+							) /
+								100)
+					).toFixed(2),
 					capsulePrice: 0.25,
 					forever: true,
-				},
-				{
-					id: 3,
-					doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-					name: "MEMBER",
-					capsulePrice: 0.25,
-					discountTitle: "Standard Team Price",
-					price: capsulesPackage ?? 0,
-				},
-			];
-			setMembers(members);
+					isActive: !product.isComming,
+				});
+			}
+
+			members.push({
+				id: 2,
+				doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
+				name: "MEMBER",
+				capsulePrice: 0.25,
+				discountTitle: "Standard Team Price",
+				price: product.price,
+			});
+			setMembers(members as IMemberCardModel[]);
 		}
 		const obj = {
 			percentage: (capsulePerDay * days * 0.25) / Number(product?.rrp),
@@ -242,8 +236,6 @@ export default function ProductDetails({
 			membership: [],
 		};
 		setSummary(obj);
-
-		setOrders(orders);
 	}, [
 		capsulePerDay,
 		product,
@@ -324,9 +316,10 @@ export default function ProductDetails({
 					</div>
 
 					{product?.isComming && (
-						<div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-blue py-[12px] h-[72px]">
-							<div className="text-white text-[16px] leading-[24px] font-helvetica flex text-center max-w-[300px] mx-auto">
-								PRE-ORDER TO BECOME FOUNDING MEMBER AND GET 10%OFF - FOREVER
+						<div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-[#FBF89F] py-[12px] h-[72px]">
+							<div className="text-blue text-[16px] leading-[24px] font-bold font-helvetica flex text-center max-w-[450px] mx-auto">
+								PRE-ORDER TO BECOME A FOUNDING MEMBER AND GET AN EXTRA 10% OFF
+								FOREVER
 							</div>
 						</div>
 					)}
@@ -410,8 +403,8 @@ export default function ProductDetails({
 				{context?.user && hasUserProduct && (
 					<div className="bg-white rounded-[12px] shadow-card py-[16px] px-[12px] w-full">
 						<div
-							className="text-[16px] leading-[18px] font-[700] font-helvetica gap-x-[16px]
-					gap-[10px] flex justify-between items-center w-full [&[data-state=open]>svg]:rotate-180"
+							className="text-[16px] leading-[18px] font-[700] font-helvetica gap-x-[16px] gap-[10px] flex 
+							justify-between items-center w-full [&[data-state=open]>svg]:rotate-180"
 						>
 							<div className="grid grid-cols-[69px_1fr] gap-[8px]">
 								<div className="rounded-[8px] border-[1px] border-grey28 w-[69px] p-[4px]">
@@ -535,20 +528,20 @@ export default function ProductDetails({
 						<CapsuleBox
 							rrp={product?.rrp ?? 0}
 							price={product?.price ?? 0}
+							isComming={product?.isComming}
 							orders={orders}
 							unitsOfMeasurePerSubUnit={product.unitsOfMeasurePerSubUnit}
 							selectCapsulePerDayAction={updateCapsulePerDay}
 							capsuleInfo={product?.capsuleInfo}
 							productId={product?.id}
 						/>
-
-						{members.length > 0 && (
-							<div className="grid gap-[16px] bg-white">
-								{members.map((item) => (
-									<MemberCard key={item.id} {...item} />
-								))}
-							</div>
-						)}
+					</div>
+				)}
+				{members.length > 0 && (
+					<div className="grid gap-[16px] bg-white mx-auto w-full opacity-80">
+						{members.map((item) => (
+							<MemberCard key={item.id} {...item} />
+						))}
 					</div>
 				)}
 				{context?.user && (
