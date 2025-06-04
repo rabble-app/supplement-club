@@ -28,6 +28,8 @@ export const PAYMENT_ENDPOINTS = {
 	REMOVE_CARD: "payments/remove-card?isSupplementApp=true",
 	GET_PAYMENT_OPTIONS: (id: string) =>
 		`payments/options/${id}?isSupplementApp=true`,
+	MEMBERSHIP_SUBSCRIPTION: (id: string) =>
+		`payments/subscription/status/${id}`,
 };
 
 export const USER_ENDPOINTS = {
@@ -59,7 +61,8 @@ export const REFERAL_ENDPOINTS = {
 };
 
 export const PRODUCT_ENDPOINTS = {
-	PRODUCT: (id: string) => `products/${id}`,
+	PRODUCT: (id: string, teamId?: string) =>
+		`products/${id}?teamId=${teamId}`,
 	PRODUCTS: (userId?: string) => `products/supplement/list?userId=${userId}`,
 	PRODUCTS_LIMIT: (limit?: number) => `products/supplement/list?limit=${limit}`,
 	PRODUCTTAGS: () => "products/supplement/tags",

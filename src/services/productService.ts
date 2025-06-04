@@ -11,9 +11,9 @@ import type ISingleManagePlanApiResponse from "@/utils/models/services/ISingleMa
 import { mapProductModel, mapSingleProductModel } from "@/utils/mapping";
 
 export const productService = {
-	product: async (id: string): Promise<ISingleProductModel> => {
+	product: async (id: string, teamId?: string): Promise<ISingleProductModel> => {
 		const { data } = (await apiRequest(
-			PRODUCT_ENDPOINTS.PRODUCT(id),
+			PRODUCT_ENDPOINTS.PRODUCT(id, teamId),
 			"GET",
 		)) as ISingleManagePlanApiResponse;
 		return data && mapSingleProductModel(data);

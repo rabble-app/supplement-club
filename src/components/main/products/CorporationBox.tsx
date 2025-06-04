@@ -14,7 +14,7 @@ export default function CorporationBox({
 	businessName?: string;
 	description?: string;
 	unitsOfMeasurePerSubUnit?: string;
-	quantityOfSubUnitPerOrder?: string;
+	quantityOfSubUnitPerOrder?: number;
 }>) {
 	return (
 		<div className="flex flex-col gap-[16px] md:gap-[24px] w-full">

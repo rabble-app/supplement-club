@@ -1,0 +1,131 @@
+/** @format */
+
+"use client";;
+import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useUser } from "@/contexts/UserContext";
+import IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
+import ISummaryProductModel from "@/utils/models/ISummaryProductModel";
+import { VisuallyHidden } from "@reach/visually-hidden";
+import { format } from "date-fns";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+type AlignmentDialogProps = {
+  daysUntilNextDrop: number;
+  deliveryDate: string;
+  orders: IOrderSummaryModel[];
+  updateQuantityAction: (val: number) => void;
+  discount: number;
+  setSummary: React.Dispatch<React.SetStateAction<ISummaryProductModel>>;
+};
+
+export default function AlignmentDialog({
+  daysUntilNextDrop,
+  deliveryDate,
+  orders,
+  updateQuantityAction,
+  discount,
+  setSummary,
+  }: Readonly<AlignmentDialogProps>) {
+  const [isOpen, setIsOpen] = useState(false);
+  const context = useUser();
+
+  useEffect(() => {
+    if (!context?.user) {
+      setIsOpen(true);
+    }
+  }, [context?.user]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const nativeEvent = e.nativeEvent as SubmitEvent;
+    const submitter = nativeEvent.submitter as HTMLButtonElement | null;
+
+    if (submitter?.value === "yes") {
+      console.log("yes");
+    } else {
+      setSummary((prev) => ({
+        ...prev,
+        orders: [],
+      }));
+    }
+
+    setIsOpen(false);
+  };
+
+  return (
+    <Dialog open={isOpen}>
+      <DialogContent className="w-full h-full sm:h-auto sm:max-w-[650px] gap-4 rounded pb-6">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 p-4 justify-between md:justify-start"
+        >
+          <DialogHeader className="flex flex-row justify-between items-center relative pb-40">
+            <DialogTitle className="absolute top-[56px] left-0 right-0">
+              <h1 className="uppercase text-center font-hagerman text-2xl font-normal">
+                You have {daysUntilNextDrop} days until the next drop
+              </h1>
+              <p className="text-center font-helvetica text-base font-normal mt-2 mb-6 text-[#8E8E93]">
+                Do you want us to send you a Sync package to cover the next{" "}
+                {daysUntilNextDrop} days. This takes you up to{" "}
+                {deliveryDate
+                  ? format(new Date(deliveryDate), "MMMM dd yyyy")
+                  : ""}{" "}
+                and aligns you with the team.
+              </p>
+            </DialogTitle>
+            <DialogClose
+              onClick={() => setIsOpen(false)}
+              className="absolute top-0 right-0"
+            >
+              <div className="border border-grey32 w-10 h-10 rounded-full flex justify-center items-center">
+                <Image
+                  src="/images/icons/close-black-icon.svg"
+                  alt="Close icon"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </DialogClose>
+          </DialogHeader>
+          <VisuallyHidden>
+            <DialogDescription />
+          </VisuallyHidden>
+
+          {orders?.map((order) => (
+            <OrderSummaryCard
+              key={order.id}
+              model={order}
+              updateQuantityAction={updateQuantityAction}
+              discount={discount}
+              className="bg-[#F6F6F6] p-4 mb-6"
+            />
+          ))}
+          <Button
+            type="submit"
+            className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
+            value="yes"
+          >
+            Yes
+          </Button>
+          <Button
+            type="submit"
+            className={`text-blue text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-[#7878801F]`}
+            value="no"
+          >
+            No
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

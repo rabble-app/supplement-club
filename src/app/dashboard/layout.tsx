@@ -9,6 +9,8 @@ import ShowTextBasedOnRoute from "@/components/dashboard/ShowTextBasedOnRoute";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
+import { IMetadata } from "@/utils/models/api/response/IUserResponse";
+import useLocalStorage from "use-local-storage";
 
 export default function RootLayout({
 	children,
@@ -17,10 +19,12 @@ export default function RootLayout({
 }>) {
 	const router = useRouter();
 	const context = useUser();
+	const [, setCheckoutData] = useLocalStorage<IMetadata>("checkoutData", {});
 
 	function handleLogout() {
 		context?.logout();
 		router.push("/");
+		setCheckoutData(undefined);
 	}
 	return (
 		<div>

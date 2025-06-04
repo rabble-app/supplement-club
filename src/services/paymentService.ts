@@ -10,6 +10,7 @@ import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentInte
 import type ISetupIntentApiResponse from "@/utils/models/services/ISetupIntentApiResponse";
 import type IUserPaymentOptionsApiResponse from "@/utils/models/services/IUserPaymentOptionsApiResponse";
 import { mapUserPaymentOptionModel } from "@/utils/mapping";
+import IMembershipSubscriptionApiResponse from "@/utils/models/services/IMembershipSubscriptionApiResponse";
 
 export const paymentService = {
 	addCard: async (paymentMethodId: string, stripeCustomerId: string) =>
@@ -154,5 +155,13 @@ export const paymentService = {
 		return data?.map<IUserPaymentOptionModel>((r: IUserPaymentOptionResponse) =>
 			mapUserPaymentOptionModel(r),
 		);
+	},
+
+	async getMembershipSubscription(id: string) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.MEMBERSHIP_SUBSCRIPTION(id),
+			"GET",
+		)) as IMembershipSubscriptionApiResponse;
+		return data;
 	},
 };
