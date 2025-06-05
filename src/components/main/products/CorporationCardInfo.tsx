@@ -10,7 +10,7 @@ export default function CorporationCardInfo({
 	name?: string;
 	businessName?: string;
 	unitsOfMeasurePerSubUnit?: string;
-	quantityOfSubUnitPerOrder?: string;
+	quantityOfSubUnitPerOrder?: number;
 }>) {
 	const [firstWord, ...rest] = (name ?? "").split(" ");
 	const [units] = useState(
@@ -39,7 +39,7 @@ export default function CorporationCardInfo({
 					width={24}
 					height={24}
 				/>
-				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder}${units}`}</p>
+				<p className="text-[14px] leading-[16px] text-grey6">{`${quantityOfSubUnitPerOrder} ${unitsOfMeasurePerSubUnit}`}</p>
 			</div>
 		</div>
 	);

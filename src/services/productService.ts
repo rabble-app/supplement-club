@@ -1,3 +1,5 @@
+/** @format */
+
 import { PRODUCT_ENDPOINTS } from "@/utils/endpoints";
 
 import { apiRequest } from "@/utils/helpers";
@@ -11,37 +13,41 @@ import type ISingleManagePlanApiResponse from "@/utils/models/services/ISingleMa
 import { mapProductModel, mapSingleProductModel } from "@/utils/mapping";
 
 export const productService = {
-	product: async (id: string): Promise<ISingleProductModel> => {
-		const { data } = (await apiRequest(
-			PRODUCT_ENDPOINTS.PRODUCT(id),
-			"GET",
-		)) as ISingleManagePlanApiResponse;
-		return data && mapSingleProductModel(data);
-	},
-	products: async (userId?: string): Promise<IProductCardModel[]> => {
-		const { data } = (await apiRequest(
-			PRODUCT_ENDPOINTS.PRODUCTS(userId),
-			"GET",
-		)) as IManagePlanApiResponse;
-		return data?.map<IProductCardModel>((r: IProductResponse) =>
-			mapProductModel(r),
-		);
-	},
-	productsLimit: async (limit: number): Promise<IProductCardModel[]> => {
-		const { data } = (await apiRequest(
-			PRODUCT_ENDPOINTS.PRODUCTS_LIMIT(limit),
-			"GET",
-		)) as IManagePlanApiResponse;
-		return data?.map<IProductCardModel>((r: IProductResponse) =>
-			mapProductModel(r),
-		);
-	},
+  product: async (
+    id: string,
+    teamId?: string,
+    userId?: string
+  ): Promise<ISingleProductModel> => {
+    const { data } = (await apiRequest(
+      PRODUCT_ENDPOINTS.PRODUCT(id, teamId, userId),
+      "GET"
+    )) as ISingleManagePlanApiResponse;
+    return data && mapSingleProductModel(data);
+  },
+  products: async (userId?: string): Promise<IProductCardModel[]> => {
+    const { data } = (await apiRequest(
+      PRODUCT_ENDPOINTS.PRODUCTS(userId),
+      "GET"
+    )) as IManagePlanApiResponse;
+    return data?.map<IProductCardModel>((r: IProductResponse) =>
+      mapProductModel(r)
+    );
+  },
+  productsLimit: async (limit: number): Promise<IProductCardModel[]> => {
+    const { data } = (await apiRequest(
+      PRODUCT_ENDPOINTS.PRODUCTS_LIMIT(limit),
+      "GET"
+    )) as IManagePlanApiResponse;
+    return data?.map<IProductCardModel>((r: IProductResponse) =>
+      mapProductModel(r)
+    );
+  },
 
-	productTags: async (): Promise<IProductTagResponse[]> => {
-		const { data } = (await apiRequest(
-			PRODUCT_ENDPOINTS.PRODUCTTAGS(),
-			"GET",
-		)) as IProductTagsApiResponse;
-		return data;
-	},
+  productTags: async (): Promise<IProductTagResponse[]> => {
+    const { data } = (await apiRequest(
+      PRODUCT_ENDPOINTS.PRODUCTTAGS(),
+      "GET"
+    )) as IProductTagsApiResponse;
+    return data;
+  },
 };

@@ -28,6 +28,10 @@ export const PAYMENT_ENDPOINTS = {
 	REMOVE_CARD: "payments/remove-card?isSupplementApp=true",
 	GET_PAYMENT_OPTIONS: (id: string) =>
 		`payments/options/${id}?isSupplementApp=true`,
+	MEMBERSHIP_SUBSCRIPTION: (id: string) =>
+		`payments/subscription/status/${id}`,
+	UPDATE_MEMBERSHIP_STATUS: (id: string) =>
+		`payments/subscription/status/${id}`,
 };
 
 export const USER_ENDPOINTS = {
@@ -56,10 +60,12 @@ export const REFERAL_ENDPOINTS = {
 	REFERAL_INFO: "referrals/info",
 	REFERAL_HISTORY: "referrals/tracking",
 	CLAIM_REWARD: "referrals/claim-rewards",
+	APPLY_REFERRAL_CODE: "referrals/apply-user-code",
 };
 
 export const PRODUCT_ENDPOINTS = {
-	PRODUCT: (id: string) => `products/${id}`,
+	PRODUCT: (id: string, teamId?: string, userId?: string) =>
+		`products/${id}?teamId=${teamId ?? ""}&userId=${userId ?? ""}`,
 	PRODUCTS: (userId?: string) => `products/supplement/list?userId=${userId}`,
 	PRODUCTS_LIMIT: (limit?: number) => `products/supplement/list?limit=${limit}`,
 	PRODUCTTAGS: () => "products/supplement/tags",
