@@ -30,7 +30,6 @@ export function UserProvider({ children, state }: Readonly<UserProviderProps>) {
 	const logout = () => {
 		setUser(null);
 		Cookies.remove("session");
-		window.location.href = "/";
 	};
 
 	const contextValue: UserContextType = {

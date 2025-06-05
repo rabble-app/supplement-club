@@ -13,8 +13,4 @@ export default interface IMembershipSummaryModel {
 	isFree?: boolean;
 	imageBorder?: boolean;
 	isFoundingMember?: boolean;
-	capsulePerDay?: number;
-	gramsPerCount?: number;
-	discount?: number;
-	isMembership?: boolean;
 }

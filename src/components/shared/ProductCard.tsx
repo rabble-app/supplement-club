@@ -52,7 +52,6 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 					alt={model.imageKey ?? model.name}
 					width={165}
 					height={300}
-					unoptimized
 				/>
 			</div>
 			<div className="grid gap-y-[16px]">
@@ -110,13 +109,9 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 					</span>
 				</div>
 
-				<Button className={`${model.isComming ? "bg-grey29 cursor-not-allowed" : "bg-blue"} font-bold`} asChild disabled={model.isComming} onClick={(e) => {
-					if (model.isComming) {
-						e.preventDefault();
-					}
-				}}>
+				<Button className="bg-blue font-bold" asChild>
 					<Link
-						href={model.isComming ? "#!" : productLink}
+						href={productLink}
 						className="flex justify-between py-[16px] px-[24px] w-full"
 					>
 						<span className="leading-[18px] font-bold font-inconsolata text-lg">

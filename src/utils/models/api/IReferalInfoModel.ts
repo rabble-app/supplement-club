@@ -6,7 +6,6 @@ export default interface IReferalInfoModel {
 	bonuses: Bonus[];
 	totalSaved: number;
 	referrer: Referrer;
-	userCode: string;
 }
 
 export interface Bonus {
