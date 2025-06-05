@@ -67,7 +67,8 @@ export default function Checkout({
   );
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
-  const [isReferralCodeApplied, setIsReferralCodeApplied] = useState<boolean>(false);
+  const [isReferralCodeApplied, setIsReferralCodeApplied] =
+    useState<boolean>(false);
   // const [membershipSubscription, setMembershipSubscription] =
   //   useState<IMembershipSubscriptionResponse>();
   const steps = ["Create an Account", "Delivery Address", "Payment Details"];
@@ -237,7 +238,7 @@ export default function Checkout({
 
   useEffect(() => {
     fetchReferralInfo();
-  }, [isReferralCodeApplied]);
+  }, []);
 
   const fetchReferralInfo = async () => {
     try {
@@ -314,6 +315,14 @@ export default function Checkout({
       setStep(1);
     }
   }, [context?.user]);
+
+  useEffect(() => {
+    if ((step !== 4)) {
+      if (context?.user && basket.length > 0) {
+        router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
+      }
+    }
+  }, [context?.user, basket, data?.productId, data?.teamId, step]);
 
   return (
     <>

@@ -492,7 +492,8 @@ export default function ProductDetails({
           </div>
         )}
 
-        {context?.user && basket.length === 0 && !product?.isComming && (
+        {((context?.user && basket.length === 0 && !product?.isComming) ||
+          (!context?.user && !product?.isComming)) && (
           <div className="flex flex-col gap-[24px]">
             <CapsuleBox
               rrp={productRrp}
@@ -605,9 +606,9 @@ export default function ProductDetails({
         )}
         {context?.user && (
           <div className="grid gap-[28px] w-full">
-            {hasUserProduct && (
+            {/* {hasUserProduct && (
               <ReferralCardsWithLink className="border-[1px]" />
-            )}
+            )} */}
 
             <div>
               {basket.map((item) => (
@@ -655,13 +656,13 @@ export default function ProductDetails({
                       </p>
                     </div>
                     <div className="flex justify-between items-center gap-2">
-                    <p className="text-base font-normal text-blue bg-[#E5E6F4] px-2.5 py-1 rounded-full font-hagerman w-fit">
-                      NEXT DROP:{" "}
-                      {product?.deliveryDate
-                        ? format(
-                            new Date(product?.deliveryDate ?? ""),
-                            "dd MMMM yyyy"
-                          )
+                      <p className="text-base font-normal text-blue bg-[#E5E6F4] px-2.5 py-1 rounded-full font-hagerman w-fit">
+                        NEXT DROP:{" "}
+                        {product?.deliveryDate
+                          ? format(
+                              new Date(product?.deliveryDate ?? ""),
+                              "dd MMMM yyyy"
+                            )
                           : "N/A"}
                       </p>
                       <Image
@@ -677,12 +678,14 @@ export default function ProductDetails({
               ))}
             </div>
 
-            {basket.length > 0 && <ConfirmJoining
-              email={context?.user?.email}
-              userType="existing"
-              referralInfo={referralInfo}
-              step={1}
-            />}
+            {basket.length > 0 && (
+              <ConfirmJoining
+                email={context?.user?.email}
+                userType="existing"
+                referralInfo={referralInfo}
+                step={1}
+              />
+            )}
 
             {/* <SummaryProduct
               showOnlyTotal={false}
