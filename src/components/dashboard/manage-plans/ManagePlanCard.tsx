@@ -6,7 +6,7 @@ import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import OptBackInDialog from "../subscription-managment/OptBackInDialog";
 import ReactivatePlanDialog from "../subscription-managment/ReactivatePlanDialog";
 
@@ -30,12 +30,32 @@ export default function ManagePlanCard({
 }: Readonly<{
 	model: IManagePlanModel;
 }>) {
-	const units = model.team?.basket[0]?.product?.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
-	const rrp = Number(model.team?.basket[0]?.product?.rrp ?? 0);
-	const price = Number(model.team?.basket[0]?.product?.price ?? 0);
+	const [totalCapsules, setTotalCapsules] = useState(0);
+	const [totalRrp, setTotalRrp] = useState(0);
+	const [percentage, setPercentage] = useState(0);
 
-	const discountPercentage = ((rrp - price) / rrp) * 100;
+	useEffect(() => {
+		const totalSum = model?.team?.basket?.reduce(
+			(sum, item) => sum + (item?.capsulePerDay ?? 0) * 0.25,
+			0,
+		);
+		const totalRRP = Math.round(
+			model?.team?.basket?.reduce(
+				(sum, item) => sum + (item?.product?.rrp ?? 0),
+				0,
+			),
+		);
+		const totalCaps = model?.team?.basket?.reduce(
+			(sum, item) => sum + (item?.capsulePerDay ?? 0),
+			0,
+		);
 
+		setTotalRrp(totalRRP);
+		if (totalSum > 0 && +totalRRP > 0) {
+			setPercentage(totalSum / Number(totalRRP));
+		}
+		setTotalCapsules(totalCaps);
+	}, [model]);
 	return (
 		<ConditionalLink
 			href={`/dashboard/manage-plans/${model.id}`}
@@ -66,25 +86,25 @@ export default function ManagePlanCard({
 							</div>
 
 							<div className="text-[16px] font-[800] text-black flex items-center gap-[5px] font-inconsolata">
-								£{Number(model.team?.basket[0]?.product?.price ?? 0) * (model.quantity ?? 0)}{" "}
+								£{model.team?.basket[0]?.product?.price ?? 0}{" "}
 								<span className="text-[10px] leading-[11px] text-grey1 font-bold font-inconsolata">
-									(£{(Number(model.team?.basket[0]?.product?.price ?? 0 )* (model.quantity) / (90* (model.capsulePerDay ?? 0))).toFixed(2)}/count)
+									(£0.25 / count)
 								</span>
 							</div>
 
 							<div className="text-[12px] leading-[13px] font-inconsolata font-[400] text-grey4">
 								RRP{" "}
 								<span className="text-[12px] leading-[13px] font-inconsolata line-through font-bold">
-									£{Number(model.team?.basket[0]?.product?.rrp ?? 0) * (model.quantity ?? 0)}
+									£{totalRrp}
 								</span>{" "}
 								<span className="text-[12px] leading-[13px] font-inconsolata font-bold text-blue">
-									{Number(discountPercentage).toFixed(2)}% OFF
+									{Number(percentage).toFixed(2)}% OFF
 								</span>
 							</div>
 
 							<div className="text-[12px] leading-[13px] text-grey4 font-helvetica">
-								{model.capsulePerDay} {units} per Day - {90 * model.capsulePerDay}{" "}
-								{units}
+								{totalCapsules} Capsules per Day - {model.quantity ?? 0}{" "}
+								Capsules
 							</div>
 						</div>
 					</div>

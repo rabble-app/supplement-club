@@ -13,7 +13,7 @@ export function middleware(req: NextRequest) {
 	if (searchParams.has("ref")) {
 		res.cookies.set("refCode", searchParams.get("ref") ?? "", {
 			httpOnly: false,
-			secure: process.env.NODE_ENV === "production",
+			secure: true,
 			path: "/",
 		});
 	}

@@ -49,7 +49,7 @@ export default async function Footer() {
 						<p className="text-[18px] leading-[21px] font-[700] font-inconsolata text-black1">
 							Shop
 						</p>
-						{products?.map((product) => (
+						{products.map((product) => (
 							<Link
 								className="text-[15px] leading-[18px] mt-[12px] font-figtree text-black1 line-clamp-3 truncate block"
 								href={`/products/${product.id}`}

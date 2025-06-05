@@ -13,9 +13,4 @@ export default interface IOrderSummaryModel {
 	isFree?: boolean;
 	imageBorder?: boolean;
 	isFoundingMember?: boolean;
-	pricePerCount?: number;
-	rrpPerCount?: number;
-	capsulePerDay?: number;
-	gramsPerCount?: number;
-	isMembership?: boolean;
 }

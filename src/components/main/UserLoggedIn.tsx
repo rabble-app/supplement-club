@@ -4,15 +4,13 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 
 import { useUser } from "@/contexts/UserContext";
-import type { IMetadata, IUserResponse } from "@/utils/models/api/response/IUserResponse";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { useEffect, useState } from "react";
-import useLocalStorage from "use-local-storage";
 export default function UserLoggedIn({
 	user,
 }: Readonly<{ user?: IUserResponse }>) {
 	const context = useUser();
 	const [userName, setUserName] = useState("");
-	const [, setCheckoutData] = useLocalStorage<IMetadata>("checkoutData", {});
 
 	useEffect(() => {
 		if (user?.firstName && user?.lastName) {
@@ -26,10 +24,7 @@ export default function UserLoggedIn({
 			</div>
 			<DialogClose asChild className=" w-[72px]">
 				<Button
-					onClick={() => {
-						context?.logout();
-						setCheckoutData(undefined);
-					}}
+					onClick={() => context?.logout()}
 					className="p-[0] flex gap-[10px] text-[16px] leading-[16px] font-inconsolata"
 					asChild
 				>

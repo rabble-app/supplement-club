@@ -30,8 +30,8 @@ export default function Header() {
 			<div
 				className={`flex justify-center items-center flex-nowrap overflow-auto whitespace-nowrap h-[40px] bg-blue2 ${pathname === "/" ? "sticky top-0 z-[1000]" : ""}`}
 			>
-				<div className="text-blue underline">
-					<span className="font-inconsolata font-bold text-blue">
+				<div className="text-blue3 underline">
+					<span className="font-inconsolata font-bold">
 						NEXT DROP: {remainsDaysToNextQuater} DAYS! - Join Today and Get 6
 						Months Free. Cancel Anytime.
 					</span>

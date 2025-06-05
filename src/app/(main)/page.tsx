@@ -214,7 +214,6 @@ export default async function Home() {
 					alt="Vercel logomark"
 					width={754}
 					height={465}
-					unoptimized
 				/>
 				<a href="#products">
 					<Image
@@ -223,7 +222,6 @@ export default async function Home() {
 						alt="Buy product"
 						width={754}
 						height={465}
-						unoptimized
 					/>
 				</a>
 			</div>
@@ -240,6 +238,7 @@ export default async function Home() {
 						))}
 					</div>
 				</div>
+
 				<div className="relative flex flex-col md:max-h-[750px]">
 					<div className="md:w-[574px] h-full">
 						<Image
@@ -248,7 +247,6 @@ export default async function Home() {
 							alt={productModel?.imageKey ?? "main product"}
 							width={308}
 							height={533}
-							unoptimized
 						/>
 					</div>
 					<div className="bg-blue">

@@ -10,7 +10,6 @@ import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentInte
 import type ISetupIntentApiResponse from "@/utils/models/services/ISetupIntentApiResponse";
 import type IUserPaymentOptionsApiResponse from "@/utils/models/services/IUserPaymentOptionsApiResponse";
 import { mapUserPaymentOptionModel } from "@/utils/mapping";
-import IMembershipSubscriptionApiResponse from "@/utils/models/services/IMembershipSubscriptionApiResponse";
 
 export const paymentService = {
 	addCard: async (paymentMethodId: string, stripeCustomerId: string) =>
@@ -176,8 +175,6 @@ export const paymentService = {
 				status,
 			},
 		)) as IMembershipSubscriptionApiResponse;
-
-		console.log("data", userId, status);
 
 		return {
 			status: data.status,
