@@ -30,6 +30,8 @@ export const PAYMENT_ENDPOINTS = {
 		`payments/options/${id}?isSupplementApp=true`,
 	MEMBERSHIP_SUBSCRIPTION: (id: string) =>
 		`payments/subscription/status/${id}`,
+	UPDATE_MEMBERSHIP_STATUS: (id: string) =>
+		`payments/subscription/status/${id}`,
 };
 
 export const USER_ENDPOINTS = {

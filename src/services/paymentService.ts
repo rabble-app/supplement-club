@@ -164,4 +164,27 @@ export const paymentService = {
 		)) as IMembershipSubscriptionApiResponse;
 		return data;
 	},
+
+	async updateMembershipStatus(
+		userId: string,
+		status: "ACTIVE" | "CANCELED",
+	) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.UPDATE_MEMBERSHIP_STATUS(userId),
+			"PATCH",
+			{
+				status,
+			},
+		)) as IMembershipSubscriptionApiResponse;
+
+		console.log("data", userId, status);
+
+		return {
+			status: data.status,
+			expiryDate: data.expiryDate,
+		} as {
+			status: "ACTIVE" | "CANCELED";
+			expiryDate: string;
+		};
+	},
 };
