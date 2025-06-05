@@ -1,9 +1,7 @@
-/** @format */
-
-"use client";;
+"use client";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import router from "next/router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -13,125 +11,102 @@ import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
+import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
-import { Loader2Icon } from "lucide-react";
-import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 
 export default function CreateAccount({
-  params,
-  children,
+	params,
+	children,
 }: Readonly<{
-  params: Promise<{ productID: string }>;
-  children?: React.ReactNode;
+	params: Promise<{ productID: string }>;
+	children?: React.ReactNode;
 }>) {
-  const [productId, setProductId] = useState<string>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
+	const context = useUser();
+	const { setUser } = useUserStore((state) => state);
+	const [productId, setProductId] = useState<string>();
 
-  const router = useRouter();
+	useEffect(() => {
+		const fetchProductId = async () => {
+			const { productID } = await params;
+			setProductId(productID);
+		};
+		fetchProductId();
+	}, [params]);
 
-  useEffect(() => {
-    const fetchProductId = async () => {
-      const { productID } = await params;
-      setProductId(productID);
-    };
-    fetchProductId();
-  }, [params]);
+	const currentForm = useForm({
+		resolver: zodResolver(createAccountSchema),
+		mode: "onChange",
+	});
 
-  const currentForm = useForm({
-    resolver: zodResolver(createAccountSchema),
-    mode: "onChange",
-  });
+	async function handleSubmit(e: FormData) {
+		const result = (await authService.register(
+			e.get("email")?.toString() ?? "",
+			e.get("password")?.toString() ?? "",
+			productId ?? "",
+			Cookies.get("refCode") ?? "",
+		)) as IResponseModel;
+		if (result.statusCode === 200 || result.statusCode === 201) {
+			const userData = result.data as IUserResponse;
+			setUser(userData);
+			context?.setNewUser(userData);
 
-  async function handleSubmit(e: FormData) {
-    setIsSubmitting(true);
+			router.push(
+				`/auth/email-verify?redirect=/products/${productId}/checkout`,
+			);
+		} else {
+			CustomToast({
+				title: JSON.parse(result?.error).message,
+				status: StatusToast.ERROR,
+			});
+		}
 
-    try {
-      const result = (await authService.register(
-        e.get("email")?.toString() ?? "",
-        e.get("password")?.toString() ?? "",
-        productId ?? "",
-        checkoutData,
-        Cookies.get("refCode") ?? ""
-      )) as IResponseModel;
+		// remove from browser
+		Cookies.remove("refCode");
+	}
 
-      if (result.statusCode === 200 || result.statusCode === 201) {
-        router.push(
-          `/auth/email-verify?redirect=/products/${productId}/checkout`
-        );
-      } else {
-        throw new Error(result?.error);
-      }
+	return (
+		<Form {...currentForm}>
+			<form
+				action={(e) => handleSubmit(e)}
+				className="flex flex-col gap-[24px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
+			>
+				{children}
 
-      localStorage.removeItem("checkoutData");
-      // remove from browser
-      Cookies.remove("refCode");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      let message = "Something went wrong";
-      try {
-        const parsedError = JSON.parse(error.message);
-        message = parsedError.message || parsedError.error || message;
-      } catch {
-        message = error.message || message;
-      }
-      CustomToast({
-        title: message,
-        status: StatusToast.ERROR,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+				<FormFieldComponent
+					form={currentForm}
+					label="Email*"
+					placeholder="e.g. newton@mail.com"
+					id="email"
+					name="email"
+				/>
 
-  return (
-    <Form {...currentForm}>
-      <form
-        action={(e) => handleSubmit(e)}
-        className="flex flex-col gap-[24px] md:p-[32px] md:border-grey12 md:border-[1px] md:border-solid"
-      >
-        {children}
+				<FormFieldComponent
+					form={currentForm}
+					label="Password*"
+					placeholder="*************"
+					id="password"
+					name="password"
+					type="password"
+				/>
 
-        <FormFieldComponent
-          form={currentForm}
-          label="Email*"
-          placeholder="e.g. newton@mail.com"
-          id="email"
-          name="email"
-        />
+				<Button type="submit" className="bg-blue text-white w-full font-bold">
+					Next
+				</Button>
 
-        <FormFieldComponent
-          form={currentForm}
-          label="Password*"
-          placeholder="*************"
-          id="password"
-          name="password"
-          type="password"
-        />
-
-        <Button
-          type="submit"
-          className={`bg-blue text-white w-full font-bold ${
-            isSubmitting ? "opacity-60" : ""
-          }`}
-        >
-          {isSubmitting && <Loader2Icon className="animate-spin mr-2" />}
-          Next
-        </Button>
-
-        <div className="flex justify-center gap-[5px] items-center text-[16px] leading-[24px] font-roboto">
-          Have an account?
-          <Link
-            className="text-blue text-[16px] leading-[24px] font-roboto"
-            href={`/auth/login?redirect=/products/${productId}/checkout`}
-          >
-            Log in
-          </Link>
-        </div>
-      </form>
-    </Form>
-  );
+				<div className="flex justify-center gap-[5px] items-center text-[16px] leading-[24px] font-roboto">
+					Have an account?
+					<Link
+						className="text-blue text-[16px] leading-[24px] font-roboto"
+						href={`/auth/login?redirect=/products/${productId}/checkout`}
+					>
+						Log in
+					</Link>
+				</div>
+			</form>
+		</Form>
+	);
 }

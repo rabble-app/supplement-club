@@ -1,5 +1,3 @@
-import IOrderSummaryModel from "../../IOrderSummaryModel";
-import ISubscriptionSummaryModel from "../../ISubscriptionSummaryModel";
 import type { IBaseTimestamps } from "../IBaseTimestamps";
 import type IShippingResponse from "./IShippingResponse";
 
@@ -32,29 +30,8 @@ export interface IUserResponse extends IBaseTimestamps {
 	metadata?: IMetadata;
 }
 
-export interface IMetadata {
+interface IMetadata {
 	productId?: string;
-	pouchSize?: number;
-	orders?: IOrderSummaryModel[] | ISubscriptionSummaryModel[];
-	price?: number;
-	pricePerPoche?: number;
-	capsuleCount?: number;
-	deliveryDate?: string;
-	alignmentPoucheSize?: number;
-	daysUntilNextDrop?: number;
-	unitsOfMeasurePerSubUnit?: string;
-	quantityOfSubUnitPerOrder?: number;
-	gramsPerCount?: number;
-	isComming?: boolean;
-	rrp?: number;
-	rrpPerCount?: number;
-	pricePerCount?: number;
-	teamName?: string;
-	teamId?: string;
-	name?: string;
-	discount?: number;
-	topUpQuantity?: number;
-	quantity?: number;
 }
 
 interface IBasketsC {

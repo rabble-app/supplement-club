@@ -1,6 +1,5 @@
 import { AUTH_ENDPOINTS } from "@/utils/endpoints";
 import { apiRequest } from "@/utils/helpers";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 
 export const authService = {
 	login: async (email: string, password: string) =>
@@ -14,7 +13,6 @@ export const authService = {
 		email: string,
 		password: string,
 		productId: string,
-		summary: IMetadata,
 		referralCode: string,
 	) =>
 		await apiRequest(AUTH_ENDPOINTS.REGISTER, "POST", {
@@ -22,7 +20,7 @@ export const authService = {
 			password,
 			role: "USER",
 			referralCode: referralCode,
-			metadata: { ...summary, productId: productId },
+			metadata: { productId },
 		}),
 
 	resetPassword: async (email: string) =>
