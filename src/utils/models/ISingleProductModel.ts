@@ -21,13 +21,14 @@ export default interface ISingleProductModel {
 	status?: string;
 	orderUnit?: string;
 	subUnit?: string;
-	quantityOfSubUnitPerOrder?: string;
+	quantityOfSubUnitPerOrder?: number;
 	unitsOfMeasurePerSubUnit?: string;
 	measuresPerSubUnit?: number;
 	approvalStatus?: string;
 	stock?: number;
 	tags?: string[];
 	priceInfo?: IPriceInfoModel[];
+	pricePerCount?: number;
 	capsuleInfo?: ICapsuleInfoModel[];
 	formulationSummary?: string[];
 	productBenefits?: IProductBenefits[];
@@ -42,4 +43,17 @@ export default interface ISingleProductModel {
 	orderId?: string;
 	supplementTeamProducts?: ISupplementTeamProducts;
 	healthCategories?: IHealthCategories[];
+	nextPriceDiscountLevel?: {
+		membersNeeded: number;
+		expectedDiscount: number;
+	};
+	deliveryDate?: string;
+	daysUntilNextDrop?: number;
+	alignmentPoucheSize?: number;
+	poucheSize?: number;
+	rrpPerCount?: number;
+	discount?: number;
+	activePercentageDiscount?: number;
+	gramsPerCount?: number;
+	pricePerPoche?: number;
 }

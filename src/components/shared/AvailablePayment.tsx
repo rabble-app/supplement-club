@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AvailablePayment() {
 	return (
-		<div className="flex flex-col gap-[8px]">
+		<div className="flex flex-col gap-[8px] my-8">
 			<div className="flex justify-center gap-[8px] items-center h-[32px]">
 				<Image
 					src="/images/icons/security-card-icon.svg"

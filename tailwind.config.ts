@@ -120,7 +120,7 @@ export default {
 				login: "0px 1px 2px 0px #0000000D",
 				"3": "0px 4px 16px 0px #00000014",
 				"4": "0px 8px 8px -4px #00000008",
-				"5": "#0px 1px 2px 0px #0000000F",
+				"5": "0px 1px 2px 0px #0000000F",
 				progress: "0px 4px 4px 0px #5B5B5B1A inset",
 			},
 		},

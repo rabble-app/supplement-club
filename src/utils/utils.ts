@@ -9,15 +9,18 @@ export function getQuarterInfo() {
 	const date = new Date();
 	const month = date.getMonth();
 	const currentQuarter = Math.floor(month / 3) + 1;
-
-	// Determine the start of the next quarter
-	const nextQuarterMonth = (Math.floor(month / 3) + 1) * 3;
+	const nextQuarterMonth = currentQuarter * 3;
 	const nextYear =
-		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;
+		nextQuarterMonth < 12 ? date.getFullYear() : date.getFullYear() + 1;	
+	// Determine the start of the next quarter
 	const nextQuarterStart = new Date(nextYear, nextQuarterMonth % 12, 1);
+	// const nextQuarterMonth = (Math.floor(month / 3) + 1) * 3;
+
 	// Calculate days remaining for the next quarter
-	const diffTime = nextQuarterStart.getTime() - date.getTime();
-	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	const today = new Date();
+	const normalizedNextQuarterMonth = nextQuarterMonth % 12;
+	const firstDayOfNextQuarter = new Date(nextYear, normalizedNextQuarterMonth, 1);
+	const remainsDaysToNextQuater = getDifferenceInDays(firstDayOfNextQuarter.toISOString(), today.toISOString());
 
 	// Previous quarter calculations
 	const prevQuarterMonth = (Math.floor(month / 3) - 1) * 3;
@@ -40,17 +43,13 @@ export function getQuarterInfo() {
 		prevYear,
 		Math.floor(prevQuarterMonth / 3) + 1,
 	);
-	const remainsDaysToNextQuater = getDifferenceInDays(
-		new Date(nextYear, endDate.getMonth(), 1).toISOString(),
-		new Date().toISOString(),
-	);
 
 	const nextDeliveryText = `${nextQuarterStart.toLocaleString("en", { month: "long" })} 1st ${nextYear}`;
 	const nextDeliveryTextShort = `${nextQuarterStart.toLocaleString("en", { month: "short" })} 1st ${nextYear}`;
 
 	return {
 		currentQuarter,
-		daysToNextQuarter: diffDays,
+		daysToNextQuarter: remainsDaysToNextQuater,
 		year: date.getFullYear(),
 		nextQuarterMonth,
 		startDate,

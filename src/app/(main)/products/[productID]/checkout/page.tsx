@@ -1,15 +1,11 @@
-"use client";
+/** @format */
 
-import { useCallback, useEffect, useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import { useUser } from "@/contexts/UserContext";
-import { productService } from "@/services/productService";
-import { useProductStore } from "@/stores/productStore";
-import { getQuarterInfo } from "@/utils/utils";
-
-import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 
 import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
@@ -18,243 +14,368 @@ import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
 import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import PaymentList from "@/components/shared/PaymentList";
-import Spinner from "@/components/shared/Spinner";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
+import { format } from "date-fns";
+import IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
+import AlignmentDialog from "@/components/main/products/[productID]/checkout/AlignmentDialog";
+import ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
+import useLocalStorage from "use-local-storage";
+import { IMetadata } from "@/utils/models/api/response/IUserResponse";
+import { productService } from "@/services/productService";
+import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
+import { referalService } from "@/services/referalService";
+import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
+// import { paymentService } from "@/services/paymentService";
+// import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
 const PreOrderMessage = () => {
-	return (
-		<div className="grid gap-[16px]">
-			<p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-				PRE-ORDER Now to Become a Founding Member
-			</p>
-			<div className="grid gap-[8px]">
-				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-					Only get charged when we hit 50 pre-orders.
-				</p>
-				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-					By becoming a founding member you get an extra 10% off the team price
-					forever.
-				</p>
-				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-					Lead time is 6 weeks from when we charge you - but you get 10% off
-					your subscription forever.
-				</p>
-			</div>
-		</div>
-	);
+  return (
+    <div className="grid gap-[16px]">
+      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+        PRE-ORDER Now to Become a Founding Member
+      </p>
+      <div className="grid gap-[8px]">
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          Only get charged when we hit 50 pre-orders.
+        </p>
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          By becoming a founding member you get an extra 10% off the team price
+          forever.
+        </p>
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          Lead time is 6 weeks from when we charge you - but you get 10% off
+          your subscription forever.
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default function Checkout({
-	params,
+  params,
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
-	const [loading, setLoading] = useState(true);
-	const router = useRouter();
-	const days = 90;
-	const context = useUser();
-	const productStore = useProductStore();
+  const router = useRouter();
 
-	const [step, setStep] = useState<number>(1);
-	const [productId, setProductId] = useState<string>("");
-	const [totalPrice, setTotalPrice] = useState<number>(0);
-	const [unitPerPouches, setUnitPerPouches] = useState<number>(0);
-	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
+  const context = useUser();
 
-	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
-	const [product, setProduct] = useState<ISingleProductModel>();
-	const [summary, setSummary] = useState<ISummaryProductModel>(
-		{} as ISummaryProductModel,
-	);
+  const [step, setStep] = useState<number>(1);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [checkoutData, setCheckoutData] = useLocalStorage<IMetadata>(
+    "checkoutData",
+    {}
+  );
+  const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
+  const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
+  const [isReferralCodeApplied, setIsReferralCodeApplied] = useState<boolean>(false);
+  // const [membershipSubscription, setMembershipSubscription] =
+  //   useState<IMembershipSubscriptionResponse>();
+  const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
-	const { year, endDate, remainsDaysToNextQuater } = getQuarterInfo();
+  // const checkoutData =
+  //   Object.keys(JSON.parse(localStorage.getItem("checkoutData") || "{}"))
+  //     .length > 0
+  //     ? JSON.parse(localStorage.getItem("checkoutData") || "{}")
+  //     : context?.user?.metadata;
 
-	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+  // const [data] = useState(
+  //   () =>
+  //     Object.keys(checkoutData).length > 0
+  //       ? checkoutData
+  //       : context?.user?.metadata
+  // );
 
-	const [capsulesPackage, setCapsulesPackage] = useState<number>(
-		remainsDaysToNextQuater * capsulePerDay,
-	);
+  const data = checkoutData as IMetadata;
 
-	useEffect(() => {
-		const fetchProductId = async () => {
-			const { productID } = await params;
-			setProductId(productID);
-			const response = await productService.product(productID);
+  const nextDeliveryProductText = `Next Drop Delivered: ${
+    data?.deliveryDate
+      ? format(new Date(data?.deliveryDate ?? ""), "MMMM dd yyyy")
+      : ""
+  }`;
 
-			const localUnits =
-				response.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
-			setProduct(response);
+  const [capsulePerDay] = useState(data?.capsuleCount ?? 2);
 
-			const unit =
-				response.unitsOfMeasurePerSubUnit === "capsules" ? "capsules" : "g";
-			const unitPerPouches = unit === "capsules" ? 30 : 150;
-			setUnitPerPouches(unitPerPouches);
+  const units = data?.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
 
-			const orders = [];
-			const subscriptions = [];
-			const membership = [
-				{
-					id: "12",
-					alt: "supplement mockup",
-					description: "Free for your first 2 drops",
-					name: "Membership Subscription",
-					delivery: `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`,
-					src: "/images/membership-card.svg",
-					capsules: 0,
-					price: 0,
-					imageBorder: true,
-				},
-			];
+  const days = data?.pouchSize;
 
-			if (response.isComming) {
-				orders.push({
-					price: 0,
-					id: "1",
-					alt: "supplement mockup",
-					description: `${capsulePerDay * days}${localUnits} Every 3 months`,
-					name: "Quarterly Subscription",
-					delivery: nextDeliveryProductText,
-					src: "/images/supplement-mockup.svg",
-					capsules: capsulePerDay * days,
-					count: 1,
-				});
-			} else {
-				orders.unshift({
-					id: "1",
-					alt: "",
-					description: `${capsulesPackage}${localUnits} to align you with next drop`,
-					name: "Alignment Capsules",
-					src: "/images/supplement-mockup.svg",
-					delivery: "Delivered Tomorrow",
-					capsules: capsulesPackage,
-					price: 0,
-					quantity:
-						Math.round(capsulesPackage / unitPerPouches) === 0
-							? 1
-							: Math.round(capsulesPackage / unitPerPouches),
-				});
+  const initialQty = Math.ceil(
+    (capsulePerDay * (data?.daysUntilNextDrop ?? 0)) /
+      (data?.alignmentPoucheSize ?? 0)
+  );
 
-				subscriptions.push({
-					id: 2,
-					alt: "supplement mockup",
-					description: `${capsulePerDay * days}${localUnits} Every 3 months`,
-					name: "Quarterly Subscription",
-					delivery: nextDeliveryProductText,
-					src: "/images/supplement-mockup.svg",
-					capsules: capsulePerDay * days,
-				});
-			}
+  const [quantity, setQuantity] = useState<number>(initialQty);
 
-			const ordersSum = orders?.reduce(
-				(sum, item) => sum + item.capsules * 0.25,
-				0,
-			);
-			const totalSumOfSubs = subscriptions?.reduce(
-				(sum, item) => sum + item.capsules * 0.25,
-				0,
-			);
-			setTotalPrice(ordersSum + totalSumOfSubs);
+  const capsulesPackage = quantity * (data?.alignmentPoucheSize ?? 0);
 
-			setSummary({
-				referals: [],
-				id: 0,
-				title: "Order Summary",
-				corporation: response?.teamName,
-				name: response.name,
-				deliveryText:
-					!response.isComming && step < 4 ? "NEXT DAY DELIVERY" : "",
-				percentage: (capsulePerDay * days * 0.25) / Number(response.rrp),
-				rrp: response.rrp,
-				subscriptions: subscriptions,
-				membership: membership as [],
-				quantityOfSubUnitPerOrder: response?.quantityOfSubUnitPerOrder,
-				unitsOfMeasurePerSubUnit: response?.unitsOfMeasurePerSubUnit,
-				orders: orders,
-			});
-			setLoading(false);
-		};
+  const nextYearDate = new Date();
+  nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
 
-		if (!product) {
-			fetchProductId();
-		}
-	}, [
-		params,
-		capsulePerDay,
-		capsulesPackage,
-		nextDeliveryProductText,
-		step,
-		endDate,
-		year,
-		product,
-	]);
+  const membershipRrp = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_RRP);
+  const membershipAmount = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_AMOUNT);
+  const membershipPrice = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_PRICE);
+  const membershipDiscount = Number(
+    process.env.NEXT_PUBLIC_MEMBERSHIP_DISCOUNT
+  );
+  const membershipExpiry = format(nextYearDate, "MMMM dd yyyy");
 
-	useEffect(() => {
-		if (context?.user) {
-			if (context.user.isVerified) {
-				if (context?.user?.shipping) {
-					setStep(3);
-					return;
-				}
-				setStep(2);
-			} else {
-				router.push(
-					`/auth/email-verify?redirect=/products/${productId}/checkout`,
-				);
-			}
-		}
-	}, [context?.user, router, productId]);
+  const orders: IOrderSummaryModel[] = [];
+  const subscriptions = [data?.orders?.[0]];
+  const membership = [
+    {
+      id: "12",
+      alt: "supplement mockup",
+      description: "Free for your first 2 drops",
+      name: `Renews at £${membershipAmount}/year on`,
+      delivery: `${format(membershipExpiry, "MMMM dd yyyy")}`,
+      src: "/images/membership-card.svg",
+      capsules: 0,
+      price: membershipPrice,
+      imageBorder: true,
+      discount: membershipDiscount,
+      rrp: membershipRrp,
+      isMembership: true,
+    },
+  ];
 
-	async function successAction() {
-		const currentStep = step + 1;
-		setStep(currentStep);
-	}
+  const obj = {
+    title: "Order Summary",
+    corporation: data?.teamName,
+    name: data?.name,
+    deliveryText: !data?.isComming ? "FREE NEXT DAY DELIVERY" : "",
+    percentage:
+      (capsulePerDay * (days ?? 0) * (data?.pricePerCount ?? 0)) /
+      Number(data?.rrp),
+    rrp: data?.rrp,
+    quantityOfSubUnitPerOrder: data?.quantityOfSubUnitPerOrder,
+    unitsOfMeasurePerSubUnit: data?.unitsOfMeasurePerSubUnit,
+    orders: orders,
+    id: 1,
+    referals: [],
+    subscriptions: subscriptions,
+    membership: membership,
+    capsulePerDay: capsulePerDay,
+    gramsPerCount: data?.gramsPerCount ?? 0,
+  };
 
-	const updateQuantityAction = useCallback(
-		(val: number) => {
-			setCapsulesPackage(val * unitPerPouches);
-		},
-		[unitPerPouches],
-	);
+  const [summary, setSummary] = useState<ISummaryProductModel>(
+    obj as ISummaryProductModel
+  );
 
-	if (loading) return <Spinner />;
+  if (data?.isComming) {
+    orders.push({
+      price: 0,
+      id: "1",
+      alt: "supplement mockup",
+      description: `${capsulePerDay * (days ?? 0)}${units} Every 3 months`,
+      name: "Quarterly Subscription",
+      delivery: nextDeliveryProductText,
+      src: "/images/supplement-mockup.png",
+      capsules: capsulePerDay * (days ?? 0),
+      pricePerCount: data?.pricePerCount ?? 0,
+      rrp: data?.rrp ?? 0,
+      rrpPerCount: data?.rrpPerCount ?? 0,
+      capsulePerDay: capsulePerDay,
+      gramsPerCount: data?.gramsPerCount ?? 0,
+    });
+  } else {
+    orders.unshift({
+      id: "1",
+      alt: "",
+      description: `${data.alignmentPoucheSize} ${units} pouch`,
+      name: "One time Alignment Package",
+      src: "/images/supplement-mockup.png",
+      delivery: "Delivered Tomorrow",
+      capsules: capsulesPackage,
+      price: Number(data?.pricePerPoche) ?? 0,
+      quantity,
+      pricePerCount: data?.pricePerCount ?? 0,
+      rrp: data?.rrp ?? 0,
+      rrpPerCount: data?.rrpPerCount ?? 0,
+      capsulePerDay: capsulePerDay,
+      gramsPerCount: data?.gramsPerCount ?? 0,
+    });
+  }
 
-	return (
-		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
-			<div className="flex flex-col gap-[40px] md:mb-[40px]">
-				<Steps activeStep={step} steps={steps} />
+  useEffect(() => {
+    setSummary((prev) => ({
+      ...prev,
+      orders: orders.map((order) => ({
+        ...order,
+        rrp:
+          (checkoutData.quantity ?? 0) *
+          (Number(order?.price ?? 0) / (1 - Number(data?.discount) / 100)),
+        price: (checkoutData.quantity ?? 0) * (Number(order?.price) ?? 0),
+      })),
+      subscriptions: subscriptions as ISubscriptionSummaryModel[],
+      capsulePerDay: capsulePerDay,
+      gramsPerCount: data?.gramsPerCount ?? 0,
+    }));
 
-				{step === 1 && (
-					<CreateAccount params={params}>
-						{product?.isComming && <PreOrderMessage />}{" "}
-					</CreateAccount>
-				)}
-				{step === 2 && (
-					<DeliveryAddress step={step} updateStepAction={setStep}>
-						{product?.isComming && <PreOrderMessage />}{" "}
-					</DeliveryAddress>
-				)}
-				{step === 3 && (
-					<PaymentList
-						productId={product?.id ?? ""}
-						topupQuantity={capsulesPackage}
-						teamId={product?.supplementTeamProducts?.team.id ?? ""}
-						isComming={product?.isComming}
-						totalPrice={totalPrice}
-						capsulePerDay={capsulePerDay}
-						successAction={successAction}
-					/>
-				)}
-				{step === 4 && <ConfirmJoining email={context?.user?.email} />}
-			</div>
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [capsulePerDay, checkoutData?.quantity]);
 
-			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<SummaryProduct
-					model={summary}
-					showTopLine={product?.isComming}
-					quantityAction={updateQuantityAction}
-				/>
-				{step === 4 && <Delivery />}
-				{step < 4 && <AvailablePayment />}
-			</div>
-		</div>
-	);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { productID } = await params;
+      const model = await productService.product(
+        productID,
+        data?.teamId ?? "",
+        context?.user?.id ?? ""
+      );
+      setBasket(model?.supplementTeamProducts?.team.basket ?? []);
+      // setUnits(model.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules");
+      // const [word, ...others] = (model.name ?? "").split(" ");
+      // setFirstWord(word);
+      // setRest(others.join(" "));
+      // setLoading(false);
+
+      // setCapsulePerDay(model.capsuleInfo?.[1]?.capsuleCount ?? 0);
+    };
+    fetchProduct();
+  }, [params, context?.user?.id, data?.teamId, step]);
+
+  useEffect(() => {
+    fetchReferralInfo();
+  }, [isReferralCodeApplied]);
+
+  const fetchReferralInfo = async () => {
+    try {
+      const response = await referalService.getReferalInfo();
+      setReferralInfo(response);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (context?.user) {
+      if (basket.length > 0) {
+        setStep(4);
+      } else if (context.user.isVerified && basket.length === 0) {
+        if (context?.user?.shipping) {
+          setStep(3);
+          return;
+        }
+        setStep(2);
+      } else {
+        router.push(
+          `/auth/email-verify?redirect=/products/${data?.productId}/checkout`
+        );
+      }
+    }
+  }, [context?.user, router, data?.productId, basket]);
+
+  useEffect(() => {
+    const totalSum = summary?.orders?.reduce(
+      (sum, item) => sum + (item.price ?? 0),
+      0
+    );
+
+    const totalSumOfSubs =
+      summary?.subscriptions?.reduce(
+        (sum, item) => sum + (item?.price ?? 0),
+        0
+      ) ?? 0;
+
+    setTotalPrice(totalSum + totalSumOfSubs);
+  }, [summary]);
+
+  // useEffect(() => {
+  //   if (context?.user?.id) {
+  //     getMembershipSubscription(context?.user?.id);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [context?.user?.id]);
+
+  // async function getMembershipSubscription(id: string) {
+  //   const response = await paymentService.getMembershipSubscription(id);
+  //   console.log("response", response);
+  //   setMembershipSubscription(response);
+  // }
+
+  async function successAction() {
+    const currentStep = step + 1;
+    setStep(currentStep);
+  }
+
+  const updateQuantityAction = (val: number) => {
+    setQuantity(val);
+    setCheckoutData((prev) => {
+      return {
+        ...prev,
+        quantity: val,
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (!context?.user) {
+      setStep(1);
+    }
+  }, [context?.user]);
+
+  return (
+    <>
+      {step !== 4 && (
+        <AlignmentDialog
+          daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
+          deliveryDate={data?.deliveryDate ?? ""}
+          orders={summary?.orders}
+          updateQuantityAction={updateQuantityAction}
+          discount={data?.discount ?? 0}
+          setSummary={setSummary}
+        />
+      )}
+
+      <div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
+        <div className="flex flex-col gap-[40px] md:mb-[40px]">
+          <Steps activeStep={step} steps={steps} />
+
+          {step === 1 && (
+            <CreateAccount params={params}>
+              {data?.isComming && <PreOrderMessage />}{" "}
+            </CreateAccount>
+          )}
+          {step === 2 && (
+            <DeliveryAddress step={step} updateStepAction={setStep}>
+              {data?.isComming && <PreOrderMessage />}{" "}
+            </DeliveryAddress>
+          )}
+          {step === 3 && (
+            <PaymentList
+              productId={data?.productId ?? ""}
+              topupQuantity={quantity}
+              teamId={data?.teamId ?? ""}
+              isComming={data?.isComming}
+              totalPrice={totalPrice}
+              capsulePerDay={capsulePerDay}
+              successAction={successAction}
+            />
+          )}
+          {step === 4 && (
+            <ConfirmJoining
+              email={context?.user?.email}
+              userType="new"
+              referralInfo={referralInfo}
+              step={step}
+            />
+          )}
+        </div>
+
+        <div className="mx-[-16px] md:mx-[0] mt-[32px]">
+          <SummaryProduct
+            model={summary}
+            showTopLine={data?.isComming}
+            quantityAction={updateQuantityAction}
+            step={step}
+            referralInfo={referralInfo}
+            setIsReferralCodeApplied={setIsReferralCodeApplied}
+          />
+          {step === 4 && <Delivery />}
+          {step < 4 && <AvailablePayment />}
+        </div>
+      </div>
+    </>
+  );
 }
