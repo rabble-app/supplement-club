@@ -59,7 +59,6 @@ export default function Plans() {
 
   async function getMembershipSubscription(id: string) {
     const response = await paymentService.getMembershipSubscription(id);
-    console.log("response", response);
     return response;
   }
 
@@ -74,7 +73,6 @@ export default function Plans() {
         status: response.status,
         expiryDate: response.expiryDate,
       }));
-      console.log("response", response);
       CustomToast({
         title: "Membership Status Updated",
         status: StatusToast.SUCCESS,

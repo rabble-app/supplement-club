@@ -177,8 +177,6 @@ export const paymentService = {
 			},
 		)) as IMembershipSubscriptionApiResponse;
 
-		console.log("data", userId, status);
-
 		return {
 			status: data.status,
 			expiryDate: data.expiryDate,

@@ -71,15 +71,8 @@ export default function CreateAccount({
       Cookies.remove("refCode");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      let message = "Something went wrong";
-      try {
-        const parsedError = JSON.parse(error.message);
-        message = parsedError.message || parsedError.error || message;
-      } catch {
-        message = error.message || message;
-      }
       CustomToast({
-        title: message,
+        title: JSON.parse(error.error).message || "Something went wrong",
         status: StatusToast.ERROR,
       });
     } finally {
