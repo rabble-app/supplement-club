@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -11,45 +11,45 @@ import TeamPrice from "@/components/main/products/TeamPrice";
 import Spinner from "@/components/shared/Spinner";
 
 const CapsuleBox = dynamic(
-  () => import("@/components/main/products/CapsuleBox")
+	() => import("@/components/main/products/CapsuleBox"),
 );
 const MemberCard = dynamic(
-  () => import("@/components/main/products/MemberCard")
+	() => import("@/components/main/products/MemberCard"),
 );
 const PreOrderInfo = dynamic(
-  () => import("@/components/main/products/PreOrderInfo")
+	() => import("@/components/main/products/PreOrderInfo"),
 );
 const ProductFaqs = dynamic(
-  () => import("@/components/main/products/ProductFaqs")
+	() => import("@/components/main/products/ProductFaqs"),
 );
 const ProfuctTable = dynamic(
-  () => import("@/components/main/products/ProductTable")
+	() => import("@/components/main/products/ProductTable"),
 );
 const SummaryProduct = dynamic(
-  () => import("@/components/shared/SummaryProduct")
+	() => import("@/components/shared/SummaryProduct"),
 );
 const BottomSection = dynamic(
-  () => import("@/components/main/products/BottomSection")
+	() => import("@/components/main/products/BottomSection"),
 );
 const ReferralCardsWithLink = dynamic(
-  () => import("@/components/shared/ReferralCardsWithLink")
+	() => import("@/components/shared/ReferralCardsWithLink"),
 );
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
-  Carousel,
-  type CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
+	Carousel,
+	type CarouselApi,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useUser } from "@/contexts/UserContext";
 import { productService } from "@/services/productService";
@@ -59,19 +59,15 @@ import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { getQuarterInfo } from "@/utils/utils";
-import { useSearchParams } from "next/navigation";
-import { format } from "date-fns";
-import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
-import { referalService } from "@/services/referalService";
-import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
-import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface ProductDetailsProps {
-  productID: string;
+	productID: string;
 }
 
 export default function ProductDetails({
-  params,
+	params,
 }: Readonly<{ params: Promise<ProductDetailsProps> }>) {
   const [loading, setLoading] = useState(true);
   const context = useUser();

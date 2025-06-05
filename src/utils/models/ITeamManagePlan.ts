@@ -20,7 +20,7 @@ export interface IProductManagePlan {
 	id: string;
 	name: string;
 	price: number;
-	quantityOfSubUnitPerOrder: number;
+	quantityOfSubUnitPerOrder: string;
 	unitsOfMeasurePerSubUnit: string;
 	rrp: number;
 	imageUrl: string;

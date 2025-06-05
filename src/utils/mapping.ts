@@ -63,7 +63,6 @@ export const mapSingleProductModel = (
 				tags: model.tags,
 				approvalStatus: model.approvalStatus,
 				priceInfo: model.priceInfo,
-				pricePerCount: model.pricePerCount,
 				producer: model.producer,
 				formulationSummary: model.formulationSummary,
 				gallery: [model.imageUrl, model.producer.imageUrl],
@@ -71,16 +70,6 @@ export const mapSingleProductModel = (
 				orderId: model.orderId,
 				productBenefits: model.productBenefits,
 				healthCategories: model.healthCategories,
-				nextPriceDiscountLevel: model.nextPriceDiscountLevel,
-				deliveryDate: model.deliveryDate,
-				daysUntilNextDrop: model.daysUntilNextDrop,
-				poucheSize: model.poucheSize,
-				alignmentPoucheSize: model.alignmentPoucheSize,
-				rrpPerCount: model.rrpPerCount,
-				discount: model.discount,
-				activePercentageDiscount: model.activePercentageDiscount,
-				gramsPerCount: model.gramsPerCount,
-				pricePerPoche: model.pricePerPoche,
 			}
 		: ({} as ISingleProductModel);
 };
@@ -185,7 +174,6 @@ export const mapReferalInfoModel = (
 		claimed: model?.wallet?.claimed ? Number(model.wallet.claimed) : 0,
 		bonuses: model?.bonuses || [],
 		referralCode: model?.referralCode,
-		userCode: model?.userCode,
 		teams: model?.teams,
 		totalSaved: model?.totalSaved,
 		referrer: model?.referrer,

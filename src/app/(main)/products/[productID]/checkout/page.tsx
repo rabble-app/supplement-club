@@ -1,11 +1,15 @@
-/** @format */
-
 "use client";
-import { useEffect, useState } from "react";
+
+import { useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import { useUser } from "@/contexts/UserContext";
+import { productService } from "@/services/productService";
+import { useProductStore } from "@/stores/productStore";
+import { getQuarterInfo } from "@/utils/utils";
+
+import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 
 import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
@@ -14,46 +18,35 @@ import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
 import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import PaymentList from "@/components/shared/PaymentList";
+import Spinner from "@/components/shared/Spinner";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
-import { format } from "date-fns";
-import IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import AlignmentDialog from "@/components/main/products/[productID]/checkout/AlignmentDialog";
-import ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
-import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
-import { productService } from "@/services/productService";
-import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
-import { referalService } from "@/services/referalService";
-import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
-// import { paymentService } from "@/services/paymentService";
-// import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
 const PreOrderMessage = () => {
-  return (
-    <div className="grid gap-[16px]">
-      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-        PRE-ORDER Now to Become a Founding Member
-      </p>
-      <div className="grid gap-[8px]">
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Only get charged when we hit 50 pre-orders.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          By becoming a founding member you get an extra 10% off the team price
-          forever.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Lead time is 6 weeks from when we charge you - but you get 10% off
-          your subscription forever.
-        </p>
-      </div>
-    </div>
-  );
+	return (
+		<div className="grid gap-[16px]">
+			<p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+				PRE-ORDER Now to Become a Founding Member
+			</p>
+			<div className="grid gap-[8px]">
+				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+					Only get charged when we hit 50 pre-orders.
+				</p>
+				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+					By becoming a founding member you get an extra 10% off the team price
+					forever.
+				</p>
+				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+					Lead time is 6 weeks from when we charge you - but you get 10% off
+					your subscription forever.
+				</p>
+			</div>
+		</div>
+	);
 };
 
 export default function Checkout({
-  params,
+	params,
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
   const router = useRouter();
 

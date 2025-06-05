@@ -1,123 +1,116 @@
-/** @format */
-
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+
+import Script from "next/script";
+import { useEffect, useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
 
 export interface AddressFormData {
-  address: string;
-  address2?: string;
-  city: string;
-  postalCode: string;
-  country: string;
-  buildingNo?: string;
-  building_number?: string;
-  firstName?: string;
-  lastName?: string;
-  mobileNumber?: string;
-  userId?: string;
+	address: string; // Ensure this is a required string
+	address2?: string;
+	city: string;
+	postalCode: string;
+	country: string;
+	buildingNo?: string;
+	building_number?: string;
+	firstName?: string;
+	lastName?: string;
+	mobileNumber?: string;
+	userId?: string;
+	// Add other fields as necessary
 }
 
-interface Props {
-  form: UseFormReturn<AddressFormData>;
+interface GetAddressEvent {
+	address: {
+		formatted_address: string[];
+		building_number: string;
+		sub_building_number: string;
+		postcode: string;
+		country: string;
+		town_or_city: string;
+		line_2: string;
+	};
 }
 
-interface Suggestion {
-  id: string;
-  address: string;
+interface GetAddress {
+	autocomplete: (field: string, apiKey?: string) => Promise<unknown>;
 }
 
-export default function AddressAutocomplete({ form }: Props) {
-  const addressValue = form.watch("address");
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const suppressNextFetch = useRef(false); // prevent fetch loop
+interface Window {
+	getAddress?: GetAddress;
+}
 
-  useEffect(() => {
-    if (suppressNextFetch.current) {
-      suppressNextFetch.current = false;
-      return;
-    }
+interface AddressAutocompleteProps {
+	form: UseFormReturn<AddressFormData>;
+}
 
-    if (!addressValue || addressValue.length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
+interface Autocomplete {
+	addEventListener: (
+		event: string,
+		callback: (e: GetAddressEvent) => void,
+	) => void;
+	// Add other methods or properties as needed
+}
 
-    const timeout = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `https://api.getaddress.io/autocomplete/${encodeURIComponent(
-            addressValue
-          )}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
-        );
-        const data = await res.json();
-        if (data?.suggestions) {
-          setSuggestions(data.suggestions);
-          setShowSuggestions(true);
-        }
-      } catch (err) {
-        console.error("Autocomplete error", err);
-      }
-    }, 300);
+export default function AddressAutocomplete({
+	form,
+}: Readonly<AddressAutocompleteProps>) {
+	const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
-    return () => clearTimeout(timeout);
-  }, [addressValue]);
+	useEffect(() => {
+		const interval = setInterval(() => {
+			if ((window as Window).getAddress) {
+				setIsScriptLoaded(true);
+				clearInterval(interval);
+			} else {
+				console.warn("getAddress not available, retrying...");
+			}
+		}, 500);
 
-  const handleSelect = async (id: string) => {
-    try {
-      const res = await fetch(
-        `https://api.getaddress.io/get/${id}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
-      );
-      const data = await res.json();
+		return () => clearInterval(interval);
+	}, []);
 
-      suppressNextFetch.current = true;
+	useEffect(() => {
+		if (!isScriptLoaded) return;
 
-      form.setValue("address", data.line_1);
-      form.setValue("address2", data.line_2);
-      form.setValue("city", data.town_or_city);
-      form.setValue("postalCode", data.postcode);
-      form.setValue("country", "United Kingdom");
+		const enableAutocomplete = async () => {
+			const getAddress = (window as Window).getAddress;
+			if (!getAddress) {
+				console.error("getAddress is still undefined.");
+				return;
+			}
 
-      setSuggestions([]);
-      setShowSuggestions(false);
-    } catch (err) {
-      console.error("Fetch full address error", err);
-    }
-  };
+			try {
+				const autocomplete = (await getAddress.autocomplete(
+					"address",
+					process.env.NEXT_PUBLIC_GETADDRESS_API_KEY,
+				)) as Autocomplete;
 
-  return (
-    <div className="relative">
-      {showSuggestions && suggestions.length > 0 && (
-        <ul className="absolute z-50 bg-white border border-gray-300 w-full mt-1 shadow-md rounded-md">
-          {suggestions.map((sug) => {
-            const parts = sug.address
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean);
-            const [line1, ...rest] = parts;
+				autocomplete.addEventListener(
+					"getaddress-autocomplete-selected",
+					(e: GetAddressEvent) => {
+						form.setValue("address", e.address.formatted_address[0]);
+						form.setValue("address2", e.address.line_2);
+						form.setValue(
+							"buildingNo",
+							e.address.building_number ?? e.address.sub_building_number,
+						);
+						form.setValue("city", e.address.town_or_city);
+						form.setValue("country", e.address.country);
+						form.setValue("postalCode", e.address.postcode);
+					},
+				);
+			} catch (error) {
+				console.error("Error initializing getAddress:", error);
+			}
+		};
 
-            return (
-              <li
-                key={sug.id}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm w-full"
-                onClick={() => handleSelect(sug.id)}
-              >
-                <p className="text-sm font-semibold">{line1}</p>
-                <span className="text-sm text-gray-600">
-                  {rest.map((line, index) => (
-                    <span key={index}>
-                      {line}
-                      {index < rest.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
-  );
+		enableAutocomplete();
+	}, [isScriptLoaded, form]);
+
+	return (
+		<Script
+			src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-3.0.3.js"
+			strategy="afterInteractive"
+		/>
+	);
 }

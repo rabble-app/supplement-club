@@ -1,9 +1,7 @@
-/** @format */
-
-"use client";;
+"use client";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import router from "next/router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -13,19 +11,19 @@ import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useUser } from "@/contexts/UserContext";
 import { authService } from "@/services/authService";
+import { useUserStore } from "@/stores/userStore";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
+import type { IUserResponse } from "@/utils/models/api/response/IUserResponse";
 import { createAccountSchema } from "@/validations";
-import { Loader2Icon } from "lucide-react";
-import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 
 export default function CreateAccount({
-  params,
-  children,
+	params,
+	children,
 }: Readonly<{
-  params: Promise<{ productID: string }>;
-  children?: React.ReactNode;
+	params: Promise<{ productID: string }>;
+	children?: React.ReactNode;
 }>) {
   const [productId, setProductId] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);

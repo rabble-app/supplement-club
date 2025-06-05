@@ -33,12 +33,9 @@ export const apiRequest = async <T>(
 
 		return (await res.json()) as IResponseModel;
 	} catch (e) {
-		throw {
+		return {
 			error: e instanceof Error ? e.message : "An unknown error occurred",
-		};
-		// return {
-		// 	error: e instanceof Error ? e.message : "An unknown error occurred",
-		// } as IResponseModel;
+		} as IResponseModel;
 	}
 };
 
