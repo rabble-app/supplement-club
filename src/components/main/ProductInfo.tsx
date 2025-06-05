@@ -32,6 +32,7 @@ export default function ProductInfo({
 							alt={product.imageKey ?? product.name}
 							width={250}
 							height={541}
+							unoptimized
 						/>
 					)}
 					<div className="w-full mx-auto lg:m-0 lg:max-w-[410px] order-4">
@@ -97,6 +98,7 @@ export default function ProductInfo({
 						alt={product.imageKey ?? product.name}
 						width={736}
 						height={736}
+						unoptimized
 					/>
 				)}
 			</div>

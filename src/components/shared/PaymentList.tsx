@@ -52,8 +52,6 @@ export default function PaymentList({
   );
   const [userCards, setUserCards] = useState<IUserPaymentOptionModel[]>([]);
 
-  console.log("userCards", context?.user?.stripeCustomerId);
-
   useEffect(() => {
     const fetchUserPaymentOptions = async () => {
       await retrivePaymentOptions(context?.user?.stripeCustomerId);
@@ -113,19 +111,14 @@ export default function PaymentList({
         })) as IPaymentIntentApiResponse;
 
         if (response.statusCode !== 200) {
-          CustomToast({
-            title: response?.error
-              ? JSON.parse(response?.error).error
-              : "Cannot join the team for some reason",
-            status: StatusToast.ERROR,
-          });
-          throw new Error("Error");
+          throw new Error(response?.error);
         }
       }
 
       successAction();
     } catch (error) {
-      console.error("Error in processPayment:", error);
+      console.error("Error in processPayment111:", error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -141,47 +134,38 @@ export default function PaymentList({
   }
 
   async function addCreditCard(paymentMethod: string | PaymentMethod | null) {
-    const errors: Error[] = [];
-    let cards: IUserPaymentOptionModel[] = [];
-
     setIsLoading(true);
+  
     try {
-      try {
-        await paymentService.addCard(
-          (paymentMethod as string) ?? "",
-          context?.user?.stripeCustomerId ?? ""
-        );
-      } catch (error) {
-        console.error("Error in addCard:", error);
-        errors.push(error as Error);
-      }
+      // 1. Add card
+      await paymentService.addCard(
+        (paymentMethod as string) ?? "",
+        context?.user?.stripeCustomerId ?? ""
+      );
+  
+      // 2. Get user cards
+      const cards = await paymentService.getUserPaymentOptions(
+        context?.user?.stripeCustomerId ?? ""
+      );
+  
+      // 3. Process payment
+      await processPayment(cards);
+    } catch (error: any) {
+      console.error("addCreditCard error:", JSON.parse(error.error).message);
+  
+      CustomToast({
+        title:JSON.parse(error.error).message,
+        status: StatusToast.ERROR,
+        position: "top-right",
+      });
 
-      try {
-        cards = await paymentService.getUserPaymentOptions(
-          context?.user?.stripeCustomerId ?? ""
-        );
-      } catch (error) {
-        console.error("Error in getUserPaymentOptions:", error);
-        errors.push(error as Error);
-      }
+      throw error;
 
-      try {
-        await processPayment(cards);
-      } catch (error) {
-        console.error("Error in processPayment:", error);
-        errors.push(error as Error);
-      }
-
-      if (errors.length > 0) {
-        throw new AggregateError(
-          errors,
-          "One or more steps in addCreditCard failed"
-        );
-      }
     } finally {
       setIsLoading(false);
     }
   }
+  
 
   const ButtonSection = (
     <div className="grid gap-[24px]">

@@ -13,7 +13,7 @@ const ReferralSection = ({ percentage, remainingDays }: { percentage: "0" | "30"
           {remainingDays}
         </h1>
         <p className="text-[12px] font-helvetica text-white text-center leading-tight">
-          You have {remainingDays} days from sign up to maximise your free membership months
+          You have 30 days from sign up to maximise your free membership months
         </p>
       </div>
 

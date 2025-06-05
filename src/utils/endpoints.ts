@@ -58,11 +58,12 @@ export const REFERAL_ENDPOINTS = {
 	REFERAL_INFO: "referrals/info",
 	REFERAL_HISTORY: "referrals/tracking",
 	CLAIM_REWARD: "referrals/claim-rewards",
+	APPLY_REFERRAL_CODE: "referrals/apply-user-code",
 };
 
 export const PRODUCT_ENDPOINTS = {
-	PRODUCT: (id: string, teamId?: string) =>
-		`products/${id}?teamId=${teamId}`,
+	PRODUCT: (id: string, teamId?: string, userId?: string) =>
+		`products/${id}?teamId=${teamId ?? ""}&userId=${userId ?? ""}`,
 	PRODUCTS: (userId?: string) => `products/supplement/list?userId=${userId}`,
 	PRODUCTS_LIMIT: (limit?: number) => `products/supplement/list?limit=${limit}`,
 	PRODUCTTAGS: () => "products/supplement/tags",

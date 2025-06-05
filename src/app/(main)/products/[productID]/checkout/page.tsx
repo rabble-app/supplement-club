@@ -22,6 +22,10 @@ import AlignmentDialog from "@/components/main/products/[productID]/checkout/Ali
 import ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import useLocalStorage from "use-local-storage";
 import { IMetadata } from "@/utils/models/api/response/IUserResponse";
+import { productService } from "@/services/productService";
+import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
+import { referalService } from "@/services/referalService";
+import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 // import { paymentService } from "@/services/paymentService";
 // import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
@@ -55,12 +59,15 @@ export default function Checkout({
 
   const context = useUser();
 
-  const [step, setStep] = useState<number>(4);
+  const [step, setStep] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [checkoutData, setCheckoutData] = useLocalStorage<IMetadata>(
     "checkoutData",
     {}
   );
+  const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
+  const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
+  const [isReferralCodeApplied, setIsReferralCodeApplied] = useState<boolean>(false);
   // const [membershipSubscription, setMembershipSubscription] =
   //   useState<IMembershipSubscriptionResponse>();
   const steps = ["Create an Account", "Delivery Address", "Payment Details"];
@@ -85,7 +92,7 @@ export default function Checkout({
       ? format(new Date(data?.deliveryDate ?? ""), "MMMM dd yyyy")
       : ""
   }`;
-  
+
   const [capsulePerDay] = useState(data?.capsuleCount ?? 2);
 
   const units = data?.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
@@ -163,7 +170,7 @@ export default function Checkout({
       description: `${capsulePerDay * (days ?? 0)}${units} Every 3 months`,
       name: "Quarterly Subscription",
       delivery: nextDeliveryProductText,
-      src: "/images/supplement-mockup.svg",
+      src: "/images/supplement-mockup.png",
       capsules: capsulePerDay * (days ?? 0),
       pricePerCount: data?.pricePerCount ?? 0,
       rrp: data?.rrp ?? 0,
@@ -177,11 +184,11 @@ export default function Checkout({
       alt: "",
       description: `${data.alignmentPoucheSize} ${units} pouch`,
       name: "One time Alignment Package",
-      src: "/images/supplement-mockup.svg",
+      src: "/images/supplement-mockup.png",
       delivery: "Delivered Tomorrow",
       capsules: capsulesPackage,
       price: Number(data?.pricePerPoche) ?? 0,
-      quantity: quantity,
+      quantity,
       pricePerCount: data?.pricePerCount ?? 0,
       rrp: data?.rrp ?? 0,
       rrpPerCount: data?.rrpPerCount ?? 0,
@@ -209,8 +216,43 @@ export default function Checkout({
   }, [capsulePerDay, checkoutData?.quantity]);
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      const { productID } = await params;
+      const model = await productService.product(
+        productID,
+        data?.teamId ?? "",
+        context?.user?.id ?? ""
+      );
+      setBasket(model?.supplementTeamProducts?.team.basket ?? []);
+      // setUnits(model.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules");
+      // const [word, ...others] = (model.name ?? "").split(" ");
+      // setFirstWord(word);
+      // setRest(others.join(" "));
+      // setLoading(false);
+
+      // setCapsulePerDay(model.capsuleInfo?.[1]?.capsuleCount ?? 0);
+    };
+    fetchProduct();
+  }, [params, context?.user?.id, data?.teamId, step]);
+
+  useEffect(() => {
+    fetchReferralInfo();
+  }, [isReferralCodeApplied]);
+
+  const fetchReferralInfo = async () => {
+    try {
+      const response = await referalService.getReferalInfo();
+      setReferralInfo(response);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
+  useEffect(() => {
     if (context?.user) {
-      if (context.user.isVerified) {
+      if (basket.length > 0) {
+        setStep(4);
+      } else if (context.user.isVerified && basket.length === 0) {
         if (context?.user?.shipping) {
           setStep(3);
           return;
@@ -222,9 +264,7 @@ export default function Checkout({
         );
       }
     }
-  }, [context?.user, router, data?.productId]);
-
-  console.log("context", context?.user);
+  }, [context?.user, router, data?.productId, basket]);
 
   useEffect(() => {
     const totalSum = summary?.orders?.reduce(
@@ -241,12 +281,6 @@ export default function Checkout({
     setTotalPrice(totalSum + totalSumOfSubs);
   }, [summary]);
 
-  useEffect(() => {
-    if (step === 4) {
-      successAction();
-    }
-  }, [step]);
-
   // useEffect(() => {
   //   if (context?.user?.id) {
   //     getMembershipSubscription(context?.user?.id);
@@ -261,12 +295,10 @@ export default function Checkout({
   // }
 
   async function successAction() {
-    // const currentStep = step + 1;
-    setStep(4);
-    console.log(123)
+    const currentStep = step + 1;
+    setStep(currentStep);
   }
-  
-  console.log("currentStep", step);
+
   const updateQuantityAction = (val: number) => {
     setQuantity(val);
     setCheckoutData((prev) => {
@@ -285,14 +317,16 @@ export default function Checkout({
 
   return (
     <>
-      {step===2 && <AlignmentDialog
-        daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
-        deliveryDate={data?.deliveryDate ?? ""}
-        orders={summary?.orders}
-        updateQuantityAction={updateQuantityAction}
-        discount={data?.discount ?? 0}
-        setSummary={setSummary}
-      />}
+      {step !== 4 && (
+        <AlignmentDialog
+          daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
+          deliveryDate={data?.deliveryDate ?? ""}
+          orders={summary?.orders}
+          updateQuantityAction={updateQuantityAction}
+          discount={data?.discount ?? 0}
+          setSummary={setSummary}
+        />
+      )}
 
       <div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
         <div className="flex flex-col gap-[40px] md:mb-[40px]">
@@ -319,7 +353,14 @@ export default function Checkout({
               successAction={successAction}
             />
           )}
-          {step === 4 && <ConfirmJoining email={context?.user?.email} />}
+          {step === 4 && (
+            <ConfirmJoining
+              email={context?.user?.email}
+              userType="new"
+              referralInfo={referralInfo}
+              step={step}
+            />
+          )}
         </div>
 
         <div className="mx-[-16px] md:mx-[0] mt-[32px]">
@@ -328,6 +369,8 @@ export default function Checkout({
             showTopLine={data?.isComming}
             quantityAction={updateQuantityAction}
             step={step}
+            referralInfo={referralInfo}
+            setIsReferralCodeApplied={setIsReferralCodeApplied}
           />
           {step === 4 && <Delivery />}
           {step < 4 && <AvailablePayment />}

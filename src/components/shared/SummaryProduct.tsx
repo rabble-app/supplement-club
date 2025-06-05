@@ -1,6 +1,6 @@
 /** @format */
 
-"use client";;
+"use client";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
@@ -8,6 +8,14 @@ import { useEffect, useState } from "react";
 import OrderSummaryCard from "./OrderSummaryCard";
 import useLocalStorage from "use-local-storage";
 import { IMetadata } from "@/utils/models/api/response/IUserResponse";
+import { useUser } from "@/contexts/UserContext";
+import { referalService } from "@/services/referalService";
+import { Loader2 } from "lucide-react";
+import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
+import GiftIcon from "@/components/icons/gift-icon.svg";
+import CheckmarkIcon from "@/components/icons/checkmark-icon.svg";
+import { CustomToast } from "./Toast";
+import { StatusToast } from "./Toast";
 
 export default function SummaryProduct({
   model,
@@ -17,6 +25,8 @@ export default function SummaryProduct({
   showTopLine,
   quantityAction,
   step,
+  referralInfo,
+  setIsReferralCodeApplied,
 }: Readonly<{
   model: ISummaryProductModel;
   className?: string;
@@ -25,18 +35,15 @@ export default function SummaryProduct({
   showTopLine?: boolean;
   quantityAction?: (val: number) => void;
   step?: number;
+  referralInfo?: IReferalInfoModel;
+  setIsReferralCodeApplied?: (val: boolean) => void;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
   const [referralCode, setReferralCode] = useState("");
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
-
+  const [isLoading, setIsLoading] = useState(false);
+  const context = useUser();
   const [firstWord, ...rest] = (model.name ?? "").split(" ");
-
-  // const checkoutData =
-  //   Object.keys(JSON.parse(localStorage.getItem("checkoutData") || "{}"))
-  //     .length > 0
-  //     ? JSON.parse(localStorage.getItem("checkoutData") || "{}")
-  //     : context?.user?.metadata;
 
   const data = checkoutData as IMetadata;
 
@@ -47,10 +54,8 @@ export default function SummaryProduct({
     );
 
     const totalSumOfSubs =
-      model?.subscriptions?.reduce(
-        (sum, item) => sum + (item.price ?? 0),
-        0
-      ) ?? 0;
+      model?.subscriptions?.reduce((sum, item) => sum + (item.price ?? 0), 0) ??
+      0;
 
     setTotalCount(totalSum + totalSumOfSubs);
   }, [model]);
@@ -58,6 +63,33 @@ export default function SummaryProduct({
   const updateQuantityAction = (val: number) => {
     if (quantityAction) quantityAction(val);
   };
+
+  const handleApplyReferralCode = async (code: string, amount: number) => {
+    setIsLoading(true);
+
+    try {
+      const res = await referalService.postApplyReferralCode(code, amount);
+
+      if (!res.data) {
+        throw res;
+      } else {
+        CustomToast({
+          title: "Referral code applied !",
+          status: StatusToast.SUCCESS,
+        });
+        setIsReferralCodeApplied?.(true);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      CustomToast({
+        title: JSON.parse(error.error).message,
+        status: StatusToast.ERROR,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       key={model?.id}
@@ -128,6 +160,7 @@ export default function SummaryProduct({
               model={order}
               updateQuantityAction={updateQuantityAction}
               discount={data.discount}
+              step={step}
             />
           ))}
           {model?.referals?.length > 0 && (
@@ -165,6 +198,7 @@ export default function SummaryProduct({
               key={item.id}
               model={item}
               discount={data.discount}
+              step={step}
             />
           ))}
 
@@ -183,6 +217,7 @@ export default function SummaryProduct({
               key={item.id}
               model={item}
               discount={item.discount ?? 0}
+              step={step}
             />
           ))}
           {model?.membership?.length > 0 && (
@@ -192,26 +227,53 @@ export default function SummaryProduct({
             </div>
           )}
 
-          <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-            Referral Code
-          </p>
+          {context?.user && (
+            <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+              Referral Code
+            </p>
+          )}
 
-          <div className="flex items-center gap-2 relative mt-9 mb-8">
-            <input
-              type="text"
-              className="w-full font-roboto text-base border border-grey32 px-3 py-6 absolute bg-transparent focus:outline-none"
-              placeholder="Referral Code"
-              value={referralCode}
-              onChange={(e) => setReferralCode(e.target.value)}
-            />
-            <button
-              className={`${
-                referralCode ? "bg-blue" : "bg-grey2"
-              } text-white px-6 py-3 absolute right-3`}
-            >
-              Apply
-            </button>
-          </div>
+          {context?.user && !referralInfo?.referrer?.name && step !== 4 && (
+            <div className="flex items-center gap-2 relative mt-9 mb-8">
+              <input
+                type="text"
+                className="w-full font-roboto text-base border border-grey32 px-3 py-6 absolute bg-transparent focus:outline-none"
+                placeholder="Referral Code"
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value)}
+              />
+              <button
+                className={`${
+                  referralCode ? "bg-blue" : "bg-grey2"
+                } text-white px-6 py-3 absolute right-3 flex items-center gap-1`}
+                onClick={() =>
+                  handleApplyReferralCode(referralCode, totalCount)
+                }
+              >
+                {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                Apply
+              </button>
+            </div>
+          )}
+
+          {referralInfo?.referrer?.name && (
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-1 bg-blue p-2.5 rounded-sm">
+                <GiftIcon className="text-white w-6 h-6 mx-auto" />
+                <p className="text-[20px] leading-[20px] font-normal uppercase text-white font-hagerman flex items-center gap-1">
+                  <span className="tracking-[0.1px] text-[20px]">••••</span>
+                  {referralInfo?.referrer?.name?.slice(0, 4)}
+                </p>
+              </div>
+              <div
+                className="flex gap-1 text-[14px] leading-[14px] font-[400] font-hagerman uppercase
+               text-[#027a48]"
+              >
+                <CheckmarkIcon className="w-4 h-4" />
+                You’re getting additional 2 free drops
+              </div>
+            </div>
+          )}
           <Separator className="bg-grey3 h-[1px]" />
           <div className="grid gap-[10px]">
             <div className="flex justify-between items-center">

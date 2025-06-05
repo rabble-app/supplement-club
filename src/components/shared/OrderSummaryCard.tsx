@@ -67,6 +67,7 @@ export default function OrderSummaryCard({
   updateQuantityAction,
   discount,
   className,
+  step,
 }: Readonly<{
   model:
     | IOrderSummaryModel
@@ -76,6 +77,7 @@ export default function OrderSummaryCard({
   updateQuantityAction?: (val: number) => void;
   discount?: number;
   className?: string;
+  step?: number;
 }>) {
 
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
@@ -104,14 +106,14 @@ export default function OrderSummaryCard({
         <Image
           src={model.src}
           alt={model.alt ?? ""}
-          className={`object-none ${
+          className={`object-contai ${
             model.imageBorder
               ? "border-[1px] border-[#DDDDDD] rounded-[8px] py-[17px] px-[12px]"
               : ""
           }`}
           width={61}
           height={61}
-          priority
+          unoptimized
         />
       )}
 
@@ -129,7 +131,7 @@ export default function OrderSummaryCard({
         )}
 
         <div className="flex md:hidden">{renderPrice(model, discount ?? 0)}</div>
-        {typeof model.quantity === "number" && (
+        {typeof model.quantity === "number" && step !== 4 && (
           <div className="flex items-center gap-[16px]">
             <Button
               type="button"

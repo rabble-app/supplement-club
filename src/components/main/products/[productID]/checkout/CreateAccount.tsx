@@ -49,7 +49,6 @@ export default function CreateAccount({
   async function handleSubmit(e: FormData) {
     setIsSubmitting(true);
 
-    // return console.log(5555, checkoutData);
     try {
       const result = (await authService.register(
         e.get("email")?.toString() ?? "",
@@ -79,7 +78,6 @@ export default function CreateAccount({
       } catch {
         message = error.message || message;
       }
-      setIsSubmitting(false);
       CustomToast({
         title: message,
         status: StatusToast.ERROR,
@@ -119,7 +117,6 @@ export default function CreateAccount({
           className={`bg-blue text-white w-full font-bold ${
             isSubmitting ? "opacity-60" : ""
           }`}
-          disabled={isSubmitting}
         >
           {isSubmitting && <Loader2Icon className="animate-spin mr-2" />}
           Next
