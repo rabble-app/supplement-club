@@ -237,8 +237,10 @@ export default function Checkout({
   }, [params, context?.user?.id, data?.teamId, step]);
 
   useEffect(() => {
-    fetchReferralInfo();
-  }, []);
+    if (step === 4) {
+      fetchReferralInfo();
+    }
+  }, [step]);
 
   const fetchReferralInfo = async () => {
     try {
