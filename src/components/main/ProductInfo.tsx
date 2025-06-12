@@ -17,7 +17,7 @@ export default function ProductInfo({
 			<div className="bg-blue lg:ml-auto w-full">
 				<div className="grid gap-[56px] lg:gap-[112px] px-[16px] lg:px-[32px] pt-[40px] pb-[76px] lg:justify-end">
 					<p className="max-w-[612px] text-[44px] lg:text-[50px] leading-[40px] lg:leading-[58px] text-white order-1 font-hagerman">
-						Get started on Supplement club
+						Get started on <br /> Supplement club
 					</p>
 					<div className="max-w-[500px] text-[32px] lg:text-[48px] leading-[36px] lg:leading-[55px] font-[400] text-white order-2 font-hagerman">
 						<p className="pb-[8px] text-[20px] leading-[24px] text-grey9 font-inconsolata">
@@ -43,7 +43,7 @@ export default function ProductInfo({
 						<div className="text-[40px] leading-[46px] font-[700] text-white mb-[2px] flex items-center font-inconsolata">
 							£{Number(product?.price ?? 0).toFixed(2)}{" "}
 							<span className="text-[16px] leading-[18px] text-grey9 ml-[2px]">
-								(£0.25 / count)
+								(£{Number(product?.pricePerCount ?? 0).toFixed(2)} / count)
 							</span>
 						</div>
 
@@ -53,7 +53,7 @@ export default function ProductInfo({
 								£{product?.rrp}
 							</span>{" "}
 							<span className="text-[24px] leading-[27px] font-[700] text-blue4 font-inconsolata">
-								{precentage}% OFF
+								{Number(product?.activePercentageDiscount)}% OFF
 							</span>
 						</div>
 

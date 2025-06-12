@@ -22,25 +22,25 @@ const homeCards = [
     title: "Straight from the Source",
     subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
     description:
-      "Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door..",
+      "Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door.",
   },
   {
     id: 2,
-    src: "/images/truck.svg",
-    alt: "Truck",
-    title: "Get Started Today",
-    subtitle: "Next Day Delivery",
-    description:
-      "Choose the supplements you want today, and we'll ship you a 'sync package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
-  },
-  {
-    id: 3,
     src: "/images/icons/people.svg",
     alt: "People",
     title: "There’s Savings in Numbers",
     subtitle: "The More People Join the Cheaper it Gets",
     description:
       "Your sync package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of sync with the bulk ordering cycle.",
+  },
+  {
+    id: 3,
+    src: "/images/truck.svg",
+    alt: "Truck",
+    title: "Get Started Today",
+    subtitle: "Next Day Delivery",
+    description:
+      "Choose the supplements you want today, and we'll ship you a 'sync package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
   },
 ] as IHomeCardModel[];
 
@@ -177,7 +177,7 @@ const membershipData = [
 export default async function Home() {
   const productId = process.env.NEXT_PUBLIC_PRODUCT_ID as string;
 
-  const fetchProduct = async () => await productService.product(productId);
+  const fetchProduct = async () => await productService.product(productId, process.env.NEXT_PUBLIC_TEAM_ID);
 
   const fetchProducts = async () => await productService.productsLimit(3);
 
@@ -196,9 +196,9 @@ export default async function Home() {
             YOU DON’T NEED ANOTHER SUPPLEMENT BRAND
           </div>
           <p className="text-[16px] lg:text-[20px] leading-[24px] lg:leading-[36px] text-[#757575] mb-[58px]">
-            Join buying teams for 100% pure, premium ingredients direct from
-            world-leading laboratories and get it delivered direct to you up to
-            73% cheaper.
+            You need pure ingredients before brands get to them. Access
+            quarterly drops of pure, pharmaceutical-grade compounds, delivered
+            direct from the labs, untouched, unblended, and up to 55% cheaper.
           </p>
           <a href="#products">
             <Image
@@ -259,7 +259,7 @@ export default async function Home() {
                 <div>
                   <div className="mb-[40px] text-white">
                     <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
-                      Ubiquinol{" "}
+                      {productModel?.name}{" "}
                       <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
                         £{Number(productModel?.price).toFixed(2)}{" "}
                       </span>
@@ -268,14 +268,9 @@ export default async function Home() {
                       {productModel?.producer?.businessName}
                       <p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
                         <span className="text-[20px] leading-[23px] text-grey2 line-through">
-                          £{Number(productModel?.wholesalePrice).toFixed(2)}
+                          £{Number(productModel?.rrp).toFixed(2)}
                         </span>{" "}
-                        {productModel
-                          ? Number(
-                              Number(productModel.price) /
-                                Number(productModel.rrp)
-                            ).toFixed(2)
-                          : 0}
+                        {Number(productModel?.activePercentageDiscount)}
                         % OFF
                       </p>
                     </div>
@@ -285,7 +280,7 @@ export default async function Home() {
                     className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
                     asChild
                   >
-                    <Link href={`/products/${productId}`}>Buy Now</Link>
+                    <Link href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}>Buy Now</Link>
                   </Button>
                 </div>
               </div>

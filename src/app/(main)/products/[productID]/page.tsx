@@ -319,6 +319,14 @@ export default function ProductDetails({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const getSubscriptionPlan = (productID: string) => {
+    return subscriptionPlans.find((plan) =>
+      plan.team.basket.some((basket) => basket.product.id === productID)
+    );
+  };
+
+  const subscriptionPlan = getSubscriptionPlan(product?.id ?? "");
+
   useEffect(() => {
     if (!product?.priceInfo || typeof product.members !== "number") return;
     const idx =
@@ -327,6 +335,11 @@ export default function ProductDetails({
         .filter((count) => product.members >= count).length - 1;
     setActiveMemberIndex(idx);
   }, [product]);
+
+  useEffect(() => {
+    if (!context?.user) return;
+    setCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? 0);
+  }, [context?.user, subscriptionPlan]);
 
   useEffect(() => {
     const fetchSubscriptionPlans = async () => {
@@ -339,7 +352,7 @@ export default function ProductDetails({
         console.error("error", error);
       }
     };
-  
+
     const fetchReferralInfo = async () => {
       try {
         const response = await referalService.getReferalInfo();
@@ -352,14 +365,6 @@ export default function ProductDetails({
     fetchReferralInfo();
     fetchSubscriptionPlans();
   }, [context?.user?.id]);
-
-  const getSubscriptionPlan = (productID: string) => {
-    return subscriptionPlans.find((plan) =>
-      plan.team.basket.some((basket) => basket.product.id === productID)
-    );
-  };
-
-  const subscriptionPlan = getSubscriptionPlan(product?.id ?? "");
 
   if (loading) return <Spinner />;
 
