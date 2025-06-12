@@ -86,8 +86,6 @@ export default function Subscription({
     fetchParams();
   }, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
 
-  console.log(managePlan);
-
   async function subscriptionCancel() {
     await teamsService.cancelSubscriptionPlan(subscriptionID);
     router.push("/dashboard/manage-plans/");
