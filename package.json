@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dev:mobile": "next dev -H 192.168.0.13"
+    "dev:mobile": "next dev -H 192.168.0.102"
   },
   "dependencies": {
     "@getaddress/autocomplete": "^3.0.9",

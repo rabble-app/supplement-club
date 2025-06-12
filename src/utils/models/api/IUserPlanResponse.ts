@@ -49,6 +49,7 @@ export interface CapsuleInfo {
 	title1: string;
 	title2: string;
 	title3: string;
+	others: string;
 }
 
 export interface Producer {

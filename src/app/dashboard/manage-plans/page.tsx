@@ -79,7 +79,7 @@ export default function Plans() {
         position: "top-right",
       });
       return response;
-    } catch (error) {
+    } catch {
       CustomToast({
         title: "Error: Something went wrong",
         status: StatusToast.ERROR,

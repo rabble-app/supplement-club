@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -21,18 +21,6 @@ const PreOrderInfo = dynamic(
 );
 const ProductFaqs = dynamic(
   () => import("@/components/main/products/ProductFaqs")
-);
-const ProfuctTable = dynamic(
-  () => import("@/components/main/products/ProductTable")
-);
-const SummaryProduct = dynamic(
-  () => import("@/components/shared/SummaryProduct")
-);
-const BottomSection = dynamic(
-  () => import("@/components/main/products/BottomSection")
-);
-const ReferralCardsWithLink = dynamic(
-  () => import("@/components/shared/ReferralCardsWithLink")
 );
 
 import {
@@ -65,6 +53,9 @@ import ConfirmJoining from "@/components/main/products/[productID]/checkout/Conf
 import { referalService } from "@/services/referalService";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
+import { usersService } from "@/services/usersService";
+import IManagePlanModel from "@/utils/models/IManagePlanModel";
+import Link from "next/link";
 
 interface ProductDetailsProps {
   productID: string;
@@ -79,9 +70,12 @@ export default function ProductDetails({
   const [api, setApi] = useState<CarouselApi>();
   const [members, setMembers] = useState<IMemberCardModel[]>([]);
   const [orders, setOrders] = useState<IOrderSummaryModel[]>([]);
-  const [hasUserProduct, setHasUserProduct] = useState<boolean>();
+  const [, setHasUserProduct] = useState<boolean>();
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<
+    IManagePlanModel[]
+  >([]);
 
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
@@ -94,10 +88,20 @@ export default function ProductDetails({
   const [capsulePerDay, setCapsulePerDay] = useState(2);
   const [product, setProduct] = useState<ISingleProductModel>();
   const [units, setUnits] = useState("g");
-  const [summary, setSummary] = useState<ISummaryProductModel>(
+  const [, setSummary] = useState<ISummaryProductModel>(
     {} as ISummaryProductModel
   );
   const [activeMemberIndex, setActiveMemberIndex] = useState(1);
+
+  const gramsPerCount =
+    Number(product?.gramsPerCount) === 0 ? 1 : Number(product?.gramsPerCount);
+  const productPrice = (capsulePerDay / gramsPerCount) * (product?.price ?? 0);
+  const productRrp = (capsulePerDay / gramsPerCount) * (product?.rrp ?? 0);
+
+  const [selectedState, setSelectedState] = useState(2);
+  const [capsuleCount, setCapsuleCount] = useState(0);
+  const capsules = useMemo(() => selectedState * days, [selectedState]);
+  const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
 
   const { currentQuarter } = getQuarterInfo();
   useEffect(() => {
@@ -118,11 +122,6 @@ export default function ProductDetails({
   const [nextQuater] = useState(
     currentQuarter + 1 > 4 ? 1 : currentQuarter + 1
   );
-
-  const gramsPerCount =
-    Number(product?.gramsPerCount) === 0 ? 1 : Number(product?.gramsPerCount);
-  const productPrice = (capsulePerDay / gramsPerCount) * (product?.price ?? 0);
-  const productRrp = (capsulePerDay / gramsPerCount) * (product?.rrp ?? 0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -330,22 +329,42 @@ export default function ProductDetails({
   }, [product]);
 
   useEffect(() => {
-    fetchReferralInfo();
-  }, []);
+    const fetchSubscriptionPlans = async () => {
+      try {
+        const response = await usersService.getSubscriptionPlans(
+          context?.user?.id ?? ""
+        );
+        setSubscriptionPlans(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
+  
+    const fetchReferralInfo = async () => {
+      try {
+        const response = await referalService.getReferalInfo();
+        setReferralInfo(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
 
-  const fetchReferralInfo = async () => {
-    try {
-      const response = await referalService.getReferalInfo();
-      setReferralInfo(response);
-    } catch (error) {
-      console.error("error", error);
-    }
+    fetchReferralInfo();
+    fetchSubscriptionPlans();
+  }, [context?.user?.id]);
+
+  const getSubscriptionPlan = (productID: string) => {
+    return subscriptionPlans.find((plan) =>
+      plan.team.basket.some((basket) => basket.product.id === productID)
+    );
   };
+
+  const subscriptionPlan = getSubscriptionPlan(product?.id ?? "");
 
   if (loading) return <Spinner />;
 
   return (
-    <div className="grid lg:grid-cols-2 md:gap-[32px] container-width relative">
+    <div className="grid lg:grid-cols-2 md:gap-[32px] container-width relative overflow-x-hidden w-full">
       <div className="contents md:grid gap-[32px]">
         <Carousel
           setApi={setApi}
@@ -409,7 +428,7 @@ export default function ProductDetails({
           </div>
         </Carousel>
 
-        <div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0]">
+        <div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] mt-20 md:mt-0 md:mx-[0] px-[16px] md:px-[0]">
           {product && (
             <TeamPrice
               rrp={product.rrp}
@@ -427,23 +446,19 @@ export default function ProductDetails({
               activeMemberIndex={activeMemberIndex}
               discount={product?.discount ?? 0}
               activePercentageDiscount={product?.activePercentageDiscount ?? 0}
+              gramsPerCount={product?.gramsPerCount ?? 0}
+              capsuleCount={capsuleCount}
             />
           )}
 
           <div
             className={`grid gap-[60px] mt-[51px] ${
-              product?.isComming ? "md:mt-[70px]" : "md:mt-[0]"
+              product?.isComming ? "md:mt-[70px]" : "md:mt-[0] pb-[200px]"
             }`}
           >
             <PreOrderInfo productBenefits={product?.productBenefits} />
 
             <ProductFaqs healthCategories={product?.healthCategories} />
-
-            <ProfuctTable />
-
-            <div ref={bottomRef} className="mb-[75px] md:mb-[84px]">
-              <BottomSection />
-            </div>
           </div>
         </div>
       </div>
@@ -521,6 +536,12 @@ export default function ProductDetails({
               }
               gramsPerCount={product?.gramsPerCount ?? 0}
               pricePerPoche={product?.pricePerPoche ?? 0}
+              capsuleCount={capsuleCount}
+              capsules={capsules}
+              selectedState={selectedState}
+              setSelectedState={setSelectedState}
+              setCapsuleCount={setCapsuleCount}
+              gPerCount={gPerCount}
             />
             {/* Placeholder keeps layout when sticky becomes fixed */}
             <div
@@ -593,6 +614,12 @@ export default function ProductDetails({
               }
               gramsPerCount={product?.gramsPerCount ?? 0}
               pricePerPoche={product?.pricePerPoche ?? 0}
+              capsuleCount={capsuleCount}
+              capsules={capsules}
+              selectedState={selectedState}
+              setSelectedState={setSelectedState}
+              setCapsuleCount={setCapsuleCount}
+              gPerCount={gPerCount}
             />
 
             {members.length > 0 && (
@@ -612,7 +639,11 @@ export default function ProductDetails({
 
             <div>
               {basket.map((item) => (
-                <div className="w-full">
+                <Link
+                  href={`/dashboard/manage-plans/${subscriptionPlan?.id}`}
+                  className="w-full"
+                  key={item.id}
+                >
                   <div
                     className={`grid gap-2 items-center grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px] shadow-2xl rounded-[12px] py-4 px-3 mr-2`}
                   >
@@ -674,7 +705,7 @@ export default function ProductDetails({
                       />
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
 

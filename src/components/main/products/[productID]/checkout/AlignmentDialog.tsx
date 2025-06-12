@@ -1,6 +1,6 @@
 /** @format */
 
-"use client";;
+"use client";
 import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +35,7 @@ export default function AlignmentDialog({
   updateQuantityAction,
   discount,
   setSummary,
-  }: Readonly<AlignmentDialogProps>) {
+}: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const context = useUser();
 
@@ -67,10 +67,10 @@ export default function AlignmentDialog({
       <DialogContent className="w-full h-full sm:h-auto sm:max-w-[650px] gap-4 rounded pb-6">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-4 p-4 justify-between md:justify-start"
         >
-          <DialogHeader className="flex flex-row justify-between items-center relative pb-40">
-            <DialogTitle className="absolute top-[56px] left-0 right-0">
+          <div className="flex flex-col gap-4">
+          <DialogHeader className="flex flex-row justify-between items-center relative pb-60 md:pb-40">
+            <DialogTitle className="absolute top-[120px] md:top-[56px] left-0 right-0">
               <h1 className="uppercase text-center font-hagerman text-2xl font-normal">
                 You have {daysUntilNextDrop} days until the next drop
               </h1>
@@ -108,22 +108,28 @@ export default function AlignmentDialog({
               updateQuantityAction={updateQuantityAction}
               discount={discount}
               className="bg-[#F6F6F6] p-4 mb-6"
+              isAlignmentDialog={true}
             />
           ))}
-          <Button
-            type="submit"
-            className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
-            value="yes"
-          >
-            Yes
-          </Button>
-          <Button
-            type="submit"
-            className={`text-blue text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-[#7878801F]`}
-            value="no"
-          >
-            No
-          </Button>
+
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <Button
+              type="submit"
+              className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
+              value="yes"
+            >
+              Yes
+            </Button>
+            <Button
+              type="submit"
+              className={`text-blue text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-[#7878801F]`}
+              value="no"
+            >
+              No
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

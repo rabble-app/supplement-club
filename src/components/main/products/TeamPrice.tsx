@@ -16,6 +16,8 @@ export default function TeamPrice({
   activeMemberIndex,
   discount,
   activePercentageDiscount,
+  gramsPerCount,
+  capsuleCount,
 }: Readonly<{
   rrp: number;
   members: number;
@@ -30,7 +32,11 @@ export default function TeamPrice({
   activeMemberIndex: number;
   discount: number;
   activePercentageDiscount: number;
+  gramsPerCount: number;
+  capsuleCount: number;
 }>) {
+
+  const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
   function getCurrentClasses(percentageDiscount: number) {
     let classes = !isComming
       ? " border-[1px] bg-grey19 my-[15px] border-grey20"
@@ -204,7 +210,7 @@ export default function TeamPrice({
             {members} Members
           </div>
           {!isComming && activeMemberIndex + 1 < priceInfo.length && (
-            <p className="text-[16px] font-semibold text-[#999999] leading-[18px]">
+            <p className="text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
               {nextPriceDiscountLevel?.membersNeeded} more members unlocks{" "}
               {nextPriceDiscountLevel?.expectedDiscount.toFixed(2)}% off for
               everyone
@@ -222,7 +228,7 @@ export default function TeamPrice({
         </div>
         <div className="grid gap-[8px]">
           <div className="text-[28px] font-[900] font-inconsolata flex items-center">
-            £{Number(price).toFixed(2)}{" "}
+            £{Number(price * capsuleCount / gPerCount).toFixed(2)}{" "}
             <span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px] whitespace-nowrap">
               (£{pricePerCount.toFixed(2)} / count)
             </span>
@@ -230,10 +236,12 @@ export default function TeamPrice({
           <div className="text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata">
             RRP{" "}
             <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-              £{Number(rrp).toFixed(2)}
+              £{Number(rrp * capsuleCount / gPerCount).toFixed(2)}
             </span>{" "}
             <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata">
-              {discount.toFixed(2)}% OFF
+              {activePercentageDiscount
+                ? activePercentageDiscount.toFixed(2)
+                : discount.toFixed(2)}% OFF
             </span>
           </div>
         </div>
@@ -241,7 +249,7 @@ export default function TeamPrice({
 
       {isComming && <Separator className="bg-grey22 h-[1px]" />}
 
-      <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mx-[-32px]">
+      <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mt-8 md:mt-0">
         {priceInfo.map((item, index) => (
           <div
             key={`info-${index + 1}`}
@@ -279,7 +287,7 @@ export default function TeamPrice({
                       : ""
                   }`}
                 >
-                  £{item.actualDiscountedValue?.toFixed(2)}
+                  £{item.actualDiscountedValue ? (item.actualDiscountedValue * capsuleCount / gPerCount).toFixed(2) : 0}
                 </p>
                 <p
                   className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center
@@ -290,7 +298,7 @@ export default function TeamPrice({
                       }
 											${
                         item.percentageDiscount === activePercentageDiscount
-                          ? "text-blue text-[24px]"
+                          ? "text-blue text-[16px]"
                           : "text-grey6"
                       }`}
                 >

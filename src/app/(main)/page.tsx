@@ -191,7 +191,7 @@ export default async function Home() {
 			<div className="relative lg:max-w-[1312px] lg:mx-[auto] w-full p-[16px] flex flex-col lg:flex-row justify-between">
 				<div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] lg:left-[68px] lg:w-[600px] h-full">
 					<div className="text-[48px] lg:text-[64px] leading-[48px] lg:leading-[74px] font-[400] font-hagerman text-blue mb-[23px]">
-						Pharmaceutical Grade Supplements at a Fraction of the Cost
+					YOU DON’T NEED ANOTHER SUPPLEMENT BRAND
 					</div>
 					<p className="text-[16px] lg:text-[20px] leading-[24px] lg:leading-[36px] text-[#757575] mb-[58px]">
 						Join buying teams for 100% pure, premium ingredients direct from
@@ -353,7 +353,7 @@ export default async function Home() {
 							<br />
 							With Supplement Club, you get direct access to top labs in Japan,
 							the US, and Europe. Our transparent model shows you exactly where
-							your supplements come from—no more blindly trusting brands. You
+							your supplements come from, no more blindly trusting brands. You
 							can research yourself and know you&apos;re getting the best money
 							can buy with 100% transparency.
 							<br />
@@ -394,9 +394,10 @@ export default async function Home() {
 								<p className="leading-[16px]">Retailer Markups</p>
 							</div>
 
-							<div className="flex flex-col gap-[8px] max-w-[100px]">
+							<div className="flex flex-col gap-[8px] max-w-[100px] h-full">
 								<Image
 									src="/images/icons/buy-discount-shop-2-icon.svg"
+									className="h-full flex flex-col items-start"
 									alt="Checkmark icon"
 									width={32}
 									height={32}
