@@ -43,13 +43,13 @@ function renderPrice(
 
   return (
     <div className="grid gap-[8px]">
-      <div className={`${model.isMembership ? "text-xl  text-right items-end" : "text-3xl flex"} font-[800] text-black items-center gap-1 font-inconsolata`}>
+      <div className={`${model.isMembership ? "md:text-xl  text-right items-end" : "text-xl md:text-3xl flex"} font-[800] text-black items-center gap-1 font-inconsolata`}>
         £{price.toFixed(2)}
        {!model.isMembership && <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
           (£{model.pricePerCount?.toFixed(2)}/count)
         </span>}
       </div>
-      <div className="text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+      <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
         RRP{" "}
         <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
           £{(Number(model.rrp) ?? 0).toFixed(2)}
@@ -68,6 +68,7 @@ export default function OrderSummaryCard({
   discount,
   className,
   step,
+  isAlignmentDialog,
 }: Readonly<{
   model:
     | IOrderSummaryModel
@@ -78,6 +79,7 @@ export default function OrderSummaryCard({
   discount?: number;
   className?: string;
   step?: number;
+  isAlignmentDialog?: boolean;
 }>) {
 
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
@@ -135,9 +137,11 @@ export default function OrderSummaryCard({
           <div className="flex items-center gap-[16px]">
             <Button
               type="button"
-              className="w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px] cursor-pointer"
+              className={`w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px] cursor-pointer ${
+                checkoutData.quantity === 1 && isAlignmentDialog ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={decrement}
-              disabled={(checkoutData.quantity ?? 0) === 1}
+              disabled={checkoutData.quantity === 1 && isAlignmentDialog}
             >
               -
             </Button>
@@ -146,8 +150,11 @@ export default function OrderSummaryCard({
             </span>
             <Button
               type="button"
-              className="w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px] cursor-pointer"
+              className={`w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px] cursor-pointer select-none ${
+                (checkoutData.quantity ?? 0) === 12 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={increment}
+              disabled={(checkoutData.quantity ?? 0) === 12}
             >
               +
             </Button>

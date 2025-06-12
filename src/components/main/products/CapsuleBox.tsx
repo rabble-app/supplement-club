@@ -1,7 +1,7 @@
 /** @format */
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
@@ -60,6 +60,12 @@ export default function CapsuleBox({
   rrpPerCount,
   gramsPerCount,
   pricePerPoche,
+  capsuleCount,
+  capsules,
+  selectedState,
+  setSelectedState,
+  setCapsuleCount,
+  gPerCount,
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -84,10 +90,16 @@ export default function CapsuleBox({
   rrpPerCount: number;
   gramsPerCount: number;
   pricePerPoche: number;
+  capsuleCount: number;
+  capsules: number;
+  selectedState: number;
+  setSelectedState: (value: number) => void;
+  setCapsuleCount: (value: number) => void;
+  gPerCount: number;
 }>) {
-  const days = 90;
-  const [selectedState, setSelectedState] = useState(2);
-  const [capsuleCount, setCapsuleCount] = useState(0);
+  // const days = 90;
+  // const [selectedState, setSelectedState] = useState(2);
+  // const [capsuleCount, setCapsuleCount] = useState(0);
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
 
@@ -97,20 +109,22 @@ export default function CapsuleBox({
     ["grams", "gm"].includes(unitsOfMeasurePerSubUnit ?? "") ? "g" : " Capsules"
   );
 
-  const capsules = useMemo(() => selectedState * days, [selectedState]);
-  const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
+  // const days = 90;
+  // const [selectedState, setSelectedState] = useState(2);
+  // const [capsuleCount, setCapsuleCount] = useState(0);
+  // const capsules = useMemo(() => selectedState * days, [selectedState]);
+  // const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
 
   useEffect(() => {
     if (capsuleInfo) setSelectedState(capsuleInfo[1].capsuleCount);
-  }, [capsuleInfo]);
+  }, [capsuleInfo, setSelectedState]);
 
   useEffect(() => {
     setCapsuleCount(
       capsuleInfo?.find((c) => c.capsuleCount === selectedState)
         ?.capsuleCount ?? 0
     );
-  }, [capsuleInfo, selectedState]);
-
+  }, [capsuleInfo, selectedState, setCapsuleCount]);
 
   function selectCapsulte(value: number) {
     setSelectedState(value);
@@ -148,7 +162,7 @@ export default function CapsuleBox({
     gramsPerCount,
     pricePerPoche,
     price,
-    quantity: capsuleCount/gPerCount,
+    quantity: capsuleCount / gPerCount,
   };
 
   return (
@@ -185,7 +199,16 @@ export default function CapsuleBox({
                 value={option.capsuleCount.toString()}
                 className="mx-auto"
               />
-              {generateImage(option.capsuleCount)}
+              {units === "g" ? (
+                <Image
+                  src="/images/icons/gram-link-icon.svg"
+                  alt="gram-link-icon"
+                  width={24}
+                  height={24}
+                />
+              ) : (
+                generateImage(option.capsuleCount)
+              )}
             </div>
             <p className="text-[12px] h-[14px] font-bold font-helvetica text-center">
               {getCapsuleLabel(option.capsuleCount)}
@@ -216,26 +239,26 @@ export default function CapsuleBox({
                 key={option.capsuleCount}
                 className="grid md:hidden gap-[8px]"
               >
-                <div className="flex justify-between gap-[7px]">
+                <div className="flex justify-between">
                   <p className="text-grey7 text-[12px] leading-[14px] max-w-[132px]">
                     3 Month Subscription <br />({capsules}
                     {units})
                   </p>
-                  <div className="max-w-[164px] grid grid-cols-2 gap-[7px]">
-                    <div className="flex flex-col gap-[7px] text-[16px] leading-[18px] font-bold">
-                      £{(capsules * pricePerCount)?.toFixed(2)}
+                  <div className="flex gap-[7px]">
+                    <div className="flex flex-col gap-[7px] text-[16px] leading-[16px] font-bold">
+                      £{((price * capsuleCount) / gPerCount)?.toFixed(2)}
                       <span className="text-[10px] leading-[11.5px] font-bold text-grey1">
-                        (£{pricePerCount}/count)
+                        (£{pricePerCount?.toFixed(2)} / count)
                       </span>
                     </div>
                     <div>
-                      <div className="text-[16px] leading-[18px] text-grey4">
+                      <div className="text-[16px] leading-[16px] text-grey4">
                         RRP{" "}
-                        <span className="text-[16px] leading-[18px] font-bold">
+                        <span className="text-[16px] leading-[16px] font-bold line-through">
                           £{Number(rrp).toFixed(2)}{" "}
                         </span>
                       </div>
-                      <div className="text-[16px] leading-[18px] font-bold text-blue">
+                      <div className="text-[16px] leading-[16px] font-bold text-blue">
                         {discount.toFixed(2)}% OFF
                       </div>
                     </div>
@@ -257,8 +280,8 @@ export default function CapsuleBox({
           </label>
         ))}
       </RadioGroup>
-      <div className="hidden md:grid gap-[16px] outline outline-[2px] outline-blue p-[16px]">
-        <div className="flex flex-col gap-[2px]">
+      <div className="grid gap-[16px] md:outline outline-[2px] outline-blue p-[16px]">
+        <div className="hidden md:flex flex-col gap-[2px]">
           <p className="text-grey7 text-[12px] leading-[12px]">
             {getCapsuleLabel(
               capsuleInfo?.find((c) => c.capsuleCount === selectedState)
@@ -270,15 +293,51 @@ export default function CapsuleBox({
           </p>
         </div>
 
+        <hr className="border-grey3 h-[1px] mb-[10px] md:hidden" />
         <div className="grid gap-[16px]">
           {orders?.map((order) => (
             <OrderSummaryCard
               updateQuantityAction={updateQuantityAction}
               key={order.id}
               model={order}
-              discount={discount}
+              discount={
+                activePercentageDiscount ? activePercentageDiscount : discount
+              }
             />
           ))}
+          <hr className="border-grey3 h-[1px] mt-[10px] md:hidden" />
+          <div className="md:hidden grid gap-[7px] md:gap-0 grid-cols-[84px_1fr] items-center w-full">
+            <div>
+              <p className="text-[32px] leading-[33px] font-inconsolata font-[900] text-black">
+                Total
+              </p>
+              <p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
+                {capsules}
+                {units === "g" ? `${units}` : ` ${units}`}
+              </p>
+            </div>
+
+            <div className="grid gap-[7px] text-right">
+              <div className="gap-[2px] text-[32px] font-inconsolata font-[900] flex justify-end items-center">
+                £{Number((price * capsuleCount) / gPerCount)?.toFixed(2)}{" "}
+                <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+                  (£{pricePerCount?.toFixed(2)}/count)
+                </span>
+              </div>
+              <div className="block text-[24px] leading-[24px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+                RRP{" "}
+                <span className="text-[24px] leading-[24px] line-through font-bold font-inconsolata">
+                  £{(Number(rrp) ?? 0).toFixed(2)}
+                </span>{" "}
+                <span className="text-[24px] leading-[24px] font-bold text-blue font-inconsolata whitespace-nowrap">
+                  {activePercentageDiscount
+                    ? activePercentageDiscount.toFixed(2)
+                    : discount.toFixed(2)}
+                  % OFF
+                </span>
+              </div>
+            </div>
+          </div>
           <Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
             <Link
               className="w-full h-full flex items-center justify-center"

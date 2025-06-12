@@ -2,7 +2,6 @@
 
 "use client";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import OrderSummaryCard from "./OrderSummaryCard";
@@ -16,6 +15,7 @@ import GiftIcon from "@/components/icons/gift-icon.svg";
 import CheckmarkIcon from "@/components/icons/checkmark-icon.svg";
 import { CustomToast } from "./Toast";
 import { StatusToast } from "./Toast";
+import { Button } from "../ui/button";
 
 export default function SummaryProduct({
   model,
@@ -139,9 +139,7 @@ export default function SummaryProduct({
                 )}
             </div>
           )}
-          {model?.orders?.length > 0 && (
-            <Separator className="bg-grey3 h-[1px]" />
-          )}
+          {model?.orders?.length > 0 && <hr className="border-grey3 border" />}
           <div className="flex justify-between items-center">
             {model?.deliveryText && (
               <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
@@ -153,18 +151,30 @@ export default function SummaryProduct({
               {data.daysUntilNextDrop} days until the next quarterly drop
             </p>
           </div>
-          {showTopLine && <Separator className="bg-grey3 h-[1px]" />}
-          {model?.orders?.map((order) => (
-            <OrderSummaryCard
-              key={order.id}
-              model={order}
-              updateQuantityAction={updateQuantityAction}
-              discount={data.discount}
-              step={step}
-            />
-          ))}
+          {showTopLine && <hr className="bg-grey3 h-[1.5px]" />}
+          {checkoutData.quantity && checkoutData.quantity > 0 ? (
+            model?.orders?.map((order) => (
+              <OrderSummaryCard
+                key={order.id}
+                model={order}
+                updateQuantityAction={updateQuantityAction}
+                discount={data.discount}
+                step={step}
+              />
+            ))
+          ) : (
+            <Button
+              variant="link"
+              className="text-center w-fit mx-auto"
+              onClick={() => updateQuantityAction(1)}
+            >
+              <p className="text-black font-inconsolata font-bold text-base underline text-center">
+                Add My Alignment Package
+              </p>
+            </Button>
+          )}
           {model?.referals?.length > 0 && (
-            <Separator className="bg-grey3 h-[1px]" />
+            <hr className="border-grey3 border" />
           )}
           {model?.referals?.map((referal, idx) => (
             <div
@@ -185,7 +195,7 @@ export default function SummaryProduct({
             </div>
           ))}
           {model?.subscriptions?.length > 0 && (
-            <Separator className="bg-grey3 h-[1px]" />
+            <hr className="border-grey3 border" />
           )}
           {model?.subscriptions?.length > 0 && (
             <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
@@ -203,7 +213,7 @@ export default function SummaryProduct({
           ))}
 
           {model?.membership?.length > 0 && (
-            <Separator className="bg-grey3 h-[1px]" />
+            <hr className="border-grey3 border" />
           )}
 
           {model?.membership?.length > 0 && (
@@ -274,7 +284,7 @@ export default function SummaryProduct({
               </div>
             </div>
           )}
-          <Separator className="bg-grey3 h-[1px]" />
+          <hr className="border-grey3 border" />
           <div className="grid gap-[10px]">
             <div className="flex justify-between items-center">
               <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
@@ -293,7 +303,7 @@ export default function SummaryProduct({
               </p>
             </div>
           </div>
-          <Separator className="bg-grey3 h-[1px]" />
+          <hr className="border-grey3 border" />
         </>
       )}
 

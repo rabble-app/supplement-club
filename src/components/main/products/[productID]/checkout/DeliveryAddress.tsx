@@ -138,7 +138,7 @@ export default function DeliveryAddress({
         <FormFieldComponent
           form={currentForm}
           label="Mobile Number"
-          placeholder="+71 638 236783"
+          placeholder="+44 7873 453389"
           id="mobileNumber"
           name="mobileNumber"
         />

@@ -67,7 +67,7 @@ export default function Checkout({
   );
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
-  const [isReferralCodeApplied, setIsReferralCodeApplied] =
+  const [, setIsReferralCodeApplied] =
     useState<boolean>(false);
   // const [membershipSubscription, setMembershipSubscription] =
   //   useState<IMembershipSubscriptionResponse>();
@@ -324,6 +324,7 @@ export default function Checkout({
         router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.user, basket, data?.productId, data?.teamId, step]);
 
   return (
