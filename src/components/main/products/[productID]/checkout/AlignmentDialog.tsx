@@ -27,6 +27,8 @@ type AlignmentDialogProps = {
   discount: number;
   setSummary: React.Dispatch<React.SetStateAction<ISummaryProductModel>>;
   isComming?: boolean;
+  isInfoIconClicked?: boolean;
+  setIsInfoIconClicked?: (val: boolean) => void;
 };
 
 export default function AlignmentDialog({
@@ -37,15 +39,17 @@ export default function AlignmentDialog({
   discount,
   setSummary,
   isComming,
+  isInfoIconClicked,
+  setIsInfoIconClicked,
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const context = useUser();
 
   useEffect(() => {
-    if (!context?.user) {
+    if (!context?.user || isInfoIconClicked) {
       setIsOpen(true);
     }
-  }, [context?.user]);
+  }, [context?.user, isInfoIconClicked]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,16 +74,14 @@ export default function AlignmentDialog({
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4">
             <DialogHeader
-              className={`flex flex-row justify-between items-center relative ${
-                isComming ? "pb-[200px] md:pb-[70px]" : "pb-60 md:pb-40"
-              }`}
+              className={`flex flex-row justify-between items-center relative ${isComming ? "pb-[200px] md:pb-[70px]" : "pb-60 md:pb-40"
+                }`}
             >
               <DialogTitle
-                className={`absolute ${
-                  isComming
-                    ? "top-[70px] md:top-0"
-                    : "top-[120px] md:top-[56px]"
-                } left-0 right-0`}
+                className={`absolute ${isComming
+                  ? "top-[70px] md:top-0"
+                  : "top-[120px] md:top-[56px]"
+                  } left-0 right-0`}
               >
                 <h1 className="uppercase text-center font-hagerman text-2xl font-normal">
                   {isComming
@@ -89,16 +91,17 @@ export default function AlignmentDialog({
                 <p className="text-center font-helvetica text-base font-normal mt-2 mb-6 text-[#8E8E93]">
                   {isComming
                     ? "We haven’t launched this team yet"
-                    : `Do you want us to send you a Sync package to cover the next ${daysUntilNextDrop} days. This takes you up to ${
-                        deliveryDate
-                          ? format(new Date(deliveryDate), "MMMM dd yyyy")
-                          : ""
-                      } and aligns you with the team.`}
+                    : `Do you want us to send you a Sync package to cover the next ${daysUntilNextDrop} days. This takes you up to ${deliveryDate
+                      ? format(new Date(deliveryDate), "MMMM dd yyyy")
+                      : ""
+                    } and aligns you with the team.`}
                 </p>
               </DialogTitle>
               {!isComming && (
                 <DialogClose
-                  onClick={() => setIsOpen(false)}
+                  onClick={() =>
+                    setIsOpen(false)
+                  }
                   className="absolute top-0 right-0"
                 >
                   <div className="border border-grey32 w-10 h-10 rounded-full flex justify-center items-center">
@@ -207,6 +210,9 @@ export default function AlignmentDialog({
                 type="submit"
                 className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
                 value="yes"
+                onClick={() => {
+                  setIsInfoIconClicked?.(false);
+                }}
               >
                 Ok
               </Button>

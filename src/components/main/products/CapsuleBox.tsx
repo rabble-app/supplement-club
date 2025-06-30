@@ -69,6 +69,7 @@ export default function CapsuleBox({
   founderSpots,
   founderMembersNeeded,
   founderDiscount,
+  leadTime
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -102,6 +103,7 @@ export default function CapsuleBox({
   founderSpots?: number;
   founderMembersNeeded?: number;
   founderDiscount?: number;
+  leadTime?: number;
 }>) {
   // const days = 90;
   // const [selectedState, setSelectedState] = useState(2);
@@ -169,6 +171,10 @@ export default function CapsuleBox({
     pricePerPoche,
     price,
     quantity: capsuleCount / gPerCount,
+    founderSpots,
+    founderMembersNeeded,
+    founderDiscount,
+    leadTime
   };
 
   return (
@@ -176,22 +182,20 @@ export default function CapsuleBox({
       <RadioGroup
         value={selectedState.toString()}
         onValueChange={(value) => selectCapsulte(Number(value))}
-        className={`grid gap-[5px] ${
-          capsuleInfo?.length === 2
+        className={`grid gap-[5px] ${capsuleInfo?.length === 2
             ? "md:grid-cols-2"
             : capsuleInfo?.length === 3
-            ? "md:grid-cols-3"
-            : "md:grid-cols-4"
-        }`}
+              ? "md:grid-cols-3"
+              : "md:grid-cols-4"
+          }`}
       >
         {capsuleInfo?.map((option) => (
           <label
             key={option.capsuleCount}
-            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] ${
-              selectedState === option.capsuleCount
+            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] ${selectedState === option.capsuleCount
                 ? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
                 : "border-[1px] border-grey18"
-            }`}
+              }`}
           >
             <input
               type="radio"

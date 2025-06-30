@@ -208,7 +208,7 @@ export default function ProductDetails({
     //     quantity: capsulePerDay,
     //   } as never);
     // } else 
-    if (!product?.isComming) {
+    if (product) {
       summaryOrders.unshift({
         id: "1",
         alt: "",
@@ -227,7 +227,7 @@ export default function ProductDetails({
         capsulePerDay: capsulePerDay,
         gramsPerCount: product?.gramsPerCount ?? 0,
       } as never);
-    } else if (product) {
+
       const members = [
         // {
         //   id: 1,
@@ -549,6 +549,7 @@ export default function ProductDetails({
               founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
               founderMembersNeeded={product?.nextPriceDiscountLevel?.membersNeeded}
               founderDiscount={product?.supplementTeamProducts?.foundingMembersDiscount}
+              leadTime={product?.leadTime ?? 0}
             />
             {/* Placeholder keeps layout when sticky becomes fixed */}
             <div
@@ -630,6 +631,7 @@ export default function ProductDetails({
               founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
               founderMembersNeeded={product?.nextPriceDiscountLevel?.membersNeeded}
               founderDiscount={product?.supplementTeamProducts?.foundingMembersDiscount}
+              leadTime={product?.leadTime ?? 0}
             />
 
             {members.length > 0 && (

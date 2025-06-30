@@ -81,6 +81,7 @@ export const mapSingleProductModel = (
 				activePercentageDiscount: model.activePercentageDiscount,
 				gramsPerCount: model.gramsPerCount,
 				pricePerPoche: model.pricePerPoche,
+				leadTime: model.leadTime,
 			}
 		: ({} as ISingleProductModel);
 };

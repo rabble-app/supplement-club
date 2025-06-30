@@ -29,29 +29,6 @@ import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 // import { paymentService } from "@/services/paymentService";
 // import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
-const PreOrderMessage = () => {
-  return (
-    <div className="grid gap-[16px]">
-      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-        PRE-ORDER Now to Become a Founding Member
-      </p>
-      <div className="grid gap-[8px]">
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Only get charged when we hit 50 pre-orders.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          By becoming a founding member you get an extra 10% off the team price
-          forever.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Lead time is 6 weeks from when we charge you - but you get 10% off
-          your subscription forever.
-        </p>
-      </div>
-    </div>
-  );
-};
-
 export default function Checkout({
   params,
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
@@ -67,6 +44,8 @@ export default function Checkout({
   );
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
+  const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
+  // const [firstWord, setFirstWord] = useState
   const [, setIsReferralCodeApplied] =
     useState<boolean>(false);
   // const [membershipSubscription, setMembershipSubscription] =
@@ -127,8 +106,8 @@ export default function Checkout({
       id: "12",
       alt: "supplement mockup",
       description: "Free for your first 2 drops",
-      name: `Renews at £${membershipAmount}/year on`,
-      delivery: `${format(membershipExpiry, "MMMM dd yyyy")}`,
+      name: `Renews at £${membershipAmount}/year ${data.isComming ?'': 'on'}`,
+      delivery: data.isComming ? `` : `${format(membershipExpiry, "MMMM dd yyyy")}`,
       src: "/images/membership-card.svg",
       capsules: 0,
       price: membershipPrice,
@@ -297,6 +276,29 @@ export default function Checkout({
   //   setMembershipSubscription(response);
   // }
 
+  const PreOrderMessage = () => {
+  return (
+    <div className="grid gap-[16px]">
+      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+        PRE-ORDER Now to Become a Founding Member
+      </p>
+      <div className="grid gap-[8px]">
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          Only get charged when we hit {data.founderMembersNeeded} pre-orders.
+        </p>
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          By becoming a founding member you get an extra {data.founderDiscount}% off the team price
+          forever.
+        </p>
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          Lead time is {data.leadTime} weeks from when we charge you - but you get {data.founderDiscount}% off
+          your subscription forever.
+        </p>
+      </div>
+    </div>
+  );
+};
+
   async function successAction() {
     const currentStep = step + 1;
     setStep(currentStep);
@@ -338,6 +340,8 @@ export default function Checkout({
           discount={data?.discount ?? 0}
           setSummary={setSummary}
           isComming={data?.isComming}
+          isInfoIconClicked={isInfoIconClicked}
+          setIsInfoIconClicked={setIsInfoIconClicked}
         />
       )}
 
@@ -384,6 +388,7 @@ export default function Checkout({
             step={step}
             referralInfo={referralInfo}
             setIsReferralCodeApplied={setIsReferralCodeApplied}
+            setIsInfoIconClicked={setIsInfoIconClicked}
           />
           {step === 4 && <Delivery />}
           {step < 4 && <AvailablePayment />}

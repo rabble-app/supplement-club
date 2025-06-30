@@ -56,4 +56,5 @@ export default interface ISingleProductModel {
 	activePercentageDiscount?: number;
 	gramsPerCount?: number;
 	pricePerPoche?: number;
+	leadTime?: number;
 }
