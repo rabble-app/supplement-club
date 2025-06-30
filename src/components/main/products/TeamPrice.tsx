@@ -35,19 +35,14 @@ export default function TeamPrice({
   gramsPerCount: number;
   capsuleCount: number;
 }>) {
-
   const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
   function getCurrentClasses(percentageDiscount: number) {
-    let classes = !isComming
-      ? " border-[1px] bg-grey19 my-[15px] border-grey20"
-      : "bg-white my-[15px] border-[0] border-none";
+    let classes = "border-[1px] bg-grey19 my-[15px] border-grey20";
 
-    if (percentageDiscount === activePercentageDiscount) {
-      if (!isComming) classes = " bg-white h-[223px] rounded-[5px] my-[0]";
-      else classes = " bg-white h-[223px] rounded-[5px] my-[0] border-none";
+    if (percentageDiscount === activePercentageDiscount && !isComming) {
+      classes = " bg-white h-[223px] rounded-[5px] my-[0]";
     } else if (percentageDiscount < activePercentageDiscount) {
-      if (!isComming) classes = " bg-grey14 my-[15px]";
-      else classes = " bg-white my-[15px] border-[0] border-none";
+      classes = " bg-grey14 my-[15px]";
     }
 
     return classes;
@@ -64,11 +59,7 @@ export default function TeamPrice({
 
     if ((index === 0 && i < 3) || (index === priceInfo.length - 1 && i > 6)) {
       classes.push(
-        index <= activeMemberIndex && !isComming
-          ? "bg-transparent"
-          : isComming
-          ? "bg-white"
-          : "bg-transparent"
+        index <= activeMemberIndex ? "bg-transparent" : "bg-transparent"
       );
       classes.push("z-[20]");
     } else {
@@ -181,23 +172,15 @@ export default function TeamPrice({
     return false;
   }
 
+  const membersToLaunch = Math.abs(
+    priceInfo[activeMemberIndex === -1 ? 0 : activeMemberIndex + 1]
+      ?.teamMemberCount - members
+  );
+
   return (
-    <div
-      className={`${
-        isComming
-          ? "py-[24px] bg-white rounded-[4px] shadow-3 mx-[-32px] md:mx-[0]"
-          : ""
-      } `}
-    >
-      {!isComming && (
-        <p className="text-[24px] leading-[28px] font-bold font-inconsolata pt-[32px] md:pt-[0]">
-          Team Price
-        </p>
-      )}
+    <div>
       <div
-        className={`flex flex-col md:flex-row md:justify-between md:items-start ${
-          isComming ? "px-[16px] pb-[26px]" : " pt-[16px] md:pb-[11px]"
-        } `}
+        className={`flex flex-col md:flex-row md:justify-between md:items-start pb-[26px] pt-[16px] md:pb-[11px]`}
       >
         <div className="grid gap-[4px]">
           <div className="flex gap-[3px] items-center text-blue text-[22px] font-[600] leading-[25px] font-inconsolata">
@@ -207,7 +190,7 @@ export default function TeamPrice({
               width={30}
               height={30}
             />
-            {members} Members
+            {members} {`${isComming ? "Pre-Orders" : "Members"}`}
           </div>
           {!isComming && activeMemberIndex + 1 < priceInfo.length && (
             <p className="text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
@@ -217,18 +200,15 @@ export default function TeamPrice({
             </p>
           )}
           {isComming && activeMemberIndex + 1 < priceInfo.length && (
-            <p className="text-[16px] leading-[18px]">
-              {Math.abs(
-                priceInfo[activeMemberIndex === -1 ? 0 : activeMemberIndex + 1]
-                  ?.teamMemberCount - members
-              )}{" "}
-              more pre-orders until product launches!
+            <p className="text-[16px] leading-[18px] font-semibold text-[#999999]">
+              {membersToLaunch} more pre-orders until product launches!
             </p>
           )}
         </div>
+
         <div className="grid gap-[8px]">
           <div className="text-[28px] font-[900] font-inconsolata flex items-center">
-            £{Number(price * capsuleCount / gPerCount).toFixed(2)}{" "}
+            £{Number((price * capsuleCount) / gPerCount).toFixed(2)}{" "}
             <span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px] whitespace-nowrap">
               (£{pricePerCount.toFixed(2)} / count)
             </span>
@@ -236,18 +216,26 @@ export default function TeamPrice({
           <div className="text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata">
             RRP{" "}
             <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-              £{Number(rrp * capsuleCount / gPerCount).toFixed(2)}
+              £{Number((rrp * capsuleCount) / gPerCount).toFixed(2)}
             </span>{" "}
             <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata">
               {activePercentageDiscount
                 ? activePercentageDiscount.toFixed(2)
-                : discount.toFixed(2)}% OFF
+                : discount.toFixed(2)}
+              % OFF
             </span>
           </div>
         </div>
       </div>
 
-      {isComming && <Separator className="bg-grey22 h-[1px]" />}
+      {isComming && members < priceInfo[0]?.teamMemberCount && (
+        <div className="bg-blue2 rounded-sm w-full mt-8 mb-2">
+          <p className="text-blue font-bold text-base font-inconsolata w-full text-center py-2">
+            When it gets to {membersToLaunch + members} people we will launch
+            the product
+          </p>
+        </div>
+      )}
 
       <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mt-8 md:mt-0">
         {priceInfo.map((item, index) => (
@@ -255,9 +243,20 @@ export default function TeamPrice({
             key={`info-${index + 1}`}
             className="relative grid overflow-hidden max-w-[148px] w-full"
           >
-            {item.percentageDiscount === activePercentageDiscount && (
-              <div className="w-8 h-8 rounded-full bg-blue absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100] border-[1px] border-white" />
-            )}
+            {item.percentageDiscount === activePercentageDiscount &&
+              !isComming && (
+                <div className="w-8 h-8 rounded-full bg-blue absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100] border-[1px] border-white" />
+              )}
+            {item.percentageDiscount === activePercentageDiscount &&
+              isComming && (
+                <Image
+                  src="/images/icons/lock-grey-icon.svg"
+                  alt="User profile group icon"
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100]"
+                  width={26}
+                  height={26}
+                />
+              )}
             {item.percentageDiscount > activePercentageDiscount && (
               <Image
                 src="/images/icons/lock-grey-icon.svg"
@@ -273,7 +272,8 @@ export default function TeamPrice({
 
             <div
               className={`p-[10px] grid gap-[8px] border-[1px] border-grey20 z-[1] ${
-                item.percentageDiscount === activePercentageDiscount
+                item.percentageDiscount === activePercentageDiscount &&
+                !isComming
                   ? "h-[231px]"
                   : "h-[192px]"
               } relative w-full md:w-[148px]
@@ -282,22 +282,31 @@ export default function TeamPrice({
               <div className="grid gap-[4px] mx-auto">
                 <p
                   className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${
-                    item.percentageDiscount === activePercentageDiscount
+                    item.percentageDiscount === activePercentageDiscount &&
+                    !isComming
                       ? "text-[24px] font-bold leading-[25px]"
                       : ""
                   }`}
                 >
-                  £{item.actualDiscountedValue ? (item.actualDiscountedValue * capsuleCount / gPerCount).toFixed(2) : 0}
+                  £
+                  {item.actualDiscountedValue
+                    ? (
+                        (item.actualDiscountedValue * capsuleCount) /
+                        gPerCount
+                      ).toFixed(2)
+                    : 0}
                 </p>
                 <p
                   className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center
 											${
-                        item.percentageDiscount === activePercentageDiscount
+                        item.percentageDiscount === activePercentageDiscount &&
+                        !isComming
                           ? "text-[16px] leading-[16px]"
                           : ""
                       }
 											${
-                        item.percentageDiscount === activePercentageDiscount
+                        item.percentageDiscount === activePercentageDiscount &&
+                        !isComming
                           ? "text-blue text-[16px]"
                           : "text-grey6"
                       }`}
@@ -311,15 +320,26 @@ export default function TeamPrice({
                 className=" w-[1px] h-[80px] mx-auto  bg-gradient-to-b from-grey23 from-[10px] via-grey24 via-[40px] to-grey23 top-[70px]"
               />
 
-              {item.percentageDiscount === activePercentageDiscount && (
-                <Image
-                  src="/images/icons/user-profile-group-blue-icon.svg"
-                  alt="User profile group icon"
-                  className="mx-auto"
-                  width={34}
-                  height={34}
-                />
-              )}
+              {item.percentageDiscount === activePercentageDiscount &&
+                !isComming && (
+                  <Image
+                    src="/images/icons/user-profile-group-blue-icon.svg"
+                    alt="User profile group icon"
+                    className="mx-auto"
+                    width={34}
+                    height={34}
+                  />
+                )}
+              {item.percentageDiscount === activePercentageDiscount &&
+                isComming && (
+                  <Image
+                    src="/images/icons/user-profile-group-grey-icon.svg"
+                    alt="User profile group icon"
+                    className="mx-auto"
+                    width={26}
+                    height={26}
+                  />
+                )}
               {item.percentageDiscount !== activePercentageDiscount && (
                 <Image
                   src="/images/icons/user-profile-group-grey-icon.svg"
@@ -332,7 +352,8 @@ export default function TeamPrice({
 
               <p
                 className={`text-[12px] leading-[13px] font-bold font-inconsolata  text-center ${
-                  item.percentageDiscount === activePercentageDiscount
+                  item.percentageDiscount === activePercentageDiscount &&
+                  !isComming
                     ? "text-black text-[18px]"
                     : "text-grey6"
                 }`}
@@ -357,13 +378,6 @@ export default function TeamPrice({
             </div>
           </div>
         ))}
-
-        {isComming && members < priceInfo[0]?.teamMemberCount && (
-          <div className="text-[10px] leading-[11px] text-blue font-helvetica text-center bg-blue10 h-[30px] rounded-[100px] px-[10px] py-[2px] w-[145px] absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1]">
-            When it gets to {priceInfo[0]?.teamMemberCount} people we will
-            launch the product
-          </div>
-        )}
       </div>
     </div>
   );

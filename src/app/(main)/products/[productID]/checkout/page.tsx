@@ -337,6 +337,7 @@ export default function Checkout({
           updateQuantityAction={updateQuantityAction}
           discount={data?.discount ?? 0}
           setSummary={setSummary}
+          isComming={data?.isComming}
         />
       )}
 

@@ -66,6 +66,9 @@ export default function CapsuleBox({
   setSelectedState,
   setCapsuleCount,
   gPerCount,
+  founderSpots,
+  founderMembersNeeded,
+  founderDiscount,
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -96,6 +99,9 @@ export default function CapsuleBox({
   setSelectedState: (value: number) => void;
   setCapsuleCount: (value: number) => void;
   gPerCount: number;
+  founderSpots?: number;
+  founderMembersNeeded?: number;
+  founderDiscount?: number;
 }>) {
   // const days = 90;
   // const [selectedState, setSelectedState] = useState(2);
@@ -303,6 +309,10 @@ export default function CapsuleBox({
               discount={
                 activePercentageDiscount ? activePercentageDiscount : discount
               }
+              isComming={isComming}
+              founderSpots={founderSpots}
+              founderMembersNeeded={founderMembersNeeded}
+              founderDiscount={founderDiscount}
             />
           ))}
           <hr className="border-grey3 h-[1px] mt-[10px] md:hidden" />
@@ -340,7 +350,7 @@ export default function CapsuleBox({
           </div>
           <Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
             <Link
-              className="w-full h-full flex items-center justify-center"
+              className="w-full h-full flex items-center justify-center font-bold font-inconsolata text-base"
               href={`/products/${productId}/checkout?teamId=${teamId}`}
               onClick={() => {
                 setCheckoutData(checkoutData);
@@ -349,6 +359,8 @@ export default function CapsuleBox({
               {isComming ? "REGISTER PRE-ORDER" : "Start My Subscription"}
             </Link>
           </Button>
+
+          {isComming && <p className="text-grey6 font-helvetica text-sm leading-[14px] text-center">You’ll be notified when your team launches. You’ll have 24 hours to withdraw before payment is taken.</p>}
         </div>
       </div>
     </div>

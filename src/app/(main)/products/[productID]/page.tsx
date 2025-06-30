@@ -113,7 +113,7 @@ export default function ProductDetails({
     }
   }, [context, product]);
 
-  const nextDeliveryProductText = `Next Drop Delivered: ${
+  const nextDeliveryProductText = product?.isComming ? `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE. FOREVER` : `Next Drop Delivered: ${
     product?.deliveryDate
       ? format(new Date(product?.deliveryDate ?? ""), "MMMM dd yyyy")
       : ""
@@ -164,11 +164,15 @@ export default function ProductDetails({
     productStore.setCapsulesPerDay(value);
   }
 
+
+  const earlyMemberPrice = Number(productPrice) * (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
+  const earlyMemberPricePerCount = Number(product?.pricePerCount) * (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
+
   useEffect(() => {
     const order = {
       id: "2",
       description: `${capsulePerDay * days} ${units} Every 3 months`,
-      name: "Quarterly Subscription",
+      name: product?.isComming ? "FOUNDING MEMBER" : "Quarterly Subscription",
       delivery: nextDeliveryProductText,
       src: "/images/supplement-mockup.png",
       alt: "supplement mockup",
@@ -185,25 +189,26 @@ export default function ProductDetails({
     const summaryOrders = [order];
     const orders = [order];
 
-    if (product?.isComming) {
-      orders.unshift({
-        id: "1",
-        alt: "Founding Member Badge",
-        name: "Founding Member 10% Discount",
-        delivery: "Forever",
-        src: "/images/icons/user-badge-icon.svg",
-        capsules: 0,
-        isFoundingMember: true,
-        price: -4.5,
-        pricePerPoche: product?.pricePerPoche ?? 0,
-        pricePerCount: product?.pricePerCount ?? 0,
-        rrpPerCount: product?.rrpPerCount ?? 0,
-        rrp: productRrp,
-        capsulePerDay: capsulePerDay,
-        gramsPerCount: product?.gramsPerCount ?? 0,
-        quantity: capsulePerDay,
-      } as never);
-    } else if (!product?.isComming) {
+    // if (product?.isComming) {
+    //   orders.unshift({
+    //     id: "1",
+    //     alt: "Founding Member Badge",
+    //     name: "Founding Member 10% Discount",
+    //     delivery: "Forever",
+    //     src: "/images/icons/user-badge-icon.svg",
+    //     capsules: 0,
+    //     isFoundingMember: true,
+    //     price: -4.5,
+    //     pricePerPoche: product?.pricePerPoche ?? 0,
+    //     pricePerCount: product?.pricePerCount ?? 0,
+    //     rrpPerCount: product?.rrpPerCount ?? 0,
+    //     rrp: productRrp,
+    //     capsulePerDay: capsulePerDay,
+    //     gramsPerCount: product?.gramsPerCount ?? 0,
+    //     quantity: capsulePerDay,
+    //   } as never);
+    // } else 
+    if (!product?.isComming) {
       summaryOrders.unshift({
         id: "1",
         alt: "",
@@ -224,47 +229,41 @@ export default function ProductDetails({
       } as never);
     } else if (product) {
       const members = [
+        // {
+        //   id: 1,
+        //   doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
+        //   name: "FOUNDING MEMBER",
+        //   discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
+        //   doseValue: "First 50 Spots",
+        //   price: product?.supplementTeamProducts?.foundingMembersDiscount
+        //     ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
+        //       (capsulePerDay *
+        //         (product?.daysUntilNextDrop ?? 0) *
+        //         product?.supplementTeamProducts?.foundingMembersDiscount) /
+        //         100
+        //     : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
+        //   capsulePrice: product?.pricePerCount ?? 0,
+        //   spotsRemainds: 4,
+        //   forever: true,
+        //   isActive: true,
+        // },
         {
           id: 1,
-          doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-          name: "FOUNDING MEMBER",
-          discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
-          doseValue: "First 50 Spots",
-          price: product?.supplementTeamProducts?.foundingMembersDiscount
-            ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
-              (capsulePerDay *
-                (product?.daysUntilNextDrop ?? 0) *
-                product?.supplementTeamProducts?.foundingMembersDiscount) /
-                100
-            : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
-          capsulePrice: product?.pricePerCount ?? 0,
-          spotsRemainds: 4,
-          forever: true,
-          isActive: true,
-        },
-        {
-          id: 2,
           doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
           name: "EARLY MEMBER",
           doseValue: "Next 200 Spots",
           discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
-          price: product?.supplementTeamProducts?.earlyMembersDiscount
-            ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
-              (capsulePerDay *
-                (product?.daysUntilNextDrop ?? 0) *
-                product?.supplementTeamProducts?.earlyMembersDiscount) /
-                100
-            : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
-          capsulePrice: product?.pricePerCount ?? 0,
+          price: Number(earlyMemberPrice.toFixed(2)),
+          capsulePrice: Number(earlyMemberPricePerCount.toFixed(2)),
           forever: true,
         },
         {
           id: 3,
           doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
           name: "MEMBER",
-          capsulePrice: product?.pricePerCount ?? 0,
+          capsulePrice: Number(product?.pricePerCount?.toFixed(2)),
           discountTitle: "Standard Team Price",
-          price: capsulePerDay * (product?.daysUntilNextDrop ?? 0),
+          price: Number(productPrice.toFixed(2)),
         },
       ];
       setMembers(members);
@@ -408,9 +407,9 @@ export default function ProductDetails({
           </div>
 
           {product?.isComming && (
-            <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-blue py-[12px] h-[72px]">
-              <div className="text-white text-[16px] leading-[24px] font-helvetica flex text-center max-w-[300px] mx-auto">
-                PRE-ORDER TO BECOME FOUNDING MEMBER AND GET 10%OFF - FOREVER
+            <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-yellow py-[12px] h-[72px]">
+              <div className="text-blue text-[16px] font-bold leading-[24px] font-helvetica flex text-center max-w-[380px] mx-auto">
+                PRE-ORDER TO BECOME A FOUNDING MEMBER AND GET AN EXTRA {product?.supplementTeamProducts?.foundingMembersDiscount}% OFF FOREVER
               </div>
             </div>
           )}
@@ -547,6 +546,9 @@ export default function ProductDetails({
               setSelectedState={setSelectedState}
               setCapsuleCount={setCapsuleCount}
               gPerCount={gPerCount}
+              founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
+              founderMembersNeeded={product?.nextPriceDiscountLevel?.membersNeeded}
+              founderDiscount={product?.supplementTeamProducts?.foundingMembersDiscount}
             />
             {/* Placeholder keeps layout when sticky becomes fixed */}
             <div
@@ -625,6 +627,9 @@ export default function ProductDetails({
               setSelectedState={setSelectedState}
               setCapsuleCount={setCapsuleCount}
               gPerCount={gPerCount}
+              founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
+              founderMembersNeeded={product?.nextPriceDiscountLevel?.membersNeeded}
+              founderDiscount={product?.supplementTeamProducts?.foundingMembersDiscount}
             />
 
             {members.length > 0 && (
