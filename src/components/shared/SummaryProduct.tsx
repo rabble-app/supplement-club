@@ -157,7 +157,7 @@ console.log("model", model.subscriptions);
             </p>
           </div>}
           {showTopLine && <hr className="bg-grey3 h-[1.5px]" />}
-          <div className="flex justify-between items-center">
+          {data.isComming && <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
             <p className="text-base font-semibold font-inconsolata">Alignment Package</p>
             <Image
@@ -172,7 +172,7 @@ console.log("model", model.subscriptions);
              <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
               Reserved at £{data.pricePerCount?.toFixed(2)} / count
             </p>
-          </div>
+          </div>}
           {!data.isComming && <>  {checkoutData.quantity && checkoutData.quantity > 0 ? (
             model?.orders?.map((order) => (
               <OrderSummaryCard

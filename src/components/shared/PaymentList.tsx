@@ -26,14 +26,12 @@ import { Loader2 } from "lucide-react";
 export default function PaymentList({
   totalPrice,
   isComming,
-  capsulePerDay,
   teamId,
   topupQuantity,
   productId,
   successAction,
 }: Readonly<{
   totalPrice: number;
-  capsulePerDay: number;
   teamId: string;
   topupQuantity: number;
   productId: string;
@@ -59,6 +57,9 @@ export default function PaymentList({
     fetchUserPaymentOptions();
   }, [context?.user?.stripeCustomerId]);
 
+  console.log("checkoutData",  checkoutData);
+  console.log("totalPrice",  totalPrice);
+
   async function processPayment(cards: IUserPaymentOptionModel[]) {
     setIsLoading(true);
     try {
@@ -77,14 +78,23 @@ export default function PaymentList({
         currectCard = cards[0];
       }
 
+      const quantity =  (checkoutData.orders?.[0]?.capsules ?? 0) /
+      (checkoutData.pouchSize ?? 0);
+      const price = totalPrice;
+      const capsulePerDay = Number(checkoutData.capsuleCount);
+      // const pricePerCount = Number(checkoutData.pricePerCount?.toFixed(2) ?? 0);
+      // const discount = Number(checkoutData.discount?.toFixed(2) ?? 0);
+
       if (isComming) {
         await paymentService.joinPreorderTeam(
           teamId ?? "",
           context?.user?.id ?? "",
           productId ?? "",
-          90 * capsulePerDay,
-          totalPrice,
-          capsulePerDay
+          quantity,
+          price,
+          capsulePerDay,
+          // pricePerCount,
+          // discount
         );
       } else {
         const data = {
@@ -108,6 +118,8 @@ export default function PaymentList({
           amount: data.amount,
           paymentMethodId: currectCard?.id,
           topupQuantity: data.topupQuantity,
+          // pricePerCount: pricePerCount,
+          // discount: discount,
         })) as IPaymentIntentApiResponse;
 
         if (response.statusCode !== 200) {

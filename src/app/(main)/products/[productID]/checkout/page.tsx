@@ -260,7 +260,9 @@ export default function Checkout({
         0
       ) ?? 0;
 
-    setTotalPrice(totalSum + totalSumOfSubs);
+      const founderDiscountedTotalSum =  totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
+
+      setTotalPrice(totalSum +( data.isComming ? founderDiscountedTotalSum : totalSumOfSubs));
   }, [summary]);
 
   // useEffect(() => {
@@ -329,6 +331,8 @@ export default function Checkout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.user, basket, data?.productId, data?.teamId, step]);
 
+  console.log("summary", summary);
+
   return (
     <>
       {step !== 4 && (
@@ -366,7 +370,6 @@ export default function Checkout({
               teamId={data?.teamId ?? ""}
               isComming={data?.isComming}
               totalPrice={totalPrice}
-              capsulePerDay={capsulePerDay}
               successAction={successAction}
             />
           )}
