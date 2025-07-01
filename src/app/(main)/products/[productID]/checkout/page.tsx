@@ -335,7 +335,7 @@ export default function Checkout({
 
   return (
     <>
-      {step !== 4 && (
+      {step !== 4 || (step===4 && data.isComming) && (
         <AlignmentDialog
           daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
           deliveryDate={data?.deliveryDate ?? ""}

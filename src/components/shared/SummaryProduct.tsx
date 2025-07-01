@@ -266,7 +266,7 @@ console.log("model", model.subscriptions);
             </div>
           )}
 
-          {context?.user && (
+          {context?.user && !data.isComming && (
             <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
               Referral Code
             </p>
@@ -315,7 +315,7 @@ console.log("model", model.subscriptions);
           <hr className="border-grey3 border" />
           {data.isComming && (
             <div className="font-inconsolata bg-blue2 rounded-sm">
-              <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">You will only be charged when the team hits {data.founderMembersNeeded}. We will email to notify and you can leave at any point</p>
+              <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">You will only be charged when the team hits {data.founderSpots}. We will email to notify and you can leave at any point</p>
             </div>
           )}
           <div className="grid gap-[10px]">

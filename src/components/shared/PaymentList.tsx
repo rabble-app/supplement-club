@@ -57,9 +57,6 @@ export default function PaymentList({
     fetchUserPaymentOptions();
   }, [context?.user?.stripeCustomerId]);
 
-  console.log("checkoutData",  checkoutData);
-  console.log("totalPrice",  totalPrice);
-
   async function processPayment(cards: IUserPaymentOptionModel[]) {
     setIsLoading(true);
     try {
@@ -82,8 +79,8 @@ export default function PaymentList({
       (checkoutData.pouchSize ?? 0);
       const price = totalPrice;
       const capsulePerDay = Number(checkoutData.capsuleCount);
-      // const pricePerCount = Number(checkoutData.pricePerCount?.toFixed(2) ?? 0);
-      // const discount = Number(checkoutData.discount?.toFixed(2) ?? 0);
+      const pricePerCount = checkoutData.pricePerCount?.toFixed(2) ?? "0.00";
+      const discount = checkoutData.discount?.toFixed(2) ?? "0.00";
 
       if (isComming) {
         await paymentService.joinPreorderTeam(
@@ -93,8 +90,8 @@ export default function PaymentList({
           quantity,
           price,
           capsulePerDay,
-          // pricePerCount,
-          // discount
+          pricePerCount,
+          discount
         );
       } else {
         const data = {
@@ -118,8 +115,8 @@ export default function PaymentList({
           amount: data.amount,
           paymentMethodId: currectCard?.id,
           topupQuantity: data.topupQuantity,
-          // pricePerCount: pricePerCount,
-          // discount: discount,
+          pricePerCount: pricePerCount,
+          discount: discount,
         })) as IPaymentIntentApiResponse;
 
         if (response.statusCode !== 200) {

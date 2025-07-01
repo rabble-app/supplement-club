@@ -9,21 +9,39 @@ import { useUser } from "@/contexts/UserContext";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 import { getQuarterInfo } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
+import { productService } from "@/services/productService";
+import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
   const { nextDeliveryTextShort } = getQuarterInfo();
-  const [userProducts, setUserProducts] = useState<string[]>([]);
+  const [userProducts, setUserProducts] = useState<ITeamBasketModel[]>([]);
+  const context = useUser();
+
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const model = await productService.product(
+        context?.user?.metadata?.productId ?? "",
+        context?.user?.metadata?.teamId ?? "",
+        context?.user?.id ?? ""
+      );
+
+      setUserProducts(model?.supplementTeamProducts?.team.basket ?? []);
+    };
+    fetchProduct();
+  }, [context?.user]);
+
+  const hasProduct = userProducts.find((p) => p.productId === model.id);
 
   const discount = useMemo(
     () => Math.abs((model.price / model.rrp - 1) * 100).toFixed(0),
     [model]
   );
-  const context = useUser();
   let titleButton = "Join Team";
 
-  if (model.isComming) {
+  if (model.isComming && !hasProduct) {
     titleButton = "Pre - Join Team";
-  } else if (userProducts.includes(model.id)) {
+  } else if (model.isComming && !!hasProduct) {
     titleButton = "See Team";
   }
 
@@ -31,9 +49,6 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 
   const [firstWord, ...rest] = (model.name ?? "").split(" ");
 
-  useEffect(() => {
-    setUserProducts(context?.user?.basketsC?.map((c) => c.productId) || []);
-  }, [context]);
 
   return (
     <div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
@@ -115,12 +130,12 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
             href={productLink}
             className="flex justify-between py-[16px] px-[24px] w-full"
           >
-            <span className="leading-[18px] font-bold font-inconsolata text-lg">
+            <span className={`leading-[18px] font-bold font-inconsolata text-lg ${!!hasProduct ? 'mx-auto' : ''}`}>
               {titleButton}{" "}
             </span>
-            <span className="leading-[18px] font-bold font-inconsolata">
+            {!hasProduct && <span className="leading-[18px] font-bold font-inconsolata">
               £{Number(model.price).toFixed(2)}
-            </span>
+            </span>}
           </Link>
         </Button>
 

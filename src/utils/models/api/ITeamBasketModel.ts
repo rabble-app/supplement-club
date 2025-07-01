@@ -8,4 +8,6 @@ export interface ITeamBasketModel extends IBaseTimestamps {
 	capsulePerDay?: string;
 	quantity?: number;
 	price?: string;
+	discount?: string;
+	pricePerCount?: string;
 }

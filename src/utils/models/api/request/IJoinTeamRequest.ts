@@ -8,6 +8,6 @@ export default interface IJoinTeamRequest {
 	amount: number;
 	paymentMethodId: string;
 	topupQuantity: number;
-	// pricePerCount: number;
-	// discount: number;
+	pricePerCount: string;
+	discount: string;
 }

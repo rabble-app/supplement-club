@@ -96,8 +96,8 @@ export const paymentService = {
 			amount: model.amount,
 			paymentMethodId: model.paymentMethodId,
 			topupQuantity: model.topupQuantity,
-			// pricePerCount: model.pricePerCount,
-			// discount: model.discount,
+			pricePerCount: model.pricePerCount,
+			discount: model.discount,
 		});
 
 		return resonse;
@@ -110,8 +110,8 @@ export const paymentService = {
 		quantity: number,
 		price: number,
 		capsulePerDay: number,
-		// pricePerCount?: number,
-		// discount?: number,
+		pricePerCount: string,
+		discount: string,
 	) {
 		const resonse = await apiRequest(
 			PAYMENT_ENDPOINTS.JOIN_PREORDER_TEAM,
@@ -124,8 +124,8 @@ export const paymentService = {
 				quantity,
 				price,
 				capsulePerDay,
-				// pricePerCount,
-				// discount,
+				pricePerCount,
+				discount,
 			},
 		);
 
