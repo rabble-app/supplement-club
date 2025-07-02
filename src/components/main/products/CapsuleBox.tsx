@@ -69,7 +69,9 @@ export default function CapsuleBox({
   founderSpots,
   founderMembersNeeded,
   founderDiscount,
-  leadTime
+  earlyMemberDiscount,
+  leadTime,
+  firstDelivery,
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -103,7 +105,9 @@ export default function CapsuleBox({
   founderSpots?: number;
   founderMembersNeeded?: number;
   founderDiscount?: number;
+  earlyMemberDiscount?: number;
   leadTime?: number;
+  firstDelivery?: boolean;
 }>) {
   // const days = 90;
   // const [selectedState, setSelectedState] = useState(2);
@@ -174,7 +178,9 @@ export default function CapsuleBox({
     founderSpots,
     founderMembersNeeded,
     founderDiscount,
-    leadTime
+    earlyMemberDiscount,
+    leadTime,
+    firstDelivery,
   };
 
   return (
@@ -317,6 +323,8 @@ export default function CapsuleBox({
               founderSpots={founderSpots}
               founderMembersNeeded={founderMembersNeeded}
               founderDiscount={founderDiscount}
+              earlyMemberDiscount={earlyMemberDiscount}
+              firstDelivery={firstDelivery}
             />
           ))}
           <hr className="border-grey3 h-[1px] mt-[10px] md:hidden" />

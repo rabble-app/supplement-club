@@ -32,6 +32,8 @@ export const PAYMENT_ENDPOINTS = {
 		`payments/subscription/status/${id}`,
 	UPDATE_MEMBERSHIP_STATUS: (id: string) =>
 		`payments/subscription/status/${id}`,
+	UNREGISTER_MEMBERSHIP: (id: string) =>
+		`teams/quit/${id}`,
 };
 
 export const USER_ENDPOINTS = {

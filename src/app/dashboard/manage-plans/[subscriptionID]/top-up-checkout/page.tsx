@@ -131,7 +131,7 @@ export default function TopUpCheckout({
 						topupQuantity={topupQuantity}
 						productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
 						teamId={managePlan?.team?.id ?? ""}
-						capsulePerDay={capsulesPerDay}
+						// capsulePerDay={capsulesPerDay}
 						successAction={() => onOpenChange(true)}
 						totalPrice={totalPrice}
 					/>

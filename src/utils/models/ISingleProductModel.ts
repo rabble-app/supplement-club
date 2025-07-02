@@ -57,4 +57,5 @@ export default interface ISingleProductModel {
 	gramsPerCount?: number;
 	pricePerPoche?: number;
 	leadTime?: number;
+	firstDelivery?: boolean;
 }

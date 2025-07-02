@@ -9,5 +9,5 @@ export default interface IMembershipSubscriptionResponse {
 	subscriptionRRP: number;
 	expiryDate: string;
 	subscriptionAmount: number;
-	status: "ACTIVE" | "CANCELED";
+	status: "ACTIVE" | "CANCELED" | "PENDING ACTIVATION";
 }

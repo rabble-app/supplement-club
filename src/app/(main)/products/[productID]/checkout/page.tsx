@@ -26,6 +26,8 @@ import { productService } from "@/services/productService";
 import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
 import { referalService } from "@/services/referalService";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
+import { usersService } from "@/services/usersService";
+import IManagePlanModel from "@/utils/models/IManagePlanModel";
 // import { paymentService } from "@/services/paymentService";
 // import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
@@ -45,6 +47,7 @@ export default function Checkout({
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<IManagePlanModel[]>([]);
   // const [firstWord, setFirstWord] = useState
   const [, setIsReferralCodeApplied] =
     useState<boolean>(false);
@@ -177,6 +180,29 @@ export default function Checkout({
     });
   }
 
+  const getSubscriptionPlan = (productID: string) => {
+    return subscriptionPlans.find((plan) =>
+      plan.team.basket.some((basket) => basket.product.id === productID)
+    );
+  };
+
+  const subscriptionPlan = getSubscriptionPlan(data?.productId ?? "");
+
+  useEffect(() => {
+    const fetchSubscriptionPlans = async () => {
+      try {
+        const response = await usersService.getSubscriptionPlans(
+          context?.user?.id ?? ""
+        );
+        setSubscriptionPlans(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
+
+    fetchSubscriptionPlans();
+  }, [context?.user?.id]);
+
   useEffect(() => {
     setSummary((prev) => ({
       ...prev,
@@ -232,21 +258,29 @@ export default function Checkout({
 
   useEffect(() => {
     if (context?.user) {
-      if (basket.length > 0) {
+      if (subscriptionPlan) {
+        console.log(222);
         setStep(4);
-      } else if (context.user.isVerified && basket.length === 0) {
+      } else if (context.user.isVerified && !subscriptionPlan) {
+        console.log(333);
         if (context?.user?.shipping) {
+          console.log(444);
           setStep(3);
           return;
         }
+        console.log(555);
         setStep(2);
       } else {
+        console.log(666);
         router.push(
           `/auth/email-verify?redirect=/products/${data?.productId}/checkout`
         );
       }
     }
-  }, [context?.user, router, data?.productId, basket]);
+  }, [context?.user, router, data?.productId, subscriptionPlan]);
+
+  // console.log(999, context?.user);
+  console.log(1000, subscriptionPlan);
 
   useEffect(() => {
     const totalSum = summary?.orders?.reduce(
@@ -324,18 +358,18 @@ export default function Checkout({
 
   useEffect(() => {
     if ((step !== 4)) {
-      if (context?.user && basket.length > 0) {
+      console.log(888);
+      if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
+        console.log(777);
         router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context?.user, basket, data?.productId, data?.teamId, step]);
-
-  console.log("summary", summary);
+  }, [context?.user, subscriptionPlan, data?.productId, data?.teamId, step]);
 
   return (
     <>
-      {step !== 4 || (step===4 && data.isComming) && (
+      {(step !== 4 || (step===4 && data.isComming)) && (
         <AlignmentDialog
           daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
           deliveryDate={data?.deliveryDate ?? ""}

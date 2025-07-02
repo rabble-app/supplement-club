@@ -27,6 +27,13 @@ export default function Plans() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
+  const membershipRrp = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_RRP);
+  const membershipAmount = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_AMOUNT);
+  const membershipPrice = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_PRICE);
+  const membershipDiscount = Number(
+    process.env.NEXT_PUBLIC_MEMBERSHIP_DISCOUNT
+  );
+
   const [subscriptions, setSubscriptions] = useState<IManagePlanModel[]>([]);
   const [membershipSubscription, setMembershipSubscription] =
     useState<IMembershipSubscriptionResponse>({
@@ -42,7 +49,14 @@ export default function Plans() {
       subscriptionAmount: 0,
       status: "ACTIVE",
     });
-
+    const [unregisterResponse, setUnregisterResponse] = useState<{
+      status: "APPROVED" | "PENDING";
+      subscriptionStatus: string;
+    }>({
+      status: "PENDING",
+      subscriptionStatus: "",
+    });
+  
   useEffect(() => {
     (async () => {
       const response = await usersService.getSubscriptionPlans(
@@ -51,16 +65,52 @@ export default function Plans() {
       const response2 = await getMembershipSubscription(
         context?.user?.id ?? ""
       );
-      setMembershipSubscription(response2);
+      
+      setMembershipSubscription(
+        response2 ?? {
+          subscriptionId: "",
+          subscriptionName: "",
+          subscriptionPrice: membershipPrice,
+          subscriptionStatus: "PENDING ACTIVATION",
+          subscriptionStartDate: "",
+          subscriptionEndDate: "",
+          subscriptionDiscount: membershipDiscount,
+          subscriptionRRP: membershipRrp,
+          subscriptionAmount: membershipAmount,
+          expiryDate: "",
+          status: "PENDING ACTIVATION",
+        }
+      );
       setSubscriptions(response);
       setLoading(false);
     })();
-  }, [context?.user]);
+  }, [context?.user, unregisterResponse]);
 
   async function getMembershipSubscription(id: string) {
     const response = await paymentService.getMembershipSubscription(id);
     return response;
   }
+
+  async function unregisterMembership(id: string) {
+    try {
+      const response = await paymentService.unregisterMembership(id);
+      setUnregisterResponse(response);
+      CustomToast({
+        title: "Membership Unregistered Successfully",
+        status: StatusToast.SUCCESS,
+        position: "top-right",
+      });
+      return response;
+    } catch (error) {
+      console.error("Error in unregisterMembership:", error);
+      CustomToast({
+        title: "Error: Something went wrong",
+        status: StatusToast.ERROR,
+        position: "top-right",
+      });
+    }
+  }
+
 
   async function updateMembershipStatus(
     id: string,
@@ -87,6 +137,8 @@ export default function Plans() {
       });
     }
   }
+
+  console.log("subscriptions", subscriptions);
 
   if (loading) return <Spinner />;
 
@@ -129,12 +181,11 @@ export default function Plans() {
                     </span>
                   </div>
                   <p className="text-[12px] leading-[12px] font-medium font-helvetica text-grey4">
-                    {membershipSubscription.expiryDate
-                      ? format(
-                          new Date(membershipSubscription.expiryDate ?? ""),
-                          "MMMM dd yyyy"
-                        )
-                      : "N/A"}
+                    {membershipSubscription.expiryDate &&
+                      format(
+                        new Date(membershipSubscription.expiryDate ?? ""),
+                        "MMMM dd yyyy"
+                      )}
                   </p>
                 </div>
               )}
@@ -154,32 +205,43 @@ export default function Plans() {
                 </div>
               )}
             </div>
-            <HoverCard open={open} onOpenChange={setOpen}>
-              {membershipSubscription.status !== "CANCELED" && (
-                <HoverCardTrigger onClick={() => setOpen(true)}>
-                  <Ellipsis className="text-blue hover:cursor-pointer" />
-                </HoverCardTrigger>
-              )}
-              <HoverCardContent>
-                <div
-                  className="w-fit bg-red-500 flex items-center gap-2 cursor-pointer"
-                  onClick={() => {
-                    updateMembershipStatus(context?.user?.id ?? "", "CANCELED");
-                    setOpen(false);
-                  }}
-                >
-                  <Image
-                    src="/images/icons/trash-red-icon.svg"
-                    alt="cancel-icon"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="text-[16px] leading-[16px] font-[800] font-inconsolata text-red4">
-                    Cancel Membership
-                  </p>
+            <div className="flex items-center gap-2">
+              {membershipSubscription.status === "PENDING ACTIVATION" ? (
+                <div className="bg-[#FFF5E9] text-[#BF6A02] font-hagerman text-base py-0.5 px-3 rounded-full">
+                  {membershipSubscription.status}
                 </div>
-              </HoverCardContent>
-            </HoverCard>
+              ) : (
+                <HoverCard open={open} onOpenChange={setOpen}>
+                  {membershipSubscription.status !== "CANCELED" && (
+                    <HoverCardTrigger onClick={() => setOpen(true)}>
+                      <Ellipsis className="text-blue hover:cursor-pointer" />
+                    </HoverCardTrigger>
+                  )}
+                  <HoverCardContent>
+                    <div
+                      className="w-fit bg-red-500 flex items-center gap-2 cursor-pointer"
+                      onClick={() => {
+                        updateMembershipStatus(
+                          context?.user?.id ?? "",
+                          "CANCELED"
+                        );
+                        setOpen(false);
+                      }}
+                    >
+                      <Image
+                        src="/images/icons/trash-red-icon.svg"
+                        alt="cancel-icon"
+                        width={24}
+                        height={24}
+                      />
+                      <p className="text-[16px] leading-[16px] font-[800] font-inconsolata text-red4">
+                        Cancel Membership
+                      </p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              )}
+            </div>
           </div>
           {membershipSubscription.status === "CANCELED" && (
             <Button
@@ -192,10 +254,17 @@ export default function Plans() {
               Opt Back In
             </Button>
           )}
+          {membershipSubscription.status === "PENDING ACTIVATION" && (
+            <div className="bg-blue2 rounded-sm w-full">
+              <p className="text-blue font-bold text-xs font-inconsolata w-full text-center py-2">
+                Your free trial begins when your first team goes live
+              </p>
+            </div>
+          )}
         </div>
       )}
       {subscriptions.map((item) => (
-        <ManagePlanCard model={item} key={item.id} />
+        <ManagePlanCard model={item} key={item.id} unregisterMembership={unregisterMembership} />
       ))}
     </div>
   );

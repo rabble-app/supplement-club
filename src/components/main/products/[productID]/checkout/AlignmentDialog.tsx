@@ -46,7 +46,7 @@ export default function AlignmentDialog({
   const context = useUser();
 
   useEffect(() => {
-    if (!context?.user || isInfoIconClicked) {
+    if (context?.user || isInfoIconClicked) {
       setIsOpen(true);
     }
   }, [context?.user, isInfoIconClicked]);

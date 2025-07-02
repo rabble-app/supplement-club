@@ -10,4 +10,5 @@ export default interface IManagePlanModel {
 	subscriptionStatus?: string;
 	quantity: number;
 	team: Team;
+	role: string;
 }

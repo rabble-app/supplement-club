@@ -14,7 +14,9 @@ function renderPrice(
   isComming?: boolean,
   founderSpots?: number,
   founderMembersNeeded?: number,
-  founderDiscount?: number
+  founderDiscount?: number,
+  earlyMemberDiscount?: number,
+  firstDelivery?: boolean
 ) {
   if (model.isFree) {
     return (
@@ -48,6 +50,17 @@ function renderPrice(
   const founderPrice = Number(model.price) * (1 - (founderDiscount ?? 0) / 100);
   const founderPricePerCount = Number(model.pricePerCount) * (1 - (founderDiscount ?? 0) / 100);
 
+  const earlyMemberPrice = Number(model.price) * (1 - (earlyMemberDiscount ?? 0) / 100);
+  const earlyMemberPricePerCount = Number(model.pricePerCount) * (1 - (earlyMemberDiscount ?? 0) / 100);
+
+  let displayPrice = price;
+  let displayPricePerCount = model.pricePerCount;
+
+  if (firstDelivery) {
+    displayPrice = earlyMemberPrice;
+    displayPricePerCount = earlyMemberPricePerCount;
+  }
+
   return (
     <div className="grid gap-[8px]">
       {isComming && (
@@ -62,10 +75,10 @@ function renderPrice(
             : "text-xl md:text-3xl flex"
         } font-[800] text-black items-center gap-1 font-inconsolata`}
       >
-        £{isComming ? founderPrice.toFixed(2) : price.toFixed(2)}
+        £{isComming ? founderPrice.toFixed(2) : displayPrice.toFixed(2)}
         {!model.isMembership && (
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-            (£{isComming ? founderPricePerCount.toFixed(2) : model.pricePerCount?.toFixed(2)}/count)
+            (£{isComming ? founderPricePerCount.toFixed(2) : displayPricePerCount?.toFixed(2)}/count)
           </span>
         )}
       </div>
@@ -100,6 +113,8 @@ export default function OrderSummaryCard({
   founderSpots,
   founderMembersNeeded,
   founderDiscount,
+  earlyMemberDiscount,
+  firstDelivery,
 }: Readonly<{
   model:
     | IOrderSummaryModel
@@ -115,6 +130,8 @@ export default function OrderSummaryCard({
   founderSpots?: number;
   founderMembersNeeded?: number;
   founderDiscount?: number;
+  earlyMemberDiscount?: number;
+  firstDelivery?: boolean;
 }>) {
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
   const increment = () => {
@@ -167,7 +184,7 @@ export default function OrderSummaryCard({
         )}
 
         <div className="flex md:hidden">
-          {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount)}
+          {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery)}
         </div>
         {typeof model.quantity === "number" && step !== 4 && (
           <div className="flex items-center gap-[16px]">
@@ -203,7 +220,7 @@ export default function OrderSummaryCard({
       </div>
 
       <div className="hidden md:flex justify-end">
-        {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount)}
+        {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery)}
       </div>
     </div>
   );

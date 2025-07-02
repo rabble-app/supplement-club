@@ -83,7 +83,7 @@ export default function PaymentList({
       const discount = checkoutData.discount?.toFixed(2) ?? "0.00";
 
       if (isComming) {
-        await paymentService.joinPreorderTeam(
+        const response = (await paymentService.joinPreorderTeam(
           teamId ?? "",
           context?.user?.id ?? "",
           productId ?? "",
@@ -92,7 +92,12 @@ export default function PaymentList({
           capsulePerDay,
           pricePerCount,
           discount
-        );
+        )) as IPaymentIntentApiResponse;
+
+        if (response.statusCode !== 200) {
+          throw new Error(response?.error);
+        }
+
       } else {
         const data = {
           amount: totalPrice,
@@ -125,8 +130,13 @@ export default function PaymentList({
       }
 
       successAction();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in processPayment111:", error);
+      CustomToast({
+        title:JSON.parse(error.error).message,
+        status: StatusToast.ERROR,
+        position: "top-right",
+      });
       throw error;
     } finally {
       setIsLoading(false);

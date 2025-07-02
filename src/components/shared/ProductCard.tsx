@@ -9,39 +9,37 @@ import { useUser } from "@/contexts/UserContext";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
 import { getQuarterInfo } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
-import { productService } from "@/services/productService";
-import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
+import { usersService } from "@/services/usersService";
+import IManagePlanModel from "@/utils/models/IManagePlanModel";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
   const { nextDeliveryTextShort } = getQuarterInfo();
-  const [userProducts, setUserProducts] = useState<ITeamBasketModel[]>([]);
+  const [userProducts, setUserProducts] = useState<IManagePlanModel[]>([]);
   const context = useUser();
 
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const model = await productService.product(
-        context?.user?.metadata?.productId ?? "",
-        context?.user?.metadata?.teamId ?? "",
+      const model  = await usersService.getSubscriptionPlans(
         context?.user?.id ?? ""
       );
 
-      setUserProducts(model?.supplementTeamProducts?.team.basket ?? []);
+      setUserProducts(model ?? []);
     };
     fetchProduct();
   }, [context?.user]);
 
-  const hasProduct = userProducts.find((p) => p.productId === model.id);
+  const hasProduct = userProducts.find((p) => p.team?.basket.some((b) => b.product.id === model.id));
 
   const discount = useMemo(
-    () => Math.abs((model.price / model.rrp - 1) * 100).toFixed(0),
+    () => Math.abs((model.price / model.rrp - 1) * 100).toFixed(2),
     [model]
   );
   let titleButton = "Join Team";
 
   if (model.isComming && !hasProduct) {
     titleButton = "Pre - Join Team";
-  } else if (model.isComming && !!hasProduct) {
+  } else if (!!hasProduct) {
     titleButton = "See Team";
   }
 

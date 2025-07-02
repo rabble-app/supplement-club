@@ -94,8 +94,6 @@ export default function SummaryProduct({
     }
   };
 
-console.log("model", model.subscriptions);
-
   return (
     <div
       key={model?.id}

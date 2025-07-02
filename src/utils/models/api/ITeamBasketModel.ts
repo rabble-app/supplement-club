@@ -10,4 +10,5 @@ export interface ITeamBasketModel extends IBaseTimestamps {
 	price?: string;
 	discount?: string;
 	pricePerCount?: string;
+	rrp?: string;
 }

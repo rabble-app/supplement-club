@@ -27,6 +27,9 @@ export interface Basket {
 	quantity: number;
 	product: Product;
 	capsulePerDay: number;
+	price: string;
+	discount: number;
+	pricePerCount: string;
 }
 
 export interface Product {

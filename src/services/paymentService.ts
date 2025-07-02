@@ -191,4 +191,21 @@ export const paymentService = {
 			expiryDate: string;
 		};
 	},
+
+	async unregisterMembership(
+		membershipId: string,
+	) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.UNREGISTER_MEMBERSHIP(membershipId),
+			"DELETE",
+		)) as IMembershipSubscriptionApiResponse;
+
+		return {
+			status: data.status as "APPROVED" | "PENDING",
+			subscriptionStatus: data.subscriptionStatus,
+		} as {
+			status: "APPROVED" | "PENDING";
+			subscriptionStatus: string;
+		};
+	},
 };
