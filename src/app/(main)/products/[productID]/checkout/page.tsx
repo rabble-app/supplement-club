@@ -26,31 +26,10 @@ import { productService } from "@/services/productService";
 import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
 import { referalService } from "@/services/referalService";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
+import { usersService } from "@/services/usersService";
+import IManagePlanModel from "@/utils/models/IManagePlanModel";
 // import { paymentService } from "@/services/paymentService";
 // import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
-
-const PreOrderMessage = () => {
-  return (
-    <div className="grid gap-[16px]">
-      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-        PRE-ORDER Now to Become a Founding Member
-      </p>
-      <div className="grid gap-[8px]">
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Only get charged when we hit 50 pre-orders.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          By becoming a founding member you get an extra 10% off the team price
-          forever.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Lead time is 6 weeks from when we charge you - but you get 10% off
-          your subscription forever.
-        </p>
-      </div>
-    </div>
-  );
-};
 
 export default function Checkout({
   params,
@@ -67,6 +46,9 @@ export default function Checkout({
   );
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
+  const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<IManagePlanModel[]>([]);
+  // const [firstWord, setFirstWord] = useState
   const [, setIsReferralCodeApplied] =
     useState<boolean>(false);
   // const [membershipSubscription, setMembershipSubscription] =
@@ -127,8 +109,8 @@ export default function Checkout({
       id: "12",
       alt: "supplement mockup",
       description: "Free for your first 2 drops",
-      name: `Renews at £${membershipAmount}/year on`,
-      delivery: `${format(membershipExpiry, "MMMM dd yyyy")}`,
+      name: `Renews at £${membershipAmount}/year ${data.isComming ?'': 'on'}`,
+      delivery: data.isComming ? `` : `${format(membershipExpiry, "MMMM dd yyyy")}`,
       src: "/images/membership-card.svg",
       capsules: 0,
       price: membershipPrice,
@@ -198,6 +180,29 @@ export default function Checkout({
     });
   }
 
+  const getSubscriptionPlan = (productID: string) => {
+    return subscriptionPlans.find((plan) =>
+      plan.team.basket.some((basket) => basket.product.id === productID)
+    );
+  };
+
+  const subscriptionPlan = getSubscriptionPlan(data?.productId ?? "");
+
+  useEffect(() => {
+    const fetchSubscriptionPlans = async () => {
+      try {
+        const response = await usersService.getSubscriptionPlans(
+          context?.user?.id ?? ""
+        );
+        setSubscriptionPlans(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
+
+    fetchSubscriptionPlans();
+  }, [context?.user?.id]);
+
   useEffect(() => {
     setSummary((prev) => ({
       ...prev,
@@ -253,9 +258,9 @@ export default function Checkout({
 
   useEffect(() => {
     if (context?.user) {
-      if (basket.length > 0) {
+      if (subscriptionPlan) {
         setStep(4);
-      } else if (context.user.isVerified && basket.length === 0) {
+      } else if (context.user.isVerified && !subscriptionPlan) {
         if (context?.user?.shipping) {
           setStep(3);
           return;
@@ -267,7 +272,7 @@ export default function Checkout({
         );
       }
     }
-  }, [context?.user, router, data?.productId, basket]);
+  }, [context?.user, router, data?.productId, subscriptionPlan]);
 
   useEffect(() => {
     const totalSum = summary?.orders?.reduce(
@@ -281,7 +286,20 @@ export default function Checkout({
         0
       ) ?? 0;
 
-    setTotalPrice(totalSum + totalSumOfSubs);
+      const founderDiscountedTotalSum =  totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
+      const earlyMemberDiscountedTotalSum =  totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
+
+      let discountedTotalSum = totalSum;
+
+      if (data.isComming) {
+        discountedTotalSum = totalSum + founderDiscountedTotalSum;
+      } else if (data.firstDelivery) {
+        discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
+      } else {
+        discountedTotalSum = totalSum + totalSumOfSubs;
+      }
+
+      setTotalPrice(discountedTotalSum);
   }, [summary]);
 
   // useEffect(() => {
@@ -296,6 +314,29 @@ export default function Checkout({
   //   console.log("response", response);
   //   setMembershipSubscription(response);
   // }
+
+  const PreOrderMessage = () => {
+  return (
+    <div className="grid gap-[16px]">
+      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+        PRE-ORDER Now to Become a Founding Member
+      </p>
+      <div className="grid gap-[8px]">
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          Only get charged when we hit {data.founderMembersNeeded} pre-orders.
+        </p>
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          By becoming a founding member you get an extra {data.founderDiscount}% off the team price
+          forever.
+        </p>
+        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+          Lead time is {data.leadTime} weeks from when we charge you - but you get {data.founderDiscount}% off
+          your subscription forever.
+        </p>
+      </div>
+    </div>
+  );
+};
 
   async function successAction() {
     const currentStep = step + 1;
@@ -320,16 +361,16 @@ export default function Checkout({
 
   useEffect(() => {
     if ((step !== 4)) {
-      if (context?.user && basket.length > 0) {
+      if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
         router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context?.user, basket, data?.productId, data?.teamId, step]);
+  }, [context?.user, subscriptionPlan, data?.productId, data?.teamId, step]);
 
   return (
     <>
-      {step !== 4 && (
+      {(step !== 4 || (step===4 && data.isComming)) && (
         <AlignmentDialog
           daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
           deliveryDate={data?.deliveryDate ?? ""}
@@ -337,6 +378,10 @@ export default function Checkout({
           updateQuantityAction={updateQuantityAction}
           discount={data?.discount ?? 0}
           setSummary={setSummary}
+          isComming={data?.isComming}
+          isInfoIconClicked={isInfoIconClicked}
+          setIsInfoIconClicked={setIsInfoIconClicked}
+          firstDelivery={data?.firstDelivery}
         />
       )}
 
@@ -361,7 +406,6 @@ export default function Checkout({
               teamId={data?.teamId ?? ""}
               isComming={data?.isComming}
               totalPrice={totalPrice}
-              capsulePerDay={capsulePerDay}
               successAction={successAction}
             />
           )}
@@ -383,6 +427,7 @@ export default function Checkout({
             step={step}
             referralInfo={referralInfo}
             setIsReferralCodeApplied={setIsReferralCodeApplied}
+            setIsInfoIconClicked={setIsInfoIconClicked}
           />
           {step === 4 && <Delivery />}
           {step < 4 && <AvailablePayment />}

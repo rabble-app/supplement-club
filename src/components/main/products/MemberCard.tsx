@@ -29,14 +29,14 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 					<p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
 						{model.doseTitle}
 					</p>
-					<p className="text-[24px] leading-[27px] font-hagerman">
+					<p className="text-[24px] leading-[27px] font-hagerman text-grey29">
 						{model.name}
 					</p>
 					<div className="flex gap-[5px] items-center text-[14px] leading-[14px] font-inconsolata text-grey4">
 						{model.discountTitle}
 						{model.forever && (
 							<span
-								className={`uppercase text-[14px] leading-[14px] font-inconsolata ${!model.isActive ? "text-blue font-[800]" : "text-grey6"}`}
+								className={`uppercase text-[14px] leading-[14px] font-inconsolata text-grey6`}
 							>
 								Forever
 							</span>
@@ -45,13 +45,8 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 				</div>
 
 				<div className="flex flex-col gap-[8px] justify-center">
-					{model.doseValue && (
-						<p className="text-[14px] leading-[14px] text-blue font-inconsolata text-end">
-							{model.doseValue}
-						</p>
-					)}
 					<div className="flex gap-[5px] items-center justify-end">
-						<span className="text-[20px] leading-[20px] font-bold font-inconsolata">
+						<span className="text-[20px] leading-[20px] font-bold font-inconsolata text-[#444444]">
 							£{model.price}
 						</span>{" "}
 						<p className="text-[12px] my-[auto] font-bold font-inconsolata text-grey1">

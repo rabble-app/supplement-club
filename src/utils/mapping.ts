@@ -81,6 +81,8 @@ export const mapSingleProductModel = (
 				activePercentageDiscount: model.activePercentageDiscount,
 				gramsPerCount: model.gramsPerCount,
 				pricePerPoche: model.pricePerPoche,
+				leadTime: model.leadTime,
+				firstDelivery: model.firstDelivery,
 			}
 		: ({} as ISingleProductModel);
 };
@@ -120,6 +122,7 @@ export const mapSubscriptionModel = (
 					+model.team?.basket[0]?.product?.capsulePerDay ||
 					+model.team?.basket[0]?.capsulePerDay,
 				percent: model.team?.basket[0]?.product?.percent,
+				role: model.role,
 			}
 		: ({} as IManagePlanModel);
 };

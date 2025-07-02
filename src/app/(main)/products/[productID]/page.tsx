@@ -113,11 +113,13 @@ export default function ProductDetails({
     }
   }, [context, product]);
 
-  const nextDeliveryProductText = `Next Drop Delivered: ${
-    product?.deliveryDate
-      ? format(new Date(product?.deliveryDate ?? ""), "MMMM dd yyyy")
-      : ""
-  }`;
+  const nextDeliveryProductText = product?.isComming
+    ? `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE. FOREVER`
+    : `Next Drop Delivered: ${
+        product?.deliveryDate
+          ? format(new Date(product?.deliveryDate ?? ""), "MMMM dd yyyy")
+          : ""
+      }`;
 
   const [nextQuater] = useState(
     currentQuarter + 1 > 4 ? 1 : currentQuarter + 1
@@ -164,11 +166,22 @@ export default function ProductDetails({
     productStore.setCapsulesPerDay(value);
   }
 
+  const earlyMemberPrice =
+    Number(productPrice) *
+    (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
+  const earlyMemberPricePerCount =
+    Number(product?.pricePerCount) *
+    (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
+
+  const foundingMemberPricePerCount =
+    Number(product?.pricePerCount) *
+    (1 - (product?.supplementTeamProducts?.foundingMembersDiscount ?? 0) / 100);
+
   useEffect(() => {
     const order = {
       id: "2",
       description: `${capsulePerDay * days} ${units} Every 3 months`,
-      name: "Quarterly Subscription",
+      name: product?.isComming ? "FOUNDING MEMBER" : product?.firstDelivery ? "EARLY MEMBER" : "Quarterly Subscription",
       delivery: nextDeliveryProductText,
       src: "/images/supplement-mockup.png",
       alt: "supplement mockup",
@@ -185,25 +198,26 @@ export default function ProductDetails({
     const summaryOrders = [order];
     const orders = [order];
 
-    if (product?.isComming) {
-      orders.unshift({
-        id: "1",
-        alt: "Founding Member Badge",
-        name: "Founding Member 10% Discount",
-        delivery: "Forever",
-        src: "/images/icons/user-badge-icon.svg",
-        capsules: 0,
-        isFoundingMember: true,
-        price: -4.5,
-        pricePerPoche: product?.pricePerPoche ?? 0,
-        pricePerCount: product?.pricePerCount ?? 0,
-        rrpPerCount: product?.rrpPerCount ?? 0,
-        rrp: productRrp,
-        capsulePerDay: capsulePerDay,
-        gramsPerCount: product?.gramsPerCount ?? 0,
-        quantity: capsulePerDay,
-      } as never);
-    } else if (!product?.isComming) {
+    // if (product?.isComming) {
+    //   orders.unshift({
+    //     id: "1",
+    //     alt: "Founding Member Badge",
+    //     name: "Founding Member 10% Discount",
+    //     delivery: "Forever",
+    //     src: "/images/icons/user-badge-icon.svg",
+    //     capsules: 0,
+    //     isFoundingMember: true,
+    //     price: -4.5,
+    //     pricePerPoche: product?.pricePerPoche ?? 0,
+    //     pricePerCount: product?.pricePerCount ?? 0,
+    //     rrpPerCount: product?.rrpPerCount ?? 0,
+    //     rrp: productRrp,
+    //     capsulePerDay: capsulePerDay,
+    //     gramsPerCount: product?.gramsPerCount ?? 0,
+    //     quantity: capsulePerDay,
+    //   } as never);
+    // } else
+    if (product) {
       summaryOrders.unshift({
         id: "1",
         alt: "",
@@ -222,49 +236,43 @@ export default function ProductDetails({
         capsulePerDay: capsulePerDay,
         gramsPerCount: product?.gramsPerCount ?? 0,
       } as never);
-    } else if (product) {
+
       const members = [
-        {
+        // {
+        //   id: 1,
+        //   doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
+        //   name: "FOUNDING MEMBER",
+        //   discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
+        //   doseValue: "First 50 Spots",
+        //   price: product?.supplementTeamProducts?.foundingMembersDiscount
+        //     ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
+        //       (capsulePerDay *
+        //         (product?.daysUntilNextDrop ?? 0) *
+        //         product?.supplementTeamProducts?.foundingMembersDiscount) /
+        //         100
+        //     : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
+        //   capsulePrice: product?.pricePerCount ?? 0,
+        //   spotsRemainds: 4,
+        //   forever: true,
+        //   isActive: true,
+        // },
+     ...(!product?.firstDelivery ? [{
           id: 1,
-          doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-          name: "FOUNDING MEMBER",
-          discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
-          doseValue: "First 50 Spots",
-          price: product?.supplementTeamProducts?.foundingMembersDiscount
-            ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
-              (capsulePerDay *
-                (product?.daysUntilNextDrop ?? 0) *
-                product?.supplementTeamProducts?.foundingMembersDiscount) /
-                100
-            : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
-          capsulePrice: product?.pricePerCount ?? 0,
-          spotsRemainds: 4,
-          forever: true,
-          isActive: true,
-        },
-        {
-          id: 2,
           doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
           name: "EARLY MEMBER",
           doseValue: "Next 200 Spots",
           discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
-          price: product?.supplementTeamProducts?.earlyMembersDiscount
-            ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
-              (capsulePerDay *
-                (product?.daysUntilNextDrop ?? 0) *
-                product?.supplementTeamProducts?.earlyMembersDiscount) /
-                100
-            : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
-          capsulePrice: product?.pricePerCount ?? 0,
+          price: Number(earlyMemberPrice.toFixed(2)),
+          capsulePrice: Number(earlyMemberPricePerCount.toFixed(2)),
           forever: true,
-        },
+        }] : []),
         {
           id: 3,
           doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
           name: "MEMBER",
-          capsulePrice: product?.pricePerCount ?? 0,
+          capsulePrice: Number(product?.pricePerCount?.toFixed(2)),
           discountTitle: "Standard Team Price",
-          price: capsulePerDay * (product?.daysUntilNextDrop ?? 0),
+          price: Number(productPrice.toFixed(2)),
         },
       ];
       setMembers(members);
@@ -366,6 +374,26 @@ export default function ProductDetails({
     fetchSubscriptionPlans();
   }, [context?.user?.id]);
 
+  const hasProduct = basket.find((p) => p.productId === product?.id);
+
+  let basketPrice = 0;
+  let basketRrp = 0;
+  let basketPricePerCount = 0;
+
+  const priceRrp =
+    Number(subscriptionPlan?.team?.basket[0]?.price) /
+    Number(1 - Number(subscriptionPlan?.team?.basket[0]?.discount) / 100);
+
+  if (product?.isComming) {
+    basketPrice = Number(basket[0]?.price);
+    basketRrp = Number(Math.ceil(priceRrp * 100) / 100);
+    basketPricePerCount = Number(foundingMemberPricePerCount);
+  } else {
+    basketPrice = Number(((product?.price ?? 0) * capsuleCount) / gPerCount);
+    basketRrp = (Number(product?.rrp) * capsuleCount) / gPerCount;
+    basketPricePerCount = Number(product?.pricePerCount);
+  }
+
   if (loading) return <Spinner />;
 
   return (
@@ -407,10 +435,12 @@ export default function ProductDetails({
             </div>
           </div>
 
-          {product?.isComming && (
-            <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-blue py-[12px] h-[72px]">
-              <div className="text-white text-[16px] leading-[24px] font-helvetica flex text-center max-w-[300px] mx-auto">
-                PRE-ORDER TO BECOME FOUNDING MEMBER AND GET 10%OFF - FOREVER
+          {product?.isComming && !hasProduct && (
+            <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-yellow py-[12px] h-[72px]">
+              <div className="text-blue text-[16px] font-bold leading-[24px] font-helvetica flex text-center max-w-[380px] mx-auto">
+                PRE-ORDER TO BECOME A FOUNDING MEMBER AND GET AN EXTRA{" "}
+                {product?.supplementTeamProducts?.foundingMembersDiscount}% OFF
+                FOREVER
               </div>
             </div>
           )}
@@ -499,21 +529,23 @@ export default function ProductDetails({
           unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
         />
 
-        {context?.user && product?.isComming && (
-          <div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
-            <Image
-              src="/images/icons/user-badge-icon.svg"
-              alt="User badge"
-              width={15}
-              height={15}
-              priority
-            />
-            YOU&apos;RE A FOUNDING MEMBER!
-          </div>
-        )}
+        {context?.user &&
+          product?.isComming &&
+          subscriptionPlan?.role === "FOUNDING_MEMBER" && (
+            <div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
+              <Image
+                src="/images/icons/user-badge-icon.svg"
+                alt="User badge"
+                width={15}
+                height={15}
+                priority
+              />
+              YOU&apos;RE A FOUNDING MEMBER!
+            </div>
+          )}
 
-        {((context?.user && basket.length === 0 && !product?.isComming) ||
-          (!context?.user && !product?.isComming)) && (
+        {((context?.user && !subscriptionPlan && !product?.isComming && !product?.firstDelivery) ||
+          (!context?.user && !product?.isComming && !product?.firstDelivery)) && (
           <div className="flex flex-col gap-[24px]">
             <CapsuleBox
               rrp={productRrp}
@@ -547,6 +579,18 @@ export default function ProductDetails({
               setSelectedState={setSelectedState}
               setCapsuleCount={setCapsuleCount}
               gPerCount={gPerCount}
+              founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
+              founderMembersNeeded={
+                product?.nextPriceDiscountLevel?.membersNeeded
+              }
+              founderDiscount={
+                product?.supplementTeamProducts?.foundingMembersDiscount
+              }
+              earlyMemberDiscount={
+                product?.supplementTeamProducts?.earlyMembersDiscount
+              }
+              leadTime={product?.leadTime ?? 0}
+              firstDelivery={product?.firstDelivery}
             />
             {/* Placeholder keeps layout when sticky becomes fixed */}
             <div
@@ -591,7 +635,8 @@ export default function ProductDetails({
           </div>
         )}
 
-        {!context?.user && product?.isComming && (
+        {((context?.user && !subscriptionPlan && (product?.isComming || product?.firstDelivery)) ||
+          (!context?.user && (product?.isComming || product?.firstDelivery))) && (
           <div className="flex flex-col gap-[24px]">
             <CapsuleBox
               rrp={productRrp}
@@ -625,13 +670,28 @@ export default function ProductDetails({
               setSelectedState={setSelectedState}
               setCapsuleCount={setCapsuleCount}
               gPerCount={gPerCount}
+              founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
+              founderMembersNeeded={
+                product?.nextPriceDiscountLevel?.membersNeeded
+              }
+              founderDiscount={
+                product?.supplementTeamProducts?.foundingMembersDiscount
+              }
+              earlyMemberDiscount={
+                product?.supplementTeamProducts?.earlyMembersDiscount
+              }
+              leadTime={product?.leadTime ?? 0}
+              firstDelivery={product?.firstDelivery}
             />
 
             {members.length > 0 && (
               <div className="grid gap-[16px] bg-white">
-                {members.map((item) => (
-                  <MemberCard key={item.id} {...item} />
-                ))}
+                {members.map((item) => {
+                  if (!product?.firstDelivery) {
+                    return null;
+                  }
+                  return <MemberCard key={item.id} {...item} />
+                })}
               </div>
             )}
           </div>
@@ -643,7 +703,7 @@ export default function ProductDetails({
             )} */}
 
             <div>
-              {basket.map((item) => (
+              {subscriptionPlan?.team.basket.map((item) => (
                 <Link
                   href={`/dashboard/manage-plans/${subscriptionPlan?.id}`}
                   className="w-full"
@@ -664,26 +724,23 @@ export default function ProductDetails({
 
                     <div className="grid gap-2">
                       <p className="text-[12px] leading-[12px] font-hagerman text-grey4">
-                        CoQ10 - MEMBER
+                        CoQ10 - {subscriptionPlan.role.replaceAll("_", " ")}
                       </p>
                       <p className="text-[16px] leading-[16px] font-[800] font-inconsolata text-black">
-                        £
-                        {(Number(item.price) * (item.quantity ?? 0)).toFixed(2)}
+                        £{basketPrice.toFixed(2)}
                         <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold ml-0.5">
-                          (£{Number(product?.pricePerCount ?? 0).toFixed(2)}
+                          (£
+                          {Number(basketPricePerCount ?? 0).toFixed(2)}
                           /count)
                         </span>
                       </p>
                       <div className="text-[12px] leading-[12px] text-grey4 font-bold font-inconsolata whitespace-nowrap">
                         RRP{" "}
                         <span className="text-[12px] leading-[12px] line-through font-bold font-inconsolata">
-                          £
-                          {(
-                            Number(product?.rrp ?? 0) * (item.quantity ?? 0)
-                          ).toFixed(2)}
+                          £{Number(basketRrp).toFixed(2)}
                         </span>{" "}
                         <span className="text-[12px] leading-[12px] font-bold text-blue font-inconsolata whitespace-nowrap">
-                          {product?.discount?.toFixed(2)}% OFF
+                          {Number(item?.discount)?.toFixed(2)}% OFF
                         </span>
                       </div>
                       <p className="text-[12px] leading-[12px] font-medium font-helvetica text-grey4">
@@ -691,15 +748,27 @@ export default function ProductDetails({
                         {days * Number(item.capsulePerDay)} {units}
                       </p>
                     </div>
-                    <div className="flex justify-between items-center gap-2">
-                      <p className="text-base font-normal text-blue bg-[#E5E6F4] px-2.5 py-1 rounded-full font-hagerman w-fit">
-                        NEXT DROP:{" "}
-                        {product?.deliveryDate
-                          ? format(
-                              new Date(product?.deliveryDate ?? ""),
-                              "dd MMMM yyyy"
-                            )
-                          : "N/A"}
+                    <div className="flex justify-between items-center gap-2 w-full">
+                      <p
+                        className={`text-base font-normal ${
+                          product?.isComming
+                            ? "bg-[#FFF5E9] text-[#BF6A02]"
+                            : "bg-[#E5E6F4] text-blue"
+                        } px-2.5 py-1 rounded-full font-hagerman w-fit whitespace-nowrap`}
+                      >
+                        {product?.isComming ? (
+                          "WAITING TO LAUNCH"
+                        ) : (
+                          <>
+                            NEXT DROP:{" "}
+                            {product?.deliveryDate
+                              ? format(
+                                  new Date(product?.deliveryDate ?? ""),
+                                  "dd MMMM yyyy"
+                                )
+                              : "N/A"}
+                          </>
+                        )}
                       </p>
                       <Image
                         src="/images/icons/chevron-right-icon.svg"
@@ -714,7 +783,7 @@ export default function ProductDetails({
               ))}
             </div>
 
-            {basket.length > 0 && (
+            {basket.length > 0 && !product?.isComming && (
               <ConfirmJoining
                 email={context?.user?.email}
                 userType="existing"

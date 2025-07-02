@@ -20,6 +20,7 @@ import { getQuarterInfo } from "@/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, startOfMonth, addMonths } from "date-fns";
+import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
 
 export default function Subscription({
   params,
@@ -105,16 +106,18 @@ export default function Subscription({
           Plan settings
         </div>
 
-        <SubscriptionCard
-          title="Next Quarterly Drop"
-          description={nextDelivery}
-          imageSrc="/images/icons/calendar-blue-icon.svg"
-          imageAlt="Calendar icon"
-        />
+        {managePlan?.role !== "FOUNDING_MEMBER" && (
+          <SubscriptionCard
+            title="Next Quarterly Drop"
+            description={nextDelivery}
+            imageSrc="/images/icons/calendar-blue-icon.svg"
+            imageAlt="Calendar icon"
+          />
+        )}
 
         <SubscriptionPlan managePlan={managePlan} />
 
-        <SubscriptionCard
+        {managePlan?.role !== "FOUNDING_MEMBER" && <SubscriptionCard
           title="Your Stock"
           description={`You should have ${totalCapsule}${units} to tie you over to the ${format(
             startOfMonth(addMonths(endDate, 1)),
@@ -133,13 +136,29 @@ export default function Subscription({
               Order Top Up Capsules
             </Link>
           </Button>
-        </SubscriptionCard>
+        </SubscriptionCard>}
 
-        <SummaryProduct model={summary}>
+        {/* <SummaryProduct model={summary}> */}
+        <div>
+
+              {/* <OrderSummaryCard
+                        key={summary.orders[0]?.id}
+                        model={summary.orders[0]}
+                        discount={data.discount}
+                        step={step}
+                        isComming={data.isComming}
+                        founderSpots={data.founderSpots}
+                        founderMembersNeeded={data.founderMembersNeeded}
+                        founderDiscount={data.founderDiscount}
+                        earlyMemberDiscount={data.earlyMemberDiscount}
+                        firstDelivery={data.firstDelivery}
+                      /> */}
+      
           <SubscriptionCancelDialog confirmAction={subscriptionCancel} />
 
           <SubscriptionSkipDialog confirmAction={subscriptionSkipDialog} />
-        </SummaryProduct>
+            </div>
+        {/* </SummaryProduct> */}
       </div>
     </div>
   );

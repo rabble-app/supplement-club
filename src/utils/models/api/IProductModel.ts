@@ -53,4 +53,6 @@ export interface IProductModel extends IBaseTimestamps {
 	activePercentageDiscount?: number;
 	gramsPerCount?: number;
 	pricePerPoche?: number;
+	leadTime?: number;
+	firstDelivery?: boolean;
 }

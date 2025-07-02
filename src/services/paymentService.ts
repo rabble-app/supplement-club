@@ -96,6 +96,8 @@ export const paymentService = {
 			amount: model.amount,
 			paymentMethodId: model.paymentMethodId,
 			topupQuantity: model.topupQuantity,
+			pricePerCount: model.pricePerCount,
+			discount: model.discount,
 		});
 
 		return resonse;
@@ -108,6 +110,8 @@ export const paymentService = {
 		quantity: number,
 		price: number,
 		capsulePerDay: number,
+		pricePerCount: string,
+		discount: string,
 	) {
 		const resonse = await apiRequest(
 			PAYMENT_ENDPOINTS.JOIN_PREORDER_TEAM,
@@ -120,6 +124,8 @@ export const paymentService = {
 				quantity,
 				price,
 				capsulePerDay,
+				pricePerCount,
+				discount,
 			},
 		);
 
@@ -183,6 +189,23 @@ export const paymentService = {
 		} as {
 			status: "ACTIVE" | "CANCELED";
 			expiryDate: string;
+		};
+	},
+
+	async unregisterMembership(
+		membershipId: string,
+	) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.UNREGISTER_MEMBERSHIP(membershipId),
+			"DELETE",
+		)) as IMembershipSubscriptionApiResponse;
+
+		return {
+			status: data.status as "APPROVED" | "PENDING",
+			subscriptionStatus: data.subscriptionStatus,
+		} as {
+			status: "APPROVED" | "PENDING";
+			subscriptionStatus: string;
 		};
 	},
 };

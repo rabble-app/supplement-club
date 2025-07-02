@@ -16,6 +16,7 @@ import CheckmarkIcon from "@/components/icons/checkmark-icon.svg";
 import { CustomToast } from "./Toast";
 import { StatusToast } from "./Toast";
 import { Button } from "../ui/button";
+import { format } from "date-fns";
 
 export default function SummaryProduct({
   model,
@@ -27,6 +28,7 @@ export default function SummaryProduct({
   step,
   referralInfo,
   setIsReferralCodeApplied,
+  setIsInfoIconClicked
 }: Readonly<{
   model: ISummaryProductModel;
   className?: string;
@@ -37,6 +39,7 @@ export default function SummaryProduct({
   step?: number;
   referralInfo?: IReferalInfoModel;
   setIsReferralCodeApplied?: (val: boolean) => void;
+  setIsInfoIconClicked?: (val: boolean) => void;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
   const [referralCode, setReferralCode] = useState("");
@@ -57,7 +60,20 @@ export default function SummaryProduct({
       model?.subscriptions?.reduce((sum, item) => sum + (item.price ?? 0), 0) ??
       0;
 
-    setTotalCount(totalSum + totalSumOfSubs);
+      const founderDiscountedTotalSum =  totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
+      const earlyMemberDiscountedTotalSum =  totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
+
+      let discountedTotalSum = totalSum;
+
+      if (data.isComming) {
+        discountedTotalSum = totalSum + founderDiscountedTotalSum;
+      } else if (data.firstDelivery) {
+        discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
+      } else {
+        discountedTotalSum = totalSum + totalSumOfSubs;
+      }
+
+    setTotalCount(discountedTotalSum);
   }, [model]);
 
   const updateQuantityAction = (val: number) => {
@@ -121,11 +137,10 @@ export default function SummaryProduct({
                 model.unitsOfMeasurePerSubUnit && (
                   <div className="flex items-center gap-[8px]">
                     <Image
-                      src={`${
-                        model.unitsOfMeasurePerSubUnit !== "grams"
-                          ? "/images/icons/link-icon.svg"
-                          : "/images/icons/gram-link-icon.svg"
-                      }`}
+                      src={`${model.unitsOfMeasurePerSubUnit !== "grams"
+                        ? "/images/icons/link-icon.svg"
+                        : "/images/icons/gram-link-icon.svg"
+                        }`}
                       alt="security-card-icon"
                       width={24}
                       height={24}
@@ -139,8 +154,8 @@ export default function SummaryProduct({
                 )}
             </div>
           )}
-          {model?.orders?.length > 0 && <hr className="border-grey3 border" />}
-          <div className="flex justify-between items-center">
+          {!data.isComming && model?.orders?.length > 0 && <hr className="border-grey3 border" />}
+          {!data.isComming && !data.firstDelivery && <div className="flex justify-between items-center">
             {model?.deliveryText && (
               <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                 {model.deliveryText}
@@ -150,9 +165,33 @@ export default function SummaryProduct({
               {" "}
               {data.daysUntilNextDrop} days until the next quarterly drop
             </p>
-          </div>
+          </div>}
           {showTopLine && <hr className="bg-grey3 h-[1.5px]" />}
-          {checkoutData.quantity && checkoutData.quantity > 0 ? (
+          {data.isComming && <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+            <p className="text-base font-semibold font-inconsolata">Alignment Package</p>
+            <Image
+              src="/images/icons/info-icon.svg"
+              alt="arrow right icon"
+              width={20}
+              height={20}
+              className="cursor-pointer"
+              onClick={() => setIsInfoIconClicked?.(true)}
+            />
+            </div>
+             <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
+              Reserved at £{data.pricePerCount?.toFixed(2)} / count
+            </p>
+          </div>}
+          {data.firstDelivery && <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+            <p className="text-base font-semibold font-inconsolata">Delayed</p>
+            </div>
+             <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
+             You’ll receive your alignment pack when stock arrives on {format(data.deliveryDate ?? "", "MMMM dd yyyy")}.
+            </p>
+          </div>}
+          {!data.isComming && <>  {checkoutData.quantity && checkoutData.quantity > 0 ? (
             model?.orders?.map((order) => (
               <OrderSummaryCard
                 key={order.id}
@@ -173,6 +212,7 @@ export default function SummaryProduct({
               </p>
             </Button>
           )}
+          </>}
           {model?.referals?.length > 0 && (
             <hr className="border-grey3 border" />
           )}
@@ -209,6 +249,12 @@ export default function SummaryProduct({
               model={item}
               discount={data.discount}
               step={step}
+              isComming={data.isComming}
+              founderSpots={data.founderSpots}
+              founderMembersNeeded={data.founderMembersNeeded}
+              founderDiscount={data.founderDiscount}
+              earlyMemberDiscount={data.earlyMemberDiscount}
+              firstDelivery={data.firstDelivery}
             />
           ))}
 
@@ -217,9 +263,12 @@ export default function SummaryProduct({
           )}
 
           {model?.membership?.length > 0 && (
+            <div>
             <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
               Membership Subscription
             </p>
+            {data.isComming &&<p className="text-sm font-inconsolata text-grey16 mt-1">Membership trial starts when the team launches and not before</p>}
+            </div>
           )}
 
           {model?.membership?.map((item) => (
@@ -232,12 +281,12 @@ export default function SummaryProduct({
           ))}
           {model?.membership?.length > 0 && (
             <div className="text-[12px] leading-[16px] font-helvetica italic mt-[-12px] text-grey4">
-              Membership gives you access to unlimited drops, premium-only
-              products, lab-direct pricing & free delivery on all orders
+              {data.isComming ? `YOUR 6 MONTH MEMBERSHIP TRIAL WILL START WHEN THE TEAM LAUNCHES` :`Membership gives you access to unlimited drops, premium-only
+              products, lab-direct pricing & free delivery on all orders`}
             </div>
           )}
 
-          {context?.user && (
+          {context?.user && !data.isComming && (
             <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
               Referral Code
             </p>
@@ -253,9 +302,8 @@ export default function SummaryProduct({
                 onChange={(e) => setReferralCode(e.target.value)}
               />
               <button
-                className={`${
-                  referralCode ? "bg-blue" : "bg-grey2"
-                } text-white px-6 py-3 absolute right-3 flex items-center gap-1`}
+                className={`${referralCode ? "bg-blue" : "bg-grey2"
+                  } text-white px-6 py-3 absolute right-3 flex items-center gap-1`}
                 onClick={() =>
                   handleApplyReferralCode(referralCode, totalCount)
                 }
@@ -285,6 +333,16 @@ export default function SummaryProduct({
             </div>
           )}
           <hr className="border-grey3 border" />
+          {data.isComming && (
+            <div className="font-inconsolata bg-blue2 rounded-sm">
+              <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">You will only be charged when the team hits {data.founderSpots}. We will email to notify and you can leave at any point</p>
+            </div>
+          )}
+           {data.firstDelivery && (
+            <div className="font-inconsolata bg-blue2 rounded-sm">
+              <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">You're early. We’ll notify you when your order ships.</p>
+            </div>
+          )}
           <div className="grid gap-[10px]">
             <div className="flex justify-between items-center">
               <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">

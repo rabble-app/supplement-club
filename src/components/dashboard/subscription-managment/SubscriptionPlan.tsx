@@ -96,7 +96,7 @@ export default function SubscriptionPlan({
     <div className="py-[16px] px-[12px] bg-white shadow-card rounded-[12px] grid gap-[16px]">
       <div className="grid gap-[4px]">
         <p className="text-[16px] leading-[24px] font-[500] font-inconsolata text-grey4">
-          KANEKA CORPRATION
+          {managePlan?.team?.basket[0]?.product?.producer?.businessName}
         </p>
         <p className="text-[24px] leading-[28px] font-[400] font-hagerman">
           {managePlan?.name}
@@ -121,7 +121,7 @@ export default function SubscriptionPlan({
       </div>
 
       <div
-        className={`px-[16px] py-[5px] grid grid-cols-${capsuleInfo?.length} mx-auto w-full`}
+        className={`px-[16px] py-[5px] grid grid-flow-col auto-cols-fr mx-auto w-full`}
       >
         {capsuleInfo?.map((info, idx) => (
           <Button

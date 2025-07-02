@@ -11,6 +11,12 @@ import useLocalStorage from "use-local-storage";
 function renderPrice(
   model: IOrderSummaryModel | ISubscriptionSummaryModel,
   discount: number,
+  isComming?: boolean,
+  founderSpots?: number,
+  founderMembersNeeded?: number,
+  founderDiscount?: number,
+  earlyMemberDiscount?: number,
+  firstDelivery?: boolean
 ) {
   if (model.isFree) {
     return (
@@ -41,23 +47,57 @@ function renderPrice(
 
   const price = Number(model.price) ?? 0;
 
+  const founderPrice = Number(model.price) * (1 - (founderDiscount ?? 0) / 100);
+  const founderPricePerCount = Number(model.pricePerCount) * (1 - (founderDiscount ?? 0) / 100);
+
+  const earlyMemberPrice = Number(model.price) * (1 - (earlyMemberDiscount ?? 0) / 100);
+  const earlyMemberPricePerCount = Number(model.pricePerCount) * (1 - (earlyMemberDiscount ?? 0) / 100);
+
+  let displayPrice = price;
+  let displayPricePerCount = model.pricePerCount;
+
+  if (firstDelivery) {
+    displayPrice = earlyMemberPrice;
+    displayPricePerCount = earlyMemberPricePerCount;
+  }
+
   return (
     <div className="grid gap-[8px]">
-      <div className={`${model.isMembership ? "md:text-xl  text-right items-end" : "text-xl md:text-3xl flex"} font-[800] text-black items-center gap-1 font-inconsolata`}>
-        £{price.toFixed(2)}
-       {!model.isMembership && <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-          (£{model.pricePerCount?.toFixed(2)}/count)
-        </span>}
+      {isComming && (
+        <p className="text-blue font-normal text-sm font-inconsolata">
+          First {founderSpots} Spots
+        </p>
+      )}
+      <div
+        className={`${
+          model.isMembership
+            ? "md:text-xl  text-right items-end"
+            : "text-xl md:text-3xl flex"
+        } font-[800] text-black items-center gap-1 font-inconsolata`}
+      >
+        £{isComming ? founderPrice.toFixed(2) : displayPrice.toFixed(2)}
+        {!model.isMembership && (
+          <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+            (£{isComming ? founderPricePerCount.toFixed(2) : displayPricePerCount?.toFixed(2)}/count)
+          </span>
+        )}
       </div>
-      <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
-        RRP{" "}
-        <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-          £{(Number(model.rrp) ?? 0).toFixed(2)}
-        </span>{" "}
-        <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
-          {model?.isMembership ? discount: discount.toFixed(2)}% OFF
-        </span>
-      </div>
+      {!isComming && (
+        <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+          RRP{" "}
+          <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+            £{(Number(model.rrp) ?? 0).toFixed(2)}
+          </span>{" "}
+          <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+            {model?.isMembership ? discount : discount.toFixed(2)}% OFF
+          </span>
+        </div>
+      )}
+      {isComming && (
+        <p className="text-blue font-normal text-sm font-inconsolata">
+          {founderMembersNeeded} Founder Spots Remaining!
+        </p>
+      )}
     </div>
   );
 }
@@ -69,6 +109,12 @@ export default function OrderSummaryCard({
   className,
   step,
   isAlignmentDialog,
+  isComming,
+  founderSpots,
+  founderMembersNeeded,
+  founderDiscount,
+  earlyMemberDiscount,
+  firstDelivery,
 }: Readonly<{
   model:
     | IOrderSummaryModel
@@ -80,8 +126,13 @@ export default function OrderSummaryCard({
   className?: string;
   step?: number;
   isAlignmentDialog?: boolean;
+  isComming?: boolean;
+  founderSpots?: number;
+  founderMembersNeeded?: number;
+  founderDiscount?: number;
+  earlyMemberDiscount?: number;
+  firstDelivery?: boolean;
 }>) {
-
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
   const increment = () => {
     if (updateQuantityAction) {
@@ -132,13 +183,17 @@ export default function OrderSummaryCard({
           </p>
         )}
 
-        <div className="flex md:hidden">{renderPrice(model, discount ?? 0)}</div>
+        <div className="flex md:hidden">
+          {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery)}
+        </div>
         {typeof model.quantity === "number" && step !== 4 && (
           <div className="flex items-center gap-[16px]">
             <Button
               type="button"
               className={`w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px] cursor-pointer ${
-                checkoutData.quantity === 1 && isAlignmentDialog ? "opacity-50 cursor-not-allowed" : ""
+                checkoutData.quantity === 1 && isAlignmentDialog
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
               onClick={decrement}
               disabled={checkoutData.quantity === 1 && isAlignmentDialog}
@@ -151,7 +206,9 @@ export default function OrderSummaryCard({
             <Button
               type="button"
               className={`w-[20px] h-[20px] rounded-[50%] bg-[#666666] text-white p-0 text-[20px] cursor-pointer select-none ${
-                (checkoutData.quantity ?? 0) === 12 ? "opacity-50 cursor-not-allowed" : ""
+                (checkoutData.quantity ?? 0) === 12
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
               onClick={increment}
               disabled={(checkoutData.quantity ?? 0) === 12}
@@ -163,7 +220,7 @@ export default function OrderSummaryCard({
       </div>
 
       <div className="hidden md:flex justify-end">
-        {renderPrice(model, discount ?? 0)}
+        {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery)}
       </div>
     </div>
   );

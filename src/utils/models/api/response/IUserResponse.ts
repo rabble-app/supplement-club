@@ -55,6 +55,12 @@ export interface IMetadata {
 	discount?: number;
 	topUpQuantity?: number;
 	quantity?: number;
+	founderSpots?: number;
+	founderMembersNeeded?: number;
+	founderDiscount?: number;
+	earlyMemberDiscount?: number;
+	leadTime?: number;
+	firstDelivery?: boolean;
 }
 
 interface IBasketsC {
