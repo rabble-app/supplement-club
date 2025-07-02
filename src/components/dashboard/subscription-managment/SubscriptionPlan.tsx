@@ -121,7 +121,7 @@ export default function SubscriptionPlan({
       </div>
 
       <div
-        className={`px-[16px] py-[5px] grid grid-cols-${capsuleInfo?.length} mx-auto w-full`}
+        className={`px-[16px] py-[5px] grid grid-flow-col auto-cols-fr mx-auto w-full`}
       >
         {capsuleInfo?.map((info, idx) => (
           <Button

@@ -66,8 +66,8 @@ export const usersService = {
 		const { data } = (await apiRequest(
 			USER_ENDPOINTS.SUBSCRIPTION_PLAN(userId),
 			"GET",
-		)) as ISubscriptionPlansApiResponse;
-		return data.map<IManagePlanModel>((r) => mapSubscriptionModel(r));
+		)) as ISubscriptionPlanApiResponse;
+		return mapSubscriptionModel(data);
 	},
 
 	async getUserInfo(userId: string) {
