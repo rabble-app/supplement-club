@@ -16,6 +16,7 @@ import CheckmarkIcon from "@/components/icons/checkmark-icon.svg";
 import { CustomToast } from "./Toast";
 import { StatusToast } from "./Toast";
 import { Button } from "../ui/button";
+import { format } from "date-fns";
 
 export default function SummaryProduct({
   model,
@@ -60,8 +61,19 @@ export default function SummaryProduct({
       0;
 
       const founderDiscountedTotalSum =  totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
+      const earlyMemberDiscountedTotalSum =  totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
 
-    setTotalCount(totalSum +( data.isComming ? founderDiscountedTotalSum : totalSumOfSubs));
+      let discountedTotalSum = totalSum;
+
+      if (data.isComming) {
+        discountedTotalSum = totalSum + founderDiscountedTotalSum;
+      } else if (data.firstDelivery) {
+        discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
+      } else {
+        discountedTotalSum = totalSum + totalSumOfSubs;
+      }
+
+    setTotalCount(discountedTotalSum);
   }, [model]);
 
   const updateQuantityAction = (val: number) => {
@@ -143,7 +155,7 @@ export default function SummaryProduct({
             </div>
           )}
           {!data.isComming && model?.orders?.length > 0 && <hr className="border-grey3 border" />}
-          {!data.isComming && <div className="flex justify-between items-center">
+          {!data.isComming && !data.firstDelivery && <div className="flex justify-between items-center">
             {model?.deliveryText && (
               <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                 {model.deliveryText}
@@ -169,6 +181,14 @@ export default function SummaryProduct({
             </div>
              <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
               Reserved at £{data.pricePerCount?.toFixed(2)} / count
+            </p>
+          </div>}
+          {data.firstDelivery && <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+            <p className="text-base font-semibold font-inconsolata">Delayed</p>
+            </div>
+             <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
+             You’ll receive your alignment pack when stock arrives on {format(data.deliveryDate ?? "", "MMMM dd yyyy")}.
             </p>
           </div>}
           {!data.isComming && <>  {checkoutData.quantity && checkoutData.quantity > 0 ? (
@@ -233,6 +253,8 @@ export default function SummaryProduct({
               founderSpots={data.founderSpots}
               founderMembersNeeded={data.founderMembersNeeded}
               founderDiscount={data.founderDiscount}
+              earlyMemberDiscount={data.earlyMemberDiscount}
+              firstDelivery={data.firstDelivery}
             />
           ))}
 
@@ -314,6 +336,11 @@ export default function SummaryProduct({
           {data.isComming && (
             <div className="font-inconsolata bg-blue2 rounded-sm">
               <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">You will only be charged when the team hits {data.founderSpots}. We will email to notify and you can leave at any point</p>
+            </div>
+          )}
+           {data.firstDelivery && (
+            <div className="font-inconsolata bg-blue2 rounded-sm">
+              <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">You're early. We’ll notify you when your order ships.</p>
             </div>
           )}
           <div className="grid gap-[10px]">

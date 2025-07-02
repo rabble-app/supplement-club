@@ -368,11 +368,11 @@ export default function CapsuleBox({
                 setCheckoutData(checkoutData);
               }}
             >
-              {isComming ? "REGISTER PRE-ORDER" : "Start My Subscription"}
+              {isComming ? "REGISTER PRE-ORDER" : firstDelivery ? "REGISTER EARLY" : "Start My Subscription"}
             </Link>
           </Button>
 
-          {isComming && <p className="text-grey6 font-helvetica text-sm leading-[14px] text-center">You’ll be notified when your team launches. You’ll have 24 hours to withdraw before payment is taken.</p>}
+          {isComming || firstDelivery && <p className="text-grey6 font-helvetica text-sm leading-[14px] text-center">You’ll be notified when your team launches. You’ll have 24 hours to withdraw before payment is taken.</p>}
         </div>
       </div>
     </div>

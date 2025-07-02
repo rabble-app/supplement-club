@@ -29,6 +29,7 @@ type AlignmentDialogProps = {
   isComming?: boolean;
   isInfoIconClicked?: boolean;
   setIsInfoIconClicked?: (val: boolean) => void;
+  firstDelivery?: boolean;
 };
 
 export default function AlignmentDialog({
@@ -41,15 +42,16 @@ export default function AlignmentDialog({
   isComming,
   isInfoIconClicked,
   setIsInfoIconClicked,
+  firstDelivery,
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const context = useUser();
 
   useEffect(() => {
-    if (context?.user || isInfoIconClicked) {
+    if (!context?.user || isInfoIconClicked || firstDelivery) {
       setIsOpen(true);
     }
-  }, [context?.user, isInfoIconClicked]);
+  }, [context?.user, isInfoIconClicked, firstDelivery]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -259,28 +259,20 @@ export default function Checkout({
   useEffect(() => {
     if (context?.user) {
       if (subscriptionPlan) {
-        console.log(222);
         setStep(4);
       } else if (context.user.isVerified && !subscriptionPlan) {
-        console.log(333);
         if (context?.user?.shipping) {
-          console.log(444);
           setStep(3);
           return;
         }
-        console.log(555);
         setStep(2);
       } else {
-        console.log(666);
         router.push(
           `/auth/email-verify?redirect=/products/${data?.productId}/checkout`
         );
       }
     }
   }, [context?.user, router, data?.productId, subscriptionPlan]);
-
-  // console.log(999, context?.user);
-  console.log(1000, subscriptionPlan);
 
   useEffect(() => {
     const totalSum = summary?.orders?.reduce(
@@ -295,8 +287,19 @@ export default function Checkout({
       ) ?? 0;
 
       const founderDiscountedTotalSum =  totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
+      const earlyMemberDiscountedTotalSum =  totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
 
-      setTotalPrice(totalSum +( data.isComming ? founderDiscountedTotalSum : totalSumOfSubs));
+      let discountedTotalSum = totalSum;
+
+      if (data.isComming) {
+        discountedTotalSum = totalSum + founderDiscountedTotalSum;
+      } else if (data.firstDelivery) {
+        discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
+      } else {
+        discountedTotalSum = totalSum + totalSumOfSubs;
+      }
+
+      setTotalPrice(discountedTotalSum);
   }, [summary]);
 
   // useEffect(() => {
@@ -358,9 +361,7 @@ export default function Checkout({
 
   useEffect(() => {
     if ((step !== 4)) {
-      console.log(888);
       if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
-        console.log(777);
         router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
       }
     }
@@ -380,6 +381,7 @@ export default function Checkout({
           isComming={data?.isComming}
           isInfoIconClicked={isInfoIconClicked}
           setIsInfoIconClicked={setIsInfoIconClicked}
+          firstDelivery={data?.firstDelivery}
         />
       )}
 

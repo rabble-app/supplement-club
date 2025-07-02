@@ -43,12 +43,12 @@ export default function ManagePlanCard({
 }>) {
   const [open, setOpen] = useState(false);
 
-  // 	const earlyMemberPrice =
-  //     Number(productPrice) *
-  //     (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
-  //   const earlyMemberPricePerCount =
-  //     Number(product?.pricePerCount) *
-  //     (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
+  	// const earlyMemberPrice =
+    //   Number(productPrice) *
+    //   (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
+    // const earlyMemberPricePerCount =
+    //   Number(product?.pricePerCount) *
+    //   (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
 
   //   const foundingMemberPricePerCount =
   //     Number(product?.pricePerCount) *
@@ -65,6 +65,13 @@ export default function ManagePlanCard({
     (1 -
       Number(model.team?.supplementTeamProducts?.foundingMembersDiscount) /
         100);
+
+  const earlyMemberPricePerCount =
+    Number(model.team?.basket[0]?.pricePerCount) *
+    (1 -
+      Number(model.team?.supplementTeamProducts?.earlyMembersDiscount) /
+        100);
+
   const priceRrp =
     Number(model.team?.basket[0]?.price) /
     Number(1 - Number(model.team?.basket[0]?.discount) / 100);
@@ -73,6 +80,10 @@ export default function ManagePlanCard({
     basketPrice = Number(model.team?.basket[0]?.price);
     basketRrp = Number(Math.ceil(priceRrp * 100) / 100);
     basketPricePerCount = Number(foundingMemberPricePerCount);
+  } else if (model.role === "EARLY_MEMBER") {
+    basketPrice = Number(model.team?.basket[0]?.price);
+    basketRrp = Number(Math.ceil(priceRrp * 100) / 100);
+    basketPricePerCount = Number(earlyMemberPricePerCount);
   } else {
     basketPrice =
       Number(model.team?.basket[0]?.price ?? 0) * (model.quantity ?? 0);
@@ -120,6 +131,8 @@ export default function ManagePlanCard({
                 <span className="text-[12px] leading-[13px] font-inconsolata text-grey4">
                   {model.role === "FOUNDING_MEMBER"
                     ? "Founding Member Subscription"
+                    : model.role === "EARLY_MEMBER"
+                    ? "Early Member Subscription"
                     : "Subscription"}
                 </span>
               </div>
