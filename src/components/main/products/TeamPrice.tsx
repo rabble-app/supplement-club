@@ -141,8 +141,6 @@ export default function TeamPrice({
       const circleCellIdx = 5;
       if (members === priceInfo[0].teamMemberCount) {
         return idx <= circleCellIdx;
-      } else if (members > priceInfo[0].teamMemberCount) {
-        return true;
       }
     }
     if (isActiveIndex(infoIndex)) {
