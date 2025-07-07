@@ -40,11 +40,11 @@ export default function Header() {
         </div>
       </div>
       <header>
-        <div className="flex items-center h-[70px] lg:px-[32px] lg:h-[90px] bg-blue">
-          <div className="flex justify-between items-center w-full">
+        <div className="flex items-center h-[70px] px-[16px] lg:px-[32px] lg:h-[90px] bg-blue">
+          <div className="flex justify-between items-center w-full max-w-[1500px] mx-auto">
             <div className="grid gap-[51px] w-max text-white md:grid-cols-[auto_123px]">
               <Link
-                className="font-normal lg:text-[64px] text-[48px] font-hagerman"
+                className="font-normal lg:text-[32px] text-[24px] font-hagerman"
                 href="/"
               >
                 Supplement Club

@@ -25,11 +25,13 @@ type AlignmentDialogProps = {
   orders: IOrderSummaryModel[];
   updateQuantityAction: (val: number) => void;
   discount: number;
+  founderDiscount: number;
   setSummary: React.Dispatch<React.SetStateAction<ISummaryProductModel>>;
   isComming?: boolean;
   isInfoIconClicked?: boolean;
   setIsInfoIconClicked?: (val: boolean) => void;
   firstDelivery?: boolean;
+  producer: string;
 };
 
 export default function AlignmentDialog({
@@ -38,11 +40,13 @@ export default function AlignmentDialog({
   orders,
   updateQuantityAction,
   discount,
+  founderDiscount,
   setSummary,
   isComming,
   isInfoIconClicked,
   setIsInfoIconClicked,
   firstDelivery,
+  producer,
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const context = useUser();
@@ -92,7 +96,7 @@ export default function AlignmentDialog({
                 </h1>
                 <p className="text-center font-helvetica text-base font-normal mt-2 mb-6 text-[#8E8E93]">
                   {isComming
-                    ? "We haven’t launched this team yet"
+                    ? `You’ll lock in ${founderDiscount}% extra off for life if you stay in when the team goes live.`
                     : `Do you want us to send you a Sync package to cover the next ${daysUntilNextDrop} days. This takes you up to ${deliveryDate
                       ? format(new Date(deliveryDate), "MMMM dd yyyy")
                       : ""
@@ -139,13 +143,13 @@ export default function AlignmentDialog({
                   lab.
                 </h3>
                 <p className="font-helvetica text-sm font-normal mb-8 text-grey4">
-                  Once all founding slots are filled, the team will launch and
-                  your order will go to the lab. We’ll email you with your
+                  Once all founding slots are filled, your order will go to{" "}
+                  {producer} for production. We’ll email you with your
                   delivery date and give you 24h before charging
                 </p>
 
                 <p className="text-[#303030] font-inconsolata text-sm font-normal mb-2">
-                  Launch Package Includes:
+                  Your Launch Package Includes:
                 </p>
 
                 <div className="flex items-center justify-between gap-4">
@@ -159,8 +163,8 @@ export default function AlignmentDialog({
                     <p className="text-black font-inconsolata text-base font-semibold my-0.5">
                       Alignment Package
                     </p>
-                    <p className="text-grey4 font-inconsolata text-sm font-normal">
-                      Capsule amount set at launch
+                    <p className="text-grey4 font-inconsolata text-sm font-normal text-center">
+                    capsules to cover you until the first drop
                     </p>
                   </div>
                   <div className="flex flex-col items-center justify-center bg-white rounded-xl w-full h-[145px]">
@@ -174,14 +178,14 @@ export default function AlignmentDialog({
                       1st Quarterly Drop
                     </p>
                     <p className="text-grey4 font-inconsolata text-sm font-normal">
-                      {orders?.[0]?.capsules} Capsules pouch
+                      {orders?.[0]?.capsules} capsule pouch
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-blue2 w-full rounded-full mt-6">
-                  <p className="text-blue font-inconsolata text-xs font-normal py-1.5 text-center">
-                    No action needed — we’ll email you 24h before charging.
+                  <p className="text-blue font-inconsolata text-sm font-semibold py-1.5 text-center">
+                  Reminder: You don’t need to do anything — we’ll notify you before charging. 
                   </p>
                 </div>
               </div>

@@ -39,6 +39,9 @@ export default function PaymentConfirmForm({
 
 	return (
 		<div className="mx-auto w-full">
+			<p className="text-[24px] leading-[27px] font-hagerman uppercase">
+				CARD DETAILS
+			</p>
 			{clientSecret ? (
 				<Elements options={{ clientSecret }} stripe={stripePromise} key={clientSecret}>
 					<PaymentElements
