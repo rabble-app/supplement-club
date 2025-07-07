@@ -11,8 +11,8 @@ export default async function Footer() {
 
 	const products = await fetchProducts();
 	return (
-		<footer className="flex flex-col items-center pt-[40px] pb-[40px] lg:pt-[60px] lg:px-[32px] lg:pb-[30px] bg-cream1">
-			<div className="container-width grid gap-[24px] lg:grid-cols-[1fr_805px] lg:gap-[0]">
+		<footer className="flex flex-col items-center pt-[40px] pb-[40px] lg:pt-[60px] lg:pb-[30px] bg-cream1">
+			<div className="max-w-[1500px] px-4 mx-auto w-full grid gap-[24px] lg:grid-cols-[1fr_805px] lg:gap-[0]">
 				<div className="flex flex-col gap-[24px]">
 					<p className="text-[24px] leading-[27px] font-hagerman font-normal text-black">
 						Supplement Club

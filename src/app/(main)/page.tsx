@@ -177,7 +177,8 @@ const membershipData = [
 export default async function Home() {
   const productId = process.env.NEXT_PUBLIC_PRODUCT_ID as string;
 
-  const fetchProduct = async () => await productService.product(productId, process.env.NEXT_PUBLIC_TEAM_ID);
+  const fetchProduct = async () =>
+    await productService.product(productId, process.env.NEXT_PUBLIC_TEAM_ID);
 
   const fetchProducts = async () => await productService.productsLimit(3);
 
@@ -189,364 +190,413 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="min-h-screen grid gap-[32px] bg-grey11 lg:bg-transparent">
-      <div className="relative lg:max-w-[1312px] lg:mx-[auto] w-full p-[16px] flex flex-col lg:flex-row justify-between">
-        <div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] lg:left-[68px] lg:w-[600px] h-full">
-          <div className="text-[48px] lg:text-[64px] leading-[48px] lg:leading-[74px] font-[400] font-hagerman text-blue mb-[23px]">
-            YOU DON’T NEED ANOTHER SUPPLEMENT BRAND
-          </div>
-          <p className="text-[16px] lg:text-[20px] leading-[24px] lg:leading-[36px] text-[#757575] mb-[58px]">
-            You need pure ingredients before brands get to them. Access
-            quarterly drops of pure, pharmaceutical-grade compounds, delivered
-            direct from the labs, untouched, unblended, and up to 55% cheaper.
-          </p>
-          <a href="#products">
+    <div className="min-h-screen grid gap-[32px] bg-white lg:bg-transparent">
+      <div className="px-[16px] lg:px-[32px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="relative lg:mx-[auto] lg:w-full flex flex-col lg:flex-row gap-x-[32px] gap-y-[24px] justify-between">
+            <div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] lg:left-[68px] h-full">
+              <div className="text-[48px] lg:text-[64px] leading-[48px] lg:leading-[74px] font-[400] font-hagerman text-blue mb-[23px]">
+                YOU DON’T NEED <br /> ANOTHER SUPPLEMENT <br /> BRAND
+              </div>
+              <p className="text-[16px] lg:text-[20px] leading-[24px] lg:leading-[36px] text-[#757575] mb-[58px]">
+                You need pure ingredients before brands get to them. Access
+                quarterly drops of pure, pharmaceutical-grade compounds,
+                delivered direct from the labs, untouched, unblended, and up to
+                55% cheaper.
+              </p>
+              <a href="#products">
+                <Image
+                  className="lg:ml-[5px] lg:h-[160px] lg:w-[160px]  h-[97px] w-[97px]"
+                  src="/images/buy.svg"
+                  alt="Buy product"
+                  width={160}
+                  height={160}
+                />
+              </a>
+            </div>
             <Image
-              className="lg:ml-[5px] lg:h-[160px] lg:w-[160px]  h-[97px] w-[97px]"
-              src="/images/buy.svg"
-              alt="Buy product"
-              width={160}
-              height={160}
+              className="hidden lg:block lg:m-auto"
+              src="/images/hero-image.png"
+              alt="Vercel logomark"
+              width={754}
+              height={465}
+              unoptimized
             />
-          </a>
+            <a href="#products">
+              <Image
+                className="lg:hidden m-auto"
+                src="/images/hero-image.png"
+                alt="Buy product"
+                width={754}
+                height={465}
+                unoptimized
+              />
+            </a>
+          </div>
         </div>
-        <Image
-          className="hidden lg:block lg:m-auto"
-          src="/images/hero-image.png"
-          alt="Vercel logomark"
-          width={754}
-          height={465}
-          unoptimized
-        />
-        <a href="#products">
-          <Image
-            className="lg:hidden m-auto"
-            src="/images/hero-image.png"
-            alt="Buy product"
-            width={754}
-            height={465}
-            unoptimized
-          />
-        </a>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-x-[42px] lg:pt-[100px]">
-        <div className="max-w-[612px] ml-auto">
-          {" "}
-          <div className="grid gap-y-[56px] justify-end  lg:my-[0] px-[16px] lg:px-[0]">
-            <div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[64px] font-[400] font-hagerman text-blue">
-              How does it work?
+      <div className="px-[16px] lg:px-[32px] lg:pt-[32px] bg-[#fbfbfb]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="grid md:grid-cols-2 gap-x-[32px]  w-full">
+            <div className="ml-auto">
+              {" "}
+              <div className="grid gap-y-[56px] justify-end lg:my-[0] lg:px-[0]">
+                <div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[64px] font-[400] font-hagerman text-blue">
+                  How does it work?
+                </div>
+                {homeCards.map((card) => (
+                  <HomeCardComponent key={card.id} {...card} />
+                ))}
+              </div>
             </div>
-            {homeCards.map((card) => (
-              <HomeCardComponent key={card.id} {...card} />
+            <div className="relative flex flex-col w-full mt-[310px]">
+              <div className="md:w-full h-full">
+                <Image
+                  className="w-[308px] mx-auto h-[520px] absolute top-[-280px] left-0 right-0 hidden md:block"
+                  src={productModel?.imageUrl ?? ""}
+                  alt={productModel?.imageKey ?? "main product"}
+                  width={308}
+                  height={520}
+                  unoptimized
+                />
+                <Image
+                  className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-260px] left-0 right-0"
+                  src={productModel?.imageUrl ?? ""}
+                  alt={productModel?.imageKey ?? "main product"}
+                  width={545}
+                  height={449}
+                  unoptimized
+                />
+              </div>
+              <div className="bg-blue">
+                <div className="md:w-full md:h-[450px] h-[350px] flex flex-col justify-end">
+                  <div className="w-full grid items-end pt-[0px] px-[16px] lg:px-[32px] py-[32px]">
+                    <div>
+                      <div className="md:mb-[40px] mb-[20px] text-white">
+                        <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
+                          {productModel?.name}{" "}
+                          <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
+                            £{Number(productModel?.price).toFixed(2)}{" "}
+                          </span>
+                        </div>
+                        <div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
+                          {productModel?.producer?.businessName}
+                          <p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
+                            <span className="text-[20px] leading-[23px] text-grey2 line-through">
+                              £{Number(productModel?.rrp).toFixed(2)}
+                            </span>{" "}
+                            {Number(productModel?.activePercentageDiscount)}%
+                            OFF
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        font={"bold"}
+                        className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
+                        asChild
+                      >
+                        <Link
+                          href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}
+                        >
+                          Buy Now
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[32px] bg-white">
+            <div className="relative w-full">
+              <Image
+                className="max-h-[716px] lg:h-[716px] w-full"
+                src="/images/pillow.png"
+                alt="Checkmark icon"
+                width={632}
+                height={716}
+              />
+              <div className="absolute left-[0] top-[0] w-full h-full grid grid-cols-2 gap-[24px] items-end px-[17px] lg:px-[32px] py-[10px] lg:py-[42px]">
+                <div className="flex flex-col gap-[4px] lg:gap-[22px]">
+                  <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
+                    ££££
+                  </p>
+                  <div className="flex flex-col">
+                    <div className="lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px]">
+                      Typical Advertising Spend
+                    </div>
+                    <div className="px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[100px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
+                      The Middlemen&apos;s Cut
+                    </div>
+                    <div className="px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[72px] bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
+                      The Cost of Ingredients
+                    </div>
+                  </div>
+                  <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
+                    What brands charge
+                  </p>
+                </div>
+                <div className="flex flex-col gap-[4px] lg:gap-[22px]">
+                  <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
+                    £
+                  </p>
+                  <Button
+                    className="bg-blue text-white w-full font-bold h-[58px] lg:h-[107px] text-[18px] lg:text-[24px] leading-[18px] lg:leading-[27px]"
+                    asChild
+                  >
+                    <Link href="#">Club Price</Link>
+                  </Button>
+                  <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
+                    What we charge
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between">
+              <div>
+                <p className="text-[32px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-[800] text-blue pt-[32px] lg:pt-[0px] pb-[16px] font-inconsolata">
+                  Pharmaceutical Grade Ingredients Aren&apos;t Expensive.
+                  Marketing them is.
+                </p>
+                <p className="text-[14px] lg:text-[18px] leading-[26px] text-grey6">
+                  Before Supplement Club, you were forced to pay for bloated
+                  advertising costs and watered-down supplements. We cut out the
+                  advertising overheads and middlemen and send you 100%
+                  clinically effective, traceable ingredients.
+                  <br />
+                  <br />
+                  With Supplement Club, you get direct access to top labs in
+                  Japan, the US, and Europe. Our transparent model shows you
+                  exactly where your supplements come from, no more blindly
+                  trusting brands. You can research yourself and know
+                  you&apos;re getting the best money can buy with 100%
+                  transparency.
+                  <br />
+                  <br />
+                  <br />
+                </p>
+                <p className="font-[700] mb-[32px] lg:mb-[18px]">
+                  Supplement Club Subscribers don&apos;t pay for:
+                </p>
+                <div className="grid grid-cols-2 gap-[32px] lg:gap-[0] lg:grid-cols-4 items-start mb-[48px] lg:mb-[0px]">
+                  <div className="flex flex-col gap-[8px]">
+                    <Image
+                      src="/images/icons/buy-cashier-discount-icon.svg"
+                      alt="Cashier discount icon"
+                      width={32}
+                      height={32}
+                    />
+                    <p className="leading-[16px]">Middlemen</p>
+                  </div>
+
+                  <div className="flex flex-col gap-[8px]">
+                    <Image
+                      src="/images/icons/buy-discount-rack-icon.svg"
+                      alt="Discountrack icon"
+                      width={32}
+                      height={32}
+                    />
+                    <p className="leading-[16px]">Expensive Advertising</p>
+                  </div>
+
+                  <div className="flex flex-col gap-[8px] max-w-[100px]">
+                    <Image
+                      src="/images/icons/buy-discount-shop-icon.svg"
+                      alt="Checkmark icon"
+                      width={32}
+                      height={32}
+                    />
+                    <p className="leading-[16px]">Retailer Markups</p>
+                  </div>
+
+                  <div className="flex flex-col justify-between max-w-[100px] h-full">
+                    <Image
+                      src="/images/icons/buy-discount-shop-2-icon.svg"
+                      className="h-8"
+                      alt="Checkmark icon"
+                      width={32}
+                      height={32}
+                    />
+                    <p className="leading-[16px] pb-4">Warehousing</p>
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                className="bg-blue text-white w-full font-bold h-[54px]"
+                asChild
+              >
+                <Link href="/labs" className="font-inconsolata font-bold">
+                  Learn More About Supplement Club
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="lg:mx-[auto] w-full grid lg:grid-cols-2 gap-y-[32px] md:gap-x-[32px]">
+            <div className="bg-blue w-full py-[60px] px-[32px] text-white flex flex-col gap-[24px]">
+              <div className="flex gap-[20px] flex-col">
+                <div className="text-[48px] leading-[48px] font-hagerman">
+                  Supplement club Membership
+                </div>
+                <div className="text-[16px] leading-[18px] font-helvetica tracking-[-0.43px]">
+                  Access the world’s best supplement labs — in Japan, Germany,
+                  the US & more
+                </div>
+              </div>
+              <div className="flex flex-col gap-[48px]">
+                <div className="flex items-center gap-[8px] text-[56px] font-bold font-inconsolata">
+                  £29.00
+                  <div className="text-[16px] font-bold font-inconsolata text-[#D1D1D1]">
+                    Per Year (Less than £2.50 per month)
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[32px] max-w-[604px] w-full mx-auto">
+                  <div className="text-left text-[32px] leading-[34px] font-hagerman uppercase">
+                    Membership Benefits
+                  </div>
+                  <div className="flex flex-col gap-[24px]">
+                    <div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
+                      <Image
+                        src="/images/icons/verified-icon.svg"
+                        className="mb-auto"
+                        alt="Snowflake icon"
+                        width={24}
+                        height={24}
+                      />{" "}
+                      Direct access to the world’s best labs
+                    </div>
+                    <div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
+                      <Image
+                        src="/images/icons/verified-icon.svg"
+                        className="mb-auto"
+                        alt="Snowflake icon"
+                        width={24}
+                        height={24}
+                      />{" "}
+                      Free delivery on all orders
+                    </div>
+                    <div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
+                      <Image
+                        src="/images/icons/verified-icon.svg"
+                        className="mb-auto"
+                        alt="Snowflake icon"
+                        width={24}
+                        height={24}
+                      />{" "}
+                      Unlimited drops
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[16px] mx-auto w-full">
+                  <Button
+                    font={"bold"}
+                    className="bg-[#FBF89F] text-blue w-full text-[18px] font-helvetica text-base font-bold h-[49px]"
+                    asChild
+                  >
+                    <Link href="/products">Join Supplement Club</Link>
+                  </Button>
+                  <div className="text-center text-[16px] font-helvetica italic tracking-[-0.43px]">
+                    Try it free — no membership fee on your first 2 drops
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-[16px]">
+              {membershipData.map((item, index) => (
+                <MembershipBox key={`membership-${index + 1}`} {...item} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="lg:mx-[auto] w-full grid gap-y-[32px] lg:gap-y-[50px]">
+            <div className="flex justify-between items-center">
+              <div className="grid gap-y-[16px]">
+                <p className="text-[32px] leading-[36px] font-[400] text-black font-hagerman">
+                  Products
+                </p>
+                <p className="bg-white leading-[18px] text-grey1 py-[4px]">
+                  Next Drop:{" "}
+                  <span className="font-[700] ">{nextDeliveryText}</span>
+                </p>
+              </div>
+
+              <Link
+                href="/products/"
+                className="underline text-[18px] leading-[20px] text-black font-inconsolata"
+              >
+                View All
+              </Link>
+            </div>
+
+            <div id="products" className="grid lg:grid-cols-3 gap-[16px]">
+              {products?.map((item: IProductCardModel) => (
+                <ProductCardComponent key={item.id} {...item} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-[16px] lg:px-[32px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="lg:mx-[auto] w-full grid grid-cols-2 lg:grid-cols-7 py-[48px]">
+            {images.map((image) => (
+              <Link
+                key={image.id}
+                href={image.url}
+                className="p-[12px] border-grey10 border-[1px] grid gap-[4px]"
+              >
+                <div className="flex flex-col gap-[4px]">
+                  <Image
+                    src={image.src ?? ""}
+                    alt={image.alt}
+                    width={40}
+                    height={40}
+                  />
+                  <p className="text-[18px] leading-[24px] text-black font-inconsolata">
+                    {image.title}
+                  </p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
-        <div className="relative flex flex-col md:max-h-[750px]">
-          <div className="md:w-[574px] h-full">
-            <Image
-              className="w-max mx-auto h-max lg:absolute lg:left-[0] lg:top-[0px] lg:w-[574px]"
-              src={productModel?.imageUrl ?? ""}
-              alt={productModel?.imageKey ?? "main product"}
-              width={308}
-              height={533}
-              unoptimized
-            />
-          </div>
-          <div className="bg-blue">
-            <div className="md:w-[574px] md:h-[450px] flex flex-col justify-end">
-              <div className="w-full grid items-end pt-[20px] px-[16px] lg:px-[32px] py-[32px]">
-                <div>
-                  <div className="mb-[40px] text-white">
-                    <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
-                      {productModel?.name}{" "}
-                      <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
-                        £{Number(productModel?.price).toFixed(2)}{" "}
-                      </span>
-                    </div>
-                    <div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-                      {productModel?.producer?.businessName}
-                      <p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
-                        <span className="text-[20px] leading-[23px] text-grey2 line-through">
-                          £{Number(productModel?.rrp).toFixed(2)}
-                        </span>{" "}
-                        {Number(productModel?.activePercentageDiscount)}
-                        % OFF
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    font={"bold"}
-                    className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
-                    asChild
-                  >
-                    <Link href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}>Buy Now</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[42px] px-[16px] bg-white">
-        <div className="relative">
-          <Image
-            className="max-h-[716px] lg:h-[716px]"
-            src="/images/pillow.png"
-            alt="Checkmark icon"
-            width={632}
-            height={716}
-          />
-          <div className="absolute left-[0] top-[0] w-full h-full grid grid-cols-2 gap-[24px] items-end px-[17px] lg:px-[32px] py-[10px] lg:py-[42px]">
-            <div className="flex flex-col gap-[4px] lg:gap-[22px]">
-              <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
-                ££££
-              </p>
-              <div className="flex flex-col">
-                <div className="lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px]">
-                  Typical Advertising Spend
-                </div>
-                <div className="px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[100px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
-                  The Middlemen&apos;s Cut
-                </div>
-                <div className="px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[72px] bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
-                  The Cost of Ingredients
-                </div>
-              </div>
-              <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
-                What brands charge
-              </p>
-            </div>
-            <div className="flex flex-col gap-[4px] lg:gap-[22px]">
-              <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
-                £
-              </p>
-              <Button
-                className="bg-blue text-white w-full font-bold h-[58px] lg:h-[107px] text-[18px] lg:text-[24px] leading-[18px] lg:leading-[27px]"
-                asChild
-              >
-                <Link href="#">Club Price</Link>
-              </Button>
-              <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
-                What we charge
-              </p>
-            </div>
+      {productModel && (
+        <div className="">
+          <div className="max-w-[1520px] mx-auto">
+            <ProductInfo product={productModel} />
           </div>
         </div>
+      )}
 
-        <div className="flex flex-col justify-between">
-          <div>
-            <p className="text-[32px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-[800] text-blue pt-[32px] lg:pt-[18px] pb-[16px] font-inconsolata">
-              Pharmaceutical Grade Ingredients Aren&apos;t Expensive. <br />
-              Marketing them is.
-            </p>
-            <p className="text-[14px] lg:text-[18px] leading-[26px] text-grey6">
-              Before Supplement Club, you were forced to pay for bloated
-              advertising costs and watered-down supplements. We cut out the
-              advertising overheads and middlemen and send you 100% clinically
-              effective, traceable ingredients.
-              <br />
-              <br />
-              With Supplement Club, you get direct access to top labs in Japan,
-              the US, and Europe. Our transparent model shows you exactly where
-              your supplements come from, no more blindly trusting brands. You
-              can research yourself and know you&apos;re getting the best money
-              can buy with 100% transparency.
-              <br />
-              <br />
-              <br />
-            </p>
-            <p className="font-[700] mb-[32px] lg:mb-[18px]">
-              Supplement Club Subscribers don&apos;t pay for:
-            </p>
-            <div className="grid grid-cols-2 gap-[32px] lg:gap-[0] lg:grid-cols-4 items-start mb-[48px] lg:mb-[0px]">
-              <div className="flex flex-col gap-[8px]">
-                <Image
-                  src="/images/icons/buy-cashier-discount-icon.svg"
-                  alt="Cashier discount icon"
-                  width={32}
-                  height={32}
-                />
-                <p className="leading-[16px]">Middlemen</p>
-              </div>
-
-              <div className="flex flex-col gap-[8px]">
-                <Image
-                  src="/images/icons/buy-discount-rack-icon.svg"
-                  alt="Discountrack icon"
-                  width={32}
-                  height={32}
-                />
-                <p className="leading-[16px]">Expensive Advertising</p>
-              </div>
-
-              <div className="flex flex-col gap-[8px] max-w-[100px]">
-                <Image
-                  src="/images/icons/buy-discount-shop-icon.svg"
-                  alt="Checkmark icon"
-                  width={32}
-                  height={32}
-                />
-                <p className="leading-[16px]">Retailer Markups</p>
-              </div>
-
-              <div className="flex flex-col justify-between max-w-[100px] h-full">
-                <Image
-                  src="/images/icons/buy-discount-shop-2-icon.svg"
-                  className="h-8"
-                  alt="Checkmark icon"
-                  width={32}
-                  height={32}
-                />
-                <p className="leading-[16px] pb-4">Warehousing</p>
-              </div>
-            </div>
-          </div>
-
-          <Button
-            className="bg-blue text-white w-full font-bold h-[54px]"
-            asChild
+      <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
+        <div className="max-w-[1500px] mx-auto">
+          <div
+            id="faqs"
+            className="lg:mx-[auto] w-full pt-[48px] lg:pt-[0] py-[16px]"
           >
-            <Link href="/labs" className="font-inconsolata font-bold">
-              Learn More About Supplement Club
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      <div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid lg:grid-cols-2 gap-[16px] px-[16px] ">
-        <div className="bg-blue w-full py-[60px] px-[32px] text-white flex flex-col gap-[24px]">
-          <div className="flex gap-[20px] flex-col">
-            <div className="text-[48px] leading-[48px] font-hagerman">
-              Supplement club Membership
-            </div>
-            <div className="text-[16px] leading-[18px] font-helvetica tracking-[-0.43px]">
-              Access the world’s best supplement labs — in Japan, Germany, the
-              US & more
-            </div>
-          </div>
-          <div className="flex flex-col gap-[48px]">
-            <div className="flex items-center gap-[8px] text-[56px] font-bold font-inconsolata">
-              £29.00
-              <div className="text-[16px] font-bold font-inconsolata text-[#D1D1D1]">
-                Per Year (Less than £2.50 per month)
-              </div>
-            </div>
-            <div className="flex flex-col gap-[32px] max-w-[604px] w-full mx-auto">
-              <div className="text-left text-[32px] leading-[34px] font-hagerman uppercase">
-                Membership Benefits
-              </div>
-              <div className="flex flex-col gap-[24px]">
-                <div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
-                  <Image
-                    src="/images/icons/verified-icon.svg"
-                    className="mb-auto"
-                    alt="Snowflake icon"
-                    width={24}
-                    height={24}
-                  />{" "}
-                  Direct access to the world’s best labs
-                </div>
-                <div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
-                  <Image
-                    src="/images/icons/verified-icon.svg"
-                    className="mb-auto"
-                    alt="Snowflake icon"
-                    width={24}
-                    height={24}
-                  />{" "}
-                  Free delivery on all orders
-                </div>
-                <div className="text-[18px] font-inconsolata flex gap-[8px] items-center tracking-[-0.43px]">
-                  <Image
-                    src="/images/icons/verified-icon.svg"
-                    className="mb-auto"
-                    alt="Snowflake icon"
-                    width={24}
-                    height={24}
-                  />{" "}
-                  Unlimited drops
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-[16px] mx-auto w-full">
-              <Button
-                font={"bold"}
-                className="bg-[#FBF89F] text-blue w-full text-[18px] font-helvetica text-base font-bold h-[49px]"
-                asChild
-              >
-                <Link href="/products">Join Supplement Club</Link>
-              </Button>
-              <div className="text-center text-[16px] font-helvetica italic tracking-[-0.43px]">
-                Try it free — no membership fee on your first 2 drops
-              </div>
-            </div>
+            <Faqs />
           </div>
         </div>
-
-        <div className="grid gap-[16px]">
-          {membershipData.map((item, index) => (
-            <MembershipBox key={`membership-${index + 1}`} {...item} />
-          ))}
-        </div>
-      </div>
-
-      <div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid gap-y-[32px] lg:gap-y-[50px] pt-[48px] px-[16px]">
-        <div className="flex justify-between items-center">
-          <div className="grid gap-y-[16px]">
-            <p className="text-[32px] leading-[36px] font-[400] text-black font-hagerman">
-              Products
-            </p>
-            <p className="bg-white leading-[18px] text-grey1 py-[4px] px-[10px]">
-              Next Drop: <span className="font-[700] ">{nextDeliveryText}</span>
-            </p>
-          </div>
-
-          <Link
-            href="/products/"
-            className="underline text-[18px] leading-[20px] text-black font-inconsolata"
-          >
-            View All
-          </Link>
-        </div>
-
-        <div id="products" className="grid lg:grid-cols-3 gap-[16px]">
-          {products?.map((item: IProductCardModel) => (
-            <ProductCardComponent key={item.id} {...item} />
-          ))}
-        </div>
-      </div>
-
-      <div className="lg:max-w-[1312px] lg:mx-[auto] w-full grid grid-cols-2 lg:grid-cols-7 px-[16px] py-[48px]">
-        {images.map((image) => (
-          <Link
-            key={image.id}
-            href={image.url}
-            className="p-[12px] border-grey10 border-[1px] grid gap-[4px]"
-          >
-            <div className="flex flex-col gap-[4px]">
-              <Image
-                src={image.src ?? ""}
-                alt={image.alt}
-                width={40}
-                height={40}
-              />
-              <p className="text-[18px] leading-[24px] text-black font-inconsolata">
-                {image.title}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {productModel && <ProductInfo product={productModel} />}
-
-      <div
-        id="faqs"
-        className="lg:max-w-[1312px] lg:mx-[auto] w-full pt-[48px] lg:pt-[0] p-[16px]"
-      >
-        <Faqs />
       </div>
     </div>
   );
