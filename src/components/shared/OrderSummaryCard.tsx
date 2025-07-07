@@ -65,7 +65,12 @@ function renderPrice(
     <div className="grid gap-[8px]">
       {isComming && (
         <p className="text-blue font-normal text-sm font-inconsolata">
-          First {founderSpots} Spots
+          Founder Slot Reserved
+        </p>
+      )}
+       {!isComming && firstDelivery && (
+        <p className="text-blue font-normal text-sm font-inconsolata">
+          Early Bird Slot Reserved
         </p>
       )}
       <div
@@ -82,7 +87,7 @@ function renderPrice(
           </span>
         )}
       </div>
-      {!isComming && (
+      {!isComming && !firstDelivery && (
         <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
           RRP{" "}
           <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
@@ -96,6 +101,11 @@ function renderPrice(
       {isComming && (
         <p className="text-blue font-normal text-sm font-inconsolata">
           {founderMembersNeeded} Founder Spots Remaining!
+        </p>
+      )}
+      {!isComming && firstDelivery && (
+        <p className="text-blue font-normal text-sm font-inconsolata">
+          Limited Time Remaining!
         </p>
       )}
     </div>

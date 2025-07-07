@@ -170,7 +170,7 @@ export default function Checkout({
       description: `${data.alignmentPoucheSize} ${units} pouch`,
       name: "One time Alignment Package",
       src: "/images/supplement-mockup.png",
-      delivery: "Delivered Tomorrow",
+      delivery: "Free Delivery",
       capsules: capsulesPackage,
       price: Number(data?.pricePerPoche) ?? 0,
       quantity,

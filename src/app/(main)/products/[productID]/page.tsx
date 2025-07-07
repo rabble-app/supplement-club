@@ -225,7 +225,7 @@ export default function ProductDetails({
           capsulePerDay * (product?.daysUntilNextDrop ?? 0)
         }${units} to see you to Q${nextQuater}`,
         name: "One time Alignment Package",
-        delivery: "Delivered Tomorrow ",
+        delivery: "Free Delivery",
         src: "/images/ubiquinol.svg",
         capsules: capsulePerDay * (product?.daysUntilNextDrop ?? 0),
         price: productPrice,

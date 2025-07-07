@@ -255,8 +255,8 @@ export default async function Labs() {
                   width={24}
                   height={24}
                 />
-                Our offering is so valuable Customers join us Through Word of
-                Mouth
+                Our offering is so valuable, customers join us through word of
+                mouth.
               </div>
               <div className="flex gap-[3px] items-center bg-blue text-white h-[60px] leading-[17px] p-[18px] border-b-[1px] border-solid border-white">
                 <Image
@@ -276,7 +276,7 @@ export default async function Labs() {
                   width={24}
                   height={24}
                 />
-                Shipped Direct From Source
+                Shipped direct from source
               </div>
             </div>
             <div>
@@ -291,7 +291,7 @@ export default async function Labs() {
                   width={24}
                   height={24}
                 />
-                Forced to pay High Advertising Costs
+                Forced to pay high advertising costs
               </div>
               <div className="flex gap-[3px] items-center bg-yellow text-black h-[60px] leading-[16px] py-[12px] px-[18px] md:p-[18px] border-b-[1px] border-solid border-white">
                 <Image
@@ -301,7 +301,7 @@ export default async function Labs() {
                   width={24}
                   height={24}
                 />
-                Opaque labeling of ingredients from unknown Sources
+                Opaque labeling of ingredients from unknown sources
               </div>
               <div className="flex gap-[3px] items-center bg-yellow text-black h-[60px] leading-[16px] py-[12px] px-[18px] md:p-[18px] rounded-b-[8px] md:rounded-br-[8px] md:rounded-bl-[0]">
                 <Image
@@ -311,7 +311,7 @@ export default async function Labs() {
                   width={24}
                   height={24}
                 />
-                Stored in third party warehouses for long periods
+                Stored in third-party warehouses for long periods
               </div>
             </div>
           </div>
