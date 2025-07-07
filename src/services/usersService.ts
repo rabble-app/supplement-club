@@ -18,6 +18,7 @@ import {
 	mapUserInfoModel,
 	mapUserPastOrder,
 } from "@/utils/mapping";
+import IAddBillingAddressRequest from "@/utils/models/api/request/IAddBillingAddressRequest";
 
 export const usersService = {
 	getUpcomingDeliveries: async (
@@ -51,6 +52,23 @@ export const usersService = {
 				phone: model.phone,
 			},
 		)) as IDeliveryAddressApiResponse;
+		return response;
+	},
+
+	addBillingAddress: async (
+		model: IAddBillingAddressRequest,
+	): Promise<IResponseModel> => {
+		const response = (await apiRequest(
+			USER_ENDPOINTS.BILLING_ADDRESS,
+			"PATCH",
+			{
+				addressLine1: model.addressLine1,
+				addressLine2: model.addressLine2,
+				city: model.city,
+				postCode: model.postCode, 
+				country: model.country,
+			},
+		)) as any;
 		return response;
 	},
 

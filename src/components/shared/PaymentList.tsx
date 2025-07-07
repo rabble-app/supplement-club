@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
@@ -22,6 +22,11 @@ import { CustomToast, StatusToast } from "./Toast";
 import useLocalStorage from "use-local-storage";
 import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import { Loader2 } from "lucide-react";
+import BillingAddressMain, {
+  BillingAddressRef,
+} from "../main/products/[productID]/checkout/BillingAddressMain";
+import { usersService } from "@/services/usersService";
+import { AddressFormData } from "./AddressAutocomplete";
 
 export default function PaymentList({
   totalPrice,
@@ -42,6 +47,8 @@ export default function PaymentList({
   const [address, setAddress] = useState(true);
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
   const [isLoading, setIsLoading] = useState(false);
+
+  const billingAddressRef = useRef<BillingAddressRef>(null);
 
   const context = useUser();
 
@@ -75,8 +82,9 @@ export default function PaymentList({
         currectCard = cards[0];
       }
 
-      const quantity =  (checkoutData.orders?.[0]?.capsules ?? 0) /
-      (checkoutData.pouchSize ?? 0);
+      const quantity =
+        (checkoutData.orders?.[0]?.capsules ?? 0) /
+        (checkoutData.pouchSize ?? 0);
       const price = totalPrice;
       const capsulePerDay = Number(checkoutData.capsuleCount);
       const pricePerCount = checkoutData.pricePerCount?.toFixed(2) ?? "0.00";
@@ -97,7 +105,6 @@ export default function PaymentList({
         if (response.statusCode !== 200) {
           throw new Error(response?.error);
         }
-
       } else {
         const data = {
           amount: totalPrice,
@@ -133,7 +140,7 @@ export default function PaymentList({
     } catch (error: any) {
       console.error("Error in processPayment111:", error);
       CustomToast({
-        title:JSON.parse(error.error).message,
+        title: JSON.parse(error.error).message,
         status: StatusToast.ERROR,
         position: "top-right",
       });
@@ -154,37 +161,106 @@ export default function PaymentList({
 
   async function addCreditCard(paymentMethod: string | PaymentMethod | null) {
     setIsLoading(true);
-  
+
     try {
+      if (!address && billingAddressRef.current) {
+        const isValid = await billingAddressRef.current.submitForm();
+        if (!isValid) {
+          CustomToast({
+            title: "Please fill in all required billing address fields",
+            status: StatusToast.ERROR,
+          });
+          return;
+        }
+      }
+
       // 1. Add card
       await paymentService.addCard(
         (paymentMethod as string) ?? "",
         context?.user?.stripeCustomerId ?? ""
       );
-  
+
       // 2. Get user cards
       const cards = await paymentService.getUserPaymentOptions(
         context?.user?.stripeCustomerId ?? ""
       );
-  
+
       // 3. Process payment
       await processPayment(cards);
     } catch (error: any) {
       console.error("addCreditCard error:", JSON.parse(error.error).message);
-  
+
       CustomToast({
-        title:JSON.parse(error.error).message,
+        title: JSON.parse(error.error).message,
         status: StatusToast.ERROR,
         position: "top-right",
       });
 
       throw error;
-
     } finally {
       setIsLoading(false);
     }
   }
-  
+
+  const handleBillingAddressSubmit = async (data: AddressFormData) => {
+    console.log("data", data);
+    try {
+      const result = await usersService.addBillingAddress({
+        addressLine1: data.address ?? "",
+        addressLine2: data.address2 ?? "",
+        city: data.city ?? "",
+        postCode: data.postalCode ?? "",
+        country: data.country ?? "",
+      });
+
+      if (result?.statusCode === 201 || result?.statusCode === 200) {
+        // Update user context with billing address
+        if (context?.user) {
+          context.user.firstName = data.firstName ?? "";
+          context.user.lastName = data.lastName ?? "";
+          // setUser(context.user);
+          context?.setNewUser(context.user);
+        }
+
+        CustomToast({
+          title: "Billing address saved successfully",
+          status: StatusToast.SUCCESS,
+        });
+
+        return true;
+      } else {
+        CustomToast({
+          title: JSON.parse(result?.error).message,
+          status: StatusToast.ERROR,
+        });
+        return false;
+      }
+    } catch (error: any) {
+      CustomToast({
+        title: error.message || "Failed to save billing address",
+        status: StatusToast.ERROR,
+      });
+      return false;
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    console.log("address", address);
+    // If billing address is not same as delivery address, validate and submit billing address form
+    if (!address && billingAddressRef.current) {
+      const isValid = await billingAddressRef.current.submitForm();
+      console.log("isValid", isValid);
+      if (!isValid) {
+        CustomToast({
+          title: "Please fill in all required billing address fields",
+          status: StatusToast.ERROR,
+        });
+        return;
+      }
+    }
+
+    await processPayment(userCards);
+  };
 
   const ButtonSection = (
     <div className="grid gap-[24px]">
@@ -219,11 +295,19 @@ export default function PaymentList({
         </label>
       </div>
 
-      <p className="text-[14px] leading-[16px]">
-        By making this purchase your supplement club will automatically renew
-        and your card will be charged the supplement plan price. You can cancel
-        or modify at any time using your customer login.
-      </p>
+      {!isComming && (
+        <p className="text-[14px] leading-[16px]">
+          By making this purchase your supplement club will automatically renew
+          and your card will be charged the supplement plan price. You can
+          cancel or modify at any time using your customer login.
+        </p>
+      )}
+      {isComming && (
+        <p className="text-[14px] leading-[16px]">
+          You’re saving your spot — no payment today. We’ll email you 24h before
+          the first charge, and you can cancel or update anytime.
+        </p>
+      )}
     </div>
   );
 
@@ -247,6 +331,15 @@ export default function PaymentList({
           </label>
         </div>
       </div>
+
+      {!address && (
+        <div className=" w-full">
+          <BillingAddressMain
+            ref={billingAddressRef}
+            handleSubmit={handleBillingAddressSubmit}
+          />
+        </div>
+      )}
 
       <Separator className="bg-grey3 h-[1px] w-full" />
 
@@ -300,13 +393,15 @@ export default function PaymentList({
           {ButtonSection}
 
           <Button
-            onClick={() => processPayment(userCards)}
+            onClick={handlePlaceOrder}
             className={` text-white font-bold w-full h-[51px] ${
               policyTerms ? "bg-blue" : "pointer-events-none bg-grey25"
             }`}
           >
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
+            {`${
+              isComming ? "Reserve Founding Membership Price" : "Place Order"
+            } - £ ${totalPrice.toFixed(2)}`}{" "}
             {/* Use a regular string */}
           </Button>
         </>
@@ -324,13 +419,20 @@ export default function PaymentList({
               }`}
             >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {`Place Order - £ ${totalPrice.toFixed(2)}`}{" "}
+              {`${
+                isComming ? "Reserve Founding Membership Price" : "Place Order"
+              } - £ ${totalPrice.toFixed(2)}`}{" "}
               {/* Use a regular string */}
             </Button>
           </PaymentConfirmForm>
         ))}
 
-      <EmailReminders />
+      {!isComming && <EmailReminders />}
+      {isComming && (
+        <p className="text-[14px] leading-[16px] text-grey4 font-semibold text-center mx-auto">
+          No Charge Now. Cancel Anytime.
+        </p>
+      )}
     </div>
   );
 }

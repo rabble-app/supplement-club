@@ -28,6 +28,7 @@ import { referalService } from "@/services/referalService";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
+import ISingleProductModel from "@/utils/models/ISingleProductModel";
 // import { paymentService } from "@/services/paymentService";
 // import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
@@ -45,9 +46,10 @@ export default function Checkout({
     {}
   );
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
-  const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
+  const [, setBasket] = useState<ITeamBasketModel[]>([]);
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState<IManagePlanModel[]>([]);
+  const [productMain, setProductMain] = useState<ISingleProductModel>();
   // const [firstWord, setFirstWord] = useState
   const [, setIsReferralCodeApplied] =
     useState<boolean>(false);
@@ -230,6 +232,7 @@ export default function Checkout({
         context?.user?.id ?? ""
       );
       setBasket(model?.supplementTeamProducts?.team.basket ?? []);
+      setProductMain(model);
       // setUnits(model.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules");
       // const [word, ...others] = (model.name ?? "").split(" ");
       // setFirstWord(word);
@@ -368,6 +371,8 @@ export default function Checkout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.user, subscriptionPlan, data?.productId, data?.teamId, step]);
 
+// console.log("productMain", productMain);
+
   return (
     <>
       {(step !== 4 || (step===4 && data.isComming)) && (
@@ -377,11 +382,13 @@ export default function Checkout({
           orders={summary?.orders}
           updateQuantityAction={updateQuantityAction}
           discount={data?.discount ?? 0}
+          founderDiscount={data?.founderDiscount ?? 0}
           setSummary={setSummary}
           isComming={data?.isComming}
           isInfoIconClicked={isInfoIconClicked}
           setIsInfoIconClicked={setIsInfoIconClicked}
           firstDelivery={data?.firstDelivery}
+          producer={productMain?.producer?.businessName ?? ""}
         />
       )}
 

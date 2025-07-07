@@ -67,6 +67,7 @@ export default function CreateAccount({
       }
 
       localStorage.removeItem("checkoutData");
+      localStorage.setItem("email", e.get("email")?.toString() ?? "");
       // remove from browser
       Cookies.remove("refCode");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
