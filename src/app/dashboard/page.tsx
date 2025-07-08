@@ -46,19 +46,35 @@ const otherActions = [
 ] as IManagerOptionCardModel[];
 
 import UpcomingDeliveryCard from "@/components/dashboard/UpcomingDeliveryCard";
+import UpcomingDeliverySlider from "@/components/dashboard/UpcomingDeliverySlider";
 import { useUser } from "@/contexts/UserContext";
 import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
 import { useEffect, useState } from "react";
 
 import { usersService } from "@/services/usersService";
 import Spinner from "@/components/shared/Spinner";
+import { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
+
 export default function ManagerPage() {
 	const [loading, setLoading] = useState(true);
 	const context = useUser();
 	const [welcomeMessage, setWelcomeMessage] = useState("Welcome");
 	const [upcomingDeliveries, setUpcomingDeliveries] = useState<
-		IUpcomingDeliveryModel[]
+		IUpcomingDeliveryResponse[]
 	>([]);
+	const [isMobile, setIsMobile] = useState(false);
+
+	// Mobile detection
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	useEffect(() => {
 		const fetchUpcomingDeliveries = async () => {
@@ -80,7 +96,7 @@ export default function ManagerPage() {
 	if (loading) return <Spinner />;
 	return (
 		<div>
-			<div className="grid gap-[32px] black max-w-[600px] mx-auto py-[46px]">
+			<div className="grid gap-[32px] black max-w-[700px] mx-auto py-[46px]">
 				<h1 className="text-[24px] leading-[28px] font-bold font-hagerman">
 					{welcomeMessage}
 					👋🏻
@@ -90,9 +106,17 @@ export default function ManagerPage() {
 						<p className="text-[18px] leading-[21px] font-bold font-inconsolata">
 							Upcoming Deliveries
 						</p>
-						{upcomingDeliveries?.map((model: IUpcomingDeliveryModel) => (
-							<UpcomingDeliveryCard key={model.id} model={model} />
-						))}
+						{isMobile ? (
+							// Mobile: Simple list
+							<div className="grid gap-[16px]">
+								{upcomingDeliveries?.map((model: IUpcomingDeliveryResponse) => (
+									<UpcomingDeliveryCard key={`${model.deliveryDate}`} model={model} />
+								))}
+							</div>
+						) : (
+							// Desktop: Slider
+							<UpcomingDeliverySlider deliveries={upcomingDeliveries} />
+						)}
 					</div>
 				)}
 

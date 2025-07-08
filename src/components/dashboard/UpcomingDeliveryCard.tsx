@@ -1,38 +1,36 @@
-import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
+import type { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
 import { formatDate } from "@/utils/utils";
 import Image from "next/image";
+import UpcomingDeliveryProductBox from "./UpcomingDeliveryProductBox";
 
 export default function UpcomingDeliveryCard({
 	model,
-}: Readonly<{ model: IUpcomingDeliveryModel }>) {
+}: Readonly<{ model: IUpcomingDeliveryResponse }>) {
 	return (
-		<div className="bg-[#fff] py-[16px] grid gap-[16px] rounded-[12px] shadow-card">
-			<div className="h-[50px] px-[12px] grid grid-cols-[50px_1fr] gap-[8px] text-[20px] leading-[23px] font-bold text-blue items-center">
-				<div className="p-[13px] bg-blue6 rounded-[50px]">
-					<Image
-						src="/images/icons/delivery-blue-icon.svg"
-						alt="Delivery icon"
-						width={24}
-						height={24}
-					/>
+		<div className="bg-[#fff] p-[16px] flex-col gap-[16px] !rounded-[12px] !shadow-card">
+			<div className="flex flex-row justify-between mb-[18px] flex-wrap">
+				<div className="flex flex-row gap-[10px] items-center">
+					<Image src="/images/delivery.svg" alt="Delivery icon" width={54} height={54} />
+					<div className="font-Helvetica text-[20px] text-[#00038F] font-bold">
+						{formatDate(model.deliveryDate)}
+					</div>
 				</div>
-				{formatDate(model.deliveryDate)}
+				<div className="addressBar text-[12px] leading-[13px] flex text-end">
+					{model.user?.address}, {model.user?.city}<br /> {model.user?.country}, {model.user?.postalCode}
+				</div>
 			</div>
-			<div className="px-[12px] grid md:grid-cols-[1fr_185px] md:justify-between md:items-center gap-[8px]">
-				<div className="grid gap-[4px]">
-					<p className="text-[12px] leading-[13px] text-grey4 uppercase font-inconsolata font-[600]">
-						{model.businessName}
-					</p>
-					<p className="text-[20px] leading-[24px] font-hagerman">
-						{model.name}
-					</p>
-					<p className="text-[12px] leading-[13px] text-grey4 font-inconsolata font-[600]">
-						{model.quantity} Capsules
-					</p>
-				</div>
-				<p className="text-[12px] leading-[13px] flex text-end">
-					{model.address}, {model.city}, {model.country}
-				</p>
+			<div className="flex flex-row justify-between flex-wrap">
+				{model.deliveries.map((delivery, index) => (
+					<UpcomingDeliveryProductBox 
+						key={index}
+						model={{
+							name: delivery.product.name,
+							image: delivery.product.imageUrl || '/images/supplement-new.png',
+							quantity: `${delivery.product.poucheSize} ${delivery.product.unitsOfMeasurePerSubUnit} pouche(${delivery.product.quantity})`,
+							type: delivery.type,
+						}} 
+					/>
+				))}
 			</div>
 		</div>
 	);
