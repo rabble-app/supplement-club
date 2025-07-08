@@ -87,24 +87,7 @@ export const mapSingleProductModel = (
 		: ({} as ISingleProductModel);
 };
 
-export const mapUpcomingDelivery = (
-	model: IUpcomingDeliveryResponse,
-): IUpcomingDeliveryModel => {
-	return model
-		? {
-				id: model.id,
-				deliveryDate: model.deliveryDate,
-				businessName: model.team.producer.businessName,
-				name: model.team.name,
-				quantity: model.basket[0]?.quantity || 0,
-				address: model.team.members[0].user.shipping.address,
-				city: model.team.members[0].user.shipping.city,
-				country: model.team.members[0].user.shipping.country,
-				postalCode: model.team.members[0].user.postalCode,
-				buildingNo: model.team.members[0].user.shipping.buildingNo,
-			}
-		: ({} as IUpcomingDeliveryModel);
-};
+
 
 export const mapSubscriptionModel = (
 	model: IUserPlanReponse,
