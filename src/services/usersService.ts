@@ -2,7 +2,6 @@ import { USER_ENDPOINTS } from "@/utils/endpoints";
 
 import { apiRequest } from "@/utils/helpers";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
 import type IAddDeliveryAddressRequest from "@/utils/models/api/request/IAddDeliveryAddressRequest";
 import type { IResponseModel } from "@/utils/models/api/response/IResponseModel";
 import type IUserPastOrderReponse from "@/utils/models/api/response/IUserPastOrderReponse";
@@ -14,23 +13,22 @@ import type IUpcomingDeliveryApiResponse from "@/utils/models/services/IUpcoming
 import type IUserInfoApiResponse from "@/utils/models/services/IUserInfoApiResponse";
 import {
 	mapSubscriptionModel,
-	mapUpcomingDelivery,
 	mapUserInfoModel,
 	mapUserPastOrder,
 } from "@/utils/mapping";
 import IAddBillingAddressRequest from "@/utils/models/api/request/IAddBillingAddressRequest";
+import { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
 
 export const usersService = {
 	getUpcomingDeliveries: async (
 		userId: string,
-	): Promise<IUpcomingDeliveryModel[]> => {
+	): Promise<IUpcomingDeliveryResponse[]> => {
 		const { data } = (await apiRequest(
 			USER_ENDPOINTS.UPCOMING_DELIVERIES(userId),
 			"GET",
 		)) as IUpcomingDeliveryApiResponse;
-		return data?.map<IUpcomingDeliveryModel>((item) =>
-			mapUpcomingDelivery(item),
-		);
+		return data;
+		
 	},
 
 	addDeliveryAddress: async (
