@@ -83,6 +83,7 @@ export const mapSingleProductModel = (
 				pricePerPoche: model.pricePerPoche,
 				leadTime: model.leadTime,
 				firstDelivery: model.firstDelivery,
+				pochesRequired: model.pochesRequired,
 			}
 		: ({} as ISingleProductModel);
 };

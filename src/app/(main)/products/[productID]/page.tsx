@@ -180,7 +180,7 @@ export default function ProductDetails({
   useEffect(() => {
     const order = {
       id: "2",
-      description: `${capsulePerDay * days} ${units} Every 3 months`,
+      description: `${capsulePerDay * days}${units === "g" ? "" : " "}${units} Every 3 months`,
       name: product?.isComming ? "FOUNDING MEMBER" : product?.firstDelivery ? "EARLY MEMBER" : "Quarterly Subscription",
       delivery: nextDeliveryProductText,
       src: "/images/supplement-mockup.png",
@@ -591,6 +591,7 @@ export default function ProductDetails({
               }
               leadTime={product?.leadTime ?? 0}
               firstDelivery={product?.firstDelivery}
+              pochesRequired={product?.pochesRequired ?? 0}
             />
             {/* Placeholder keeps layout when sticky becomes fixed */}
             <div
@@ -682,6 +683,7 @@ export default function ProductDetails({
               }
               leadTime={product?.leadTime ?? 0}
               firstDelivery={product?.firstDelivery}
+              pochesRequired={product?.pochesRequired ?? 0}
             />
 
             {members.length > 0 && (

@@ -48,11 +48,12 @@ export default function Checkout({
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [, setBasket] = useState<ITeamBasketModel[]>([]);
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
-  const [subscriptionPlans, setSubscriptionPlans] = useState<IManagePlanModel[]>([]);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<
+    IManagePlanModel[]
+  >([]);
   const [productMain, setProductMain] = useState<ISingleProductModel>();
   // const [firstWord, setFirstWord] = useState
-  const [, setIsReferralCodeApplied] =
-    useState<boolean>(false);
+  const [, setIsReferralCodeApplied] = useState<boolean>(false);
   // const [membershipSubscription, setMembershipSubscription] =
   //   useState<IMembershipSubscriptionResponse>();
   const steps = ["Create an Account", "Delivery Address", "Payment Details"];
@@ -111,8 +112,10 @@ export default function Checkout({
       id: "12",
       alt: "supplement mockup",
       description: "Free for your first 2 drops",
-      name: `Renews at £${membershipAmount}/year ${data.isComming ?'': 'on'}`,
-      delivery: data.isComming ? `` : `${format(membershipExpiry, "MMMM dd yyyy")}`,
+      name: `Renews at £${membershipAmount}/year ${data.isComming ? "" : "on"}`,
+      delivery: data.isComming
+        ? ``
+        : `${format(membershipExpiry, "MMMM dd yyyy")}`,
       src: "/images/membership-card.svg",
       capsules: 0,
       price: membershipPrice,
@@ -167,7 +170,9 @@ export default function Checkout({
     orders.unshift({
       id: "1",
       alt: "",
-      description: `${data.alignmentPoucheSize} ${units} pouch`,
+      description: `${data.alignmentPoucheSize}${
+        units === "g" ? "" : " "
+      }${units} pouch`,
       name: "One time Alignment Package",
       src: "/images/supplement-mockup.png",
       delivery: "Free Delivery",
@@ -289,20 +294,22 @@ export default function Checkout({
         0
       ) ?? 0;
 
-      const founderDiscountedTotalSum =  totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
-      const earlyMemberDiscountedTotalSum =  totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
+    const founderDiscountedTotalSum =
+      totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
+    const earlyMemberDiscountedTotalSum =
+      totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
 
-      let discountedTotalSum = totalSum;
+    let discountedTotalSum = totalSum;
 
-      if (data.isComming) {
-        discountedTotalSum = totalSum + founderDiscountedTotalSum;
-      } else if (data.firstDelivery) {
-        discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
-      } else {
-        discountedTotalSum = totalSum + totalSumOfSubs;
-      }
+    if (data.isComming) {
+      discountedTotalSum = totalSum + founderDiscountedTotalSum;
+    } else if (data.firstDelivery) {
+      discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
+    } else {
+      discountedTotalSum = totalSum + totalSumOfSubs;
+    }
 
-      setTotalPrice(discountedTotalSum);
+    setTotalPrice(discountedTotalSum);
   }, [summary]);
 
   // useEffect(() => {
@@ -319,27 +326,27 @@ export default function Checkout({
   // }
 
   const PreOrderMessage = () => {
-  return (
-    <div className="grid gap-[16px]">
-      <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-        PRE-ORDER Now to Become a Founding Member
-      </p>
-      <div className="grid gap-[8px]">
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Only get charged when we hit {data.founderMembersNeeded} pre-orders.
+    return (
+      <div className="grid gap-[16px]">
+        <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+          PRE-ORDER Now to Become a Founding Member
         </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          By becoming a founding member you get an extra {data.founderDiscount}% off the team price
-          forever.
-        </p>
-        <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-          Lead time is {data.leadTime} weeks from when we charge you - but you get {data.founderDiscount}% off
-          your subscription forever.
-        </p>
+        <div className="grid gap-[8px]">
+          <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+            Only get charged when we hit {data.founderMembersNeeded} pre-orders.
+          </p>
+          <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+            By becoming a founding member you get an extra{" "}
+            {data.founderDiscount}% off the team price forever.
+          </p>
+          <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+            Lead time is {data.leadTime} weeks from when we charge you - but you
+            get {data.founderDiscount}% off your subscription forever.
+          </p>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   async function successAction() {
     const currentStep = step + 1;
@@ -363,7 +370,7 @@ export default function Checkout({
   }, [context?.user]);
 
   useEffect(() => {
-    if ((step !== 4)) {
+    if (step !== 4) {
       if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
         router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
       }
@@ -371,26 +378,25 @@ export default function Checkout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.user, subscriptionPlan, data?.productId, data?.teamId, step]);
 
-// console.log("productMain", productMain);
+  console.log("productMain", productMain);
 
   return (
     <>
-      {(step !== 4 || (step===4 && data.isComming)) && (
-        <AlignmentDialog
-          daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
-          deliveryDate={data?.deliveryDate ?? ""}
-          orders={summary?.orders}
-          updateQuantityAction={updateQuantityAction}
-          discount={data?.discount ?? 0}
-          founderDiscount={data?.founderDiscount ?? 0}
-          setSummary={setSummary}
-          isComming={data?.isComming}
-          isInfoIconClicked={isInfoIconClicked}
-          setIsInfoIconClicked={setIsInfoIconClicked}
-          firstDelivery={data?.firstDelivery}
-          producer={productMain?.producer?.businessName ?? ""}
-        />
-      )}
+      <AlignmentDialog
+        daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
+        deliveryDate={data?.deliveryDate ?? ""}
+        orders={summary?.orders}
+        updateQuantityAction={updateQuantityAction}
+        discount={data?.discount ?? 0}
+        founderDiscount={data?.founderDiscount ?? 0}
+        setSummary={setSummary}
+        isComming={data?.isComming}
+        isInfoIconClicked={isInfoIconClicked}
+        setIsInfoIconClicked={setIsInfoIconClicked}
+        firstDelivery={data?.firstDelivery}
+        producer={productMain?.producer?.businessName ?? ""}
+        step={step}
+      />
 
       <div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
         <div className="flex flex-col gap-[40px] md:mb-[40px]">

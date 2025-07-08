@@ -22,11 +22,13 @@ const BillingAddressMain = forwardRef<
   BillingAddressRef,
   {
     handleSubmit: (data: AddressFormData) => void;
+    defaultValues?: Partial<AddressFormData>;
   }
->(({ handleSubmit }, ref) => {
+>(({ handleSubmit, defaultValues }, ref) => {
   const currentForm = useForm<AddressFormData>({
     resolver: zodResolver(billingAddressSchema),
     mode: "onChange",
+    defaultValues: defaultValues || {},
   });
 
   useImperativeHandle(ref, () => ({

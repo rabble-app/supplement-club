@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useUser } from "@/contexts/UserContext";
 import IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { VisuallyHidden } from "@reach/visually-hidden";
@@ -32,6 +31,7 @@ type AlignmentDialogProps = {
   setIsInfoIconClicked?: (val: boolean) => void;
   firstDelivery?: boolean;
   producer: string;
+  step: number;
 };
 
 export default function AlignmentDialog({
@@ -47,15 +47,17 @@ export default function AlignmentDialog({
   setIsInfoIconClicked,
   firstDelivery,
   producer,
+  step,
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
-  const context = useUser();
 
   useEffect(() => {
-    if (!context?.user || isInfoIconClicked || firstDelivery) {
+    if ([1,3].includes(step) || isInfoIconClicked) {
       setIsOpen(true);
+    }else{
+      setIsOpen(false);
     }
-  }, [context?.user, isInfoIconClicked, firstDelivery]);
+  }, [isInfoIconClicked, step]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

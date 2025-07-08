@@ -58,4 +58,5 @@ export default interface ISingleProductModel {
 	pricePerPoche?: number;
 	leadTime?: number;
 	firstDelivery?: boolean;
+	pochesRequired?: number;
 }

@@ -72,6 +72,7 @@ export default function CapsuleBox({
   earlyMemberDiscount,
   leadTime,
   firstDelivery,
+  pochesRequired,
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -108,6 +109,7 @@ export default function CapsuleBox({
   earlyMemberDiscount?: number;
   leadTime?: number;
   firstDelivery?: boolean;
+  pochesRequired?: number;
 }>) {
   // const days = 90;
   // const [selectedState, setSelectedState] = useState(2);
@@ -174,13 +176,14 @@ export default function CapsuleBox({
     gramsPerCount,
     pricePerPoche,
     price,
-    quantity: capsuleCount / gPerCount,
+    quantity: (capsuleCount / gPerCount) * (pochesRequired ?? 0),
     founderSpots,
     founderMembersNeeded,
     founderDiscount,
     earlyMemberDiscount,
     leadTime,
     firstDelivery,
+    pochesRequired,
   };
 
   return (
