@@ -55,4 +55,6 @@ export interface IProductModel extends IBaseTimestamps {
 	pricePerPoche?: number;
 	leadTime?: number;
 	firstDelivery?: boolean;
+	pochesRequired?: number;
+	orderDate?: string;
 }

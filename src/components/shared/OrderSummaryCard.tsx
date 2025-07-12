@@ -16,7 +16,8 @@ function renderPrice(
   founderMembersNeeded?: number,
   founderDiscount?: number,
   earlyMemberDiscount?: number,
-  firstDelivery?: boolean
+  firstDelivery?: boolean,
+  step?: number
 ) {
   if (model.isFree) {
     return (
@@ -47,30 +48,47 @@ function renderPrice(
 
   const price = Number(model.price) ?? 0;
 
-  const founderPrice = Number(model.price) * (1 - (founderDiscount ?? 0) / 100);
+  const totalFounderDiscount = Number(founderDiscount ?? 0) + (Number(discount??0));
+  const totalEarlyMemberDiscount = Number(earlyMemberDiscount ?? 0) + (Number(discount??0));
+
+  const founderPrice = Number(model.rrp) * (1 - (totalFounderDiscount / 100));
   const founderPricePerCount = Number(model.pricePerCount) * (1 - (founderDiscount ?? 0) / 100);
 
-  const earlyMemberPrice = Number(model.price) * (1 - (earlyMemberDiscount ?? 0) / 100);
+  const earlyMemberPrice = Number(model.rrp) * (1 - (totalEarlyMemberDiscount / 100));
   const earlyMemberPricePerCount = Number(model.pricePerCount) * (1 - (earlyMemberDiscount ?? 0) / 100);
 
   let displayPrice = price;
   let displayPricePerCount = model.pricePerCount;
 
-  if (firstDelivery) {
+  if (typeof model.quantity === "number" && step !== 4) {
     displayPrice = earlyMemberPrice;
     displayPricePerCount = earlyMemberPricePerCount;
   }
 
+  if(firstDelivery) {
+    displayPrice = earlyMemberPrice;
+    displayPricePerCount = earlyMemberPricePerCount;
+  }
+
+// console.log('earlyMemberPrice', earlyMemberPrice)
+// console.log('founderPrice', founderPrice)
+
+
   return (
-    <div className="grid gap-[8px]">
+    <div className="flex flex-col items-end gap-[8px]">
       {isComming && (
         <p className="text-blue font-normal text-sm font-inconsolata">
           Founder Slot Reserved
         </p>
       )}
-       {!isComming && firstDelivery && (
+       {(!isComming || firstDelivery) && !(typeof model.quantity === "number" && step !== 4) && !model.isMembership && (
         <p className="text-blue font-normal text-sm font-inconsolata">
           Early Bird Slot Reserved
+        </p>
+      )}
+      {typeof model.quantity === "number" && step !== 4 && (!isComming || firstDelivery) && (
+        <p className="text-blue font-normal text-sm font-inconsolata whitespace-nowrap">
+          Includes Early Member {earlyMemberDiscount}% Extra Discount
         </p>
       )}
       <div
@@ -80,7 +98,8 @@ function renderPrice(
             : "text-xl md:text-3xl flex"
         } font-[800] text-black items-center gap-1 font-inconsolata`}
       >
-        £{isComming ? founderPrice.toFixed(2) : displayPrice.toFixed(2)}
+        £{!(typeof model.quantity === "number" && step !== 4) && (isComming ? founderPrice.toFixed(2) : displayPrice.toFixed(2))}
+        {(typeof model.quantity === "number" && step !== 4) && (displayPrice.toFixed(2))}
         {!model.isMembership && (
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
             (£{isComming ? founderPricePerCount.toFixed(2) : displayPricePerCount?.toFixed(2)}/count)
@@ -94,7 +113,8 @@ function renderPrice(
             £{(Number(model.rrp) ?? 0).toFixed(2)}
           </span>{" "}
           <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
-            {model?.isMembership ? discount : discount.toFixed(2)}% OFF
+            {!(typeof model.quantity === "number" && step !== 4) && ((model?.isMembership) ? `${discount}% OFF` : `${discount.toFixed(2)}% OFF`)}
+            {typeof model.quantity === "number" && step !== 4 && `${(Number(earlyMemberDiscount ?? 0) + Number(discount ?? 0)).toFixed(2)}% OFF`}
           </span>
         </div>
       )}
@@ -103,11 +123,17 @@ function renderPrice(
           {founderMembersNeeded} Founder Spots Remaining!
         </p>
       )}
-      {!isComming && firstDelivery && (
+      {/* {(!isComming || firstDelivery) && !model.isMembership &&(
         <p className="text-blue font-normal text-sm font-inconsolata">
           Limited Time Remaining!
         </p>
-      )}
+      )} */}
+         {/* {(!isComming || firstDelivery) && !(typeof model.quantity === "number" && step !== 4) &&(
+        <p className="text-blue font-normal text-sm font-inconsolata">
+          Limited Time Remaining!
+        </p>
+      )} */}
+      
     </div>
   );
 }
@@ -157,6 +183,8 @@ export default function OrderSummaryCard({
     }
   };
 
+  console.log("111 earlyMemberDiscount", earlyMemberDiscount);
+
   return (
     <div
       className={`grid gap-2 items-center ${className} ${
@@ -194,9 +222,9 @@ export default function OrderSummaryCard({
         )}
 
         <div className="flex md:hidden">
-          {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery)}
+          {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery, step)}
         </div>
-        {typeof model.quantity === "number" && step !== 4 && (
+        {!isComming && !firstDelivery && typeof model.quantity === "number" && step !== 4 && (
           <div className="flex items-center gap-[16px]">
             <Button
               type="button"
@@ -230,7 +258,7 @@ export default function OrderSummaryCard({
       </div>
 
       <div className="hidden md:flex justify-end">
-        {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery)}
+        {renderPrice(model, discount ?? 0, isComming, founderSpots, founderMembersNeeded, founderDiscount, earlyMemberDiscount, firstDelivery, step)}
       </div>
     </div>
   );

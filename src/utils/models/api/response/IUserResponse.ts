@@ -61,6 +61,7 @@ export interface IMetadata {
 	earlyMemberDiscount?: number;
 	leadTime?: number;
 	firstDelivery?: boolean;
+	pochesRequired?: number;
 }
 
 interface IBasketsC {

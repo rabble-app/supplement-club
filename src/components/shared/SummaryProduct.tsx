@@ -52,7 +52,7 @@ export default function SummaryProduct({
 
   useEffect(() => {
     const totalSum = model?.orders?.reduce(
-      (sum, item) => sum + (item.price ?? 0),
+      (sum, item) => sum + (item.rrp ?? 0),
       0
     );
 
@@ -70,10 +70,24 @@ export default function SummaryProduct({
     if (data.isComming) {
       discountedTotalSum = totalSum + founderDiscountedTotalSum;
     } else if (data.firstDelivery) {
-      discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
+      discountedTotalSum =
+        (1 -
+          (Number(data.earlyMemberDiscount ?? 0) + Number(data.discount ?? 0)) /
+            100) *
+        totalSum;
     } else {
       discountedTotalSum = totalSum + totalSumOfSubs;
     }
+
+    console.log("totalSum", totalSum);
+    console.log("data.earlyMemberDiscount", data.earlyMemberDiscount);
+    console.log(
+      "earlyMemberDiscountedTotalSum",
+      (1 -
+        (Number(data.earlyMemberDiscount ?? 0) + Number(data.discount ?? 0)) /
+          100) *
+        totalSum
+    );
 
     setTotalCount(discountedTotalSum);
   }, [model]);
@@ -107,6 +121,10 @@ export default function SummaryProduct({
       setIsLoading(false);
     }
   };
+
+  const totalDiscountPercentage =
+    (data.discount ?? 0) + (Number(data.earlyMemberDiscount ?? 0) ?? 0);
+  const totalDiscountAmount = (data.rrp ?? 0) * (totalDiscountPercentage / 100);
 
   return (
     <div
@@ -173,12 +191,23 @@ export default function SummaryProduct({
               </p>
             </div>
           )}
+          {data.firstDelivery && (
+            <div className="font-inconsolata bg-blue2 rounded-sm">
+              <p className="text-blue font-inconsolata text-sm leading-6 font-bold text-center py-2 px-2.5">
+                EARLY MEMBER PRICING – You’re ordering before stock arrives and
+                securing an <br /> extra {data.earlyMemberDiscount}% off for
+                life.
+              </p>
+            </div>
+          )}
           {showTopLine && <hr className="bg-grey3 h-[1.5px]" />}
-          {data.isComming && (
+
+          <div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <p className="text-base font-semibold font-inconsolata">
-                  Alignment Package
+                  {data.isComming && "Launch Package"}
+                  {(!data.isComming || data.firstDelivery) && "BILLED TODAY"}
                 </p>
                 <Image
                   src="/images/icons/info-icon.svg"
@@ -189,12 +218,22 @@ export default function SummaryProduct({
                   onClick={() => setIsInfoIconClicked?.(true)}
                 />
               </div>
-              <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
-                Reserved at £{data.pricePerCount?.toFixed(2)} / count
-              </p>
+              {data.isComming && (
+                <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
+                  Reserved at £{data.pricePerCount?.toFixed(2)} / count
+                </p>
+              )}
             </div>
-          )}
-          {data.firstDelivery && (
+            {(!data.isComming || data.firstDelivery) && (
+              <>
+                <p className="text-sm font-semibold font-inconsolata text-[#444444]">
+                  Delivers on {format(data.deliveryDate ?? "", "MMMM dd yyyy")}.
+                </p>
+                {<hr className="bg-grey3 h-[1.5px] mt-6" />}
+              </>
+            )}
+          </div>
+          {/* {data.firstDelivery && (
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <p className="text-base font-semibold font-inconsolata">
@@ -206,7 +245,7 @@ export default function SummaryProduct({
                 {format(data.deliveryDate ?? "", "MMMM dd yyyy")}.
               </p>
             </div>
-          )}
+          )} */}
           {!data.isComming && (
             <>
               {" "}
@@ -218,6 +257,8 @@ export default function SummaryProduct({
                     updateQuantityAction={updateQuantityAction}
                     discount={data.discount}
                     step={step}
+                    firstDelivery={data.firstDelivery}
+                    earlyMemberDiscount={data.earlyMemberDiscount}
                   />
                 ))
               ) : (
@@ -233,7 +274,7 @@ export default function SummaryProduct({
               )}
             </>
           )}
-          {model?.referals?.length > 0 && (
+          {/* {model?.referals?.length > 0 && (
             <hr className="border-grey3 border" />
           )}
           {model?.referals?.map((referal, idx) => (
@@ -253,36 +294,37 @@ export default function SummaryProduct({
                 £{referal.price.toFixed(2)}
               </div>
             </div>
-          ))}
-          {model?.subscriptions?.length > 0 && (
+          ))} */}
+          {data.isComming && model?.subscriptions?.length > 0 && (
             <hr className="border-grey3 border" />
           )}
-          {model?.subscriptions?.length > 0 && (
+          {data.isComming && model?.subscriptions?.length > 0 && (
             <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
               Quarterly Subscription
             </p>
           )}
 
-          {model?.subscriptions?.map((item) => (
-            <OrderSummaryCard
-              key={item.id}
-              model={item}
-              discount={data.discount}
-              step={step}
-              isComming={data.isComming}
-              founderSpots={data.founderSpots}
-              founderMembersNeeded={data.founderMembersNeeded}
-              founderDiscount={data.founderDiscount}
-              earlyMemberDiscount={data.earlyMemberDiscount}
-              firstDelivery={data.firstDelivery}
-            />
-          ))}
+          {data.isComming &&
+            model?.subscriptions?.map((item) => (
+              <OrderSummaryCard
+                key={item.id}
+                model={item}
+                discount={data.discount}
+                step={step}
+                isComming={data.isComming}
+                founderSpots={data.founderSpots}
+                founderMembersNeeded={data.founderMembersNeeded}
+                founderDiscount={data.founderDiscount}
+                earlyMemberDiscount={data.earlyMemberDiscount}
+                firstDelivery={data.firstDelivery}
+              />
+            ))}
 
-          {model?.membership?.length > 0 && (
+          {data.isComming && model?.membership?.length > 0 && (
             <hr className="border-grey3 border" />
           )}
 
-          {model?.membership?.length > 0 && (
+          {data.isComming && model?.membership?.length > 0 && (
             <div>
               <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                 Membership Fee
@@ -296,20 +338,21 @@ export default function SummaryProduct({
             </div>
           )}
 
-          {model?.membership?.map((item) => (
-            <OrderSummaryCard
-              key={item.id}
-              model={item}
-              discount={item.discount ?? 0}
-              step={step}
-            />
-          ))}
-          {model?.membership?.length > 0 && !data.isComming && (
+          {data.isComming &&
+            model?.membership?.map((item) => (
+              <OrderSummaryCard
+                key={item.id}
+                model={item}
+                discount={item.discount ?? 0}
+                step={step}
+              />
+            ))}
+          {/* {model?.membership?.length > 0 && !data.isComming && (
             <div className="text-[12px] leading-[16px] font-helvetica italic mt-[-12px] text-grey4">
               Membership gives you access to unlimited drops, premium-only
               products, lab-direct pricing & free delivery on all orders
             </div>
-          )}
+          )} */}
 
           {context?.user && !data.isComming && (
             <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
@@ -363,7 +406,7 @@ export default function SummaryProduct({
             <div className="font-inconsolata bg-blue2 rounded-sm">
               <p className="text-blue font-inconsolata text-sm leading-6 font-bold text-center py-2 px-2.5">
                 Founder slot secured. You’ll be notified when the team is ready
-                and charged only if you stay in.
+                and charged <br /> only if you stay in.
               </p>
             </div>
           )}
@@ -375,6 +418,26 @@ export default function SummaryProduct({
             </div>
           )}
           <div className="grid gap-[10px]">
+            {!data.isComming && (
+              <div className="flex justify-between items-center">
+                <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+                  RRP
+                </p>
+                <p className="text-black text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+                  £{data.rrp?.toFixed(2)}
+                </p>
+              </div>
+            )}
+            {!data.isComming && (
+              <div className="flex justify-between items-center">
+                <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+                  Total Discount
+                </p>
+                <p className="text-black text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+                  -£{totalDiscountAmount?.toFixed(2)}
+                </p>
+              </div>
+            )}
             <div className="flex justify-between items-center">
               <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                 Subtotal
@@ -410,7 +473,60 @@ export default function SummaryProduct({
             </div>
           </div>
         </div>
+        {(!data.isComming || data.firstDelivery) &&
+          model?.subscriptions?.length > 0 && (
+            <hr className="border-grey3 border my-6" />
+          )}
+       { (!data.isComming || data.firstDelivery) && <p className="text-[20px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-6">SUBSCRIPTIONS</p>}
+        {(!data.isComming || data.firstDelivery) &&
+          model?.subscriptions?.length > 0 && (
+            <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+              Quarterly Drop Subscription
+            </p>
+          )}
+        {(!data.isComming || data.firstDelivery) &&
+          model?.subscriptions?.map((item) => (
+            <OrderSummaryCard
+              key={item.id}
+              model={item}
+              discount={data.discount}
+              step={step}
+              isComming={data.isComming}
+              founderSpots={data.founderSpots}
+              founderMembersNeeded={data.founderMembersNeeded}
+              founderDiscount={data.founderDiscount}
+              earlyMemberDiscount={data.earlyMemberDiscount}
+              firstDelivery={data.firstDelivery}
+            />
+          ))}
+        {/* {(!data.isComming || data.firstDelivery) &&
+          model?.membership?.length > 0 && (
+            <hr className="border-grey3 border my-6" />
+          )} */}
+        {(!data.isComming || data.firstDelivery) &&
+          model?.membership?.length > 0 && (
+            <div>
+              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-4 mt-2">
+                Membership Fee
+              </p>
+              {/* {!data.isComming && (
+                <p className="text-sm font-inconsolata text-grey16 mt-1">
+                  Membership trial begins only once your team launches — not
+                  before.
+                </p>
+              )} */}
 
+              {(!data.isComming || data.firstDelivery) &&
+                model?.membership?.map((item) => (
+                  <OrderSummaryCard
+                    key={item.id}
+                    model={item}
+                    discount={item.discount ?? 0}
+                    step={step}
+                  />
+                ))}
+            </div>
+          )}
         <div className="grid gap-[10px]">{children}</div>
       </div>
     </div>

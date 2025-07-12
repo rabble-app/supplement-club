@@ -72,6 +72,8 @@ export default function CapsuleBox({
   earlyMemberDiscount,
   leadTime,
   firstDelivery,
+  pochesRequired,
+  orderDate,
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -108,6 +110,8 @@ export default function CapsuleBox({
   earlyMemberDiscount?: number;
   leadTime?: number;
   firstDelivery?: boolean;
+  pochesRequired?: number;
+  orderDate?: string;
 }>) {
   // const days = 90;
   // const [selectedState, setSelectedState] = useState(2);
@@ -174,13 +178,15 @@ export default function CapsuleBox({
     gramsPerCount,
     pricePerPoche,
     price,
-    quantity: capsuleCount / gPerCount,
+    quantity: (capsuleCount / gPerCount) * (pochesRequired ?? 0),
     founderSpots,
     founderMembersNeeded,
     founderDiscount,
     earlyMemberDiscount,
     leadTime,
     firstDelivery,
+    pochesRequired,
+    orderDate,
   };
 
   return (
@@ -368,7 +374,7 @@ export default function CapsuleBox({
                 setCheckoutData(checkoutData);
               }}
             >
-              {isComming ? "REGISTER PRE-ORDER" : firstDelivery ? "Secure Early Membership" : "Start My Subscription"}
+              {isComming ? "CLAIM FOUNDING MEMBER PRICE" : firstDelivery ? "CLAIM EARLY MEMBER PRICE" : "Start My Subscription"}
             </Link>
           </Button>
 

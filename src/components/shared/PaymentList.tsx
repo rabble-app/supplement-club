@@ -27,6 +27,7 @@ import BillingAddressMain, {
 } from "../main/products/[productID]/checkout/BillingAddressMain";
 import { usersService } from "@/services/usersService";
 import { AddressFormData } from "./AddressAutocomplete";
+// import IUserBillingAddressModel from "@/utils/models/api/IUserBillingAddressModel";
 
 export default function PaymentList({
   totalPrice,
@@ -45,6 +46,13 @@ export default function PaymentList({
 }>) {
   const [policyTerms, setPolicyTerms] = useState(true);
   const [address, setAddress] = useState(true);
+  const [billingAddress, setBillingAddress] = useState<{
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    postCode: string;
+    country: string;
+  }>();
   const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,6 +71,19 @@ export default function PaymentList({
     };
     fetchUserPaymentOptions();
   }, [context?.user?.stripeCustomerId]);
+
+  useEffect(() => {
+    const fetchBillingAddress = async () => {
+      const billing = await retriveBillingAddress(context?.user?.id);
+      // If user has a billing address, checkbox should be unchecked (different from delivery)
+      if (billing) {
+        setAddress(false);
+      }
+    };
+    fetchBillingAddress();
+  }, [context?.user]);
+
+  console.log("billingAddress", billingAddress);
 
   async function processPayment(cards: IUserPaymentOptionModel[]) {
     setIsLoading(true);
@@ -157,6 +178,14 @@ export default function PaymentList({
       (stripeCustomerId as string) ?? ""
     );
     setUserCards(model);
+  }
+
+  async function retriveBillingAddress(userId?: string | PaymentMethod | null) {
+    const model = await usersService.getBillingAddress(
+      (userId as string) ?? ""
+    );
+    setBillingAddress(model);
+    return model;
   }
 
   async function addCreditCard(paymentMethod: string | PaymentMethod | null) {
@@ -337,6 +366,17 @@ export default function PaymentList({
           <BillingAddressMain
             ref={billingAddressRef}
             handleSubmit={handleBillingAddressSubmit}
+            defaultValues={
+              billingAddress
+                ? {
+                    address: billingAddress.addressLine1,
+                    address2: billingAddress.addressLine2,
+                    city: billingAddress.city,
+                    postalCode: billingAddress.postCode,
+                    country: billingAddress.country,
+                  }
+                : undefined
+            }
           />
         </div>
       )}

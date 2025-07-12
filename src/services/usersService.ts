@@ -70,6 +70,14 @@ export const usersService = {
 		return response;
 	},
 
+	async getBillingAddress(userId: string) {
+		const { data } = (await apiRequest(
+			USER_ENDPOINTS.GET_BILLING_ADDRESS(userId),
+			"GET",
+		)) as any;
+		return data;
+	},
+
 	async getSubscriptionPlans(userId: string) {
 		const { data } = (await apiRequest(
 			USER_ENDPOINTS.SUBSCRIPTION_PLANS(userId),
