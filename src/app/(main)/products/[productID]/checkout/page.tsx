@@ -73,7 +73,7 @@ export default function Checkout({
 
   const data = checkoutData as IMetadata;
 
-  const nextDeliveryProductText = `Next Drop Delivered: ${
+  const nextDeliveryProductText = `Next subscription billed: ${
     data?.deliveryDate
       ? format(new Date(data?.deliveryDate ?? ""), "MMMM dd yyyy")
       : ""
@@ -86,7 +86,7 @@ export default function Checkout({
   const days = data?.pouchSize;
 
   const initialQty = Math.ceil(
-    (capsulePerDay * (data?.daysUntilNextDrop ?? 0)) /
+    (capsulePerDay * 90) /
       (data?.alignmentPoucheSize ?? 0)
   );
 
@@ -170,12 +170,12 @@ export default function Checkout({
     orders.unshift({
       id: "1",
       alt: "",
-      description: `${data.alignmentPoucheSize}${
+      description: `${capsulesPackage}${
         units === "g" ? "" : " "
-      }${units} pouch`,
-      name: "One time Alignment Package",
+      }${units}`,
+      name: "LAUNCH PACKAGE",
       src: "/images/supplement-mockup.png",
-      delivery: "Free Delivery",
+      delivery: `Takes you up to: ${format(new Date(data?.deliveryDate ?? ""), "MMMM dd yyyy")} Drop`,
       capsules: capsulesPackage,
       price: Number(data?.pricePerPoche) ?? 0,
       quantity,
@@ -389,6 +389,7 @@ export default function Checkout({
         updateQuantityAction={updateQuantityAction}
         discount={data?.discount ?? 0}
         founderDiscount={data?.founderDiscount ?? 0}
+        earlyMemberDiscount={data?.earlyMemberDiscount ?? 0}
         setSummary={setSummary}
         isComming={data?.isComming}
         isInfoIconClicked={isInfoIconClicked}
@@ -396,6 +397,12 @@ export default function Checkout({
         firstDelivery={data?.firstDelivery}
         producer={productMain?.producer?.businessName ?? ""}
         step={step}
+        orderDate={productMain?.orderDate ?? ""}
+        pochesRequired={data?.pochesRequired ?? 0}
+        alignmentPoucheSize={data?.alignmentPoucheSize ?? 0}
+        units={units}
+        status={productMain?.status ?? ""}
+        capsulePerDay={capsulePerDay}
       />
 
       <div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">

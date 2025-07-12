@@ -73,6 +73,7 @@ export default function CapsuleBox({
   leadTime,
   firstDelivery,
   pochesRequired,
+  orderDate,
 }: Readonly<{
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
@@ -110,6 +111,7 @@ export default function CapsuleBox({
   leadTime?: number;
   firstDelivery?: boolean;
   pochesRequired?: number;
+  orderDate?: string;
 }>) {
   // const days = 90;
   // const [selectedState, setSelectedState] = useState(2);
@@ -184,6 +186,7 @@ export default function CapsuleBox({
     leadTime,
     firstDelivery,
     pochesRequired,
+    orderDate,
   };
 
   return (
@@ -371,7 +374,7 @@ export default function CapsuleBox({
                 setCheckoutData(checkoutData);
               }}
             >
-              {isComming ? "REGISTER PRE-ORDER" : firstDelivery ? "Secure Early Membership" : "Start My Subscription"}
+              {isComming ? "CLAIM FOUNDING MEMBER PRICE" : firstDelivery ? "CLAIM EARLY MEMBER PRICE" : "Start My Subscription"}
             </Link>
           </Button>
 

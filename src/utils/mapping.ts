@@ -84,6 +84,7 @@ export const mapSingleProductModel = (
 				leadTime: model.leadTime,
 				firstDelivery: model.firstDelivery,
 				pochesRequired: model.pochesRequired,
+				orderDate: model.orderDate,
 			}
 		: ({} as ISingleProductModel);
 };

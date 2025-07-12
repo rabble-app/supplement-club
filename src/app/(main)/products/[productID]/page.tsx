@@ -115,7 +115,7 @@ export default function ProductDetails({
 
   const nextDeliveryProductText = product?.isComming
     ? `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE. FOREVER`
-    : `Next Drop Delivered: ${
+    : `Next subscription billed: ${
         product?.deliveryDate
           ? format(new Date(product?.deliveryDate ?? ""), "MMMM dd yyyy")
           : ""
@@ -177,6 +177,8 @@ export default function ProductDetails({
     Number(product?.pricePerCount) *
     (1 - (product?.supplementTeamProducts?.foundingMembersDiscount ?? 0) / 100);
 
+  console.log('earlyMemberPrice', earlyMemberPrice)
+
   useEffect(() => {
     const order = {
       id: "2",
@@ -222,12 +224,12 @@ export default function ProductDetails({
         id: "1",
         alt: "",
         description: `${
-          capsulePerDay * (product?.daysUntilNextDrop ?? 0)
+          capsulePerDay * days
         }${units} to see you to Q${nextQuater}`,
         name: "One time Alignment Package",
         delivery: "Free Delivery",
         src: "/images/ubiquinol.svg",
-        capsules: capsulePerDay * (product?.daysUntilNextDrop ?? 0),
+        capsules: capsulePerDay * days,
         price: productPrice,
         pricePerPoche: product?.pricePerPoche ?? 0,
         pricePerCount: product?.pricePerCount ?? 0,
@@ -592,6 +594,7 @@ export default function ProductDetails({
               leadTime={product?.leadTime ?? 0}
               firstDelivery={product?.firstDelivery}
               pochesRequired={product?.pochesRequired ?? 0}
+              orderDate={product?.orderDate ?? ""}
             />
             {/* Placeholder keeps layout when sticky becomes fixed */}
             <div
@@ -684,6 +687,7 @@ export default function ProductDetails({
               leadTime={product?.leadTime ?? 0}
               firstDelivery={product?.firstDelivery}
               pochesRequired={product?.pochesRequired ?? 0}
+              orderDate={product?.orderDate ?? ""}
             />
 
             {members.length > 0 && (

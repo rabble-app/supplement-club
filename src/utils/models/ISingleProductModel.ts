@@ -59,4 +59,5 @@ export default interface ISingleProductModel {
 	leadTime?: number;
 	firstDelivery?: boolean;
 	pochesRequired?: number;
+	orderDate?: string;
 }
