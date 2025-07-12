@@ -3,7 +3,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { useUser } from "@/contexts/UserContext";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
@@ -29,6 +29,8 @@ import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
 import ISingleProductModel from "@/utils/models/ISingleProductModel";
+import useProduct from "@/hooks/useProduct";
+import { MemberType } from "@/utils/models/IOrderPackageModel";
 // import { paymentService } from "@/services/paymentService";
 // import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
@@ -41,21 +43,13 @@ export default function Checkout({
 
   const [step, setStep] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [checkoutData, setCheckoutData] = useLocalStorage<IMetadata>(
-    "checkoutData",
-    {}
-  );
+  const [storageQuantity, setStorageQuantity] = useLocalStorage("storageQuantity", 0);
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
-  const [, setBasket] = useState<ITeamBasketModel[]>([]);
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     IManagePlanModel[]
   >([]);
-  const [productMain, setProductMain] = useState<ISingleProductModel>();
-  // const [firstWord, setFirstWord] = useState
   const [, setIsReferralCodeApplied] = useState<boolean>(false);
-  // const [membershipSubscription, setMembershipSubscription] =
-  //   useState<IMembershipSubscriptionResponse>();
   const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
   // const checkoutData =
@@ -71,29 +65,6 @@ export default function Checkout({
   //       : context?.user?.metadata
   // );
 
-  const data = checkoutData as IMetadata;
-
-  const nextDeliveryProductText = `Next subscription billed: ${
-    data?.deliveryDate
-      ? format(new Date(data?.deliveryDate ?? ""), "MMMM dd yyyy")
-      : ""
-  }`;
-
-  const [capsulePerDay] = useState(data?.capsuleCount ?? 2);
-
-  const units = data?.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
-
-  const days = data?.pouchSize;
-
-  const initialQty = Math.ceil(
-    (capsulePerDay * 90) /
-      (data?.alignmentPoucheSize ?? 0)
-  );
-
-  const [quantity, setQuantity] = useState<number>(initialQty);
-
-  const capsulesPackage = quantity * (data?.alignmentPoucheSize ?? 0);
-
   const nextYearDate = new Date();
   nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
 
@@ -105,95 +76,11 @@ export default function Checkout({
   );
   const membershipExpiry = format(nextYearDate, "MMMM dd yyyy");
 
-  const orders: IOrderSummaryModel[] = [];
-  const subscriptions = [data?.orders?.[0]];
-  const membership = [
-    {
-      id: "12",
-      alt: "supplement mockup",
-      description: "Free for your first 2 drops",
-      name: `Renews at £${membershipAmount}/year ${data.isComming ? "" : "on"}`,
-      delivery: data.isComming
-        ? ``
-        : `${format(membershipExpiry, "MMMM dd yyyy")}`,
-      src: "/images/membership-card.svg",
-      capsules: 0,
-      price: membershipPrice,
-      imageBorder: true,
-      discount: membershipDiscount,
-      rrp: membershipRrp,
-      isMembership: true,
-    },
-  ];
-
-  const obj = {
-    title: "Order Summary",
-    corporation: data?.teamName,
-    name: data?.name,
-    deliveryText: !data?.isComming ? "FREE NEXT DAY DELIVERY" : "",
-    percentage:
-      (capsulePerDay * (days ?? 0) * (data?.pricePerCount ?? 0)) /
-      Number(data?.rrp),
-    rrp: data?.rrp,
-    quantityOfSubUnitPerOrder: data?.quantityOfSubUnitPerOrder,
-    unitsOfMeasurePerSubUnit: data?.unitsOfMeasurePerSubUnit,
-    orders: orders,
-    id: 1,
-    referals: [],
-    subscriptions: subscriptions,
-    membership: membership,
-    capsulePerDay: capsulePerDay,
-    gramsPerCount: data?.gramsPerCount ?? 0,
-  };
-
-  const [summary, setSummary] = useState<ISummaryProductModel>(
-    obj as ISummaryProductModel
-  );
-
-  if (data?.isComming) {
-    orders.push({
-      price: 0,
-      id: "1",
-      alt: "supplement mockup",
-      description: `${capsulePerDay * (days ?? 0)}${units} Every 3 months`,
-      name: "Quarterly Subscription",
-      delivery: nextDeliveryProductText,
-      src: "/images/supplement-mockup.png",
-      capsules: capsulePerDay * (days ?? 0),
-      pricePerCount: data?.pricePerCount ?? 0,
-      rrp: data?.rrp ?? 0,
-      rrpPerCount: data?.rrpPerCount ?? 0,
-      capsulePerDay: capsulePerDay,
-      gramsPerCount: data?.gramsPerCount ?? 0,
-    });
-  } else {
-    orders.unshift({
-      id: "1",
-      alt: "",
-      description: `${capsulesPackage}${
-        units === "g" ? "" : " "
-      }${units}`,
-      name: "LAUNCH PACKAGE",
-      src: "/images/supplement-mockup.png",
-      delivery: `Takes you up to: ${format(new Date(data?.deliveryDate ?? ""), "MMMM dd yyyy")} Drop`,
-      capsules: capsulesPackage,
-      price: Number(data?.pricePerPoche) ?? 0,
-      quantity,
-      pricePerCount: data?.pricePerCount ?? 0,
-      rrp: data?.rrp ?? 0,
-      rrpPerCount: data?.rrpPerCount ?? 0,
-      capsulePerDay: capsulePerDay,
-      gramsPerCount: data?.gramsPerCount ?? 0,
-    });
-  }
-
   const getSubscriptionPlan = (productID: string) => {
     return subscriptionPlans.find((plan) =>
       plan.team.basket.some((basket) => basket.product.id === productID)
     );
   };
-
-  const subscriptionPlan = getSubscriptionPlan(data?.productId ?? "");
 
   useEffect(() => {
     const fetchSubscriptionPlans = async () => {
@@ -210,44 +97,16 @@ export default function Checkout({
     fetchSubscriptionPlans();
   }, [context?.user?.id]);
 
-  useEffect(() => {
-    setSummary((prev) => ({
-      ...prev,
-      orders: orders.map((order) => ({
-        ...order,
-        rrp:
-          (checkoutData.quantity ?? 0) *
-          (Number(order?.price ?? 0) / (1 - Number(data?.discount) / 100)),
-        price: (checkoutData.quantity ?? 0) * (Number(order?.price) ?? 0),
-      })),
-      subscriptions: subscriptions as ISubscriptionSummaryModel[],
-      capsulePerDay: capsulePerDay,
-      gramsPerCount: data?.gramsPerCount ?? 0,
-    }));
+  const searchParams = useSearchParams();
+  const teamId = searchParams.get("teamId");
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [capsulePerDay, checkoutData?.quantity]);
+  const {
+    product: productMain,
+    orderPackage,
+    gPerCount,
+  } = useProduct(teamId ?? "", context?.user?.id ?? "");
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { productID } = await params;
-      const model = await productService.product(
-        productID,
-        data?.teamId ?? "",
-        context?.user?.id ?? ""
-      );
-      setBasket(model?.supplementTeamProducts?.team.basket ?? []);
-      setProductMain(model);
-      // setUnits(model.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules");
-      // const [word, ...others] = (model.name ?? "").split(" ");
-      // setFirstWord(word);
-      // setRest(others.join(" "));
-      // setLoading(false);
-
-      // setCapsulePerDay(model.capsuleInfo?.[1]?.capsuleCount ?? 0);
-    };
-    fetchProduct();
-  }, [params, context?.user?.id, data?.teamId, step]);
+  const subscriptionPlan = getSubscriptionPlan(orderPackage?.productId ?? "");
 
   useEffect(() => {
     if (step === 4) {
@@ -276,41 +135,11 @@ export default function Checkout({
         setStep(2);
       } else {
         router.push(
-          `/auth/email-verify?redirect=/products/${data?.productId}/checkout`
+          `/auth/email-verify?redirect=/products/${orderPackage?.productId}/checkout`
         );
       }
     }
-  }, [context?.user, router, data?.productId, subscriptionPlan]);
-
-  useEffect(() => {
-    const totalSum = summary?.orders?.reduce(
-      (sum, item) => sum + (item.price ?? 0),
-      0
-    );
-
-    const totalSumOfSubs =
-      summary?.subscriptions?.reduce(
-        (sum, item) => sum + (item?.price ?? 0),
-        0
-      ) ?? 0;
-
-    const founderDiscountedTotalSum =
-      totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
-    const earlyMemberDiscountedTotalSum =
-      totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
-
-    let discountedTotalSum = totalSum;
-
-    if (data.isComming) {
-      discountedTotalSum = totalSum + founderDiscountedTotalSum;
-    } else if (data.firstDelivery) {
-      discountedTotalSum = totalSum + earlyMemberDiscountedTotalSum;
-    } else {
-      discountedTotalSum = totalSum + totalSumOfSubs;
-    }
-
-    setTotalPrice(discountedTotalSum);
-  }, [summary]);
+  }, [context?.user, router, orderPackage?.productId, subscriptionPlan]);
 
   // useEffect(() => {
   //   if (context?.user?.id) {
@@ -333,15 +162,15 @@ export default function Checkout({
         </p>
         <div className="grid gap-[8px]">
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            Only get charged when we hit {data.founderMembersNeeded} pre-orders.
+            Only get charged when we hit {orderPackage.remainingSpots} pre-orders.
           </p>
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
             By becoming a founding member you get an extra{" "}
-            {data.founderDiscount}% off the team price forever.
+            {orderPackage.extraDiscount}% off the team price forever.
           </p>
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            Lead time is {data.leadTime} weeks from when we charge you - but you
-            get {data.founderDiscount}% off your subscription forever.
+            Lead time is {productMain?.leadTime} weeks from when we charge you - but you
+            get {orderPackage.extraDiscount}% off your subscription forever.
           </p>
         </div>
       </div>
@@ -354,13 +183,7 @@ export default function Checkout({
   }
 
   const updateQuantityAction = (val: number) => {
-    setQuantity(val);
-    setCheckoutData((prev) => {
-      return {
-        ...prev,
-        quantity: val,
-      };
-    });
+    setStorageQuantity(val);
   };
 
   useEffect(() => {
@@ -372,38 +195,32 @@ export default function Checkout({
   useEffect(() => {
     if (step !== 4) {
       if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
-        router.push(`/products/${data?.productId}?teamId=${data?.teamId}`);
+        router.push(`/products/${orderPackage?.productId}?teamId=${orderPackage?.teamId}`);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context?.user, subscriptionPlan, data?.productId, data?.teamId, step]);
+  }, [context?.user, subscriptionPlan, orderPackage?.productId, orderPackage?.teamId, step]);
 
   console.log("productMain", productMain);
+  console.log("orderPackage", orderPackage);
 
   return (
     <>
-      <AlignmentDialog
-        daysUntilNextDrop={data?.daysUntilNextDrop ?? 0}
-        deliveryDate={data?.deliveryDate ?? ""}
-        orders={summary?.orders}
-        updateQuantityAction={updateQuantityAction}
-        discount={data?.discount ?? 0}
-        founderDiscount={data?.founderDiscount ?? 0}
-        earlyMemberDiscount={data?.earlyMemberDiscount ?? 0}
-        setSummary={setSummary}
-        isComming={data?.isComming}
-        isInfoIconClicked={isInfoIconClicked}
-        setIsInfoIconClicked={setIsInfoIconClicked}
-        firstDelivery={data?.firstDelivery}
-        producer={productMain?.producer?.businessName ?? ""}
-        step={step}
-        orderDate={productMain?.orderDate ?? ""}
-        pochesRequired={data?.pochesRequired ?? 0}
-        alignmentPoucheSize={data?.alignmentPoucheSize ?? 0}
-        units={units}
-        status={productMain?.status ?? ""}
-        capsulePerDay={capsulePerDay}
-      />
+      {productMain && (
+        <AlignmentDialog
+          orderPackage={orderPackage}
+          daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
+          deliveryDate={productMain?.deliveryDate ?? ""}
+          orderDate={productMain?.orderDate ?? ""}
+          updateQuantityAction={updateQuantityAction}
+          isInfoIconClicked={isInfoIconClicked}
+          setIsInfoIconClicked={setIsInfoIconClicked}
+          step={step}
+          leadTime={productMain?.leadTime ?? 0}
+          gPerCount={gPerCount}
+          storageQuantity={storageQuantity}
+        />
+      )}
 
       <div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
         <div className="flex flex-col gap-[40px] md:mb-[40px]">
@@ -411,20 +228,20 @@ export default function Checkout({
 
           {step === 1 && (
             <CreateAccount params={params}>
-              {data?.isComming && <PreOrderMessage />}{" "}
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && <PreOrderMessage />}{" "}
             </CreateAccount>
           )}
           {step === 2 && (
             <DeliveryAddress step={step} updateStepAction={setStep}>
-              {data?.isComming && <PreOrderMessage />}{" "}
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && <PreOrderMessage />}{" "}
             </DeliveryAddress>
           )}
           {step === 3 && (
             <PaymentList
-              productId={data?.productId ?? ""}
-              topupQuantity={quantity}
-              teamId={data?.teamId ?? ""}
-              isComming={data?.isComming}
+              productId={orderPackage?.productId ?? ""}
+              topupQuantity={storageQuantity}
+              teamId={orderPackage?.teamId ?? ""}
+              isComming={orderPackage.memberType === MemberType.FOUNDING_MEMBER}
               totalPrice={totalPrice}
               successAction={successAction}
             />
@@ -441,8 +258,9 @@ export default function Checkout({
 
         <div className="mx-[-16px] md:mx-[0] mt-[32px]">
           <SummaryProduct
-            model={summary}
-            showTopLine={data?.isComming}
+            model={{} as ISummaryProductModel}
+            orderPackage={orderPackage}
+            showTopLine={orderPackage.memberType === MemberType.FOUNDING_MEMBER}
             quantityAction={updateQuantityAction}
             step={step}
             referralInfo={referralInfo}

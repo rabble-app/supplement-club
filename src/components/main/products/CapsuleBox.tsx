@@ -14,6 +14,9 @@ import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useLocalStorage from "use-local-storage";
+import OrderSummaryCard2 from "@/components/shared/OrderSummaryCard2";
+import { getQuarterInfo } from "@/utils/utils";
+import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
 
 const generateImage = (count: number) => (
   <div
@@ -37,14 +40,13 @@ const generateImage = (count: number) => (
 );
 
 export default function CapsuleBox({
+  orderPackage,
   unitsOfMeasurePerSubUnit,
   capsuleInfo,
   rrp,
-  isComming,
-  orders,
+  isFoundingProduct,
   productId,
   price,
-  selectCapsulePerDayAction,
   pricePerCount,
   activeMemberIndex,
   discount,
@@ -62,9 +64,8 @@ export default function CapsuleBox({
   pricePerPoche,
   capsuleCount,
   capsules,
-  selectedState,
-  setSelectedState,
   setCapsuleCount,
+  setStorageCapsuleCount,
   gPerCount,
   founderSpots,
   founderMembersNeeded,
@@ -75,14 +76,13 @@ export default function CapsuleBox({
   pochesRequired,
   orderDate,
 }: Readonly<{
+  orderPackage: IOrderPackageModel;
   unitsOfMeasurePerSubUnit?: string;
   capsuleInfo?: ICapsuleInfoModel[];
   rrp: number;
   price: number;
-  isComming?: boolean;
+  isFoundingProduct?: boolean;
   productId?: string;
-  orders?: IOrderSummaryModel[];
-  selectCapsulePerDayAction: (val: number) => void;
   pricePerCount: number;
   activeMemberIndex: number;
   discount: number;
@@ -100,9 +100,8 @@ export default function CapsuleBox({
   pricePerPoche: number;
   capsuleCount: number;
   capsules: number;
-  selectedState: number;
-  setSelectedState: (value: number) => void;
   setCapsuleCount: (value: number) => void;
+  setStorageCapsuleCount: (value: number) => void;
   gPerCount: number;
   founderSpots?: number;
   founderMembersNeeded?: number;
@@ -113,9 +112,6 @@ export default function CapsuleBox({
   pochesRequired?: number;
   orderDate?: string;
 }>) {
-  // const days = 90;
-  // const [selectedState, setSelectedState] = useState(2);
-  // const [capsuleCount, setCapsuleCount] = useState(0);
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
 
@@ -124,28 +120,6 @@ export default function CapsuleBox({
   const [units] = useState(
     ["grams", "gm"].includes(unitsOfMeasurePerSubUnit ?? "") ? "g" : " Capsules"
   );
-
-  // const days = 90;
-  // const [selectedState, setSelectedState] = useState(2);
-  // const [capsuleCount, setCapsuleCount] = useState(0);
-  // const capsules = useMemo(() => selectedState * days, [selectedState]);
-  // const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
-
-  useEffect(() => {
-    if (capsuleInfo) setSelectedState(capsuleInfo[1].capsuleCount);
-  }, [capsuleInfo, setSelectedState]);
-
-  useEffect(() => {
-    setCapsuleCount(
-      capsuleInfo?.find((c) => c.capsuleCount === selectedState)
-        ?.capsuleCount ?? 0
-    );
-  }, [capsuleInfo, selectedState, setCapsuleCount]);
-
-  function selectCapsulte(value: number) {
-    setSelectedState(value);
-    selectCapsulePerDayAction(value);
-  }
 
   const updateQuantityAction = useCallback((val: number) => {
     console.log(val);
@@ -163,9 +137,8 @@ export default function CapsuleBox({
     activePercentageDiscount,
     deliveryDate,
     teamStatus,
-    orders,
     daysUntilNextDrop,
-    isComming,
+    isFoundingProduct,
     capsuleCount,
     alignmentPoucheSize,
     pouchSize,
@@ -189,31 +162,103 @@ export default function CapsuleBox({
     orderDate,
   };
 
+  const { currentQuarter } = getQuarterInfo();
+  const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
+
+  const leftTopText = `${
+    (orderPackage.capsuleCount * orderPackage.days) / gPerCount
+  }${orderPackage.units} Every 3 months`;
+
+  const rightCenterText = (
+    <div
+      className={`text-xl md:text-3xl flex font-[800] text-black items-center gap-1 font-inconsolata`}
+    >
+      £{orderPackage.price}
+      <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+      </span>
+    </div>
+  );
+
+  const rightBottomContent = (
+    <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+      RRP{" "}
+      <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+        £{(Number(orderPackage.rrp) ?? 0).toFixed(2)}
+      </span>{" "}
+      <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+        {(
+          Number(orderPackage.discount ?? 0) +
+          Number(orderPackage.extraDiscount ?? 0)
+        ).toFixed(2)}
+        % OFF
+      </span>
+    </div>
+  );
+
+  const memberTypeTexts = {
+    FOUNDING_MEMBER: {
+      leftCenter: "FOUNDING MEMBER",
+      leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
+      rightTop: "Founders Slot Reserved",
+      rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
+    },
+    EARLY_MEMBER: {
+      leftCenter: "EARLY MEMBER",
+      leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
+      rightTop: "Early Bird Slot Reserved",
+      rightBottom: `Limited Time Remaining!`,
+    },
+    MEMBER: {
+      leftCenter: `Q${nextQuater} DROP`,
+      leftBottom: `Delivers: ${orderPackage.deliveryDate}`,
+      rightTop: "",
+      rightBottom: rightBottomContent,
+    },
+  } as const;
+
+  const currentMemberType =
+    memberTypeTexts[orderPackage.memberType as keyof typeof memberTypeTexts] ||
+    memberTypeTexts.MEMBER;
+
+  const leftCenterText = currentMemberType.leftCenter;
+  const leftBottomText = currentMemberType.leftBottom;
+  const rightTopText = currentMemberType.rightTop;
+  const rightBottomText = currentMemberType.rightBottom;
+
   return (
     <div className="grid gap-[5px]">
       <RadioGroup
-        value={selectedState.toString()}
-        onValueChange={(value) => selectCapsulte(Number(value))}
-        className={`grid gap-[5px] ${capsuleInfo?.length === 2
+        value={capsuleCount.toString()}
+        onValueChange={(value) => {
+          setCapsuleCount(Number(value));
+          setStorageCapsuleCount(Number(value));
+        }}
+        className={`grid gap-[5px] ${
+          capsuleInfo?.length === 2
             ? "md:grid-cols-2"
             : capsuleInfo?.length === 3
-              ? "md:grid-cols-3"
-              : "md:grid-cols-4"
-          }`}
+            ? "md:grid-cols-3"
+            : "md:grid-cols-4"
+        }`}
       >
         {capsuleInfo?.map((option) => (
           <label
             key={option.capsuleCount}
-            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] ${selectedState === option.capsuleCount
+            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] ${
+              capsuleCount === option.capsuleCount
                 ? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
                 : "border-[1px] border-grey18"
-              }`}
+            }`}
           >
             <input
               type="radio"
               value={option.capsuleCount}
-              checked={selectedState === option.capsuleCount}
-              onChange={() => selectCapsulte(option.capsuleCount)}
+              checked={capsuleCount === option.capsuleCount}
+              onChange={() => {
+                setCapsuleCount(option.capsuleCount);
+                setStorageCapsuleCount(option.capsuleCount);
+              }}
               className="sr-only" // Hide the input but keep it accessible
             />
             <div className="grid gap-[8px] justify-center max-h-[56px]">
@@ -253,10 +298,10 @@ export default function CapsuleBox({
                 {option.description2}
               </p>
             </div>
-            {selectedState === option.capsuleCount && (
+            {capsuleCount === option.capsuleCount && (
               <div className="hidden md:flex absolute bottom-[-10px] w-full h-[20px] bg-white" />
             )}
-            {selectedState === option.capsuleCount && (
+            {capsuleCount === option.capsuleCount && (
               <div
                 key={option.capsuleCount}
                 className="grid md:hidden gap-[8px]"
@@ -292,7 +337,7 @@ export default function CapsuleBox({
                   </p>
                   <p className="text-[12px] leading-[14px]">
                     {
-                      capsuleInfo?.find((c) => c.capsuleCount === selectedState)
+                      capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)
                         ?.others
                     }
                   </p>
@@ -306,33 +351,30 @@ export default function CapsuleBox({
         <div className="hidden md:flex flex-col gap-[2px]">
           <p className="text-grey7 text-[12px] leading-[12px]">
             {getCapsuleLabel(
-              capsuleInfo?.find((c) => c.capsuleCount === selectedState)
+              capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)
                 ?.capsuleCount || 0
             )}
           </p>
           <p className="text-[12px] leading-[14px]">
-            {capsuleInfo?.find((c) => c.capsuleCount === selectedState)?.others}
+            {capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)?.others}
           </p>
         </div>
 
         <hr className="border-grey3 h-[1px] mb-[10px] md:hidden" />
         <div className="grid gap-[16px]">
-          {orders?.map((order) => (
-            <OrderSummaryCard
+            <OrderSummaryCard2
+              imageSrc={orderPackage.imageSrc}
+              leftTopText={leftTopText}
+              leftCenterText={leftCenterText}
+              leftBottomText={leftBottomText}
+              rightTopText={rightTopText}
+              rightCenterText={rightCenterText}
+              rightBottomText={rightBottomText}
               updateQuantityAction={updateQuantityAction}
-              key={order.id}
-              model={order}
-              discount={
-                activePercentageDiscount ? activePercentageDiscount : discount
-              }
-              isComming={isComming}
-              founderSpots={founderSpots}
-              founderMembersNeeded={founderMembersNeeded}
-              founderDiscount={founderDiscount}
-              earlyMemberDiscount={earlyMemberDiscount}
-              firstDelivery={firstDelivery}
+              isMember={orderPackage.memberType === MemberType.MEMBER}
             />
-          ))}
+
+            {/* TODO: MOBILE SECTION  */}
           <hr className="border-grey3 h-[1px] mt-[10px] md:hidden" />
           <div className="md:hidden grid gap-[7px] md:gap-0 grid-cols-[84px_1fr] items-center w-full">
             <div>
@@ -366,6 +408,7 @@ export default function CapsuleBox({
               </div>
             </div>
           </div>
+
           <Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
             <Link
               className="w-full h-full flex items-center justify-center font-bold font-inconsolata text-base"
@@ -374,11 +417,20 @@ export default function CapsuleBox({
                 setCheckoutData(checkoutData);
               }}
             >
-              {isComming ? "CLAIM FOUNDING MEMBER PRICE" : firstDelivery ? "CLAIM EARLY MEMBER PRICE" : "Start My Subscription"}
+              {isFoundingProduct
+                ? "CLAIM FOUNDING MEMBER PRICE"
+                : firstDelivery
+                ? "CLAIM EARLY MEMBER PRICE"
+                : "Start My Subscription"}
             </Link>
           </Button>
 
-          {isComming && <p className="text-grey6 font-helvetica text-sm leading-[14px] text-center">You’ll be notified when your team launches. You’ll have 24 hours to withdraw before payment is taken.</p>}
+          {isFoundingProduct && (
+            <p className="text-grey6 font-helvetica text-sm leading-[14px] text-center">
+              You’ll be notified when your team launches. You’ll have 24 hours
+              to withdraw before payment is taken.
+            </p>
+          )}
         </div>
       </div>
     </div>

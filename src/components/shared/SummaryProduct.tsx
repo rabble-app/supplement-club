@@ -17,9 +17,13 @@ import { CustomToast } from "./Toast";
 import { StatusToast } from "./Toast";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
+import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
+import OrderSummaryCard2 from "./OrderSummaryCard2";
+import { getQuarterInfo } from "@/utils/utils";
 
 export default function SummaryProduct({
   model,
+  orderPackage,
   className,
   children,
   showOnlyTotal,
@@ -31,6 +35,7 @@ export default function SummaryProduct({
   setIsInfoIconClicked,
 }: Readonly<{
   model: ISummaryProductModel;
+  orderPackage: IOrderPackageModel;
   className?: string;
   showOnlyTotal?: boolean;
   children?: React.ReactNode;
@@ -47,6 +52,9 @@ export default function SummaryProduct({
   const [isLoading, setIsLoading] = useState(false);
   const context = useUser();
   const [firstWord, ...rest] = (model.name ?? "").split(" ");
+
+  const { currentQuarter } = getQuarterInfo();
+  const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 
   const data = checkoutData as IMetadata;
 
@@ -78,16 +86,6 @@ export default function SummaryProduct({
     } else {
       discountedTotalSum = totalSum + totalSumOfSubs;
     }
-
-    console.log("totalSum", totalSum);
-    console.log("data.earlyMemberDiscount", data.earlyMemberDiscount);
-    console.log(
-      "earlyMemberDiscountedTotalSum",
-      (1 -
-        (Number(data.earlyMemberDiscount ?? 0) + Number(data.discount ?? 0)) /
-          100) *
-        totalSum
-    );
 
     setTotalCount(discountedTotalSum);
   }, [model]);
@@ -125,6 +123,69 @@ export default function SummaryProduct({
   const totalDiscountPercentage =
     (data.discount ?? 0) + (Number(data.earlyMemberDiscount ?? 0) ?? 0);
   const totalDiscountAmount = (data.rrp ?? 0) * (totalDiscountPercentage / 100);
+
+  const leftTopText = `${
+    (orderPackage.capsuleCount * orderPackage.days) / (orderPackage?.gPerCount ?? 0)
+  }${orderPackage.units} Every 3 months`;
+
+  const rrp = orderPackage.storageCapsuleCount * (orderPackage.alignmentPoucheSize ?? 0) * (orderPackage.rrpPerCount ?? 0)
+
+  const rightCenterText = (
+    <div
+      className={`text-xl md:text-3xl flex font-[800] text-black items-center gap-1 font-inconsolata`}
+    >
+      £{(Number(orderPackage.pricePerPoche) * orderPackage.storageCapsuleCount).toFixed(2)}
+      <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+      </span>
+    </div>
+  );
+
+  const rightBottomContent = (
+    <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+      RRP{" "}
+      <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+        £{Number(rrp).toFixed(2)}
+      </span>{" "}
+      <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+        {(
+          Number(orderPackage.discount ?? 0) +
+          Number(orderPackage.extraDiscount ?? 0)
+        ).toFixed(2)}
+        % OFF
+      </span>
+    </div>
+  );
+
+  const memberTypeTexts = {
+    FOUNDING_MEMBER: {
+      leftCenter: "FOUNDING MEMBER",
+      leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
+      rightTop: "Founders Slot Reserved",
+      rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
+    },
+    EARLY_MEMBER: {
+      leftCenter: "EARLY MEMBER",
+      leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
+      rightTop: "Early Bird Slot Reserved",
+      rightBottom: `Limited Time Remaining!`,
+    },
+    MEMBER: {
+      leftCenter: `Q${nextQuater} DROP`,
+      leftBottom: `Delivers: ${orderPackage.deliveryDate}`,
+      rightTop: "",
+      rightBottom: rightBottomContent,
+    },
+  } as const;
+
+  const currentMemberType =
+    memberTypeTexts[orderPackage.memberType as keyof typeof memberTypeTexts] ||
+    memberTypeTexts.MEMBER;
+
+  const leftCenterText = currentMemberType.leftCenter;
+  const leftBottomText = currentMemberType.leftBottom;
+  const rightTopText = currentMemberType.rightTop;
+  const rightBottomText = currentMemberType.rightBottom;
 
   return (
     <div
@@ -227,7 +288,7 @@ export default function SummaryProduct({
             {(!data.isComming || data.firstDelivery) && (
               <>
                 <p className="text-sm font-semibold font-inconsolata text-[#444444]">
-                  Delivers on {format(data.deliveryDate ?? "", "MMMM dd yyyy")}.
+                  Delivers on .
                 </p>
                 {<hr className="bg-grey3 h-[1.5px] mt-6" />}
               </>
@@ -249,18 +310,23 @@ export default function SummaryProduct({
           {!data.isComming && (
             <>
               {" "}
-              {checkoutData.quantity && checkoutData.quantity > 0 ? (
-                model?.orders?.map((order) => (
-                  <OrderSummaryCard
-                    key={order.id}
-                    model={order}
-                    updateQuantityAction={updateQuantityAction}
-                    discount={data.discount}
-                    step={step}
-                    firstDelivery={data.firstDelivery}
-                    earlyMemberDiscount={data.earlyMemberDiscount}
-                  />
-                ))
+              {orderPackage.storageCapsuleCount && orderPackage.storageCapsuleCount > 0 ? (
+                 <OrderSummaryCard2
+                 imageSrc={orderPackage.imageSrc}
+                 leftTopText={leftTopText}
+                 leftCenterText={leftCenterText}
+                 leftBottomText={leftBottomText}
+                 rightTopText={rightTopText}
+                 rightCenterText={rightCenterText}
+                 rightBottomText={rightBottomText}
+                 updateQuantityAction={updateQuantityAction}
+                 isMember={orderPackage.memberType === MemberType.MEMBER}
+                 isAlignmentDialog={false}
+                 isUpdatableQuantity={true}
+                 gPerCount={orderPackage?.gPerCount ?? 0}
+                 pochesRequired={orderPackage?.pochesRequired ?? 0}
+                 className="bg-[#F6F6F6] p-4 mb-6"
+               />
               ) : (
                 <Button
                   variant="link"

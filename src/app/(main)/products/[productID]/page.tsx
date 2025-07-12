@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -40,39 +40,21 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useUser } from "@/contexts/UserContext";
-import { productService } from "@/services/productService";
-import { useProductStore } from "@/stores/productStore";
-import type { IMemberCardModel } from "@/utils/models/IMemberCardModel";
-import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import type ISingleProductModel from "@/utils/models/ISingleProductModel";
-import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
-import { getQuarterInfo } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
 import { referalService } from "@/services/referalService";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
-import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
 import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
 import Link from "next/link";
+import useProduct from "@/hooks/useProduct";
 
-interface ProductDetailsProps {
-  productID: string;
-}
-
-export default function ProductDetails({
-  params,
-}: Readonly<{ params: Promise<ProductDetailsProps> }>) {
-  const [loading, setLoading] = useState(true);
+export default function ProductDetails() {
   const context = useUser();
-  const productStore = useProductStore();
   const [api, setApi] = useState<CarouselApi>();
-  const [members, setMembers] = useState<IMemberCardModel[]>([]);
-  const [orders, setOrders] = useState<IOrderSummaryModel[]>([]);
   const [, setHasUserProduct] = useState<boolean>();
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
-  const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     IManagePlanModel[]
   >([]);
@@ -80,30 +62,31 @@ export default function ProductDetails({
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
 
-  const days = 90;
+  const {
+    product,
+    units,
+    firstWord,
+    rest,
+    loading,
+    capsuleCount,
+    basket,
+    current,
+    activeMemberIndex,
+    capsules,
+    orderPackage,
+    membersSection,
+    isFoundingProduct,
+    isLiveProduct,
+    setCurrent,
+    setActiveMemberIndex,
+    setCapsuleCount,
+    foundingMemberPricePerCount,
+    gPerCount,
+    productRrp,
+    days,
+    setStorageCapsuleCount
+  } = useProduct(teamId ?? "", context?.user?.id ?? "");
 
-  const [current, setCurrent] = useState(1);
-  const [firstWord, setFirstWord] = useState<string>("");
-  const [rest, setRest] = useState<string>("");
-  const [capsulePerDay, setCapsulePerDay] = useState(2);
-  const [product, setProduct] = useState<ISingleProductModel>();
-  const [units, setUnits] = useState("g");
-  const [, setSummary] = useState<ISummaryProductModel>(
-    {} as ISummaryProductModel
-  );
-  const [activeMemberIndex, setActiveMemberIndex] = useState(1);
-
-  const gramsPerCount =
-    Number(product?.gramsPerCount) === 0 ? 1 : Number(product?.gramsPerCount);
-  const productPrice = (capsulePerDay / gramsPerCount) * (product?.price ?? 0);
-  const productRrp = (capsulePerDay / gramsPerCount) * (product?.rrp ?? 0);
-
-  const [selectedState, setSelectedState] = useState(2);
-  const [capsuleCount, setCapsuleCount] = useState(0);
-  const capsules = useMemo(() => selectedState * days, [selectedState]);
-  const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
-
-  const { currentQuarter } = getQuarterInfo();
   useEffect(() => {
     if (product) {
       setHasUserProduct(
@@ -112,42 +95,6 @@ export default function ProductDetails({
       );
     }
   }, [context, product]);
-
-  const nextDeliveryProductText = product?.isComming
-    ? `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE. FOREVER`
-    : `Next subscription billed: ${
-        product?.deliveryDate
-          ? format(new Date(product?.deliveryDate ?? ""), "MMMM dd yyyy")
-          : ""
-      }`;
-
-  const [nextQuater] = useState(
-    currentQuarter + 1 > 4 ? 1 : currentQuarter + 1
-  );
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { productID } = await params;
-      const model = await productService.product(
-        productID,
-        teamId ?? "",
-        context?.user?.id ?? ""
-      );
-      setProduct(model);
-      setUnits(model.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules");
-      const [word, ...others] = (model.name ?? "").split(" ");
-      setFirstWord(word);
-      setRest(others.join(" "));
-      setLoading(false);
-
-      setCapsulePerDay(model.capsuleInfo?.[1]?.capsuleCount ?? 0);
-
-      if (context?.user?.id) {
-        setBasket(model?.supplementTeamProducts?.team.basket ?? []);
-      }
-    };
-    fetchProduct();
-  }, [params, teamId, context?.user?.id]);
 
   useEffect(() => {
     if (!api) {
@@ -160,144 +107,6 @@ export default function ProductDetails({
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
-
-  function updateCapsulePerDay(value: number) {
-    setCapsulePerDay(value);
-    productStore.setCapsulesPerDay(value);
-  }
-
-  const earlyMemberPrice =
-    Number(productPrice) *
-    (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
-  const earlyMemberPricePerCount =
-    Number(product?.pricePerCount) *
-    (1 - (product?.supplementTeamProducts?.earlyMembersDiscount ?? 0) / 100);
-
-  const foundingMemberPricePerCount =
-    Number(product?.pricePerCount) *
-    (1 - (product?.supplementTeamProducts?.foundingMembersDiscount ?? 0) / 100);
-
-  console.log('earlyMemberPrice', earlyMemberPrice)
-
-  useEffect(() => {
-    const order = {
-      id: "2",
-      description: `${capsulePerDay * days}${units === "g" ? "" : " "}${units} Every 3 months`,
-      name: product?.isComming ? "FOUNDING MEMBER" : product?.firstDelivery ? "EARLY MEMBER" : "Quarterly Subscription",
-      delivery: nextDeliveryProductText,
-      src: "/images/supplement-mockup.png",
-      alt: "supplement mockup",
-      capsules: capsulePerDay * days,
-      price: productPrice,
-      pricePerPoche: product?.pricePerPoche ?? 0,
-      pricePerCount: product?.pricePerCount ?? 0,
-      rrpPerCount: product?.rrpPerCount ?? 0,
-      rrp: productRrp,
-      capsulePerDay: capsulePerDay,
-      gramsPerCount: product?.gramsPerCount ?? 0,
-      topUpQuantity: capsulePerDay,
-    };
-    const summaryOrders = [order];
-    const orders = [order];
-
-    // if (product?.isComming) {
-    //   orders.unshift({
-    //     id: "1",
-    //     alt: "Founding Member Badge",
-    //     name: "Founding Member 10% Discount",
-    //     delivery: "Forever",
-    //     src: "/images/icons/user-badge-icon.svg",
-    //     capsules: 0,
-    //     isFoundingMember: true,
-    //     price: -4.5,
-    //     pricePerPoche: product?.pricePerPoche ?? 0,
-    //     pricePerCount: product?.pricePerCount ?? 0,
-    //     rrpPerCount: product?.rrpPerCount ?? 0,
-    //     rrp: productRrp,
-    //     capsulePerDay: capsulePerDay,
-    //     gramsPerCount: product?.gramsPerCount ?? 0,
-    //     quantity: capsulePerDay,
-    //   } as never);
-    // } else
-    if (product) {
-      summaryOrders.unshift({
-        id: "1",
-        alt: "",
-        description: `${
-          capsulePerDay * days
-        }${units} to see you to Q${nextQuater}`,
-        name: "One time Alignment Package",
-        delivery: "Free Delivery",
-        src: "/images/ubiquinol.svg",
-        capsules: capsulePerDay * days,
-        price: productPrice,
-        pricePerPoche: product?.pricePerPoche ?? 0,
-        pricePerCount: product?.pricePerCount ?? 0,
-        rrpPerCount: product?.rrpPerCount ?? 0,
-        rrp: productRrp,
-        capsulePerDay: capsulePerDay,
-        gramsPerCount: product?.gramsPerCount ?? 0,
-      } as never);
-
-      const members = [
-        // {
-        //   id: 1,
-        //   doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-        //   name: "FOUNDING MEMBER",
-        //   discountTitle: `${product?.supplementTeamProducts?.foundingMembersDiscount}% OFF TEAM PRICE`,
-        //   doseValue: "First 50 Spots",
-        //   price: product?.supplementTeamProducts?.foundingMembersDiscount
-        //     ? capsulePerDay * (product?.daysUntilNextDrop ?? 0) -
-        //       (capsulePerDay *
-        //         (product?.daysUntilNextDrop ?? 0) *
-        //         product?.supplementTeamProducts?.foundingMembersDiscount) /
-        //         100
-        //     : capsulePerDay * (product?.daysUntilNextDrop ?? 0),
-        //   capsulePrice: product?.pricePerCount ?? 0,
-        //   spotsRemainds: 4,
-        //   forever: true,
-        //   isActive: true,
-        // },
-     ...(!product?.firstDelivery ? [{
-          id: 1,
-          doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-          name: "EARLY MEMBER",
-          doseValue: "Next 200 Spots",
-          discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
-          price: Number(earlyMemberPrice.toFixed(2)),
-          capsulePrice: Number(earlyMemberPricePerCount.toFixed(2)),
-          forever: true,
-        }] : []),
-        {
-          id: 3,
-          doseTitle: `${capsulePerDay * days}${units} Every 3 months`,
-          name: "MEMBER",
-          capsulePrice: Number(product?.pricePerCount?.toFixed(2)),
-          discountTitle: "Standard Team Price",
-          price: Number(productPrice.toFixed(2)),
-        },
-      ];
-      setMembers(members);
-    }
-    const obj = {
-      percentage:
-        (capsulePerDay * days * (product?.pricePerCount ?? 0)) /
-        Number(product?.rrp),
-      rrp: productRrp,
-      quantityOfSubUnitPerOrder: product?.unitsOfMeasurePerSubUnit,
-      unitsOfMeasurePerSubUnit: product?.unitsOfMeasurePerSubUnit,
-      orders: summaryOrders,
-      price: productPrice,
-      id: 1,
-      referals: [],
-      subscriptions: [],
-      membership: [],
-    };
-    setSummary(obj);
-
-    setOrders(orders);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [capsulePerDay, product, nextDeliveryProductText, nextQuater, units]);
 
   // implement sticky button
   const stickyRef = useRef<HTMLDivElement | null>(null);
@@ -349,7 +158,8 @@ export default function ProductDetails({
   useEffect(() => {
     if (!context?.user) return;
     setCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? 0);
-  }, [context?.user, subscriptionPlan]);
+    setStorageCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? 0);
+  }, [context?.user, subscriptionPlan, product]);
 
   useEffect(() => {
     const fetchSubscriptionPlans = async () => {
@@ -396,6 +206,8 @@ export default function ProductDetails({
     basketPricePerCount = Number(product?.pricePerCount);
   }
 
+  console.log("orderPackage MAIN", orderPackage);
+
   if (loading) return <Spinner />;
 
   return (
@@ -406,7 +218,7 @@ export default function ProductDetails({
           className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0] h-[430px] md:h-auto"
         >
           <CarouselContent
-            className={`${product?.isComming ? "opacity-[40%]" : ""}`}
+            className={`${isFoundingProduct ? "opacity-[40%]" : ""}`}
           >
             {product?.gallery?.map((item, idx) => (
               <CarouselItem key={`img-${idx + 1}`} className="flex">
@@ -437,7 +249,7 @@ export default function ProductDetails({
             </div>
           </div>
 
-          {product?.isComming && !hasProduct && (
+          {isFoundingProduct && !hasProduct && (
             <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-yellow py-[12px] h-[72px]">
               <div className="text-blue text-[16px] font-bold leading-[24px] font-helvetica flex text-center max-w-[380px] mx-auto">
                 PRE-ORDER TO BECOME A FOUNDING MEMBER AND GET AN EXTRA{" "}
@@ -468,29 +280,24 @@ export default function ProductDetails({
         <div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] mt-20 md:mt-0 md:mx-[0] px-[16px] md:px-[0]">
           {product && (
             <TeamPrice
-              rrp={product.rrp}
-              isComming={product.isComming}
+              isFoundingProduct={isFoundingProduct}
+              activeMemberIndex={activeMemberIndex}
+              capsuleCount={capsuleCount}
               members={product.members}
               price={product.price}
-              priceInfo={product?.priceInfo ?? []}
-              pricePerCount={product?.pricePerCount ?? 0}
-              nextPriceDiscountLevel={
-                product?.nextPriceDiscountLevel ?? {
-                  membersNeeded: 0,
-                  expectedDiscount: 0,
-                }
-              }
-              activeMemberIndex={activeMemberIndex}
-              discount={product?.discount ?? 0}
-              activePercentageDiscount={product?.activePercentageDiscount ?? 0}
-              gramsPerCount={product?.gramsPerCount ?? 0}
-              capsuleCount={capsuleCount}
+              rrp={product.rrp}
+              priceInfo={product.priceInfo!}
+              pricePerCount={product.pricePerCount!}
+              nextPriceDiscountLevel={product.nextPriceDiscountLevel!}
+              discount={product.discount!}
+              activePercentageDiscount={product?.activePercentageDiscount!}
+              gramsPerCount={product?.gramsPerCount!}
             />
           )}
 
           <div
             className={`grid gap-[60px] mt-[51px] ${
-              product?.isComming ? "md:mt-[70px]" : "md:mt-[0] pb-[200px]"
+              isFoundingProduct ? "md:mt-[70px]" : "md:mt-[0] pb-[200px]"
             }`}
           >
             <PreOrderInfo productBenefits={product?.productBenefits} />
@@ -532,7 +339,7 @@ export default function ProductDetails({
         />
 
         {context?.user &&
-          product?.isComming &&
+          isFoundingProduct &&
           subscriptionPlan?.role === "FOUNDING_MEMBER" && (
             <div className="flex justify-between gap-[10px] px-[10px] text-[16px] leading-[16px] font-bold font-inconsolata text-blue bg-blue2 h-[37px] w-max items-center rounded-[100px]">
               <Image
@@ -546,18 +353,16 @@ export default function ProductDetails({
             </div>
           )}
 
-        {((context?.user && !subscriptionPlan && !product?.isComming && !product?.firstDelivery) ||
-          (!context?.user && !product?.isComming && !product?.firstDelivery)) && (
+        {((context?.user && !subscriptionPlan) || !context?.user) && (
           <div className="flex flex-col gap-[24px]">
             <CapsuleBox
+              orderPackage={orderPackage}
               rrp={productRrp}
               rrpPerCount={product?.rrpPerCount ?? 0}
               price={product?.price ?? 0}
               unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
               capsuleInfo={product?.capsuleInfo}
-              orders={orders}
               productId={product?.id}
-              selectCapsulePerDayAction={updateCapsulePerDay}
               pricePerCount={product?.pricePerCount ?? 0}
               activeMemberIndex={activeMemberIndex}
               discount={product?.discount ?? 0}
@@ -565,7 +370,7 @@ export default function ProductDetails({
               deliveryDate={product?.deliveryDate ?? ""}
               teamStatus={product?.supplementTeamProducts?.status ?? ""}
               daysUntilNextDrop={product?.daysUntilNextDrop ?? 0}
-              isComming={product?.isComming ?? false}
+              isFoundingProduct={isFoundingProduct}
               pouchSize={product?.poucheSize ?? 0}
               alignmentPoucheSize={product?.alignmentPoucheSize ?? 0}
               teamName={product?.producer?.businessName ?? ""}
@@ -577,102 +382,8 @@ export default function ProductDetails({
               pricePerPoche={product?.pricePerPoche ?? 0}
               capsuleCount={capsuleCount}
               capsules={capsules}
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
               setCapsuleCount={setCapsuleCount}
-              gPerCount={gPerCount}
-              founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
-              founderMembersNeeded={
-                product?.nextPriceDiscountLevel?.membersNeeded
-              }
-              founderDiscount={
-                product?.supplementTeamProducts?.foundingMembersDiscount
-              }
-              earlyMemberDiscount={
-                product?.supplementTeamProducts?.earlyMembersDiscount
-              }
-              leadTime={product?.leadTime ?? 0}
-              firstDelivery={product?.firstDelivery}
-              pochesRequired={product?.pochesRequired ?? 0}
-              orderDate={product?.orderDate ?? ""}
-            />
-            {/* Placeholder keeps layout when sticky becomes fixed */}
-            <div
-              ref={placeholderRef}
-              style={{ height: isSticky ? stickyRef.current?.offsetHeight : 0 }}
-            />
-            <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
-              <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
-                <Image
-                  className="mx-auto"
-                  src="/images/icons/delivery-blue-icon.svg"
-                  alt="delivery icon"
-                  width={24}
-                  height={24}
-                  priority
-                />
-                Free delivery on all orders
-              </div>
-              <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
-                <Image
-                  className="mx-auto"
-                  src="/images/icons/edit-contained-icon.svg"
-                  alt="edit contained"
-                  width={24}
-                  height={24}
-                  priority
-                />
-                Skip, pause or cancel your subscription any time
-              </div>
-              <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
-                <Image
-                  className="mx-auto"
-                  src="/images/icons/gift-icon.svg"
-                  alt="gift icon"
-                  width={24}
-                  height={24}
-                  priority
-                />
-                Refer friends for added discounts
-              </div>
-            </div>
-          </div>
-        )}
-
-        {((context?.user && !subscriptionPlan && (product?.isComming || product?.firstDelivery)) ||
-          (!context?.user && (product?.isComming || product?.firstDelivery))) && (
-          <div className="flex flex-col gap-[24px]">
-            <CapsuleBox
-              rrp={productRrp}
-              rrpPerCount={product?.rrpPerCount ?? 0}
-              price={product?.price ?? 0}
-              orders={orders}
-              unitsOfMeasurePerSubUnit={product.unitsOfMeasurePerSubUnit}
-              selectCapsulePerDayAction={updateCapsulePerDay}
-              capsuleInfo={product?.capsuleInfo}
-              productId={product?.id}
-              pricePerCount={product?.pricePerCount ?? 0}
-              activeMemberIndex={activeMemberIndex}
-              discount={product?.discount ?? 0}
-              activePercentageDiscount={product?.activePercentageDiscount ?? 0}
-              deliveryDate={product?.deliveryDate ?? ""}
-              teamStatus={product?.supplementTeamProducts?.status ?? ""}
-              daysUntilNextDrop={product?.daysUntilNextDrop ?? 0}
-              isComming={product?.isComming ?? false}
-              pouchSize={product?.poucheSize ?? 0}
-              alignmentPoucheSize={product?.alignmentPoucheSize ?? 0}
-              teamName={product?.producer?.businessName ?? ""}
-              name={product?.name ?? ""}
-              quantityOfSubUnitPerOrder={
-                product?.quantityOfSubUnitPerOrder ?? 0
-              }
-              gramsPerCount={product?.gramsPerCount ?? 0}
-              pricePerPoche={product?.pricePerPoche ?? 0}
-              capsuleCount={capsuleCount}
-              capsules={capsules}
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
-              setCapsuleCount={setCapsuleCount}
+              setStorageCapsuleCount={setStorageCapsuleCount}
               gPerCount={gPerCount}
               founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
               founderMembersNeeded={
@@ -690,18 +401,66 @@ export default function ProductDetails({
               orderDate={product?.orderDate ?? ""}
             />
 
-            {members.length > 0 && (
-              <div className="grid gap-[16px] bg-white">
-                {members.map((item) => {
-                  if (!product?.firstDelivery) {
-                    return null;
-                  }
-                  return <MemberCard key={item.id} {...item} />
-                })}
-              </div>
+            {isLiveProduct ? (
+              <>
+                {/* Placeholder keeps layout when sticky becomes fixed */}
+                <div
+                  ref={placeholderRef}
+                  style={{
+                    height: isSticky ? stickyRef.current?.offsetHeight : 0,
+                  }}
+                />
+                <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
+                  <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
+                    <Image
+                      className="mx-auto"
+                      src="/images/icons/delivery-blue-icon.svg"
+                      alt="delivery icon"
+                      width={24}
+                      height={24}
+                      priority
+                    />
+                    Free delivery on all orders
+                  </div>
+                  <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
+                    <Image
+                      className="mx-auto"
+                      src="/images/icons/edit-contained-icon.svg"
+                      alt="edit contained"
+                      width={24}
+                      height={24}
+                      priority
+                    />
+                    Skip, pause or cancel your subscription any time
+                  </div>
+                  <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
+                    <Image
+                      className="mx-auto"
+                      src="/images/icons/gift-icon.svg"
+                      alt="gift icon"
+                      width={24}
+                      height={24}
+                      priority
+                    />
+                    Refer friends for added discounts
+                  </div>
+                </div>
+              </>
+            ) : (
+              membersSection.length > 0 && (
+                <div className="grid gap-[16px] bg-white">
+                  {(isFoundingProduct
+                    ? membersSection
+                    : [membersSection[1]]
+                  ).map((item) => (
+                    <MemberCard key={item.id} {...item} />
+                  ))}
+                </div>
+              )
             )}
           </div>
         )}
+
         {context?.user && (
           <div className="grid gap-[28px] w-full">
             {/* {hasUserProduct && (
