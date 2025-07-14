@@ -20,5 +20,6 @@ export default interface ISummaryProductModel {
 	pricePerCount?: number;
 	capsulePerDay?: number;
 	gramsPerCount?: number;
-	
+	orderDate?: string;
+	leadTime?: number;
 }

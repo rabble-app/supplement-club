@@ -327,6 +327,7 @@ export default function ProductDetails() {
           name={product?.name}
           quantityOfSubUnitPerOrder={product?.quantityOfSubUnitPerOrder}
           unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
+          orderPackage={orderPackage}
         />
 
         {context?.user &&

@@ -188,7 +188,7 @@ export default function TeamPrice({
               width={30}
               height={30}
             />
-            {members} {`${isFoundingProduct ? "Pre-Orders" : "Members"}`}
+            {members} {`${isFoundingProduct ? "Founding Members" : "Members"}`}
           </div>
           {!isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
             <p className="text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
@@ -229,7 +229,7 @@ export default function TeamPrice({
       {isFoundingProduct && members < priceInfo[0]?.teamMemberCount && (
         <div className="bg-blue2 rounded-sm w-full mt-8 mb-2">
           <p className="text-blue font-bold text-base font-inconsolata w-full text-center py-2">
-            When it gets to {membersToLaunch + members} people we will launch
+            When all {membersToLaunch + members} founding slots are reserved, we'll launch
             the product
           </p>
         </div>

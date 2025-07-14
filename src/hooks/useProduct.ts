@@ -11,7 +11,9 @@ import ISingleProductModel from "@/utils/models/ISingleProductModel";
 import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
 import { useParams, usePathname } from "next/navigation";
 import useLocalStorage from "use-local-storage";
-import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
+import IOrderPackageModel, {
+  MemberType,
+} from "@/utils/models/IOrderPackageModel";
 
 const useProduct = (teamId?: string, userId?: string) => {
   const [product, setProduct] = useState<ISingleProductModel>();
@@ -22,10 +24,13 @@ const useProduct = (teamId?: string, userId?: string) => {
   const [basket, setBasket] = useState<ITeamBasketModel[]>([]);
   const [current, setCurrent] = useState(1);
   const [activeMemberIndex, setActiveMemberIndex] = useState(1);
-  
+
   const days = 90;
   const [capsuleCount, setCapsuleCount] = useState(1);
-  const [storageCapsuleCount, setStorageCapsuleCount] = useLocalStorage<number>("capsuleCount", 1);
+  const [storageCapsuleCount, setStorageCapsuleCount] = useLocalStorage<number>(
+    "capsuleCount",
+    1
+  );
   const [hasAlignmentPackage, setHasAlignmentPackage] = useLocalStorage(
     "hasAlignmentPackage",
     false
@@ -41,8 +46,6 @@ const useProduct = (teamId?: string, userId?: string) => {
 
   const { productID: productId } = useParams();
   const pathname = usePathname();
-
-
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -60,7 +63,10 @@ const useProduct = (teamId?: string, userId?: string) => {
 
       if (pathname.includes("checkout")) {
         setCapsuleCount(storageCapsuleCount ?? 0);
-      } else {
+      } else if (model.unitsOfMeasurePerSubUnit === "grams") {
+        setStorageCapsuleCount(model.capsuleInfo?.[0]?.capsuleCount ?? 0);
+        setCapsuleCount(model.capsuleInfo?.[0]?.capsuleCount ?? 0);
+      } else if (model.unitsOfMeasurePerSubUnit === "capsules") {
         setStorageCapsuleCount(model.capsuleInfo?.[1]?.capsuleCount ?? 0);
         setCapsuleCount(model.capsuleInfo?.[1]?.capsuleCount ?? 0);
       }

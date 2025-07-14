@@ -123,14 +123,14 @@ export default function CapsuleBox({
     FOUNDING_MEMBER: {
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
-      rightTop: "Founders Slot Reserved",
+      rightTop: "Founders Slot",
       rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
     },
     EARLY_MEMBER: {
       leftCenter: "EARLY MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
-      rightTop: "Early Bird Slot Reserved",
-      rightBottom: `Limited Time Remaining!`,
+      rightTop: "Early Bird Slot",
+      rightBottom: `Limited Slots Remaining!`,
     },
     MEMBER: {
       leftCenter: `Q${nextQuater} DROP`,

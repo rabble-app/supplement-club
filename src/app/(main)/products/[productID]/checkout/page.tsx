@@ -80,7 +80,7 @@ export default function Checkout({
     gPerCount,
     hasAlignmentPackage,
     setHasAlignmentPackage,
-  } = useProduct(teamId ?? contextTeamId ?? "", context?.user?.id ?? "");
+  } = useProduct(searchParams.get("teamId") ?? contextTeamId ?? "", context?.user?.id ?? "");
 
   const subscriptionPlan = getSubscriptionPlan(orderPackage?.productId ?? "");
 
@@ -286,6 +286,8 @@ export default function Checkout({
                 quantityOfSubUnitPerOrder:
                   productMain?.quantityOfSubUnitPerOrder,
                 unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
+                orderDate: productMain?.orderDate,
+                leadTime: productMain?.leadTime,
               } as unknown as ISummaryProductModel
             }
             storageQuantity={storageQuantity}

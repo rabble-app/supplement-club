@@ -19,6 +19,7 @@ import { VisuallyHidden } from "@reach/visually-hidden";
 import { format, addWeeks } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getQuarterInfo } from "@/utils/utils";
 
 type AlignmentDialogProps = {
   orderPackage: IOrderPackageModel;
@@ -54,6 +55,9 @@ export default function AlignmentDialog({
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { currentQuarter } = getQuarterInfo();
+  const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
+
   const router = useRouter();
 
   useEffect(() => {
@@ -88,10 +92,6 @@ export default function AlignmentDialog({
   const orderPlusLeadTimeDate = orderDate
     ? addWeeks(new Date(orderDate), leadTime)
     : null;
-
-  const monthNameFromDeliveryDate = deliveryDate
-    ? format(new Date(deliveryDate), "MMMM")
-    : "";
 
   const leftTopText =
     storageQuantity +
@@ -303,7 +303,7 @@ export default function AlignmentDialog({
                     <p className="text-black font-inconsolata text-base font-semibold my-0.5">
                       {orderPackage.memberType === MemberType.FOUNDING_MEMBER
                         ? "1st Quarterly Drop"
-                        : `${monthNameFromDeliveryDate}'s Quarterly Drop`}
+                        : `Q${nextQuater} Drop`}
                     </p>
                     <p className="text-grey4 font-inconsolata text-sm font-normal">
                       {orderPackage.capsuleCount * orderPackage.days} capsule

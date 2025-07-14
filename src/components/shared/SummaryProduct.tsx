@@ -3,7 +3,7 @@
 "use client";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import Image from "next/image";
-import { useEffect, useState } from "react";;
+import { useEffect, useState } from "react";
 import useLocalStorage from "use-local-storage";
 import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import { useUser } from "@/contexts/UserContext";
@@ -88,14 +88,19 @@ export default function SummaryProduct({
   useEffect(() => {
     let totalPrice = orderPackage.price;
 
-    if ([MemberType.FOUNDING_MEMBER, MemberType.EARLY_MEMBER].includes(orderPackage.memberType)) {
+    if (
+      [MemberType.FOUNDING_MEMBER, MemberType.EARLY_MEMBER].includes(
+        orderPackage.memberType
+      )
+    ) {
       totalPrice = orderPackage.price;
       setTotalRrp(orderPackage.rrp);
     } else if (orderPackage.memberType === MemberType.MEMBER) {
-      if(hasAlignmentPackage) {
-      totalPrice =
+      if (hasAlignmentPackage) {
+        totalPrice =
           (orderPackage?.pricePerPoche ?? 0) *
-          (storageQuantityState ?? storageQuantity) + orderPackage.price;
+            (storageQuantityState ?? storageQuantity) +
+          orderPackage.price;
         setTotalRrp(memberTypeRrp + orderPackage.rrp);
       } else {
         totalPrice = orderPackage.price;
@@ -104,7 +109,12 @@ export default function SummaryProduct({
     }
 
     setTotalCount(totalPrice);
-  }, [orderPackage, storageQuantityState, storageQuantity, hasAlignmentPackage]);
+  }, [
+    orderPackage,
+    storageQuantityState,
+    storageQuantity,
+    hasAlignmentPackage,
+  ]);
 
   const handleApplyReferralCode = async (code: string, amount: number) => {
     setIsLoading(true);
@@ -133,7 +143,8 @@ export default function SummaryProduct({
   };
 
   const totalDiscountPercentage =
-    (orderPackage.discount ?? 0) + (Number(orderPackage.extraDiscount ?? 0) ?? 0);
+    (orderPackage.discount ?? 0) +
+    (Number(orderPackage.extraDiscount ?? 0) ?? 0);
   const totalDiscountAmount = (totalRrp ?? 0) * (totalDiscountPercentage / 100);
 
   const memberTypeRrp =
@@ -292,7 +303,9 @@ export default function SummaryProduct({
                     />
 
                     <p className="text-[14px] leading-[16px] text-grey6">
-                      {model.quantityOfSubUnitPerOrder}{" "}
+                      {(Number(model.quantityOfSubUnitPerOrder ?? 0) *
+                        (orderPackage?.capsuleCount ?? 0)) /
+                        (orderPackage?.gPerCount ?? 0)}{" "}
                       {model.unitsOfMeasurePerSubUnit}
                     </p>
                   </div>
@@ -414,8 +427,8 @@ export default function SummaryProduct({
                 leftTopText={
                   orderPackage.memberType === MemberType.MEMBER
                     ? `${
-                        (orderPackage.capsuleCount * orderPackage.days) /
-                        (orderPackage?.gPerCount ?? 0)
+                        Number(orderPackage.capsuleCount) *
+                        Number(orderPackage.days)
                       }${orderPackage.units} Every 3 months`
                     : leftTopText
                 }
@@ -647,8 +660,7 @@ export default function SummaryProduct({
           <OrderSummaryCard2
             imageSrc={orderPackage.imageSrc}
             leftTopText={`${
-              (orderPackage.capsuleCount * orderPackage.days) /
-              (orderPackage?.gPerCount ?? 0)
+              Number(orderPackage.capsuleCount) * Number(orderPackage.days)
             }${orderPackage.units} Every 3 months`}
             leftCenterText={
               orderPackage.memberType === MemberType.EARLY_MEMBER
