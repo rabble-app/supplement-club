@@ -78,11 +78,11 @@ export default function UpcomingDeliverySlider({
 			onMouseLeave={() => !isMobile && setIsPaused(false)}
 		>
 			{/* Carousel Container */}
-			<div className="overflow-hidden" ref={emblaRef}>
+			<div className="overflow-hidden rounded-[12px]" ref={emblaRef}>
 				<div className="flex">
 					{deliveries.map((delivery, index) => (
 						<div key={`${delivery.deliveryDate}-${index}`} className="flex-[0_0_100%] min-w-0">
-							<div className="p-1 bg-blue rounded-[12px]">
+							<div className="p-1 rounded-[12px]">
 								<UpcomingDeliveryCard model={delivery} />
 							</div>
 						</div>
