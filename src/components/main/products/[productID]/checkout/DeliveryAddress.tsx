@@ -4,17 +4,25 @@
 
 import AddressAutocomplete, {
   type AddressFormData,
+  type AddressAutocompleteRef,
 } from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
 import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useUser } from "@/contexts/UserContext";
 import { usersService } from "@/services/usersService";
 import { useUserStore } from "@/stores/userStore";
 import { deliveryAddressSchema } from "@/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startTransition } from "react";
+import { startTransition, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export default function DeliveryAddress({
@@ -30,6 +38,8 @@ export default function DeliveryAddress({
     resolver: zodResolver(deliveryAddressSchema),
     mode: "onChange",
   });
+
+  const addressAutocompleteRef = useRef<AddressAutocompleteRef>(null);
 
   const context = useUser();
   const { setUser } = useUserStore((state) => state);
@@ -93,14 +103,34 @@ export default function DeliveryAddress({
         </div>
 
         <div className="relative">
-          <FormFieldComponent
-            form={currentForm}
-            label="Address Line 1*"
-            placeholder="Somewhere around"
-            id="address"
+          <FormField
+            control={currentForm.control}
             name="address"
+            render={({ field, fieldState }) => (
+              <FormItem className={fieldState.invalid ? "error" : ""}>
+                <FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
+                  Address Line 1*
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Somewhere around"
+                    id="address"
+                    onFocus={() =>
+                      addressAutocompleteRef.current?.handleInputFocus()
+                    }
+                    onBlur={() =>
+                      addressAutocompleteRef.current?.handleInputBlur()
+                    }
+                  />
+                </FormControl>
+              </FormItem>
+            )}
           />
-          <AddressAutocomplete form={currentForm} />
+          <AddressAutocomplete
+            ref={addressAutocompleteRef}
+            form={currentForm}
+          />
         </div>
 
         <FormFieldComponent

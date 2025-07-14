@@ -37,6 +37,7 @@ export default function SummaryProduct({
   setIsInfoIconClicked,
   hasAlignmentPackage,
   setHasAlignmentPackage,
+  hasActiveSupplement,
 }: Readonly<{
   model: ISummaryProductModel;
   storageQuantity: number;
@@ -52,6 +53,7 @@ export default function SummaryProduct({
   setIsInfoIconClicked?: (val: boolean) => void;
   hasAlignmentPackage: boolean;
   setHasAlignmentPackage: (val: boolean) => void;
+  hasActiveSupplement: boolean;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
   const [totalRrp, setTotalRrp] = useState(0);
@@ -472,7 +474,7 @@ export default function SummaryProduct({
             </div>
           )}
 
-          {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+          {!hasActiveSupplement && orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
             <>
               <hr className="border-grey3 border" />
 
@@ -701,7 +703,7 @@ export default function SummaryProduct({
             className="mb-11"
           />
         )}
-        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+        {!hasActiveSupplement && orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
           <>
             <div>
               <p className="text-base font-bold font-inconsolata mb-4">

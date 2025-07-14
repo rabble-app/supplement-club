@@ -41,6 +41,7 @@ export default function Checkout({
 
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
+  const [hasActiveSupplement, setHasActiveSupplement] = useState<boolean>(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     IManagePlanModel[]
   >([]);
@@ -65,7 +66,17 @@ export default function Checkout({
       }
     };
 
+    const fetchHasActiveSupplement = async () => {
+      try {
+        const response = await usersService.getHasActiveSupplement(context?.user?.id ?? "");
+        setHasActiveSupplement(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
+
     fetchSubscriptionPlans();
+    fetchHasActiveSupplement();
   }, [context?.user?.id]);
 
   const searchParams = useSearchParams();
@@ -300,6 +311,7 @@ export default function Checkout({
             setIsInfoIconClicked={setIsInfoIconClicked}
             hasAlignmentPackage={hasAlignmentPackage}
             setHasAlignmentPackage={setHasAlignmentPackage}
+            hasActiveSupplement={hasActiveSupplement}
           />
           {step === 4 && <Delivery />}
           {step < 4 && <AvailablePayment />}

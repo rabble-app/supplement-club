@@ -48,6 +48,8 @@ export const USER_ENDPOINTS = {
 	UPDATE_SHIPPING: (userId: string) => `users/delivery-address/${userId}`,
 	PAST_ORDERS: (userId: string) => `users/order-history/${userId}`,
 	INFO: (userId: string) => `users/${userId}`,
+	HAS_ACTIVE_SUPPLEMENT: (userId: string) =>
+		`users/${userId}/has-active-supplement`,
 };
 
 export const AUTH_ENDPOINTS = {

@@ -138,8 +138,6 @@ export default function Plans() {
     }
   }
 
-  console.log("subscriptions", subscriptions);
-
   if (loading) return <Spinner />;
 
   return (
