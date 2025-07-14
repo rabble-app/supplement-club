@@ -20,7 +20,6 @@ import { getQuarterInfo } from "@/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, startOfMonth, addMonths } from "date-fns";
-import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
 
 export default function Subscription({
   params,

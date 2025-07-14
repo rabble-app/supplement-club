@@ -3,8 +3,7 @@
 "use client";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import OrderSummaryCard from "./OrderSummaryCard";
+import { useEffect, useState } from "react";;
 import useLocalStorage from "use-local-storage";
 import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import { useUser } from "@/contexts/UserContext";
