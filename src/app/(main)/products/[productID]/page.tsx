@@ -49,6 +49,7 @@ import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
 import Link from "next/link";
 import useProduct from "@/hooks/useProduct";
+import { MemberType } from "@/utils/models/IOrderPackageModel";
 
 export default function ProductDetails() {
   const context = useUser();
@@ -69,7 +70,6 @@ export default function ProductDetails() {
     rest,
     loading,
     capsuleCount,
-    basket,
     current,
     activeMemberIndex,
     capsules,
@@ -83,7 +83,6 @@ export default function ProductDetails() {
     foundingMemberPricePerCount,
     gPerCount,
     productRrp,
-    days,
     setStorageCapsuleCount
   } = useProduct(teamId ?? "", context?.user?.id ?? "");
 
@@ -157,8 +156,8 @@ export default function ProductDetails() {
 
   useEffect(() => {
     if (!context?.user) return;
-    setCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? 0);
-    setStorageCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? 0);
+    setCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? capsuleCount);
+    setStorageCapsuleCount(subscriptionPlan?.team.basket[0]?.capsulePerDay ?? capsuleCount);
   }, [context?.user, subscriptionPlan, product]);
 
   useEffect(() => {
@@ -186,27 +185,19 @@ export default function ProductDetails() {
     fetchSubscriptionPlans();
   }, [context?.user?.id]);
 
-  const hasProduct = basket.find((p) => p.productId === product?.id);
+  const hasProduct = subscriptionPlans.find((p) => p.team.basket.some((basket) => basket.product.id === product?.id));
+
 
   let basketPrice = 0;
-  let basketRrp = 0;
   let basketPricePerCount = 0;
 
-  const priceRrp =
-    Number(subscriptionPlan?.team?.basket[0]?.price) /
-    Number(1 - Number(subscriptionPlan?.team?.basket[0]?.discount) / 100);
-
-  if (product?.isComming) {
-    basketPrice = Number(basket[0]?.price);
-    basketRrp = Number(Math.ceil(priceRrp * 100) / 100);
+  if (orderPackage.memberType === MemberType.FOUNDING_MEMBER) {
+    basketPrice = Number(subscriptionPlan?.team?.basket[0]?.price);
     basketPricePerCount = Number(foundingMemberPricePerCount);
   } else {
-    basketPrice = Number(((product?.price ?? 0) * capsuleCount) / gPerCount);
-    basketRrp = (Number(product?.rrp) * capsuleCount) / gPerCount;
+    basketPrice = Number(((product?.rrp ?? 0) * capsuleCount) / gPerCount) * (1 - Number(Number(orderPackage.discount) + Number(orderPackage.extraDiscount)) / 100);
     basketPricePerCount = Number(product?.pricePerCount);
   }
-
-  console.log("orderPackage MAIN", orderPackage);
 
   if (loading) return <Spinner />;
 
@@ -358,47 +349,20 @@ export default function ProductDetails() {
             <CapsuleBox
               orderPackage={orderPackage}
               rrp={productRrp}
-              rrpPerCount={product?.rrpPerCount ?? 0}
               price={product?.price ?? 0}
               unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
               capsuleInfo={product?.capsuleInfo}
               productId={product?.id}
               pricePerCount={product?.pricePerCount ?? 0}
-              activeMemberIndex={activeMemberIndex}
               discount={product?.discount ?? 0}
               activePercentageDiscount={product?.activePercentageDiscount ?? 0}
-              deliveryDate={product?.deliveryDate ?? ""}
-              teamStatus={product?.supplementTeamProducts?.status ?? ""}
-              daysUntilNextDrop={product?.daysUntilNextDrop ?? 0}
               isFoundingProduct={isFoundingProduct}
-              pouchSize={product?.poucheSize ?? 0}
-              alignmentPoucheSize={product?.alignmentPoucheSize ?? 0}
-              teamName={product?.producer?.businessName ?? ""}
-              name={product?.name ?? ""}
-              quantityOfSubUnitPerOrder={
-                product?.quantityOfSubUnitPerOrder ?? 0
-              }
-              gramsPerCount={product?.gramsPerCount ?? 0}
-              pricePerPoche={product?.pricePerPoche ?? 0}
               capsuleCount={capsuleCount}
               capsules={capsules}
               setCapsuleCount={setCapsuleCount}
               setStorageCapsuleCount={setStorageCapsuleCount}
               gPerCount={gPerCount}
-              founderSpots={product?.priceInfo?.[0]?.teamMemberCount}
-              founderMembersNeeded={
-                product?.nextPriceDiscountLevel?.membersNeeded
-              }
-              founderDiscount={
-                product?.supplementTeamProducts?.foundingMembersDiscount
-              }
-              earlyMemberDiscount={
-                product?.supplementTeamProducts?.earlyMembersDiscount
-              }
-              leadTime={product?.leadTime ?? 0}
               firstDelivery={product?.firstDelivery}
-              pochesRequired={product?.pochesRequired ?? 0}
-              orderDate={product?.orderDate ?? ""}
             />
 
             {isLiveProduct ? (
@@ -502,26 +466,26 @@ export default function ProductDetails() {
                       <div className="text-[12px] leading-[12px] text-grey4 font-bold font-inconsolata whitespace-nowrap">
                         RRP{" "}
                         <span className="text-[12px] leading-[12px] line-through font-bold font-inconsolata">
-                          £{Number(basketRrp).toFixed(2)}
+                          £{Number(orderPackage.rrp).toFixed(2)}
                         </span>{" "}
                         <span className="text-[12px] leading-[12px] font-bold text-blue font-inconsolata whitespace-nowrap">
-                          {Number(item?.discount)?.toFixed(2)}% OFF
+                          {Number(Number(item?.discount) + Number(orderPackage.extraDiscount))?.toFixed(2)}% OFF
                         </span>
                       </div>
                       <p className="text-[12px] leading-[12px] font-medium font-helvetica text-grey4">
-                        {item.capsulePerDay} {units} per Day -{" "}
-                        {days * Number(item.capsulePerDay)} {units}
+                        {item.capsulePerDay}{units} per Day -{" "}
+                        {Number(orderPackage.days) * Number(item.capsulePerDay)}{units}
                       </p>
                     </div>
                     <div className="flex justify-between items-center gap-2 w-full">
                       <p
                         className={`text-base font-normal ${
-                          product?.isComming
+                          orderPackage.memberType === MemberType.FOUNDING_MEMBER
                             ? "bg-[#FFF5E9] text-[#BF6A02]"
                             : "bg-[#E5E6F4] text-blue"
                         } px-2.5 py-1 rounded-full font-hagerman w-fit whitespace-nowrap`}
                       >
-                        {product?.isComming ? (
+                        {orderPackage.memberType === MemberType.FOUNDING_MEMBER ? (
                           "WAITING TO LAUNCH"
                         ) : (
                           <>
@@ -548,8 +512,10 @@ export default function ProductDetails() {
               ))}
             </div>
 
-            {basket.length > 0 && !product?.isComming && (
+            {product && (subscriptionPlan?.team.basket?.length ?? 0)  > 0 && orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
               <ConfirmJoining
+                orderPackage={orderPackage}
+                productName={product?.name}
                 email={context?.user?.email}
                 userType="existing"
                 referralInfo={referralInfo}

@@ -1,19 +1,16 @@
 /** @format */
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Separator } from "@radix-ui/react-separator";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
 import { Button } from "@/components/ui/button";
-import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import useLocalStorage from "use-local-storage";
 import OrderSummaryCard2 from "@/components/shared/OrderSummaryCard2";
 import { getQuarterInfo } from "@/utils/utils";
 import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
@@ -48,33 +45,14 @@ export default function CapsuleBox({
   productId,
   price,
   pricePerCount,
-  activeMemberIndex,
   discount,
   activePercentageDiscount,
-  deliveryDate,
-  teamStatus,
-  daysUntilNextDrop,
-  pouchSize,
-  alignmentPoucheSize,
-  teamName,
-  name,
-  quantityOfSubUnitPerOrder,
-  rrpPerCount,
-  gramsPerCount,
-  pricePerPoche,
   capsuleCount,
   capsules,
   setCapsuleCount,
   setStorageCapsuleCount,
   gPerCount,
-  founderSpots,
-  founderMembersNeeded,
-  founderDiscount,
-  earlyMemberDiscount,
-  leadTime,
   firstDelivery,
-  pochesRequired,
-  orderDate,
 }: Readonly<{
   orderPackage: IOrderPackageModel;
   unitsOfMeasurePerSubUnit?: string;
@@ -84,38 +62,17 @@ export default function CapsuleBox({
   isFoundingProduct?: boolean;
   productId?: string;
   pricePerCount: number;
-  activeMemberIndex: number;
   discount: number;
   activePercentageDiscount: number;
-  deliveryDate: string;
-  teamStatus: string;
-  daysUntilNextDrop: number;
-  pouchSize: number;
-  alignmentPoucheSize: number;
-  teamName: string;
-  name: string;
-  quantityOfSubUnitPerOrder: number;
-  rrpPerCount: number;
-  gramsPerCount: number;
-  pricePerPoche: number;
   capsuleCount: number;
   capsules: number;
   setCapsuleCount: (value: number) => void;
   setStorageCapsuleCount: (value: number) => void;
   gPerCount: number;
-  founderSpots?: number;
-  founderMembersNeeded?: number;
-  founderDiscount?: number;
-  earlyMemberDiscount?: number;
-  leadTime?: number;
   firstDelivery?: boolean;
-  pochesRequired?: number;
-  orderDate?: string;
 }>) {
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
-
-  const [, setCheckoutData] = useLocalStorage("checkoutData", {});
 
   const [units] = useState(
     ["grams", "gm"].includes(unitsOfMeasurePerSubUnit ?? "") ? "g" : " Capsules"
@@ -127,40 +84,6 @@ export default function CapsuleBox({
 
   const getCapsuleLabel = (capsuleCount: number) =>
     `${capsuleCount}${capsuleCount > 1 ? units : units.slice(0, -1)} per Day`;
-
-  const checkoutData = {
-    teamId,
-    teamName,
-    name,
-    productId,
-    activeMemberIndex,
-    activePercentageDiscount,
-    deliveryDate,
-    teamStatus,
-    daysUntilNextDrop,
-    isFoundingProduct,
-    capsuleCount,
-    alignmentPoucheSize,
-    pouchSize,
-    unitsOfMeasurePerSubUnit,
-    quantityOfSubUnitPerOrder,
-    pricePerCount,
-    rrp,
-    rrpPerCount,
-    discount,
-    gramsPerCount,
-    pricePerPoche,
-    price,
-    quantity: (capsuleCount / gPerCount) * (pochesRequired ?? 0),
-    founderSpots,
-    founderMembersNeeded,
-    founderDiscount,
-    earlyMemberDiscount,
-    leadTime,
-    firstDelivery,
-    pochesRequired,
-    orderDate,
-  };
 
   const { currentQuarter } = getQuarterInfo();
   const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
@@ -413,9 +336,6 @@ export default function CapsuleBox({
             <Link
               className="w-full h-full flex items-center justify-center font-bold font-inconsolata text-base"
               href={`/products/${productId}/checkout?teamId=${teamId}`}
-              onClick={() => {
-                setCheckoutData(checkoutData);
-              }}
             >
               {isFoundingProduct
                 ? "CLAIM FOUNDING MEMBER PRICE"

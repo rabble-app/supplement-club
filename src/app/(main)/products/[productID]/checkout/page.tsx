@@ -3,7 +3,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useUser } from "@/contexts/UserContext";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
@@ -16,23 +16,14 @@ import AvailablePayment from "@/components/shared/AvailablePayment";
 import PaymentList from "@/components/shared/PaymentList";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
-import { format } from "date-fns";
-import IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import AlignmentDialog from "@/components/main/products/[productID]/checkout/AlignmentDialog";
-import ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
-import { productService } from "@/services/productService";
-import { ITeamBasketModel } from "@/utils/models/api/ITeamBasketModel";
 import { referalService } from "@/services/referalService";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
-import ISingleProductModel from "@/utils/models/ISingleProductModel";
 import useProduct from "@/hooks/useProduct";
 import { MemberType } from "@/utils/models/IOrderPackageModel";
-// import { paymentService } from "@/services/paymentService";
-// import IMembershipSubscriptionResponse from "@/utils/models/api/response/IMembershipSubscriptionResponse";
 
 export default function Checkout({
   params,
@@ -43,7 +34,11 @@ export default function Checkout({
 
   const [step, setStep] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [storageQuantity, setStorageQuantity] = useLocalStorage("storageQuantity", 0);
+  const [storageQuantity, setStorageQuantity] = useLocalStorage(
+    "storageQuantity",
+    0
+  );
+
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState<
@@ -51,30 +46,6 @@ export default function Checkout({
   >([]);
   const [, setIsReferralCodeApplied] = useState<boolean>(false);
   const steps = ["Create an Account", "Delivery Address", "Payment Details"];
-
-  // const checkoutData =
-  //   Object.keys(JSON.parse(localStorage.getItem("checkoutData") || "{}"))
-  //     .length > 0
-  //     ? JSON.parse(localStorage.getItem("checkoutData") || "{}")
-  //     : context?.user?.metadata;
-
-  // const [data] = useState(
-  //   () =>
-  //     Object.keys(checkoutData).length > 0
-  //       ? checkoutData
-  //       : context?.user?.metadata
-  // );
-
-  const nextYearDate = new Date();
-  nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
-
-  const membershipRrp = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_RRP);
-  const membershipAmount = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_AMOUNT);
-  const membershipPrice = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_PRICE);
-  const membershipDiscount = Number(
-    process.env.NEXT_PUBLIC_MEMBERSHIP_DISCOUNT
-  );
-  const membershipExpiry = format(nextYearDate, "MMMM dd yyyy");
 
   const getSubscriptionPlan = (productID: string) => {
     return subscriptionPlans.find((plan) =>
@@ -98,21 +69,52 @@ export default function Checkout({
   }, [context?.user?.id]);
 
   const searchParams = useSearchParams();
-  const teamId = searchParams.get("teamId");
+  const { productID } = useParams<{ productID: string }>();
+
+  const contextTeamId = context?.user?.metadata?.teamId;
+  let teamId = subscriptionPlans.length > 0 ? searchParams.get("teamId") : contextTeamId;
 
   const {
     product: productMain,
     orderPackage,
     gPerCount,
-  } = useProduct(teamId ?? "", context?.user?.id ?? "");
+    hasAlignmentPackage,
+    setHasAlignmentPackage,
+  } = useProduct(teamId ?? contextTeamId ?? "", context?.user?.id ?? "");
 
   const subscriptionPlan = getSubscriptionPlan(orderPackage?.productId ?? "");
+
+  useEffect(() => {
+    let totalPrice = orderPackage.price;
+
+    if ([MemberType.FOUNDING_MEMBER, MemberType.EARLY_MEMBER].includes(orderPackage.memberType)) {
+      totalPrice = orderPackage.price;
+    } else if (orderPackage.memberType === MemberType.MEMBER) {
+      if(hasAlignmentPackage) {
+      totalPrice =
+          (orderPackage?.pricePerPoche ?? 0) *
+          (storageQuantity) + orderPackage.price;
+      } else {
+        totalPrice = orderPackage.price;
+      }
+    }
+
+    setTotalPrice(totalPrice);
+  }, [orderPackage, storageQuantity, hasAlignmentPackage]);
 
   useEffect(() => {
     if (step === 4) {
       fetchReferralInfo();
     }
   }, [step]);
+
+  useEffect(() => {
+    if (orderPackage.memberType === MemberType.MEMBER && storageQuantity > 0) {
+      setHasAlignmentPackage(true);
+    } else {
+      setHasAlignmentPackage(false);
+    }
+  }, [storageQuantity]);
 
   const fetchReferralInfo = async () => {
     try {
@@ -162,15 +164,17 @@ export default function Checkout({
         </p>
         <div className="grid gap-[8px]">
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            Only get charged when we hit {orderPackage.remainingSpots} pre-orders.
+            Only get charged when we hit {orderPackage.remainingSpots}{" "}
+            pre-orders.
           </p>
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
             By becoming a founding member you get an extra{" "}
             {orderPackage.extraDiscount}% off the team price forever.
           </p>
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            Lead time is {productMain?.leadTime} weeks from when we charge you - but you
-            get {orderPackage.extraDiscount}% off your subscription forever.
+            Lead time is {productMain?.leadTime} weeks from when we charge you -
+            but you get {orderPackage.extraDiscount}% off your subscription
+            forever.
           </p>
         </div>
       </div>
@@ -195,14 +199,19 @@ export default function Checkout({
   useEffect(() => {
     if (step !== 4) {
       if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
-        router.push(`/products/${orderPackage?.productId}?teamId=${orderPackage?.teamId}`);
+        router.push(
+          `/products/${orderPackage?.productId}?teamId=${orderPackage?.teamId}`
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context?.user, subscriptionPlan, orderPackage?.productId, orderPackage?.teamId, step]);
-
-  console.log("productMain", productMain);
-  console.log("orderPackage", orderPackage);
+  }, [
+    context?.user,
+    subscriptionPlan,
+    orderPackage?.productId,
+    orderPackage?.teamId,
+    step,
+  ]);
 
   return (
     <>
@@ -219,6 +228,8 @@ export default function Checkout({
           leadTime={productMain?.leadTime ?? 0}
           gPerCount={gPerCount}
           storageQuantity={storageQuantity}
+          setHasAlignmentPackage={setHasAlignmentPackage}
+          hasSubscriptionPlan={subscriptionPlans.length > 0}
         />
       )}
 
@@ -228,26 +239,35 @@ export default function Checkout({
 
           {step === 1 && (
             <CreateAccount params={params}>
-              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && <PreOrderMessage />}{" "}
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                <PreOrderMessage />
+              )}{" "}
             </CreateAccount>
           )}
           {step === 2 && (
             <DeliveryAddress step={step} updateStepAction={setStep}>
-              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && <PreOrderMessage />}{" "}
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                <PreOrderMessage />
+              )}{" "}
             </DeliveryAddress>
           )}
           {step === 3 && (
             <PaymentList
-              productId={orderPackage?.productId ?? ""}
+              orderPackage={orderPackage}
+              poucheSize={productMain?.poucheSize}
+              pricePerCount={productMain?.pricePerCount}
+              productPrice={productMain?.price}
+              productId={productID ?? ""}
               topupQuantity={storageQuantity}
-              teamId={orderPackage?.teamId ?? ""}
-              isComming={orderPackage.memberType === MemberType.FOUNDING_MEMBER}
+              teamId={teamId ?? ""}
               totalPrice={totalPrice}
               successAction={successAction}
             />
           )}
           {step === 4 && (
             <ConfirmJoining
+              orderPackage={orderPackage}
+              productName={productMain?.name}
               email={context?.user?.email}
               userType="new"
               referralInfo={referralInfo}
@@ -258,14 +278,26 @@ export default function Checkout({
 
         <div className="mx-[-16px] md:mx-[0] mt-[32px]">
           <SummaryProduct
-            model={{} as ISummaryProductModel}
+            model={
+              {
+                id: "1",
+                name: productMain?.name,
+                corporation: productMain?.teamName,
+                quantityOfSubUnitPerOrder:
+                  productMain?.quantityOfSubUnitPerOrder,
+                unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
+              } as unknown as ISummaryProductModel
+            }
+            storageQuantity={storageQuantity}
+            setStorageQuantity={setStorageQuantity}
+            daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
             orderPackage={orderPackage}
-            showTopLine={orderPackage.memberType === MemberType.FOUNDING_MEMBER}
-            quantityAction={updateQuantityAction}
             step={step}
             referralInfo={referralInfo}
             setIsReferralCodeApplied={setIsReferralCodeApplied}
             setIsInfoIconClicked={setIsInfoIconClicked}
+            hasAlignmentPackage={hasAlignmentPackage}
+            setHasAlignmentPackage={setHasAlignmentPackage}
           />
           {step === 4 && <Delivery />}
           {step < 4 && <AvailablePayment />}

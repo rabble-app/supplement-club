@@ -6,14 +6,14 @@ import { useEffect } from "react";
 import useLocalStorage from "use-local-storage";
 
 function renderPrice(
-  rightTopText: string,
+  rightTopText: React.ReactNode,
   rightCenterText: React.ReactNode,
   rightBottomText: React.ReactNode
 ) {
   return (
     <div className="flex flex-col items-end gap-[8px]">
       {rightTopText && (
-        <p className="text-blue font-normal text-sm font-inconsolata">
+        <p className="text-blue font-normal text-sm font-inconsolata whitespace-nowrap">
           {rightTopText}
         </p>
       )}
@@ -36,6 +36,7 @@ export default function OrderSummaryCard2({
   rightCenterText,
   rightBottomText,
   updateQuantityAction,
+  storageQuantityState,
   className,
   step,
   isAlignmentDialog,
@@ -43,15 +44,17 @@ export default function OrderSummaryCard2({
   isUpdatableQuantity,
   gPerCount,
   pochesRequired,
+  isMembership,
 }: Readonly<{
   imageSrc: string;
   leftTopText: string;
-  leftBottomText: string;
+  leftBottomText: React.ReactNode;
   leftCenterText: string;
-  rightTopText: string;
+  rightTopText: React.ReactNode;
   rightCenterText: React.ReactNode;
   rightBottomText: React.ReactNode;
   updateQuantityAction?: (val: number) => void;
+  storageQuantityState?: number;
   className?: string;
   step?: number;
   isAlignmentDialog?: boolean;
@@ -59,6 +62,7 @@ export default function OrderSummaryCard2({
   isUpdatableQuantity?: boolean;
   gPerCount?: number;
   pochesRequired?: number;
+  isMembership?: boolean;
 }>) {
   const [storageCapsuleCount] = useLocalStorage("capsuleCount", 0);
   const [storageQuantity, setStorageQuantity] = useLocalStorage(
@@ -75,7 +79,7 @@ export default function OrderSummaryCard2({
   };
 
   useEffect(() => {
-    setStorageQuantity(updatableQuantity);
+    setStorageQuantity(storageQuantityState ?? updatableQuantity);
   }, [updatableQuantity]);
 
   const decrement = () => {
@@ -87,7 +91,7 @@ export default function OrderSummaryCard2({
 
   return (
     <div
-      className={`grid gap-2 items-start ${className} ${
+      className={`grid gap-2 ${isUpdatableQuantity ? "items-start" : "items-center"} ${className} ${
         imageSrc
           ? "grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px]"
           : "md:grid-cols-[1fr_210px]"
@@ -99,11 +103,16 @@ export default function OrderSummaryCard2({
           alt={imageSrc}
           width={61}
           height={61}
+          className={` ${
+            isMembership
+              ? "border-[1px] border-[#DDDDDD] rounded-[8px] py-[17px] px-[12px]"
+              : ""
+          }`}
           unoptimized
         />
       )}
 
-      <div className="grid gap-2">
+      <div className={`grid gap-2 ${isMembership ? "ml-2" : ""}`}>
         <p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
           {leftTopText}
         </p>

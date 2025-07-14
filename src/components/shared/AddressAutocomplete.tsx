@@ -1,7 +1,13 @@
 /** @format */
 
 "use client";
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { UseFormReturn } from "react-hook-form";
 
 export interface AddressFormData {
@@ -18,9 +24,10 @@ export interface AddressFormData {
   userId?: string;
 }
 
-
 interface Props {
   form: UseFormReturn<AddressFormData>;
+  onInputFocus?: () => void;
+  onInputBlur?: () => void;
 }
 
 interface Suggestion {
@@ -28,97 +35,129 @@ interface Suggestion {
   address: string;
 }
 
-export default function AddressAutocomplete({ form }: Props) {
-  const addressValue = form.watch("address");
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const suppressNextFetch = useRef(false); // prevent fetch loop
+export interface AddressAutocompleteRef {
+  handleInputFocus: () => void;
+  handleInputBlur: () => void;
+}
 
-  useEffect(() => {
-    if (suppressNextFetch.current) {
-      suppressNextFetch.current = false;
-      return;
-    }
+const AddressAutocomplete = forwardRef<AddressAutocompleteRef, Props>(
+  ({ form, onInputFocus, onInputBlur }, ref) => {
+    const addressValue = form.watch("address");
+    const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [isInputFocused, setIsInputFocused] = useState(false);
+    const suppressNextFetch = useRef(false); // prevent fetch loop
 
-    if (!addressValue || addressValue.length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
+    useEffect(() => {
+      if (suppressNextFetch.current) {
+        suppressNextFetch.current = false;
+        return;
+      }
 
-    const timeout = setTimeout(async () => {
+      if (!addressValue || addressValue.length < 3 || !isInputFocused) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      const timeout = setTimeout(async () => {
+        try {
+          const res = await fetch(
+            `https://api.getaddress.io/autocomplete/${encodeURIComponent(
+              addressValue
+            )}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
+          );
+          const data = await res.json();
+          if (data?.suggestions) {
+            setSuggestions(data.suggestions);
+            setShowSuggestions(true);
+          }
+        } catch (err) {
+          console.error("Autocomplete error", err);
+        }
+      }, 300);
+
+      return () => clearTimeout(timeout);
+    }, [addressValue, isInputFocused]);
+
+    const handleSelect = async (id: string) => {
       try {
         const res = await fetch(
-          `https://api.getaddress.io/autocomplete/${encodeURIComponent(
-            addressValue
-          )}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
+          `https://api.getaddress.io/get/${id}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
         );
         const data = await res.json();
-        if (data?.suggestions) {
-          setSuggestions(data.suggestions);
-          setShowSuggestions(true);
-        }
+
+        suppressNextFetch.current = true;
+
+        form.setValue("address", data.line_1);
+        form.setValue("address2", data.line_2);
+        form.setValue("city", data.town_or_city);
+        form.setValue("postalCode", data.postcode);
+        form.setValue("country", "United Kingdom");
+
+        setSuggestions([]);
+        setShowSuggestions(false);
+        setIsInputFocused(false);
       } catch (err) {
-        console.error("Autocomplete error", err);
+        console.error("Fetch full address error", err);
       }
-    }, 300);
+    };
 
-    return () => clearTimeout(timeout);
-  }, [addressValue]);
+    const handleInputFocus = () => {
+      setIsInputFocused(true);
+      onInputFocus?.();
+    };
 
-  const handleSelect = async (id: string) => {
-    try {
-      const res = await fetch(
-        `https://api.getaddress.io/get/${id}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
-      );
-      const data = await res.json();
+    const handleInputBlur = () => {
+      // Delay hiding suggestions to allow clicking on them
+      setTimeout(() => {
+        setIsInputFocused(false);
+        setShowSuggestions(false);
+      }, 150);
+      onInputBlur?.();
+    };
 
-      suppressNextFetch.current = true;
+    useImperativeHandle(ref, () => ({
+      handleInputFocus,
+      handleInputBlur,
+    }));
 
-      form.setValue("address", data.line_1);
-      form.setValue("address2", data.line_2);
-      form.setValue("city", data.town_or_city);
-      form.setValue("postalCode", data.postcode);
-      form.setValue("country", "United Kingdom");
+    return (
+      <div className="relative">
+        {showSuggestions && suggestions.length > 0 && isInputFocused && (
+          <ul className="absolute z-50 bg-white border border-gray-300 w-full mt-1 shadow-md rounded-md">
+            {suggestions.map((sug) => {
+              const parts = sug.address
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+              const [line1, ...rest] = parts;
 
-      setSuggestions([]);
-      setShowSuggestions(false);
-    } catch (err) {
-      console.error("Fetch full address error", err);
-    }
-  };
+              return (
+                <li
+                  key={sug.id}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm w-full"
+                  onClick={() => handleSelect(sug.id)}
+                >
+                  <p className="text-sm font-semibold">{line1}</p>
+                  <span className="text-sm text-gray-600">
+                    {rest.map((line, index) => (
+                      <span key={index}>
+                        {line}
+                        {index < rest.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    );
+  }
+);
 
-  return (
-    <div className="relative">
-      {showSuggestions && suggestions.length > 0 && (
-        <ul className="absolute z-50 bg-white border border-gray-300 w-full mt-1 shadow-md rounded-md">
-          {suggestions.map((sug) => {
-            const parts = sug.address
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean);
-            const [line1, ...rest] = parts;
+AddressAutocomplete.displayName = "AddressAutocomplete";
 
-            return (
-              <li
-                key={sug.id}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm w-full"
-                onClick={() => handleSelect(sug.id)}
-              >
-                <p className="text-sm font-semibold">{line1}</p>
-                <span className="text-sm text-gray-600">
-                  {rest.map((line, index) => (
-                    <span key={index}>
-                      {line}
-                      {index < rest.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
-  );
-}
+export default AddressAutocomplete;

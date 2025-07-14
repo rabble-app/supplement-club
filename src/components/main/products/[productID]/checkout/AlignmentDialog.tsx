@@ -1,7 +1,7 @@
 /** @format */
 
 "use client";
-import OrderSummaryCard from "@/components/shared/OrderSummaryCard";
+import { useEffect, useState } from "react";
 import OrderSummaryCard2 from "@/components/shared/OrderSummaryCard2";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +15,10 @@ import {
 import IOrderPackageModel, {
   MemberType,
 } from "@/utils/models/IOrderPackageModel";
-import IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import { VisuallyHidden } from "@reach/visually-hidden";
 import { format, addWeeks } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 type AlignmentDialogProps = {
   orderPackage: IOrderPackageModel;
@@ -36,6 +33,8 @@ type AlignmentDialogProps = {
   leadTime: number;
   gPerCount: number;
   storageQuantity: number;
+  setHasAlignmentPackage: (val: boolean) => void;
+  hasSubscriptionPlan: boolean;
 };
 
 export default function AlignmentDialog({
@@ -50,29 +49,30 @@ export default function AlignmentDialog({
   leadTime,
   gPerCount,
   storageQuantity,
+  setHasAlignmentPackage,
+  hasSubscriptionPlan,
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    if ([1, 3].includes(step) || isInfoIconClicked) {
+    if ([1].includes(step) || (hasSubscriptionPlan && [3].includes(step)) || isInfoIconClicked) {
       setIsOpen(true);
     } else {
       setIsOpen(false);
     }
-  }, [isInfoIconClicked, step]);
+  }, [isInfoIconClicked, step, hasSubscriptionPlan]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const nativeEvent = e.nativeEvent as SubmitEvent;
     const submitter = nativeEvent.submitter as HTMLButtonElement | null;
 
-    if (submitter?.value === "yes") {
-      console.log("yes");
-      orderPackage.hasAlignmentPackage = true;
+    if (submitter?.value === "yes" && orderPackage.memberType === MemberType.MEMBER) {
+      setHasAlignmentPackage(true);
     } else {
-      orderPackage.hasAlignmentPackage = false;
+      setHasAlignmentPackage(false);
     }
 
     setIsOpen(false);
@@ -229,6 +229,7 @@ export default function AlignmentDialog({
                   isMember={orderPackage.memberType === MemberType.MEMBER}
                   isAlignmentDialog={true}
                   isUpdatableQuantity={true}
+                  step={step}
                   gPerCount={gPerCount}
                   pochesRequired={orderPackage?.pochesRequired ?? 0}
                   className="bg-[#F6F6F6] p-4 mb-6"

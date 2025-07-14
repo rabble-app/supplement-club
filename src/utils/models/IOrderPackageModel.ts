@@ -14,10 +14,6 @@ export default interface IOrderPackageModel {
     remainingSpots: number;
     imageSrc: string;
     storageCapsuleCount: number;
-    membership: {
-        hasBorder: boolean;
-        imageSrc: string;
-    };
     stockStatus?: string;
     pochesRequired?: number;
     alignmentPoucheSize?: number;

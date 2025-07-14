@@ -17,82 +17,95 @@ import { CustomToast } from "./Toast";
 import { StatusToast } from "./Toast";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
-import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
+import IOrderPackageModel, {
+  MemberType,
+} from "@/utils/models/IOrderPackageModel";
 import OrderSummaryCard2 from "./OrderSummaryCard2";
 import { getQuarterInfo } from "@/utils/utils";
 
 export default function SummaryProduct({
   model,
+  storageQuantity,
+  setStorageQuantity,
   orderPackage,
+  daysUntilNextDrop,
   className,
   children,
   showOnlyTotal,
-  showTopLine,
-  quantityAction,
   step,
   referralInfo,
   setIsReferralCodeApplied,
   setIsInfoIconClicked,
+  hasAlignmentPackage,
+  setHasAlignmentPackage,
 }: Readonly<{
   model: ISummaryProductModel;
+  storageQuantity: number;
+  setStorageQuantity: (val: number) => void;
   orderPackage: IOrderPackageModel;
+  daysUntilNextDrop: number;
   className?: string;
   showOnlyTotal?: boolean;
   children?: React.ReactNode;
-  showTopLine?: boolean;
-  quantityAction?: (val: number) => void;
   step?: number;
   referralInfo?: IReferalInfoModel;
   setIsReferralCodeApplied?: (val: boolean) => void;
   setIsInfoIconClicked?: (val: boolean) => void;
+  hasAlignmentPackage: boolean;
+  setHasAlignmentPackage: (val: boolean) => void;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
+  const [totalRrp, setTotalRrp] = useState(0);
   const [referralCode, setReferralCode] = useState("");
-  const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
   const [isLoading, setIsLoading] = useState(false);
   const context = useUser();
   const [firstWord, ...rest] = (model.name ?? "").split(" ");
 
+  const [localStorageQuantity] = useLocalStorage("storageQuantity", 0);
+  const [storageQuantityState, setStorageQuantityState] =
+    useState(localStorageQuantity);
+
   const { currentQuarter } = getQuarterInfo();
   const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 
-  const data = checkoutData as IMetadata;
+  const nextYearDate = new Date();
+  nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
+
+  const membershipRrp = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_RRP);
+  const membershipAmount = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_AMOUNT);
+  const membershipPrice = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_PRICE);
+  const membershipDiscount = Number(
+    process.env.NEXT_PUBLIC_MEMBERSHIP_DISCOUNT
+  );
+  const membershipExpiry = format(nextYearDate, "MMMM dd yyyy");
 
   useEffect(() => {
-    const totalSum = model?.orders?.reduce(
-      (sum, item) => sum + (item.rrp ?? 0),
-      0
-    );
+    if (!storageQuantity || storageQuantity === 0) {
+      setStorageQuantityState(localStorageQuantity);
+      setStorageQuantity(localStorageQuantity);
+    }
+  }, [localStorageQuantity]);
 
-    const totalSumOfSubs =
-      model?.subscriptions?.reduce((sum, item) => sum + (item.price ?? 0), 0) ??
-      0;
+  useEffect(() => {
+    let totalPrice = orderPackage.price;
 
-    const founderDiscountedTotalSum =
-      totalSumOfSubs * (1 - (data.founderDiscount ?? 0) / 100);
-    const earlyMemberDiscountedTotalSum =
-      totalSumOfSubs * (1 - (data.earlyMemberDiscount ?? 0) / 100);
-
-    let discountedTotalSum = totalSum;
-
-    if (data.isComming) {
-      discountedTotalSum = totalSum + founderDiscountedTotalSum;
-    } else if (data.firstDelivery) {
-      discountedTotalSum =
-        (1 -
-          (Number(data.earlyMemberDiscount ?? 0) + Number(data.discount ?? 0)) /
-            100) *
-        totalSum;
-    } else {
-      discountedTotalSum = totalSum + totalSumOfSubs;
+    if ([MemberType.FOUNDING_MEMBER, MemberType.EARLY_MEMBER].includes(orderPackage.memberType)) {
+      totalPrice = orderPackage.price;
+      setTotalRrp(orderPackage.rrp);
+    } else if (orderPackage.memberType === MemberType.MEMBER) {
+      if(hasAlignmentPackage) {
+      totalPrice =
+          (orderPackage?.pricePerPoche ?? 0) *
+          (storageQuantityState ?? storageQuantity) + orderPackage.price;
+        setTotalRrp(memberTypeRrp + orderPackage.rrp);
+      } else {
+        totalPrice = orderPackage.price;
+        setTotalRrp(orderPackage.rrp);
+      }
     }
 
-    setTotalCount(discountedTotalSum);
-  }, [model]);
-
-  const updateQuantityAction = (val: number) => {
-    if (quantityAction) quantityAction(val);
-  };
+    setTotalCount(totalPrice);
+  }, [orderPackage, storageQuantityState, storageQuantity, hasAlignmentPackage]);
 
   const handleApplyReferralCode = async (code: string, amount: number) => {
     setIsLoading(true);
@@ -121,31 +134,19 @@ export default function SummaryProduct({
   };
 
   const totalDiscountPercentage =
-    (data.discount ?? 0) + (Number(data.earlyMemberDiscount ?? 0) ?? 0);
-  const totalDiscountAmount = (data.rrp ?? 0) * (totalDiscountPercentage / 100);
+    (orderPackage.discount ?? 0) + (Number(orderPackage.extraDiscount ?? 0) ?? 0);
+  const totalDiscountAmount = (totalRrp ?? 0) * (totalDiscountPercentage / 100);
 
-  const leftTopText = `${
-    (orderPackage.capsuleCount * orderPackage.days) / (orderPackage?.gPerCount ?? 0)
-  }${orderPackage.units} Every 3 months`;
-
-  const rrp = orderPackage.storageCapsuleCount * (orderPackage.alignmentPoucheSize ?? 0) * (orderPackage.rrpPerCount ?? 0)
-
-  const rightCenterText = (
-    <div
-      className={`text-xl md:text-3xl flex font-[800] text-black items-center gap-1 font-inconsolata`}
-    >
-      £{(Number(orderPackage.pricePerPoche) * orderPackage.storageCapsuleCount).toFixed(2)}
-      <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
-      </span>
-    </div>
-  );
+  const memberTypeRrp =
+    storageQuantity *
+    (orderPackage.alignmentPoucheSize ?? 0) *
+    (orderPackage.rrpPerCount ?? 0);
 
   const rightBottomContent = (
     <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
       RRP{" "}
       <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-        £{Number(rrp).toFixed(2)}
+        £{(Number(orderPackage.rrp) ?? 0).toFixed(2)}
       </span>{" "}
       <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
         {(
@@ -159,22 +160,84 @@ export default function SummaryProduct({
 
   const memberTypeTexts = {
     FOUNDING_MEMBER: {
+      leftTop: `${
+        (orderPackage.capsuleCount * orderPackage.days) /
+        (orderPackage?.gPerCount ?? 0)
+      }${orderPackage.units} Every 3 months`,
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
       rightTop: "Founders Slot Reserved",
+      rightCenter: (
+        <div
+          className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
+        >
+          £{Number(orderPackage.price).toFixed(2)}
+          <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+            (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+          </span>
+        </div>
+      ),
       rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
     },
     EARLY_MEMBER: {
-      leftCenter: "EARLY MEMBER",
-      leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
-      rightTop: "Early Bird Slot Reserved",
-      rightBottom: `Limited Time Remaining!`,
+      leftTop: `${
+        (orderPackage?.pochesRequired ?? 0) * orderPackage.storageCapsuleCount
+      } x ${orderPackage.alignmentPoucheSize} ${
+        orderPackage.units === "g"
+          ? `${orderPackage.units} Pouch`
+          : `${orderPackage.units.slice(0, -1)} Pouch`
+      }`,
+      leftCenter: "LAUNCH PACKAGE",
+      leftBottom: `Takes you up to: ${orderPackage.deliveryDate} Drop`,
+      rightTop: "Includes Early Member 5% Extra Discount",
+      rightCenter: (
+        <div
+          className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
+        >
+          £{Number(orderPackage.price).toFixed(2)}
+          <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+            (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+          </span>
+        </div>
+      ),
+      rightBottom: rightBottomContent,
     },
     MEMBER: {
-      leftCenter: `Q${nextQuater} DROP`,
-      leftBottom: `Delivers: ${orderPackage.deliveryDate}`,
+      leftTop:
+        storageQuantity +
+        " x " +
+        orderPackage.alignmentPoucheSize +
+        (orderPackage.units === "g"
+          ? `${orderPackage.units} Pouch`
+          : `${orderPackage.units.slice(0, -1)} Pouch`),
+      leftCenter: `Alignment Package`,
+      leftBottom: `Ships Today`,
       rightTop: "",
-      rightBottom: rightBottomContent,
+      rightCenter: (
+        <div
+          className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
+        >
+          £{(Number(orderPackage.pricePerPoche) * storageQuantity).toFixed(2)}
+          <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+            (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+          </span>
+        </div>
+      ),
+      rightBottom: (
+        <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+          RRP{" "}
+          <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+            £{Number(memberTypeRrp).toFixed(2)}
+          </span>{" "}
+          <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+            {(
+              Number(orderPackage.discount ?? 0) +
+              Number(orderPackage.extraDiscount ?? 0)
+            ).toFixed(2)}
+            % OFF
+          </span>
+        </div>
+      ),
     },
   } as const;
 
@@ -182,9 +245,11 @@ export default function SummaryProduct({
     memberTypeTexts[orderPackage.memberType as keyof typeof memberTypeTexts] ||
     memberTypeTexts.MEMBER;
 
+  const leftTopText = currentMemberType.leftTop;
   const leftCenterText = currentMemberType.leftCenter;
   const leftBottomText = currentMemberType.leftBottom;
   const rightTopText = currentMemberType.rightTop;
+  const rightCenterText = currentMemberType.rightCenter;
   const rightBottomText = currentMemberType.rightBottom;
 
   return (
@@ -194,11 +259,10 @@ export default function SummaryProduct({
     >
       {!showOnlyTotal && (
         <>
-          {step !== 4 && model?.title && (
-            <h1 className="text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
-              {model.title}
-            </h1>
-          )}
+          <h1 className="text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
+            ORDER SUMMARY
+          </h1>
+
           {model?.corporation && model.name && (
             <div className="grid gap-[8px]">
               <p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4 uppercase">
@@ -236,195 +300,226 @@ export default function SummaryProduct({
                 )}
             </div>
           )}
-          {!data.isComming && model?.orders?.length > 0 && (
-            <hr className="border-grey3 border" />
-          )}
-          {!data.isComming && !data.firstDelivery && (
-            <div className="flex justify-between items-center">
-              {model?.deliveryText && (
-                <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-                  {model.deliveryText}
-                </p>
-              )}
-              <p className="text-sm font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
-                {" "}
-                {data.daysUntilNextDrop} days until the next quarterly drop
-              </p>
-            </div>
-          )}
-          {data.firstDelivery && (
+
+          <hr className="border-grey3 border" />
+
+          {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
             <div className="font-inconsolata bg-blue2 rounded-sm">
-              <p className="text-blue font-inconsolata text-sm leading-6 font-bold text-center py-2 px-2.5">
-                EARLY MEMBER PRICING – You’re ordering before stock arrives and
-                securing an <br /> extra {data.earlyMemberDiscount}% off for
-                life.
+              <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
+                FOUNDING MEMBER PRICING – You’re claiming a spot before stock
+                arrives and securing an extra {orderPackage.extraDiscount}% off
+                for life.
               </p>
             </div>
           )}
-          {showTopLine && <hr className="bg-grey3 h-[1.5px]" />}
+          {orderPackage.memberType === MemberType.EARLY_MEMBER && (
+            <div className="font-inconsolata bg-blue2 rounded-sm">
+              <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
+                EARLY MEMBER PRICING – You’re ordering before stock arrives and
+                securing an extra {orderPackage.extraDiscount}% off for life.
+              </p>
+            </div>
+          )}
 
           <div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <p className="text-base font-semibold font-inconsolata">
-                  {data.isComming && "Launch Package"}
-                  {(!data.isComming || data.firstDelivery) && "BILLED TODAY"}
+                <p className="text-xl font-bold font-inconsolata">
+                  {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
+                    "LAUNCH PACKAGE"}
+                  {orderPackage.memberType !== MemberType.FOUNDING_MEMBER &&
+                    "BILLED TODAY"}
                 </p>
-                <Image
-                  src="/images/icons/info-icon.svg"
-                  alt="arrow right icon"
-                  width={20}
-                  height={20}
-                  className="cursor-pointer"
-                  onClick={() => setIsInfoIconClicked?.(true)}
-                />
+                {orderPackage.memberType !== MemberType.MEMBER && (
+                  <Image
+                    src="/images/icons/info-icon.svg"
+                    alt="arrow right icon"
+                    width={20}
+                    height={20}
+                    className="cursor-pointer"
+                    onClick={() => setIsInfoIconClicked?.(true)}
+                  />
+                )}
               </div>
-              {data.isComming && (
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
                 <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
-                  Reserved at £{data.pricePerCount?.toFixed(2)} / count
+                  Reserved at £{orderPackage.pricePerCount?.toFixed(2)} / count
                 </p>
               )}
             </div>
-            {(!data.isComming || data.firstDelivery) && (
-              <>
-                <p className="text-sm font-semibold font-inconsolata text-[#444444]">
-                  Delivers on .
-                </p>
-                {<hr className="bg-grey3 h-[1.5px] mt-6" />}
-              </>
-            )}
+            <hr className="bg-grey3 h-[1.5px] mt-6" />
           </div>
-          {/* {data.firstDelivery && (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <p className="text-base font-semibold font-inconsolata">
-                  Delayed
-                </p>
-              </div>
-              <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
-                You’ll receive your alignment pack when stock arrives on{" "}
-                {format(data.deliveryDate ?? "", "MMMM dd yyyy")}.
-              </p>
-            </div>
-          )} */}
-          {!data.isComming && (
-            <>
-              {" "}
-              {orderPackage.storageCapsuleCount && orderPackage.storageCapsuleCount > 0 ? (
-                 <OrderSummaryCard2
-                 imageSrc={orderPackage.imageSrc}
-                 leftTopText={leftTopText}
-                 leftCenterText={leftCenterText}
-                 leftBottomText={leftBottomText}
-                 rightTopText={rightTopText}
-                 rightCenterText={rightCenterText}
-                 rightBottomText={rightBottomText}
-                 updateQuantityAction={updateQuantityAction}
-                 isMember={orderPackage.memberType === MemberType.MEMBER}
-                 isAlignmentDialog={false}
-                 isUpdatableQuantity={true}
-                 gPerCount={orderPackage?.gPerCount ?? 0}
-                 pochesRequired={orderPackage?.pochesRequired ?? 0}
-                 className="bg-[#F6F6F6] p-4 mb-6"
-               />
+
+          {model.name && orderPackage.memberType === MemberType.MEMBER && (
+            <div>
+              {hasAlignmentPackage &&
+              (storageQuantityState ?? storageQuantity) &&
+              (storageQuantityState ?? storageQuantity) > 0 ? (
+                <>
+                  <p className="text-xl font-bold font-inconsolata mb-4">
+                    DISPATCHED TODAY - ROYAL MAIL 48H
+                  </p>
+                  <OrderSummaryCard2
+                    imageSrc={orderPackage.imageSrc}
+                    leftTopText={leftTopText}
+                    leftCenterText={leftCenterText}
+                    leftBottomText={leftBottomText}
+                    rightTopText={rightTopText}
+                    rightCenterText={rightCenterText}
+                    rightBottomText={rightBottomText}
+                    updateQuantityAction={(val) => {
+                      setStorageQuantity(val);
+                      setStorageQuantityState(val);
+                    }}
+                    storageQuantityState={storageQuantityState}
+                    isMember={orderPackage.memberType === MemberType.MEMBER}
+                    isAlignmentDialog={false}
+                    isUpdatableQuantity={true}
+                    step={step}
+                    gPerCount={orderPackage?.gPerCount ?? 0}
+                    pochesRequired={orderPackage?.pochesRequired ?? 0}
+                  />
+                </>
               ) : (
                 <Button
                   variant="link"
-                  className="text-center w-fit mx-auto"
-                  onClick={() => updateQuantityAction(1)}
+                  className="text-center w-fit mx-auto flex justify-center"
+                  onClick={() => {
+                    setStorageQuantity(1);
+                    setStorageQuantityState(1);
+                    setHasAlignmentPackage(true);
+                  }}
                 >
-                  <p className="text-black font-inconsolata font-bold text-base underline text-center">
+                  <p className="text-black font-inconsolata font-bold text-base underline text-center w-full">
                     Add My Alignment Package
                   </p>
                 </Button>
               )}
-            </>
-          )}
-          {/* {model?.referals?.length > 0 && (
-            <hr className="border-grey3 border" />
-          )}
-          {model?.referals?.map((referal, idx) => (
-            <div
-              key={`${idx + 1}`}
-              className="flex justify-between items-center"
-            >
-              <div className="grid gap-[8px]">
-                <p className="text-[20px] leading-[20px] font-[600] font-inconsolata">
-                  Succesful Referal x {referal.count}
-                </p>
-                <p className="text-[14px] leading-[14px] font-[400] font-inconsolata text-grey4">
-                  This Quarter
-                </p>
-              </div>
-              <div className="text-[20px] leading-[20px] font-bold font-inconsolata">
-                £{referal.price.toFixed(2)}
-              </div>
             </div>
-          ))} */}
-          {data.isComming && model?.subscriptions?.length > 0 && (
-            <hr className="border-grey3 border" />
           )}
-          {data.isComming && model?.subscriptions?.length > 0 && (
-            <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-              Quarterly Subscription
-            </p>
-          )}
-
-          {data.isComming &&
-            model?.subscriptions?.map((item) => (
-              <OrderSummaryCard
-                key={item.id}
-                model={item}
-                discount={data.discount}
-                step={step}
-                isComming={data.isComming}
-                founderSpots={data.founderSpots}
-                founderMembersNeeded={data.founderMembersNeeded}
-                founderDiscount={data.founderDiscount}
-                earlyMemberDiscount={data.earlyMemberDiscount}
-                firstDelivery={data.firstDelivery}
-              />
-            ))}
-
-          {data.isComming && model?.membership?.length > 0 && (
-            <hr className="border-grey3 border" />
-          )}
-
-          {data.isComming && model?.membership?.length > 0 && (
+          {model.name && (
             <div>
-              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-                Membership Fee
-              </p>
-              {data.isComming && (
-                <p className="text-sm font-inconsolata text-grey16 mt-1">
+              {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+                <p className="text-xl font-bold font-inconsolata mb-4 uppercase">
+                  DELIVERED {orderPackage.deliveryDate} • (IN{" "}
+                  {daysUntilNextDrop} DAYS)
+                </p>
+              )}
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                <p className="text-xl font-bold font-inconsolata mb-4">
+                  Quarterly Subscription
+                </p>
+              )}
+              <OrderSummaryCard2
+                imageSrc={orderPackage.imageSrc}
+                leftTopText={
+                  orderPackage.memberType === MemberType.MEMBER
+                    ? `${
+                        (orderPackage.capsuleCount * orderPackage.days) /
+                        (orderPackage?.gPerCount ?? 0)
+                      }${orderPackage.units} Every 3 months`
+                    : leftTopText
+                }
+                leftCenterText={
+                  orderPackage.memberType === MemberType.MEMBER
+                    ? `Q${nextQuater} DROP`
+                    : leftCenterText
+                }
+                leftBottomText={
+                  orderPackage.memberType === MemberType.MEMBER
+                    ? `FREE DELIVERY • ${orderPackage.deliveryDate?.toUpperCase()}`
+                    : leftBottomText
+                }
+                rightTopText={rightTopText}
+                rightCenterText={
+                  orderPackage.memberType === MemberType.MEMBER ? (
+                    <div
+                      className={`text-xl md:text-3xl flex font-[800] text-black items-center gap-1 font-inconsolata`}
+                    >
+                      £{Number(orderPackage.price).toFixed(2)}
+                      <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
+                        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+                      </span>
+                    </div>
+                  ) : (
+                    rightCenterText
+                  )
+                }
+                rightBottomText={
+                  orderPackage.memberType === MemberType.MEMBER
+                    ? rightBottomContent
+                    : rightBottomText
+                }
+                storageQuantityState={storageQuantityState}
+                isMember={orderPackage.memberType !== MemberType.MEMBER}
+                isAlignmentDialog={false}
+                isUpdatableQuantity={false}
+                gPerCount={orderPackage?.gPerCount ?? 0}
+                pochesRequired={orderPackage?.pochesRequired ?? 0}
+              />
+            </div>
+          )}
+
+          {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+            <>
+              <hr className="border-grey3 border" />
+
+              <div>
+                <p className="text-xl font-bold font-inconsolata">
+                  Membership Fee
+                </p>
+
+                <p className="text-base font-inconsolata text-grey16">
                   Membership trial begins only once your team launches — not
                   before.
                 </p>
-              )}
-            </div>
-          )}
+              </div>
 
-          {data.isComming &&
-            model?.membership?.map((item) => (
-              <OrderSummaryCard
-                key={item.id}
-                model={item}
-                discount={item.discount ?? 0}
-                step={step}
+              <OrderSummaryCard2
+                imageSrc={`/images/membership-card.svg`}
+                isMembership={true}
+                leftTopText={`Free for your first 2 drops`}
+                leftCenterText={`Renews at £${membershipAmount}/year`}
+                leftBottomText={`Renews on ${membershipExpiry}`}
+                rightTopText={
+                  <p className="text-xl text-black font-bold font-inconsolata">
+                    £{membershipPrice.toFixed(2)}
+                  </p>
+                }
+                rightCenterText={
+                  <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+                    RRP{" "}
+                    <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+                      £{membershipRrp.toFixed(2)}
+                    </span>{" "}
+                    <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+                      {membershipDiscount}% OFF
+                    </span>
+                  </div>
+                }
+                rightBottomText={""}
+                updateQuantityAction={(val) => {
+                  setStorageQuantity(val);
+                  setStorageQuantityState(val);
+                }}
+                storageQuantityState={storageQuantityState}
+                isMember={
+                  orderPackage.memberType === MemberType.FOUNDING_MEMBER
+                }
+                isAlignmentDialog={false}
+                isUpdatableQuantity={false}
+                gPerCount={orderPackage?.gPerCount ?? 0}
+                pochesRequired={orderPackage?.pochesRequired ?? 0}
               />
-            ))}
-          {/* {model?.membership?.length > 0 && !data.isComming && (
-            <div className="text-[12px] leading-[16px] font-helvetica italic mt-[-12px] text-grey4">
-              Membership gives you access to unlimited drops, premium-only
-              products, lab-direct pricing & free delivery on all orders
-            </div>
-          )} */}
-
-          {context?.user && !data.isComming && (
-            <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-              Referral Code
-            </p>
+            </>
           )}
+
+          {context?.user &&
+            orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+                Referral Code
+              </p>
+            )}
 
           {context?.user && !referralInfo?.referrer?.name && step !== 4 && (
             <div className="flex items-center gap-2 relative mt-9 mb-8">
@@ -468,7 +563,8 @@ export default function SummaryProduct({
             </div>
           )}
           <hr className="border-grey3 border" />
-          {data.isComming && (
+
+          {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
             <div className="font-inconsolata bg-blue2 rounded-sm">
               <p className="text-blue font-inconsolata text-sm leading-6 font-bold text-center py-2 px-2.5">
                 Founder slot secured. You’ll be notified when the team is ready
@@ -476,25 +572,19 @@ export default function SummaryProduct({
               </p>
             </div>
           )}
-          {data.firstDelivery && (
-            <div className="font-inconsolata bg-blue2 rounded-sm">
-              <p className="text-blue font-inconsolata text-xs leading-6 font-bold text-center py-2 px-2.5">
-                You're early. We’ll notify you when your order ships.
-              </p>
-            </div>
-          )}
+
           <div className="grid gap-[10px]">
-            {!data.isComming && (
+            {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
               <div className="flex justify-between items-center">
                 <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                   RRP
                 </p>
                 <p className="text-black text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-                  £{data.rrp?.toFixed(2)}
+                  £{totalRrp?.toFixed(2)}
                 </p>
               </div>
             )}
-            {!data.isComming && (
+            {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
               <div className="flex justify-between items-center">
                 <p className="text-grey16 text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                   Total Discount
@@ -529,7 +619,9 @@ export default function SummaryProduct({
         <div className="grid gap-[7px] md:gap-0 grid-cols-[84px_1fr]">
           <div>
             <p className="text-[32px] leading-[33px] font-inconsolata font-[900] text-black whitespace-nowrap">
-              {data.isComming ? "Founder Price" : "Total"}
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER
+                ? "Founder Price"
+                : "Total"}
             </p>
           </div>
 
@@ -539,60 +631,109 @@ export default function SummaryProduct({
             </div>
           </div>
         </div>
-        {(!data.isComming || data.firstDelivery) &&
-          model?.subscriptions?.length > 0 && (
-            <hr className="border-grey3 border my-6" />
-          )}
-       { (!data.isComming || data.firstDelivery) && <p className="text-[20px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-6">SUBSCRIPTIONS</p>}
-        {(!data.isComming || data.firstDelivery) &&
-          model?.subscriptions?.length > 0 && (
-            <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-              Quarterly Drop Subscription
-            </p>
-          )}
-        {(!data.isComming || data.firstDelivery) &&
-          model?.subscriptions?.map((item) => (
-            <OrderSummaryCard
-              key={item.id}
-              model={item}
-              discount={data.discount}
-              step={step}
-              isComming={data.isComming}
-              founderSpots={data.founderSpots}
-              founderMembersNeeded={data.founderMembersNeeded}
-              founderDiscount={data.founderDiscount}
-              earlyMemberDiscount={data.earlyMemberDiscount}
-              firstDelivery={data.firstDelivery}
-            />
-          ))}
-        {/* {(!data.isComming || data.firstDelivery) &&
-          model?.membership?.length > 0 && (
-            <hr className="border-grey3 border my-6" />
-          )} */}
-        {(!data.isComming || data.firstDelivery) &&
-          model?.membership?.length > 0 && (
+        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+          <hr className="border-grey3 border my-6" />
+        )}
+        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+          <p className="text-[20px] md:leading-[16px] font-[600] font-inconsolata mb-6">
+            SUBSCRIPTIONS
+          </p>
+        )}
+        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+          <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-4">
+            Quarterly Drop Subscription
+          </p>
+        )}
+        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+          <OrderSummaryCard2
+            imageSrc={orderPackage.imageSrc}
+            leftTopText={`${
+              (orderPackage.capsuleCount * orderPackage.days) /
+              (orderPackage?.gPerCount ?? 0)
+            }${orderPackage.units} Every 3 months`}
+            leftCenterText={
+              orderPackage.memberType === MemberType.EARLY_MEMBER
+                ? `EARLY MEMBER`
+                : `QUARTERLY SUBSCRIPTION`
+            }
+            leftBottomText={
+              <p className="text-sm text-grey4 font-normal font-inconsolata relative">
+                Next Subscription Billed: <br />
+                <span className="absolute text-sm text-grey4 font-normal font-inconsolata">
+                  {orderPackage.deliveryDate}
+                </span>
+              </p>
+            }
+            rightTopText={
+              orderPackage.memberType === MemberType.EARLY_MEMBER
+                ? `Early Bird Pricing Forever`
+                : ``
+            }
+            rightCenterText={
+              <div
+                className={`text-xl  leading-[20px] flex !font-bold text-black font-inconsolata`}
+              >
+                £{Number(orderPackage.price).toFixed(2)}
+              </div>
+            }
+            rightBottomText={rightBottomText}
+            updateQuantityAction={(val) => {
+              setStorageQuantity(val);
+              setStorageQuantityState(val);
+            }}
+            storageQuantityState={storageQuantityState}
+            isMember={orderPackage.memberType === MemberType.MEMBER}
+            isAlignmentDialog={false}
+            isUpdatableQuantity={false}
+            gPerCount={orderPackage?.gPerCount ?? 0}
+            pochesRequired={orderPackage?.pochesRequired ?? 0}
+            className="mb-11"
+          />
+        )}
+        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+          <>
             <div>
-              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-4 mt-2">
+              <p className="text-base font-bold font-inconsolata mb-4">
                 Membership Fee
               </p>
-              {/* {!data.isComming && (
-                <p className="text-sm font-inconsolata text-grey16 mt-1">
-                  Membership trial begins only once your team launches — not
-                  before.
-                </p>
-              )} */}
-
-              {(!data.isComming || data.firstDelivery) &&
-                model?.membership?.map((item) => (
-                  <OrderSummaryCard
-                    key={item.id}
-                    model={item}
-                    discount={item.discount ?? 0}
-                    step={step}
-                  />
-                ))}
             </div>
-          )}
+
+            <OrderSummaryCard2
+              imageSrc={`/images/membership-card.svg`}
+              isMembership={true}
+              leftTopText={`Free for your first 2 drops`}
+              leftCenterText={`Renews at £${membershipAmount}/year`}
+              leftBottomText={`Renews on ${membershipExpiry}`}
+              rightTopText={
+                <p className="text-xl text-black font-bold font-inconsolata">
+                  £{membershipPrice.toFixed(2)}
+                </p>
+              }
+              rightCenterText={
+                <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+                  RRP{" "}
+                  <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+                    £{membershipRrp.toFixed(2)}
+                  </span>{" "}
+                  <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+                    {membershipDiscount}% OFF
+                  </span>
+                </div>
+              }
+              rightBottomText={""}
+              updateQuantityAction={(val) => {
+                setStorageQuantity(val);
+                setStorageQuantityState(val);
+              }}
+              storageQuantityState={storageQuantityState}
+              isMember={false}
+              isAlignmentDialog={false}
+              isUpdatableQuantity={false}
+              gPerCount={orderPackage?.gPerCount ?? 0}
+              pochesRequired={orderPackage?.pochesRequired ?? 0}
+            />
+          </>
+        )}
         <div className="grid gap-[10px]">{children}</div>
       </div>
     </div>

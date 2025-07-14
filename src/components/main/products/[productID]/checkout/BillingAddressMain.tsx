@@ -4,12 +4,20 @@
 
 import AddressAutocomplete, {
   type AddressFormData,
+  type AddressAutocompleteRef,
 } from "@/components/shared/AddressAutocomplete";
 import FormFieldComponent from "@/components/shared/FormFieldComponent";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { billingAddressSchema } from "@/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export interface BillingAddressRef {
@@ -31,40 +39,26 @@ const BillingAddressMain = forwardRef<
     defaultValues: defaultValues || {},
   });
 
+  const addressAutocompleteRef = useRef<AddressAutocompleteRef>(null);
+
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      console.log("=== BILLING ADDRESS FORM DEBUG ===");
-      console.log("Form values:", currentForm.getValues());
-      console.log("Form errors:", currentForm.formState.errors);
-      console.log("Form isValid:", currentForm.formState.isValid);
-
       const isValid = await currentForm.trigger();
-      console.log("After trigger - isValid:", isValid);
-      console.log("After trigger - errors:", currentForm.formState.errors);
 
       if (isValid) {
         const formData = currentForm.getValues();
-        console.log("Form is valid, submitting data:", formData);
         handleSubmit(formData);
         return true;
       } else {
-        console.log("Form is invalid, validation failed");
-        console.log(
-          "Invalid fields:",
-          Object.keys(currentForm.formState.errors)
-        );
         return false;
       }
     },
     getFormData: () => {
       const data = currentForm.getValues();
-      console.log("Getting form data:", data);
       return data;
     },
     isValid: () => {
       const valid = currentForm.formState.isValid;
-      console.log("Checking if form is valid:", valid);
-      console.log("Current errors:", currentForm.formState.errors);
       return valid;
     },
   }));
@@ -73,14 +67,34 @@ const BillingAddressMain = forwardRef<
     <Form {...currentForm}>
       <div className="flex flex-col gap-[24px] py-[16px] md:py-[32px]">
         <div className="relative">
-          <FormFieldComponent
-            form={currentForm}
-            label="Address Line 1*"
-            placeholder="Somewhere around"
-            id="address"
+          <FormField
+            control={currentForm.control}
             name="address"
+            render={({ field, fieldState }) => (
+              <FormItem className={fieldState.invalid ? "error" : ""}>
+                <FormLabel className="flex justify-between text-[16px] font-bold font-inconsolata">
+                  Address Line 1*
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Somewhere around"
+                    id="address"
+                    onFocus={() =>
+                      addressAutocompleteRef.current?.handleInputFocus()
+                    }
+                    onBlur={() =>
+                      addressAutocompleteRef.current?.handleInputBlur()
+                    }
+                  />
+                </FormControl>
+              </FormItem>
+            )}
           />
-          <AddressAutocomplete form={currentForm} />
+          <AddressAutocomplete
+            ref={addressAutocompleteRef}
+            form={currentForm}
+          />
         </div>
 
         <FormFieldComponent

@@ -23,9 +23,13 @@ const useProduct = (teamId?: string, userId?: string) => {
   const [current, setCurrent] = useState(1);
   const [activeMemberIndex, setActiveMemberIndex] = useState(1);
   
-  const days = product?.quantityOfSubUnitPerOrder ?? 90;
+  const days = 90;
   const [capsuleCount, setCapsuleCount] = useState(1);
   const [storageCapsuleCount, setStorageCapsuleCount] = useLocalStorage<number>("capsuleCount", 1);
+  const [hasAlignmentPackage, setHasAlignmentPackage] = useLocalStorage(
+    "hasAlignmentPackage",
+    false
+  );
   const capsules = useMemo(() => capsuleCount * days, [capsuleCount]);
 
   const gramsPerCount =
@@ -37,6 +41,8 @@ const useProduct = (teamId?: string, userId?: string) => {
 
   const { productID: productId } = useParams();
   const pathname = usePathname();
+
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -99,7 +105,6 @@ const useProduct = (teamId?: string, userId?: string) => {
   let orderProductPrice = productPrice;
   let orderProductPricePerCount = product?.pricePerCount;
   let memberType = MemberType.MEMBER;
-  let hasAlignmentPackage = true;
   let extraDiscount = 0;
   let remainingSpots = 0;
 
@@ -109,7 +114,6 @@ const useProduct = (teamId?: string, userId?: string) => {
     );
     orderProductPricePerCount = Number(foundingMemberPricePerCount.toFixed(2));
     memberType = MemberType.FOUNDING_MEMBER;
-    hasAlignmentPackage = false;
     extraDiscount =
       product?.supplementTeamProducts?.foundingMembersDiscount ?? 0;
     remainingSpots = product?.nextPriceDiscountLevel?.membersNeeded ?? 0;
@@ -119,7 +123,6 @@ const useProduct = (teamId?: string, userId?: string) => {
     );
     orderProductPricePerCount = Number(earlyMemberPricePerCount.toFixed(2));
     memberType = MemberType.EARLY_MEMBER;
-    hasAlignmentPackage = false;
     extraDiscount = product?.supplementTeamProducts?.earlyMembersDiscount ?? 0;
     remainingSpots = product?.nextPriceDiscountLevel?.membersNeeded ?? 0;
   }
@@ -142,10 +145,6 @@ const useProduct = (teamId?: string, userId?: string) => {
     extraDiscount: extraDiscount,
     remainingSpots: remainingSpots,
     imageSrc: "/images/supplement-mockup.png",
-    membership: {
-      hasBorder: true,
-      imageSrc: "/images/membership-card.svg",
-    },
     stockStatus: product?.status,
     pochesRequired: product?.pochesRequired ?? 0,
     alignmentPoucheSize: product?.alignmentPoucheSize ?? 0,
@@ -190,6 +189,8 @@ const useProduct = (teamId?: string, userId?: string) => {
     isEarlyProduct,
     isLiveProduct,
     orderProductPrice,
+    hasAlignmentPackage,
+    setHasAlignmentPackage,
     orderProductPricePerCount,
     current,
     activeMemberIndex,
