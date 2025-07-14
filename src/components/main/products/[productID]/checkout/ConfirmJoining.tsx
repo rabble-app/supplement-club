@@ -10,24 +10,25 @@ import { CustomToast } from "@/components/shared/Toast";
 import { StatusToast } from "@/components/shared/Toast";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { useUser } from "@/contexts/UserContext";
-import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import { addDays, differenceInDays, startOfDay } from "date-fns";
+import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
 
 export default function ConfirmJoining({
+  orderPackage,
+  productName,
   email,
   userType,
   referralInfo,
   step,
 }: Readonly<{
+  orderPackage: IOrderPackageModel;
+  productName?: string;
   email?: string;
   userType: "new" | "existing";
   referralInfo?: IReferalInfoModel;
   step?: number;
 }>) {
   const context = useUser();
-
-  const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
 
   const referralLink = process.env.NEXT_PUBLIC_WEBSITE_URL;
   const referralCode = referralInfo?.referralCode;
@@ -63,9 +64,9 @@ export default function ConfirmJoining({
           </div>
         </div>
       )}
-      {!checkoutData.isComming && <ReferralSection percentage="0" remainingDays={remainingDays} />}
+      {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && <ReferralSection percentage="0" remainingDays={remainingDays} />}
 
-      {!checkoutData.isComming && <>
+      {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && <>
         {userType === "new" && (
           <div className="shadow-card bg-white rounded-sm p-4">
             <div className="mb-6">
@@ -211,19 +212,19 @@ export default function ConfirmJoining({
         )}
       </>}
 
-      {checkoutData.isComming && (
+      {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
         <div className="bg-white shadow-card rounded-sm p-4 border border-grey35">
           <h3 className="font-hagerman text-[24px]">You’ve Registered as a Founding Member for <br />
-            {checkoutData.name}</h3>
+            {productName}</h3>
 
-          <p className="font-helvetica text-sm text-grey4 my-2">As a founding member, you’ve secured a further {checkoutData.founderDiscount}% lifetime discount off the team price for all your future orders.</p>
+          <p className="font-helvetica text-sm text-grey4 my-2">As a founding member, you’ve secured a further {orderPackage.discount}% lifetime discount off the team price for all your future orders.</p>
 
           <div className="my-4">
             <h3 className="font-inconsolata font-bold text-base">What Happens Next</h3>
             <ul className="list-disc pl-6">
               <li className="font-helvetica text-sm text-grey4 mt-2">Your payment has not been taken yet.</li>
               <li className="font-helvetica text-sm text-grey4">Once enough members have joined, we’ll email you with a 24-hour notice before your card is charged for the first drop</li>
-              <li className="font-helvetica text-sm text-grey4">The team currently needs {checkoutData.founderMembersNeeded} more members to launch.</li></ul>
+              <li className="font-helvetica text-sm text-grey4">The team currently needs {orderPackage.remainingSpots} more members to launch.</li></ul>
           </div>
           <div className="my-4">
             <h3 className="font-inconsolata font-bold text-base">When the Team Launches</h3>

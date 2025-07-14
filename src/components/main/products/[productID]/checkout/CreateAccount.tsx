@@ -3,7 +3,7 @@
 "use client";;
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -18,7 +18,6 @@ import type { IResponseModel } from "@/utils/models/api/response/IResponseModel"
 import { createAccountSchema } from "@/validations";
 import { Loader2Icon } from "lucide-react";
 import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 
 export default function CreateAccount({
   params,
@@ -29,7 +28,12 @@ export default function CreateAccount({
 }>) {
   const [productId, setProductId] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
+  const [capsuleCount] = useLocalStorage<number>("capsuleCount", 0);
+  const [storageQuantity] = useLocalStorage<number>("storageQuantity", 0);
+  const [hasAlignmentPackage] = useLocalStorage<boolean>("hasAlignmentPackage", false);
+
+  const searchParams = useSearchParams();
+  const teamId = searchParams.get("teamId");
 
   const router = useRouter();
 
@@ -54,7 +58,12 @@ export default function CreateAccount({
         e.get("email")?.toString() ?? "",
         e.get("password")?.toString() ?? "",
         productId ?? "",
-        checkoutData,
+        teamId ?? "",
+        {
+          capsuleCount,
+          storageQuantity,
+          hasAlignmentPackage,
+        },
         Cookies.get("refCode") ?? ""
       )) as IResponseModel;
 
@@ -66,7 +75,9 @@ export default function CreateAccount({
         throw new Error(result?.error);
       }
 
-      localStorage.removeItem("checkoutData");
+      localStorage.removeItem("hasAlignmentPackage");
+      localStorage.removeItem("storageQuantity");
+      localStorage.removeItem("capsuleCount");
       localStorage.setItem("email", e.get("email")?.toString() ?? "");
       // remove from browser
       Cookies.remove("refCode");

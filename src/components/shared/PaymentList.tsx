@@ -20,29 +20,34 @@ import EmailReminders from "./EmailReminders";
 import PaymentConfirmForm from "./PaymentConfirmForm";
 import { CustomToast, StatusToast } from "./Toast";
 import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import { Loader2 } from "lucide-react";
 import BillingAddressMain, {
   BillingAddressRef,
 } from "../main/products/[productID]/checkout/BillingAddressMain";
 import { usersService } from "@/services/usersService";
 import { AddressFormData } from "./AddressAutocomplete";
-// import IUserBillingAddressModel from "@/utils/models/api/IUserBillingAddressModel";
+import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
 
 export default function PaymentList({
-  totalPrice,
-  isComming,
+  totalPrice, 
   teamId,
   topupQuantity,
   productId,
   successAction,
+  orderPackage,
+  poucheSize,
+  pricePerCount,
+  productPrice,
 }: Readonly<{
   totalPrice: number;
   teamId: string;
   topupQuantity: number;
   productId: string;
-  isComming?: boolean;
   successAction: () => void;
+  orderPackage: IOrderPackageModel;
+  poucheSize?: number;
+  pricePerCount?: number;
+  productPrice?: number;
 }>) {
   const [policyTerms, setPolicyTerms] = useState(true);
   const [address, setAddress] = useState(true);
@@ -53,7 +58,7 @@ export default function PaymentList({
     postCode: string;
     country: string;
   }>();
-  const [checkoutData] = useLocalStorage<IMetadata>("checkoutData", {});
+  const [capsuleCount] = useLocalStorage<number>("capsuleCount", 0);
   const [isLoading, setIsLoading] = useState(false);
 
   const billingAddressRef = useRef<BillingAddressRef>(null);
@@ -83,8 +88,6 @@ export default function PaymentList({
     fetchBillingAddress();
   }, [context?.user]);
 
-  console.log("billingAddress", billingAddress);
-
   async function processPayment(cards: IUserPaymentOptionModel[]) {
     setIsLoading(true);
     try {
@@ -103,15 +106,14 @@ export default function PaymentList({
         currectCard = cards[0];
       }
 
-      const quantity =
-        (checkoutData.orders?.[0]?.capsules ?? 0) /
-        (checkoutData.pouchSize ?? 0);
+      const quantity = Number((capsuleCount ?? 0) * (orderPackage.days)) /
+      (poucheSize ?? 0);
       const price = totalPrice;
-      const capsulePerDay = Number(checkoutData.capsuleCount);
-      const pricePerCount = checkoutData.pricePerCount?.toFixed(2) ?? "0.00";
-      const discount = checkoutData.discount?.toFixed(2) ?? "0.00";
+      const capsulePerDay = Number(orderPackage.capsuleCount);
+      const pricePerCountq = pricePerCount?.toFixed(2) ?? "0.00";
+      const discount = orderPackage.discount?.toFixed(2) ?? "0.00";
 
-      if (isComming) {
+      if (orderPackage.memberType === MemberType.FOUNDING_MEMBER) {
         const response = (await paymentService.joinPreorderTeam(
           teamId ?? "",
           context?.user?.id ?? "",
@@ -119,7 +121,7 @@ export default function PaymentList({
           quantity,
           price,
           capsulePerDay,
-          pricePerCount,
+          pricePerCountq,
           discount
         )) as IPaymentIntentApiResponse;
 
@@ -129,12 +131,12 @@ export default function PaymentList({
       } else {
         const data = {
           amount: totalPrice,
-          price: Number(checkoutData.price),
+          price: Number(productPrice),
           quantity:
-            (checkoutData.orders?.[0]?.capsules ?? 0) /
-            (checkoutData.pouchSize ?? 0),
+            Number((capsuleCount ?? 0) * (orderPackage.days)) /
+            (poucheSize ?? 0),
           paymentMethodId: currectCard?.id,
-          capsuleCount: checkoutData.capsuleCount,
+          capsuleCount: orderPackage.capsuleCount,
           topupQuantity: topupQuantity,
         };
 
@@ -148,7 +150,7 @@ export default function PaymentList({
           amount: data.amount,
           paymentMethodId: currectCard?.id,
           topupQuantity: data.topupQuantity,
-          pricePerCount: pricePerCount,
+          pricePerCount: pricePerCountq,
           discount: discount,
         })) as IPaymentIntentApiResponse;
 
@@ -232,7 +234,6 @@ export default function PaymentList({
   }
 
   const handleBillingAddressSubmit = async (data: AddressFormData) => {
-    console.log("data", data);
     try {
       const result = await usersService.addBillingAddress({
         addressLine1: data.address ?? "",
@@ -274,11 +275,9 @@ export default function PaymentList({
   };
 
   const handlePlaceOrder = async () => {
-    console.log("address", address);
     // If billing address is not same as delivery address, validate and submit billing address form
     if (!address && billingAddressRef.current) {
       const isValid = await billingAddressRef.current.submitForm();
-      console.log("isValid", isValid);
       if (!isValid) {
         CustomToast({
           title: "Please fill in all required billing address fields",
@@ -324,14 +323,14 @@ export default function PaymentList({
         </label>
       </div>
 
-      {!isComming && (
+      {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
         <p className="text-[14px] leading-[16px]">
           By making this purchase your supplement club will automatically renew
           and your card will be charged the supplement plan price. You can
           cancel or modify at any time using your customer login.
         </p>
       )}
-      {isComming && (
+      {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
         <p className="text-[14px] leading-[16px]">
           You’re saving your spot — no payment today. We’ll email you 24h before
           the first charge, and you can cancel or update anytime.
@@ -440,7 +439,7 @@ export default function PaymentList({
           >
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {`${
-              isComming ? "Reserve Founding Membership Price" : "Place Order"
+              orderPackage.memberType !== MemberType.MEMBER ? "Register Order" : "Place Order"
             } - £ ${totalPrice.toFixed(2)}`}{" "}
             {/* Use a regular string */}
           </Button>
@@ -460,15 +459,15 @@ export default function PaymentList({
             >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {`${
-                isComming ? "Reserve Founding Membership Price" : "Place Order"
+                orderPackage.memberType !== MemberType.MEMBER ? "Register Order" : "Place Order"
               } - £ ${totalPrice.toFixed(2)}`}{" "}
               {/* Use a regular string */}
             </Button>
           </PaymentConfirmForm>
         ))}
 
-      {!isComming && <EmailReminders />}
-      {isComming && (
+      {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && <EmailReminders />}
+      {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
         <p className="text-[14px] leading-[16px] text-grey4 font-semibold text-center mx-auto">
           No Charge Now. Cancel Anytime.
         </p>

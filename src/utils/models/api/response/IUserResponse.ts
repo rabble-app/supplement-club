@@ -34,34 +34,10 @@ export interface IUserResponse extends IBaseTimestamps {
 
 export interface IMetadata {
 	productId?: string;
-	pouchSize?: number;
-	orders?: IOrderSummaryModel[] | ISubscriptionSummaryModel[];
-	price?: number;
-	pricePerPoche?: number;
-	capsuleCount?: number;
-	deliveryDate?: string;
-	alignmentPoucheSize?: number;
-	daysUntilNextDrop?: number;
-	unitsOfMeasurePerSubUnit?: string;
-	quantityOfSubUnitPerOrder?: number;
-	gramsPerCount?: number;
-	isComming?: boolean;
-	rrp?: number;
-	rrpPerCount?: number;
-	pricePerCount?: number;
-	teamName?: string;
 	teamId?: string;
-	name?: string;
-	discount?: number;
-	topUpQuantity?: number;
-	quantity?: number;
-	founderSpots?: number;
-	founderMembersNeeded?: number;
-	founderDiscount?: number;
-	earlyMemberDiscount?: number;
-	leadTime?: number;
-	firstDelivery?: boolean;
-	pochesRequired?: number;
+	hasAlignmentPackage?: boolean;
+	storageQuantity?: number;
+	capsuleCount?: number;
 }
 
 interface IBasketsC {

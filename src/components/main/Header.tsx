@@ -44,7 +44,7 @@ export default function Header() {
           <div className="flex justify-between items-center w-full max-w-[1500px] mx-auto">
             <div className="grid gap-[51px] w-max text-white md:grid-cols-[auto_123px]">
               <Link
-                className="font-normal lg:text-[32px] text-[24px] font-hagerman"
+                className="font-normal lg:text-[40px] text-[24px] font-hagerman"
                 href="/"
               >
                 Supplement Club

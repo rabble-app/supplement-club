@@ -17,7 +17,9 @@ export default function EmailVerification() {
   const token = searchParams.get("token");
   const { setUser } = useUserStore((state) => state);
   const router = useRouter();
-  const [, setCheckoutData] = useLocalStorage("checkoutData", {});
+  const [, setHasAlignmentPackage] = useLocalStorage<boolean>("hasAlignmentPackage", false);
+  const [, setStorageQuantity] = useLocalStorage<number>("storageQuantity", 0);
+  const [, setCapsuleCount] = useLocalStorage<number>("capsuleCount", 0);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -29,10 +31,14 @@ export default function EmailVerification() {
       setUser(userData);
       context?.setNewUser(userData);
 
-      setCheckoutData(userData.metadata);
+      setHasAlignmentPackage(userData.metadata?.hasAlignmentPackage);
+      setStorageQuantity(userData.metadata?.storageQuantity);
+      setCapsuleCount(userData.metadata?.capsuleCount);
+
+      localStorage.removeItem("email");
 
       if (response.data.metadata?.productId) {
-        router.push(`/products/${response.data.metadata?.productId}/checkout/`);
+        router.push(`/products/${response.data.metadata?.productId}/checkout`);
       }
     };
     if (token && !context?.user) {

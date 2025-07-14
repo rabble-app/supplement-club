@@ -10,7 +10,7 @@ export default function TeamPrice({
   rrp,
   price,
   priceInfo,
-  isComming,
+  isFoundingProduct,
   pricePerCount,
   nextPriceDiscountLevel,
   activeMemberIndex,
@@ -22,7 +22,7 @@ export default function TeamPrice({
   rrp: number;
   members: number;
   price: number;
-  isComming: boolean;
+  isFoundingProduct: boolean;
   priceInfo: IPriceInfoModel[];
   pricePerCount: number;
   nextPriceDiscountLevel: {
@@ -39,7 +39,7 @@ export default function TeamPrice({
   function getCurrentClasses(percentageDiscount: number) {
     let classes = "border-[1px] bg-grey19 my-[15px] border-grey20";
 
-    if (percentageDiscount === activePercentageDiscount && !isComming) {
+    if (percentageDiscount === activePercentageDiscount && !isFoundingProduct) {
       classes = " bg-white h-[223px] rounded-[5px] my-[0]";
     } else if (percentageDiscount < activePercentageDiscount) {
       classes = " bg-grey14 my-[15px]";
@@ -188,16 +188,16 @@ export default function TeamPrice({
               width={30}
               height={30}
             />
-            {members} {`${isComming ? "Pre-Orders" : "Members"}`}
+            {members} {`${isFoundingProduct ? "Pre-Orders" : "Members"}`}
           </div>
-          {!isComming && activeMemberIndex + 1 < priceInfo.length && (
+          {!isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
             <p className="text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
               {nextPriceDiscountLevel?.membersNeeded} more members unlocks{" "}
               {nextPriceDiscountLevel?.expectedDiscount.toFixed(2)}% off for
               everyone
             </p>
           )}
-          {isComming && activeMemberIndex + 1 < priceInfo.length && (
+          {isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
             <p className="text-[16px] leading-[18px] font-semibold text-[#999999]">
               {membersToLaunch} more pre-orders until product launches!
             </p>
@@ -226,7 +226,7 @@ export default function TeamPrice({
         </div>
       </div>
 
-      {isComming && members < priceInfo[0]?.teamMemberCount && (
+      {isFoundingProduct && members < priceInfo[0]?.teamMemberCount && (
         <div className="bg-blue2 rounded-sm w-full mt-8 mb-2">
           <p className="text-blue font-bold text-base font-inconsolata w-full text-center py-2">
             When it gets to {membersToLaunch + members} people we will launch
@@ -242,11 +242,11 @@ export default function TeamPrice({
             className="relative grid overflow-hidden max-w-[148px] w-full"
           >
             {item.percentageDiscount === activePercentageDiscount &&
-              !isComming && (
+              !isFoundingProduct && (
                 <div className="w-8 h-8 rounded-full bg-blue absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100] border-[1px] border-white" />
               )}
             {item.percentageDiscount === activePercentageDiscount &&
-              isComming && (
+              isFoundingProduct && (
                 <Image
                   src="/images/icons/lock-grey-icon.svg"
                   alt="User profile group icon"
@@ -271,7 +271,7 @@ export default function TeamPrice({
             <div
               className={`p-[10px] grid gap-[8px] border-[1px] border-grey20 z-[1] ${
                 item.percentageDiscount === activePercentageDiscount &&
-                !isComming
+                !isFoundingProduct
                   ? "h-[231px]"
                   : "h-[192px]"
               } relative w-full md:w-[148px]
@@ -281,7 +281,7 @@ export default function TeamPrice({
                 <p
                   className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${
                     item.percentageDiscount === activePercentageDiscount &&
-                    !isComming
+                    !isFoundingProduct
                       ? "text-[24px] font-bold leading-[25px]"
                       : ""
                   }`}
@@ -298,13 +298,13 @@ export default function TeamPrice({
                   className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center
 											${
                         item.percentageDiscount === activePercentageDiscount &&
-                        !isComming
+                        !isFoundingProduct
                           ? "text-[16px] leading-[16px]"
                           : ""
                       }
 											${
                         item.percentageDiscount === activePercentageDiscount &&
-                        !isComming
+                        !isFoundingProduct
                           ? "text-blue text-[16px]"
                           : "text-grey6"
                       }`}
@@ -319,7 +319,7 @@ export default function TeamPrice({
               />
 
               {item.percentageDiscount === activePercentageDiscount &&
-                !isComming && (
+                !isFoundingProduct && (
                   <Image
                     src="/images/icons/user-profile-group-blue-icon.svg"
                     alt="User profile group icon"
@@ -329,7 +329,7 @@ export default function TeamPrice({
                   />
                 )}
               {item.percentageDiscount === activePercentageDiscount &&
-                isComming && (
+                isFoundingProduct && (
                   <Image
                     src="/images/icons/user-profile-group-grey-icon.svg"
                     alt="User profile group icon"
@@ -351,7 +351,7 @@ export default function TeamPrice({
               <p
                 className={`text-[12px] leading-[13px] font-bold font-inconsolata  text-center ${
                   item.percentageDiscount === activePercentageDiscount &&
-                  !isComming
+                  !isFoundingProduct
                     ? "text-black text-[18px]"
                     : "text-grey6"
                 }`}

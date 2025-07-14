@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import type IMembershipSummaryModel from "@/utils/models/IMembershipSummaryModel";
+import IOrderPackageModel from "@/utils/models/IOrderPackageModel";
 import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
 import type ISubscriptionSummaryModel from "@/utils/models/ISubscriptionSummaryModel";
 import Image from "next/image";
@@ -70,10 +71,6 @@ function renderPrice(
     displayPricePerCount = earlyMemberPricePerCount;
   }
 
-// console.log('earlyMemberPrice', earlyMemberPrice)
-// console.log('founderPrice', founderPrice)
-
-
   return (
     <div className="flex flex-col items-end gap-[8px]">
       {isComming && (
@@ -139,6 +136,7 @@ function renderPrice(
 }
 
 export default function OrderSummaryCard({
+  orderPackage,
   model,
   updateQuantityAction,
   discount,
@@ -152,6 +150,7 @@ export default function OrderSummaryCard({
   earlyMemberDiscount,
   firstDelivery,
 }: Readonly<{
+  orderPackage?: IOrderPackageModel;
   model:
     | IOrderSummaryModel
     | ISubscriptionSummaryModel
@@ -183,12 +182,10 @@ export default function OrderSummaryCard({
     }
   };
 
-  console.log("111 earlyMemberDiscount", earlyMemberDiscount);
-
   return (
     <div
       className={`grid gap-2 items-center ${className} ${
-        model?.src
+        orderPackage?.imageSrc
           ? "grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px]"
           : "md:grid-cols-[1fr_210px]"
       }`}

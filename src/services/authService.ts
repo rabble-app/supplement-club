@@ -14,6 +14,7 @@ export const authService = {
 		email: string,
 		password: string,
 		productId: string,
+		teamId: string,
 		summary: IMetadata,
 		referralCode: string,
 	) =>
@@ -22,7 +23,7 @@ export const authService = {
 			password,
 			role: "USER",
 			referralCode: referralCode,
-			metadata: { ...summary, productId: productId },
+			metadata: { ...summary, productId: productId, teamId: teamId },
 		}),
 
 	resetPassword: async (email: string) =>
