@@ -122,15 +122,15 @@ export default function OptBackIn({
 					description={`A confirmation email has been sent to ${context?.user?.email}`}
 					bottomContent={bottomContent}
 				/>
-				<PaymentList
+				{/* <PaymentList
 					topupQuantity={topupQuantity}
 					productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
 					teamId={managePlan?.team.id ?? ""}
 					successAction={() => onOpenChange(true)}
 					totalPrice={totalPrice}
-				/>
+				/> */}
 			</div>
-			<SummaryProduct model={summary} />
+			{/* <SummaryProduct model={summary} /> */}
 		</div>
 	);
 }

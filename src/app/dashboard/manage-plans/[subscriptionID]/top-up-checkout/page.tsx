@@ -126,7 +126,7 @@ export default function TopUpCheckout({
 						successAction={() => setStep(step + 1)}
 					/>
 				)}
-				{step !== 1 && (
+				{/* {step !== 1 && (
 					<PaymentList
 						topupQuantity={topupQuantity}
 						productId={managePlan?.team?.basket[0]?.product?.id ?? ""}
@@ -135,7 +135,7 @@ export default function TopUpCheckout({
 						successAction={() => onOpenChange(true)}
 						totalPrice={totalPrice}
 					/>
-				)}
+				)} */}
 
 				<ConfirmDialog
 					isDialogOpen={isDialogOpen}
@@ -146,7 +146,7 @@ export default function TopUpCheckout({
 			</div>
 
 			<div className="grid gap-[73px]">
-				<SummaryProduct model={summary} />
+				{/* <SummaryProduct model={summary} /> */}
 
 				<AvailablePayment />
 			</div>
