@@ -57,4 +57,5 @@ export interface IProductModel extends IBaseTimestamps {
 	firstDelivery?: boolean;
 	pochesRequired?: number;
 	orderDate?: string;
+	nextEditableDate?: string;
 }

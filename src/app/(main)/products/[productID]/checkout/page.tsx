@@ -304,6 +304,7 @@ export default function Checkout({
             storageQuantity={storageQuantity}
             setStorageQuantity={setStorageQuantity}
             daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
+            nextEditableDate={productMain?.nextEditableDate ?? ""}
             orderPackage={orderPackage}
             step={step}
             referralInfo={referralInfo}

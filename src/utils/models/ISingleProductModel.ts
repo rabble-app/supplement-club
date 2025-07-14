@@ -60,4 +60,5 @@ export default interface ISingleProductModel {
 	firstDelivery?: boolean;
 	pochesRequired?: number;
 	orderDate?: string;
+	nextEditableDate?: string;
 }

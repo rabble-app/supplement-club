@@ -38,6 +38,7 @@ export default function SummaryProduct({
   hasAlignmentPackage,
   setHasAlignmentPackage,
   hasActiveSupplement,
+  nextEditableDate,
 }: Readonly<{
   model: ISummaryProductModel;
   storageQuantity: number;
@@ -54,6 +55,7 @@ export default function SummaryProduct({
   hasAlignmentPackage: boolean;
   setHasAlignmentPackage: (val: boolean) => void;
   hasActiveSupplement: boolean;
+  nextEditableDate: string;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
   const [totalRrp, setTotalRrp] = useState(0);
@@ -200,7 +202,7 @@ export default function SummaryProduct({
           : `${orderPackage.units.slice(0, -1)} Pouch`
       }`,
       leftCenter: "LAUNCH PACKAGE",
-      leftBottom: `Takes you up to: ${orderPackage.deliveryDate} Drop`,
+      leftBottom: `Takes you up to: ${nextEditableDate ? format(new Date(nextEditableDate), "MMMM dd yyyy") : ""} Drop`,
       rightTop: "Includes Early Member 5% Extra Discount",
       rightCenter: (
         <div
@@ -673,7 +675,7 @@ export default function SummaryProduct({
               <p className="text-sm text-grey4 font-normal font-inconsolata relative">
                 Next Subscription Billed: <br />
                 <span className="absolute text-sm text-grey4 font-normal font-inconsolata">
-                  {orderPackage.deliveryDate}
+                  {nextEditableDate ? format(new Date(nextEditableDate), "MMMM dd yyyy") : ""}
                 </span>
               </p>
             }
