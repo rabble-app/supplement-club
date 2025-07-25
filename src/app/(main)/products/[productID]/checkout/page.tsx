@@ -277,75 +277,61 @@ export default function Checkout({
           )}
         </div>
 
-        {/* Desktop Summary Product - hidden on mobile */}
-        <div id="summary-product" className="hidden md:block mx-[-16px] md:mx-[0] mt-[32px]">
-          <SummaryProduct
-            model={
-              {
-                id: "1",
-                name: productMain?.name,
-                corporation: productMain?.teamName,
-                quantityOfSubUnitPerOrder:
-                  productMain?.quantityOfSubUnitPerOrder,
-                unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
-                orderDate: productMain?.orderDate,
-                leadTime: productMain?.leadTime,
-              } as unknown as ISummaryProductModel
-            }
-            storageQuantity={storageQuantity}
-            setStorageQuantity={setStorageQuantity}
-            daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
-            nextEditableDate={productMain?.nextEditableDate ?? ""}
-            orderPackage={orderPackage}
-            step={step}
-            referralInfo={referralInfo}
-            setIsReferralCodeApplied={setIsReferralCodeApplied}
-            setIsInfoIconClicked={setIsInfoIconClicked}
-            hasAlignmentPackage={hasAlignmentPackage}
-            setHasAlignmentPackage={setHasAlignmentPackage}
-            hasActiveSupplement={hasActiveSupplement}
-          />
-          {step === 4 && <Delivery />}
-          {step < 4 && <AvailablePayment />}
-        </div>
+        {/* Summary Product Content - Reusable for both desktop and mobile */}
+        {(() => {
+          const summaryProductProps = {
+            model: {
+              id: "1",
+              name: productMain?.name,
+              corporation: productMain?.teamName,
+              quantityOfSubUnitPerOrder:
+                productMain?.quantityOfSubUnitPerOrder,
+              unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
+              orderDate: productMain?.orderDate,
+              leadTime: productMain?.leadTime,
+            } as unknown as ISummaryProductModel,
+            storageQuantity,
+            setStorageQuantity,
+            daysUntilNextDrop: productMain?.daysUntilNextDrop ?? 0,
+            nextEditableDate: productMain?.nextEditableDate ?? "",
+            orderPackage,
+            step,
+            referralInfo,
+            setIsReferralCodeApplied,
+            setIsInfoIconClicked,
+            hasAlignmentPackage,
+            setHasAlignmentPackage,
+            hasActiveSupplement,
+          };
 
-        {/* Mobile Summary Drawer */}
-        <MobileSummaryDrawer
-          totalPrice={totalPrice}
-          isOpen={isDrawerOpen}
-          onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
-        >
-          <div className="p-4">
-            <SummaryProduct
-              model={
-                {
-                  id: "1",
-                  name: productMain?.name,
-                  corporation: productMain?.teamName,
-                  quantityOfSubUnitPerOrder:
-                    productMain?.quantityOfSubUnitPerOrder,
-                  unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
-                  orderDate: productMain?.orderDate,
-                  leadTime: productMain?.leadTime,
-                } as unknown as ISummaryProductModel
-              }
-              storageQuantity={storageQuantity}
-              setStorageQuantity={setStorageQuantity}
-              daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
-              nextEditableDate={productMain?.nextEditableDate ?? ""}
-              orderPackage={orderPackage}
-              step={step}
-              referralInfo={referralInfo}
-              setIsReferralCodeApplied={setIsReferralCodeApplied}
-              setIsInfoIconClicked={setIsInfoIconClicked}
-              hasAlignmentPackage={hasAlignmentPackage}
-              setHasAlignmentPackage={setHasAlignmentPackage}
-              hasActiveSupplement={hasActiveSupplement}
-            />
-            {step === 4 && <Delivery />}
-            {step < 4 && <AvailablePayment />}
-          </div>
-        </MobileSummaryDrawer>
+          const summaryContent = (
+            <>
+              <SummaryProduct {...summaryProductProps} />
+              {step === 4 && <Delivery />}
+              {step < 4 && <AvailablePayment />}
+            </>
+          );
+
+          return (
+            <>
+              {/* Desktop Summary Product - hidden on mobile */}
+              <div id="summary-product" className="hidden md:block mx-[-16px] md:mx-[0] mt-[32px]">
+                {summaryContent}
+              </div>
+
+              {/* Mobile Summary Drawer */}
+              <MobileSummaryDrawer
+                totalPrice={totalPrice}
+                isOpen={isDrawerOpen}
+                onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
+              >
+                <div className="p-4">
+                  {summaryContent}
+                </div>
+              </MobileSummaryDrawer>
+            </>
+          );
+        })()}
       </div>
     </>
   );
