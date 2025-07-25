@@ -5,7 +5,6 @@ import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import useLocalStorage from "use-local-storage";
-import { IMetadata } from "@/utils/models/api/response/IUserResponse";
 import { useUser } from "@/contexts/UserContext";
 import { referalService } from "@/services/referalService";
 import { Loader2 } from "lucide-react";
@@ -273,7 +272,7 @@ export default function SummaryProduct({
     >
       {!showOnlyTotal && (
         <>
-          <h1 className="text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
+          <h1 className="hidden md:block text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
             ORDER SUMMARY
           </h1>
 
@@ -416,7 +415,7 @@ export default function SummaryProduct({
           {model.name && (
             <div>
               {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-                <p className="text-xl font-bold font-inconsolata mb-4 uppercase">
+                <p className="text-[14px] md:text-xl font-bold font-inconsolata mb-4 uppercase">
                   DELIVERED {orderPackage.deliveryDate} • (IN{" "}
                   {daysUntilNextDrop} DAYS)
                 </p>

@@ -24,6 +24,7 @@ import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
 import useProduct from "@/hooks/useProduct";
 import { MemberType } from "@/utils/models/IOrderPackageModel";
+import MobileSummaryDrawer from "@/components/shared/MobileSummaryDrawer";
 
 export default function Checkout({
   params,
@@ -38,6 +39,7 @@ export default function Checkout({
     "storageQuantity",
     0
   );
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
   const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
@@ -83,7 +85,7 @@ export default function Checkout({
   const { productID } = useParams<{ productID: string }>();
 
   const contextTeamId = context?.user?.metadata?.teamId;
-  let teamId = subscriptionPlans.length > 0 ? searchParams.get("teamId") : contextTeamId;
+  const teamId = subscriptionPlans.length > 0 ? searchParams.get("teamId") : contextTeamId;
 
   const {
     product: productMain,
@@ -154,18 +156,6 @@ export default function Checkout({
     }
   }, [context?.user, router, orderPackage?.productId, subscriptionPlan]);
 
-  // useEffect(() => {
-  //   if (context?.user?.id) {
-  //     getMembershipSubscription(context?.user?.id);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [context?.user?.id]);
-
-  // async function getMembershipSubscription(id: string) {
-  //   const response = await paymentService.getMembershipSubscription(id);
-  //   console.log("response", response);
-  //   setMembershipSubscription(response);
-  // }
 
   const PreOrderMessage = () => {
     return (
@@ -287,7 +277,8 @@ export default function Checkout({
           )}
         </div>
 
-        <div className="mx-[-16px] md:mx-[0] mt-[32px]">
+        {/* Desktop Summary Product - hidden on mobile */}
+        <div id="summary-product" className="hidden md:block mx-[-16px] md:mx-[0] mt-[32px]">
           <SummaryProduct
             model={
               {
@@ -317,6 +308,44 @@ export default function Checkout({
           {step === 4 && <Delivery />}
           {step < 4 && <AvailablePayment />}
         </div>
+
+        {/* Mobile Summary Drawer */}
+        <MobileSummaryDrawer
+          totalPrice={totalPrice}
+          isOpen={isDrawerOpen}
+          onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
+        >
+          <div className="p-4">
+            <SummaryProduct
+              model={
+                {
+                  id: "1",
+                  name: productMain?.name,
+                  corporation: productMain?.teamName,
+                  quantityOfSubUnitPerOrder:
+                    productMain?.quantityOfSubUnitPerOrder,
+                  unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
+                  orderDate: productMain?.orderDate,
+                  leadTime: productMain?.leadTime,
+                } as unknown as ISummaryProductModel
+              }
+              storageQuantity={storageQuantity}
+              setStorageQuantity={setStorageQuantity}
+              daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
+              nextEditableDate={productMain?.nextEditableDate ?? ""}
+              orderPackage={orderPackage}
+              step={step}
+              referralInfo={referralInfo}
+              setIsReferralCodeApplied={setIsReferralCodeApplied}
+              setIsInfoIconClicked={setIsInfoIconClicked}
+              hasAlignmentPackage={hasAlignmentPackage}
+              setHasAlignmentPackage={setHasAlignmentPackage}
+              hasActiveSupplement={hasActiveSupplement}
+            />
+            {step === 4 && <Delivery />}
+            {step < 4 && <AvailablePayment />}
+          </div>
+        </MobileSummaryDrawer>
       </div>
     </>
   );
