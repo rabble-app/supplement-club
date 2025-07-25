@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 interface MobileSummaryDrawerProps {
-  children: React.ReactNode;
-  totalPrice: number;
-  isOpen: boolean;
-  onToggle: () => void;
+  readonly children: React.ReactNode;
+  readonly totalPrice: number;
+  readonly isOpen: boolean;
+  readonly onToggle: () => void;
 }
 
 export default function MobileSummaryDrawer({
@@ -38,6 +38,16 @@ export default function MobileSummaryDrawer({
           isOpen ? "top-0 border-b" : "bottom-0 border-t"
         }`}
         onClick={onToggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={isOpen ? "Close order summary" : "Open order summary"}
+        aria-expanded={isOpen}
       >
         <div className="flex items-center gap-2">
           <span
@@ -66,7 +76,19 @@ export default function MobileSummaryDrawer({
 
       {/* Drawer overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={onToggle} />
+        <div 
+          className="fixed inset-0 z-40 bg-black bg-opacity-50" 
+          onClick={onToggle}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              onToggle();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close order summary"
+        />
       )}
 
       {/* Drawer content */}
