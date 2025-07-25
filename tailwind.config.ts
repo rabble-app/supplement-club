@@ -111,7 +111,7 @@ export default {
 				inter: ["inter"],
 				roboto: ["roboto"],
 				helvetica: ["helvetica"],
-				hagerman: ["hagerman"],
+				hagerman: ["Hagerman_Font"],
 				"sf-pro": ["sf-pro-text"],
 				poppins: ["poppins"],
 			},
@@ -125,5 +125,6 @@ export default {
 			},
 		},
 	},
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;

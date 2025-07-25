@@ -165,7 +165,7 @@ export default function AlignmentDialog({
                     : "top-[120px] md:top-[56px]"
                 } left-0 right-0`}
               >
-                <h1 className="uppercase text-center font-hagerman text-2xl font-normal">
+                <h1 className="uppercase text-center font-hagerman text-[18px] md:text-2xl font-normal">
                   {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
                     "YOU’RE REGISTERING AS A FOUNDING MEMBER"}
                   {orderPackage.memberType === MemberType.MEMBER &&
