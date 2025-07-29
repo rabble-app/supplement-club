@@ -11,7 +11,7 @@ function renderPrice(
   rightBottomText: React.ReactNode
 ) {
   return (
-    <div className="flex flex-col items-end gap-[8px]">
+    <div id="order-summary-price" className="flex flex-col items-end gap-[8px]">
       {rightTopText && (
         <p className="text-blue font-normal text-sm font-inconsolata whitespace-nowrap">
           {rightTopText}
@@ -56,7 +56,7 @@ export default function OrderSummaryCard2({
   rightBottomText: React.ReactNode;
   updateQuantityAction?: (val: number) => void;
   storageQuantityState?: number;
-  className?: string;
+  className?: string | '';
   step?: number;
   isAlignmentDialog?: boolean;
   isMember?: boolean;
@@ -94,9 +94,8 @@ export default function OrderSummaryCard2({
 
   return (
     <div
-      className={`grid gap-2 ${
-        isUpdatableQuantity ? "items-start" : "items-center"
-      } ${className} ${
+      id="order-summary-card"
+      className={`grid gap-2 ${isUpdatableQuantity ? "items-start" : "items-center"} ${className??''} ${
         imageSrc
           ? "grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px]"
           : "md:grid-cols-[1fr_210px]"
@@ -104,13 +103,14 @@ export default function OrderSummaryCard2({
     >
       {imageSrc && (
         <Image
+          id="order-summary-image"
           src={imageSrc}
           alt={imageSrc}
           width={61}
           height={61}
           className={` ${
             isMembership
-              ? "border-[1px] border-[#DDDDDD] rounded-[8px] py-[17px] px-[12px]"
+              ? "border-[1px] border-[#DDDDDD] rounded-[8px] py-[17px] px-[12px] membership-image"
               : ""
           }`}
           unoptimized

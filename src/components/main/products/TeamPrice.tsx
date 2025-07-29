@@ -191,14 +191,14 @@ export default function TeamPrice({
             {members} {`${isFoundingProduct ? "Founding Members" : "Members"}`}
           </div>
           {!isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
-            <p className="text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
+            <p className="text-[14px] md:text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
               {nextPriceDiscountLevel?.membersNeeded} more members unlocks{" "}
               {nextPriceDiscountLevel?.expectedDiscount.toFixed(2)}% off for
               everyone
             </p>
           )}
           {isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
-            <p className="text-[16px] leading-[18px] font-semibold text-[#999999]">
+            <p className="text-[14px] md:text-[16px] leading-[18px] font-semibold text-[#999999]">
               {membersToLaunch} more pre-orders until product launches!
             </p>
           )}
@@ -207,7 +207,7 @@ export default function TeamPrice({
         <div className="grid gap-[8px]">
           <div className="text-[28px] font-[900] font-inconsolata flex items-center">
             £{Number((price * capsuleCount) / gPerCount).toFixed(2)}{" "}
-            <span className="text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px] whitespace-nowrap">
+            <span className="text-[14px] md:text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px] whitespace-nowrap">
               (£{pricePerCount.toFixed(2)} / count)
             </span>
           </div>
@@ -235,7 +235,7 @@ export default function TeamPrice({
         </div>
       )}
 
-      <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mt-8 md:mt-0">
+      <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mt-0">
         {priceInfo.map((item, index) => (
           <div
             key={`info-${index + 1}`}
@@ -299,13 +299,13 @@ export default function TeamPrice({
 											${
                         item.percentageDiscount === activePercentageDiscount &&
                         !isFoundingProduct
-                          ? "text-[16px] leading-[16px]"
+                          ? "text-[14px] md:text-[16px] leading-[16px]"
                           : ""
                       }
 											${
                         item.percentageDiscount === activePercentageDiscount &&
                         !isFoundingProduct
-                          ? "text-blue text-[16px]"
+                          ? "text-blue text-[14px] md:text-[16px]"
                           : "text-grey6"
                       }`}
                 >

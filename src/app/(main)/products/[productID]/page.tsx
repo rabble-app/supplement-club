@@ -249,26 +249,8 @@ export default function ProductDetails() {
               </div>
             </div>
           )}
-
-          <div className="flex justify-between items-center md:hidden pt-[24px]">
-            <p className="leading-[18px] text-grey4 mb-[2px]">
-              Quarterly Subscription
-            </p>
-            <div className="grid grid-cols-[24px_28px] gap-[4px] text-blue text-[16px] leading-[24px]">
-              <Image
-                src="/images/icons/user-profile-group-blue-icon.svg"
-                className="mb-auto"
-                alt="User profile group icon"
-                width={24}
-                height={24}
-                priority
-              />
-              678
-            </div>
-          </div>
         </Carousel>
-
-        <div className="order-3 md:order-none bg-grey11 md:bg-transparent mx-[-16px] mt-20 md:mt-0 md:mx-[0] px-[16px] md:px-[0]">
+        <div className="order-2 md:order-none bg-white md:bg-transparent mx-[-16px] !mt-0 md:mt-20 md:mx-[0] px-[16px] md:px-[0]">
           {product && (
             <TeamPrice
               isFoundingProduct={isFoundingProduct}
@@ -285,20 +267,9 @@ export default function ProductDetails() {
               gramsPerCount={product?.gramsPerCount!}
             />
           )}
-
-          <div
-            className={`grid gap-[60px] mt-[51px] ${
-              isFoundingProduct ? "md:mt-[70px]" : "md:mt-[0] pb-[200px]"
-            }`}
-          >
-            <PreOrderInfo productBenefits={product?.productBenefits} />
-
-            <ProductFaqs healthCategories={product?.healthCategories} />
-          </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-[16px] md:gap-[24px] order-2 md:order-none md:top-[0] md:items-start md:self-start md:pb-[50px]">
+      <div id="breadcrumb" className="flex flex-col gap-[16px] md:gap-[24px] order-3 md:order-none md:top-[0] md:items-start md:self-start md:pb-[50px]">
         <Breadcrumb className="p-[16px] md:p-[0] md:pt-[32px] absolute top-[0] left-[0] md:relative w-full bg-grey11 md:bg-transparent">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -523,16 +494,20 @@ export default function ProductDetails() {
                 step={1}
               />
             )}
-
-            {/* <SummaryProduct
-              showOnlyTotal={false}
-              className={`bg-[#F6F6F6] ${
-                product?.isComming ? "md:p-[24px]" : ""
-              }`}
-              model={summary}
-            /> */}
           </div>
         )}
+      </div>
+      
+      {/* Product info moved to standalone container */}
+      <div
+        id="product-info"
+        className={`mt-[50px] grid gap-[60px] order-4 md:order-none bg-white md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0] ${
+          isFoundingProduct ? "md:mt-[70px]" : "md:mt-[0] pb-[200px]"
+        }`}
+      >
+        <PreOrderInfo productBenefits={product?.productBenefits} />
+
+        <ProductFaqs healthCategories={product?.healthCategories} />
       </div>
     </div>
   );

@@ -270,7 +270,7 @@ export default function CapsuleBox({
           </label>
         ))}
       </RadioGroup>
-      <div className="grid gap-[16px] md:outline outline-[2px] outline-blue p-[16px]">
+      <div className="grid gap-[16px] md:outline outline-[2px] outline-blue p-0 md:p-[16px]">
         <div className="hidden md:flex flex-col gap-[2px]">
           <p className="text-grey7 text-[12px] leading-[12px]">
             {getCapsuleLabel(

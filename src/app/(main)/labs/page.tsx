@@ -208,7 +208,7 @@ export default async function Labs() {
                   {laboratories.map((laboratory) => (
                     <CarouselItem
                       key={laboratory.id}
-                      className="p-[0] md:pr-[0] min-w-0 shrink-0 grow-0 basis-full [&:not(:first-child)]:pl-4 md:basis-1/3"
+                      className="p-[0] md:pr-[0] min-w-0 shrink-0 grow-0 basis-full md:basis-1/3 !m-[auto]"
                     >
                       <LaboratoryCard {...laboratory} />
                     </CarouselItem>
