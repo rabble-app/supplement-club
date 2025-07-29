@@ -19,16 +19,25 @@ import {
 } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@reach/visually-hidden";
 import { useEffect, useState } from "react";
+import { CustomToast, StatusToast } from "@/components/shared/Toast";
+import useProduct from "@/hooks/useProduct";
+import { useUser } from "@/contexts/UserContext";
 
 export default function SubscriptionPlan({
   managePlan,
+  setIsUpdated,
+  isOpen,
+  setIsOpen,
 }: Readonly<{
   managePlan?: IManagePlanModel;
+  setIsUpdated?: (val: boolean) => void;
+  isOpen: boolean;
+  setIsOpen: (val: boolean) => void;
 }>) {
   const [changePlan, setChangePlan] = useState(false);
   const [initCapsule, setInitCapsule] = useState(1);
-  const [isOpen, setIsOpen] = useState(false);
   const [deadline, setDeadline] = useState<string>();
+  const context = useUser();
 
   useEffect(() => {
     const date = new Date(
@@ -46,9 +55,20 @@ export default function SubscriptionPlan({
   }, [managePlan]);
 
   useEffect(() => {
-    if (managePlan?.team?.basket[0]?.capsulePerDay)
-      setInitCapsule(Number(managePlan?.team?.basket[0]?.capsulePerDay));
+    const currentCapsule = Number(managePlan?.team?.basket[0]?.capsulePerDay);
+    setInitCapsule(currentCapsule);
   }, [managePlan]);
+
+  const { product } = useProduct(
+    managePlan?.team?.id,
+    context?.user?.id,
+    managePlan?.team?.basket[0]?.product?.id
+  );
+
+  const gramsPerCount =
+    Number(product?.gramsPerCount) === 0 ? 1 : Number(product?.gramsPerCount);
+
+  const quantity = initCapsule / gramsPerCount;
 
   function getBoxClasses(idx: number) {
     const isFirst = idx === 0;
@@ -68,17 +88,27 @@ export default function SubscriptionPlan({
   async function onOpenChange(val: boolean) {
     setChangePlan(val);
     if (val) {
-      await paymentService.updateSubscription(
-        managePlan?.id ?? "",
-        5,
-        initCapsule
-      );
+      try {
+        await paymentService.updateSubscription(
+          managePlan?.team?.basket[0]?.id ?? "",
+          quantity,
+          initCapsule
+        );
+        setIsUpdated?.(true);
+        setIsOpen(val);
+      } catch (error: unknown) {
+        const errorMessage =
+          error && typeof error === "object" && "error" in error
+            ? JSON.parse((error as { error: string }).error).message
+            : "An error occurred";
+        CustomToast({
+          title: errorMessage,
+          status: StatusToast.ERROR,
+          position: "top-right",
+        });
+        console.log(error);
+      }
     }
-    setIsOpen(val);
-  }
-
-  function pluralizeUnit(count: number) {
-    return count === 1 ? unit : `${unit}s`;
   }
 
   const unit =
@@ -127,6 +157,7 @@ export default function SubscriptionPlan({
           <Button
             key={`len-${idx + 1}`}
             onClick={() => {
+              // eslint-disable-next-line
               changePlan && setInitCapsule(info.capsuleCount);
             }}
             className={`border-[1px] border-grey31 font-helvetica h-[33px] flex justify-center items-center ${getBoxClasses(
@@ -140,7 +171,10 @@ export default function SubscriptionPlan({
       {!changePlan && (
         <Button
           type="submit"
-          onClick={() => setChangePlan(true)}
+          onClick={() => {
+            setChangePlan(true);
+            setIsOpen(false);
+          }}
           className="bg-blue13 w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-blue rounded-[2px] h-[50px]"
         >
           Change My Plan
@@ -158,7 +192,12 @@ export default function SubscriptionPlan({
       )}
 
       {changePlan && (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog
+          open={isOpen}
+          onOpenChange={(val) => {
+            onOpenChange(val);
+          }}
+        >
           <DialogTrigger asChild onClick={() => onOpenChange}>
             <Button className="bg-blue w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-white rounded-[2px] h-[46px]">
               Confirm New Subscription Quantity
@@ -201,13 +240,13 @@ export default function SubscriptionPlan({
                     Subscription Quantity updated
                   </p>
                   <p className="text-[20px] leading-[24px] font-helvetica text-grey4 text-center w-full font-[400]">
-                    You have changed your subscription quantity from{" "}
-                    {managePlan?.team?.basket[0]?.capsulePerDay}{" "}
-                    {pluralizeUnit(
-                      managePlan?.team?.basket[0]?.capsulePerDay ?? 2
-                    )}{" "}
-                    to {initCapsule} {pluralizeUnit(initCapsule)} per day.
-                    This update will apply from {deadline} onwards.
+                    You have changed your subscription quantity
+                    to {initCapsule}
+                    {managePlan?.team?.basket[0]?.product
+                      ?.unitsOfMeasurePerSubUnit === "grams"
+                      ? "g"
+                      : " capsule(s)"}{" "}
+                    per day. This update will apply from {deadline} onwards.
                   </p>
                 </div>
               </div>

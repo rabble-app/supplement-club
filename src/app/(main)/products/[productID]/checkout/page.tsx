@@ -161,21 +161,13 @@ export default function Checkout({
     return (
       <div className="grid gap-[16px]">
         <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-          PRE-ORDER Now to Become a Founding Member
+        Claim Your Space Now to Become a Founding Member 
         </p>
         <div className="grid gap-[8px]">
           <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            Only get charged when we hit {orderPackage.remainingSpots}{" "}
-            pre-orders.
-          </p>
-          <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            By becoming a founding member you get an extra{" "}
-            {orderPackage.extraDiscount}% off the team price forever.
-          </p>
-          <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-            Lead time is {productMain?.leadTime} weeks from when we charge you -
-            but you get {orderPackage.extraDiscount}% off your subscription
-            forever.
+            Only charged once all Founding Member slots are filled. Your
+            delivery will arrive {productMain?.leadTime} weeks after that, but
+            your {orderPackage.extraDiscount}% lifetime discount is locked in today.
           </p>
         </div>
       </div>

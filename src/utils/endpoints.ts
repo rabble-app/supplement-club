@@ -20,7 +20,7 @@ export const PAYMENT_ENDPOINTS = {
 	JOIN_TEAM: "payments/supplement/join-team",
 	JOIN_PREORDER_TEAM: "payments/supplement/join-team",
 	SETUP_INTENT: "payments/setup-intent/",
-	PAYMENT_INTENT: "payments/intent",
+	PAYMENT_INTENT: "payments/intent?isSupplementApp=true",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",
 	UPDATE_SUBSCRIPTION: (id: string) => `payments/basketC/${id}`,
 	CHARGE_USER: "payments/charge",

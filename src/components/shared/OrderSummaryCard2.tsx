@@ -19,7 +19,7 @@ function renderPrice(
       )}
       {rightCenterText}
       {rightBottomText && (
-        <p className="text-blue font-normal text-sm font-inconsolata">
+        <p className="text-blue font-normal text-sm font-inconsolata whitespace-nowrap">
           {rightBottomText}
         </p>
       )}
@@ -45,6 +45,7 @@ export default function OrderSummaryCard2({
   gPerCount,
   pochesRequired,
   isMembership,
+  isReactivatePlan,
 }: Readonly<{
   imageSrc: string;
   leftTopText: string;
@@ -63,6 +64,7 @@ export default function OrderSummaryCard2({
   gPerCount?: number;
   pochesRequired?: number;
   isMembership?: boolean;
+  isReactivatePlan?: boolean;
 }>) {
   const [storageCapsuleCount] = useLocalStorage("capsuleCount", 0);
   const [storageQuantity, setStorageQuantity] = useLocalStorage(
@@ -79,6 +81,7 @@ export default function OrderSummaryCard2({
   };
 
   useEffect(() => {
+    if (isReactivatePlan) return;
     setStorageQuantity(storageQuantityState ?? updatableQuantity);
   }, [updatableQuantity]);
 

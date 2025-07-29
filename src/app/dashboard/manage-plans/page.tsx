@@ -26,6 +26,7 @@ export default function Plans() {
   const context = useUser();
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [isSubscriptionUpdated, setIsSubscriptionUpdated] = useState(false);
 
   const membershipRrp = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_RRP);
   const membershipAmount = Number(process.env.NEXT_PUBLIC_MEMBERSHIP_AMOUNT);
@@ -84,12 +85,16 @@ export default function Plans() {
       setSubscriptions(response);
       setLoading(false);
     })();
-  }, [context?.user, unregisterResponse]);
+  }, [context?.user, unregisterResponse, isSubscriptionUpdated]);
 
   async function getMembershipSubscription(id: string) {
     const response = await paymentService.getMembershipSubscription(id);
     return response;
   }
+
+  useEffect(() => {
+    localStorage.removeItem('storageQuantity');
+  }, []);
 
   async function unregisterMembership(id: string) {
     try {
@@ -262,7 +267,7 @@ export default function Plans() {
         </div>
       )}
       {subscriptions.map((item) => (
-        <ManagePlanCard model={item} key={item.id} unregisterMembership={unregisterMembership} />
+        <ManagePlanCard model={item} key={item.id} unregisterMembership={unregisterMembership} setIsSubscriptionUpdated={setIsSubscriptionUpdated} />
       ))}
     </div>
   );

@@ -136,6 +136,7 @@ export const paymentService = {
 		amount: number,
 		currency: string,
 		customerId: string,
+		paymentMethodId: string,
 	) {
 		const { data } = (await apiRequest(
 			PAYMENT_ENDPOINTS.PAYMENT_INTENT,
@@ -144,6 +145,7 @@ export const paymentService = {
 				amount,
 				currency,
 				customerId,
+				paymentMethodId,
 			},
 		)) as IPaymentIntentApiResponse;
 
