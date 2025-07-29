@@ -15,7 +15,7 @@ import IOrderPackageModel, {
   MemberType,
 } from "@/utils/models/IOrderPackageModel";
 
-const useProduct = (teamId?: string, userId?: string) => {
+const useProduct = (teamId?: string, userId?: string, pId?: string) => {
   const [product, setProduct] = useState<ISingleProductModel>();
   const [units, setUnits] = useState("g");
   const [firstWord, setFirstWord] = useState<string>("");
@@ -50,7 +50,7 @@ const useProduct = (teamId?: string, userId?: string) => {
   useEffect(() => {
     const fetchProduct = async () => {
       const model = await productService.product(
-        productId as string,
+        productId as string ?? pId,
         teamId ?? "",
         userId ?? ""
       );
@@ -76,7 +76,7 @@ const useProduct = (teamId?: string, userId?: string) => {
       }
     };
     fetchProduct();
-  }, [productId, teamId, userId]);
+  }, [productId, pId, teamId, userId]);
 
   // const foundingMemberPrice =
   //   Number(productRrp) *
@@ -98,6 +98,8 @@ const useProduct = (teamId?: string, userId?: string) => {
 
   const foundingMemberPricePerCount =
     Number(product?.rrpPerCount) * (1 - (foundingMemberDiscount ?? 0) / 100);
+
+    console.log(product?.rrpPerCount)
 
   const isFoundingProduct =
     product?.supplementTeamProducts?.status === "PREORDER";

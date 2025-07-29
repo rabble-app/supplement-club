@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Separator } from "@radix-ui/react-separator";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +15,12 @@ import {
 
 export default function SubscriptionSkipDialog({
 	confirmAction,
+	nextQuarterStart,
+	deliveryDate,
 }: Readonly<{
 	confirmAction: () => void;
+	nextQuarterStart: Date;
+	deliveryDate: string;
 }>) {
 	return (
 		<Dialog>
@@ -45,7 +50,7 @@ export default function SubscriptionSkipDialog({
 				<Separator className=" h-[1px] bg-grey32 mx-[-16px]" />
 
 				<div className="text-[16px] leading-[24px] font-[400] font-helvetica text-grey6">
-					You are opting to skip the Jan 1st 2025 Drop. Are you sure you want to
+					You are opting to skip the {deliveryDate ? format(deliveryDate, "MMMM d, yyyy") : format(nextQuarterStart, "MMMM d, yyyy")} drop. Are you sure you want to
 					Skip?
 				</div>
 

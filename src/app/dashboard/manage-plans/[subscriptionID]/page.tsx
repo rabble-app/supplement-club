@@ -2,24 +2,31 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import SubscriptionCancelDialog from "@/components/dashboard/subscription-managment/SubscriptionCancelDialog";
 import SubscriptionCard from "@/components/dashboard/subscription-managment/SubscriptionCard";
 import SubscriptionPlan from "@/components/dashboard/subscription-managment/SubscriptionPlan";
 import SubscriptionSkipDialog from "@/components/dashboard/subscription-managment/SubscriptionSkipDialog";
-import SummaryProduct from "@/components/shared/SummaryProduct";
 import { Button } from "@/components/ui/button";
 import { teamsService } from "@/services/teamService";
 import { usersService } from "@/services/usersService";
 import type IManagePlanModel from "@/utils/models/IManagePlanModel";
-import type IOrderSummaryModel from "@/utils/models/IOrderSummaryModel";
-import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 import type { SubscriptionProps } from "@/utils/props/SubscriptionProps";
 import { getQuarterInfo } from "@/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { format, startOfMonth, addMonths } from "date-fns";
+import {
+  format,
+  startOfMonth,
+  addMonths,
+  addQuarters,
+  startOfQuarter,
+} from "date-fns";
+import Image from "next/image";
+import PricePerCapsule from "@/components/shared/PricePerCapsule";
+import useProduct from "@/hooks/useProduct";
+import { useUser } from "@/contexts/UserContext";
 
 export default function Subscription({
   params,
@@ -27,18 +34,13 @@ export default function Subscription({
   const [subscriptionID, setSubscriptionID] = useState<string>();
   const [totalCapsule, setTotalCapsule] = useState<number>(0);
   const [managePlan, setManagePlan] = useState<IManagePlanModel>();
-  const [summary, setSummary] = useState<ISummaryProductModel>(
-    {} as ISummaryProductModel
-  );
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const router = useRouter();
-  const {
-    endDate,
-    year,
-    daysToNextQuarter,
-    remainsDaysToNextQuater,
-    currentQuarter,
-  } = getQuarterInfo();
-  const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
+  const context = useUser();
+  const { endDate, year, daysToNextQuarter, remainsDaysToNextQuater } =
+    getQuarterInfo();
   const nextDelivery = `${format(
     startOfMonth(addMonths(endDate, 1)),
     "d MMM yyyy"
@@ -51,40 +53,16 @@ export default function Subscription({
       const response = await usersService.getSubscriptionPlan(subscriptionID);
       setManagePlan(response);
 
-      const orders = [] as IOrderSummaryModel[];
       let caps = 0;
       for (const item of response.team.basket) {
         const capsules = +item.capsulePerDay * remainsDaysToNextQuater;
-        orders.push({
-          alt: item.product.imageUrl,
-          description:
-            capsules > 0
-              ? `${
-                  +item.capsulePerDay * remainsDaysToNextQuater
-                } Capsules to see you to Q${nextQuater}`
-              : "",
-          capsules: capsules,
-          name: item.product.name,
-          delivery: nextDelivery,
-          src: item.product.imageUrl,
-          price: capsules * 0.25,
-          rrp: item.product.rrp,
-          pricePerCapsule: 0.25,
-          id: item.id,
-        });
         caps += capsules;
       }
 
       setTotalCapsule(caps);
-
-      const model = {
-        orders: orders,
-      } as ISummaryProductModel;
-
-      setSummary(model);
     };
     fetchParams();
-  }, [params, nextDelivery, nextQuater, remainsDaysToNextQuater]);
+  }, [params, isOpen]);
 
   async function subscriptionCancel() {
     await teamsService.cancelSubscriptionPlan(subscriptionID);
@@ -96,7 +74,47 @@ export default function Subscription({
     router.push("/dashboard/manage-plans/");
   }
 
-  const units = managePlan?.team?.basket[0]?.product?.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
+  const now = new Date();
+  const nextQuarterStart = startOfQuarter(addQuarters(now, 1));
+
+  const units =
+    managePlan?.team?.basket[0]?.product?.unitsOfMeasurePerSubUnit === "grams"
+      ? "g"
+      : " Capsules";
+
+  const { product, orderPackage } = useProduct(
+    managePlan?.team?.id,
+    context?.user?.id,
+    managePlan?.team?.basket[0]?.product?.id
+  );
+
+  let bottomText = "Free Delivery";
+  if (managePlan?.role === "EARLY_MEMBER") {
+    bottomText = `${managePlan.team.supplementTeamProducts.earlyMembersDiscount}% OFF TEAM PRICE. FOREVER`;
+  } else if (managePlan?.role === "FOUNDING_MEMBER") {
+    bottomText = `${managePlan.team.supplementTeamProducts.foundingMembersDiscount}% OFF TEAM PRICE. FOREVER`;
+  }
+
+  const price =
+    Number(
+      ((product?.rrp ?? 0) *
+        Number(managePlan?.team?.basket[0]?.capsulePerDay)) /
+        Number(orderPackage.gPerCount)
+    ) *
+    (1 -
+      Number(
+        Number(orderPackage.discount) + Number(orderPackage.extraDiscount)
+      ) /
+        100);
+
+        const rrpPerCount = Number(managePlan?.team?.basket[0]?.product?.rrp) / 90;
+
+        const foundingMemberPricePerCount =
+        Number(rrpPerCount) *
+        (1 -
+          (Number(managePlan?.team?.supplementTeamProducts?.foundingMembersDiscount) +
+            Number(managePlan?.team?.basket[0]?.discount)) /
+            100);
 
   return (
     <div className="mx-auto py-[30px] max-w-[600px]">
@@ -114,50 +132,77 @@ export default function Subscription({
           />
         )}
 
-        <SubscriptionPlan managePlan={managePlan} />
+        <SubscriptionPlan
+          managePlan={managePlan}
+          setIsUpdated={setIsUpdated}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
 
-        {managePlan?.role !== "FOUNDING_MEMBER" && <SubscriptionCard
-          title="Your Stock"
-          description={`You should have ${totalCapsule}${units} to tie you over to the ${format(
-            startOfMonth(addMonths(endDate, 1)),
-            "MMMM d"
-          )} ${year} drop`}
-          imageSrc="/images/icons/truck-icon.svg"
-          imageAlt="Truck icon"
-        >
-          <Button
-            asChild
-            className="bg-blue13 w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-blue rounded-[2px] h-[50px]"
+        {managePlan?.role !== "FOUNDING_MEMBER" && (
+          <SubscriptionCard
+            title="Your Stock"
+            description={`You should have ${totalCapsule}${units} to tie you over to the ${format(
+              startOfMonth(addMonths(endDate, 1)),
+              "MMMM d"
+            )} ${year} drop`}
+            imageSrc="/images/icons/truck-icon.svg"
+            imageAlt="Truck icon"
+            key={managePlan?.capsulePerDay}
           >
-            <Link
-              href={`/dashboard/manage-plans/${subscriptionID}/top-up-checkout/`}
+            <Button
+              asChild
+              className="bg-blue13 w-full text[16px] md:text-[17px] md:leading-[22px] font-inconsolata font-bold text-blue rounded-[2px] h-[50px]"
             >
-              Order Top Up Capsules
-            </Link>
-          </Button>
-        </SubscriptionCard>}
+              <Link
+                href={`/dashboard/manage-plans/${subscriptionID}/top-up-checkout/`}
+              >
+                Order Top Up Capsules
+              </Link>
+            </Button>
+          </SubscriptionCard>
+        )}
 
-        {/* <SummaryProduct model={summary}> */}
-        <div>
+        <div className="bg-grey12 p-6 mt-10">
+          <div className="grid gap-[8px] items-center grid-cols-[61px_1fr_auto] bg-grey12 pb-[24px]">
+            <Image
+              src="/images/supplement-mockup.svg"
+              alt=""
+              width={61}
+              height={61}
+            />
+            <div className="grid gap-[8px]">
+              <p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
+                {`${Number(managePlan?.team?.basket[0]?.capsulePerDay) * 90}${
+                  managePlan?.team?.basket[0]?.product
+                    ?.unitsOfMeasurePerSubUnit === "grams"
+                    ? "g"
+                    : " Capsule(s)"
+                } Every 3 months`}
+              </p>
+              <p className="text-[16px] leading-[16px] font-[600] font-inconsolata">
+                {managePlan?.role !== "MEMBER"
+                  ? managePlan?.role.replaceAll("_", " ")
+                  : `QUARTERLY SUBSCRIPTION`}
+              </p>
+              <p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
+                {bottomText}
+              </p>
+            </div>
+            <PricePerCapsule
+              price={Number(price.toFixed(2))}
+              pricePerCount={managePlan?.role === "FOUNDING_MEMBER" ? Number(foundingMemberPricePerCount) : Number(product?.pricePerCount)}
+            />
+          </div>
 
-              {/* <OrderSummaryCard
-                        key={summary.orders[0]?.id}
-                        model={summary.orders[0]}
-                        discount={data.discount}
-                        step={step}
-                        isComming={data.isComming}
-                        founderSpots={data.founderSpots}
-                        founderMembersNeeded={data.founderMembersNeeded}
-                        founderDiscount={data.founderDiscount}
-                        earlyMemberDiscount={data.earlyMemberDiscount}
-                        firstDelivery={data.firstDelivery}
-                      /> */}
-      
           <SubscriptionCancelDialog confirmAction={subscriptionCancel} />
 
-          <SubscriptionSkipDialog confirmAction={subscriptionSkipDialog} />
-            </div>
-        {/* </SummaryProduct> */}
+          <SubscriptionSkipDialog
+            confirmAction={subscriptionSkipDialog}
+            nextQuarterStart={nextQuarterStart}
+            deliveryDate={product?.deliveryDate ?? ""}
+          />
+        </div>
       </div>
     </div>
   );

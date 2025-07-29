@@ -44,6 +44,7 @@ export interface Product {
 	capsuleInfo: CapsuleInfo[];
 	imageUrl: string;
 	producer: Producer;
+	gramsPerCount: string;
 }
 
 export interface PriceInfo {

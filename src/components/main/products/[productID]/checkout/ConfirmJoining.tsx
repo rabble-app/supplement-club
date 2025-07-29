@@ -217,7 +217,7 @@ export default function ConfirmJoining({
           <h3 className="font-hagerman text-[24px]">You’ve Registered as a Founding Member for <br />
             {productName}</h3>
 
-          <p className="font-helvetica text-sm text-grey4 my-2">As a founding member, you’ve secured a further {orderPackage.discount}% lifetime discount off the team price for all your future orders.</p>
+          <p className="font-helvetica text-sm text-grey4 my-2">As a founding member, you’ve secured a further {orderPackage.extraDiscount}% lifetime discount off the team price for all your future orders.</p>
 
           <div className="my-4">
             <h3 className="font-inconsolata font-bold text-base">What Happens Next</h3>

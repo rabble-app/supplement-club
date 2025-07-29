@@ -38,7 +38,10 @@ export default function PaymentList({
   poucheSize,
   pricePerCount,
   productPrice,
-}: Readonly<{
+  isReactivatePlan,
+  submitAction,
+  isLoadingSubmitAction,
+  }: Readonly<{
   totalPrice: number;
   teamId: string;
   topupQuantity: number;
@@ -48,6 +51,9 @@ export default function PaymentList({
   poucheSize?: number;
   pricePerCount?: number;
   productPrice?: number;
+  isReactivatePlan?: boolean;
+  submitAction?: () => void;
+  isLoadingSubmitAction?: boolean;
 }>) {
   const [policyTerms, setPolicyTerms] = useState(true);
   const [address, setAddress] = useState(true);
@@ -252,10 +258,10 @@ export default function PaymentList({
           context?.setNewUser(context.user);
         }
 
-        CustomToast({
-          title: "Billing address saved successfully",
-          status: StatusToast.SUCCESS,
-        });
+        // CustomToast({
+        //   title: "Billing address saved successfully",
+        //   status: StatusToast.SUCCESS,
+        // });
 
         return true;
       } else {
@@ -294,7 +300,7 @@ export default function PaymentList({
     <div className="grid gap-[24px]">
       <Separator className="bg-grey3 h-[1px] w-full" />
 
-      <div className="flex items-start gap-[10px]">
+      {!isReactivatePlan && <div className="flex items-start gap-[10px]">
         <Checkbox
           id="policyTerms"
           checked={policyTerms}
@@ -321,7 +327,7 @@ export default function PaymentList({
             Privacy Policy
           </Link>
         </label>
-      </div>
+      </div>}
 
       {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
         <p className="text-[14px] leading-[16px]">
@@ -432,11 +438,12 @@ export default function PaymentList({
           {ButtonSection}
 
           <Button
-            onClick={handlePlaceOrder}
+            onClick={isReactivatePlan ? submitAction : handlePlaceOrder}
             className={` text-white font-bold w-full h-[51px] ${
               policyTerms ? "bg-blue" : "pointer-events-none bg-grey25"
             }`}
           >
+            {isLoadingSubmitAction && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {`${
               orderPackage.memberType !== MemberType.MEMBER ? "Register Order" : "Place Order"

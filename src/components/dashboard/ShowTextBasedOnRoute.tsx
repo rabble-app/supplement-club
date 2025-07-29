@@ -20,7 +20,7 @@ const ShowTextBasedOnRoute = () => {
 	const getTextForRoute = () => {
 		switch (pathname) {
 			case `/dashboard/manage-plans/${params.subscriptionID}/reactivate-plan`:
-				return "Re-active My plan";
+				return "Re-activate My plan";
 			case `/dashboard/manage-plans/${params.subscriptionID}/opt-back-in`:
 				return "Opt Back in";
 			case `/dashboard/manage-plans/${params.subscriptionID}/top-up-checkout`:

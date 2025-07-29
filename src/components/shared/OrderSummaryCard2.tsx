@@ -19,7 +19,7 @@ function renderPrice(
       )}
       {rightCenterText}
       {rightBottomText && (
-        <p className="text-blue font-normal text-sm font-inconsolata">
+        <p className="text-blue font-normal text-sm font-inconsolata whitespace-nowrap">
           {rightBottomText}
         </p>
       )}
@@ -45,6 +45,7 @@ export default function OrderSummaryCard2({
   gPerCount,
   pochesRequired,
   isMembership,
+  isReactivatePlan,
 }: Readonly<{
   imageSrc: string;
   leftTopText: string;
@@ -63,6 +64,7 @@ export default function OrderSummaryCard2({
   gPerCount?: number;
   pochesRequired?: number;
   isMembership?: boolean;
+  isReactivatePlan?: boolean;
 }>) {
   const [storageCapsuleCount] = useLocalStorage("capsuleCount", 0);
   const [storageQuantity, setStorageQuantity] = useLocalStorage(
@@ -79,6 +81,7 @@ export default function OrderSummaryCard2({
   };
 
   useEffect(() => {
+    if (isReactivatePlan) return;
     setStorageQuantity(storageQuantityState ?? updatableQuantity);
   }, [updatableQuantity]);
 
@@ -91,7 +94,9 @@ export default function OrderSummaryCard2({
 
   return (
     <div
-      className={`grid gap-2 ${isUpdatableQuantity ? "items-start" : "items-center"} ${className} ${
+      className={`grid gap-2 ${
+        isUpdatableQuantity ? "items-start" : "items-center"
+      } ${className} ${
         imageSrc
           ? "grid-cols-[61px_1fr] md:grid-cols-[61px_1fr_210px]"
           : "md:grid-cols-[1fr_210px]"

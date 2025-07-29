@@ -89,7 +89,7 @@ export default function CapsuleBox({
   const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 
   const leftTopText = `${
-    (orderPackage.capsuleCount * orderPackage.days) / gPerCount
+    (orderPackage.capsuleCount * orderPackage.days)
   }${orderPackage.units} Every 3 months`;
 
   const rightCenterText = (
@@ -123,14 +123,14 @@ export default function CapsuleBox({
     FOUNDING_MEMBER: {
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
-      rightTop: "Founders Slot",
-      rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
+      rightTop: "Founding Membership",
+      rightBottom: `${orderPackage.remainingSpots} Founding Member Spots Remaining!`,
     },
     EARLY_MEMBER: {
       leftCenter: "EARLY MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
-      rightTop: "Early Bird Slot",
-      rightBottom: `Limited Slots Remaining!`,
+      rightTop: "Early Membership",
+      rightBottom: `${orderPackage.remainingSpots} Early Member Spots Remaining!`,
     },
     MEMBER: {
       leftCenter: `Q${nextQuater} DROP`,

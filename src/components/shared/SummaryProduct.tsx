@@ -39,6 +39,8 @@ export default function SummaryProduct({
   setHasAlignmentPackage,
   hasActiveSupplement,
   nextEditableDate,
+  isReactivatePlan,
+  isTopUp,
 }: Readonly<{
   model: ISummaryProductModel;
   storageQuantity: number;
@@ -56,6 +58,8 @@ export default function SummaryProduct({
   setHasAlignmentPackage: (val: boolean) => void;
   hasActiveSupplement: boolean;
   nextEditableDate: string;
+  isReactivatePlan?: boolean;
+  isTopUp?: boolean;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
   const [totalRrp, setTotalRrp] = useState(0);
@@ -180,7 +184,7 @@ export default function SummaryProduct({
       }${orderPackage.units} Every 3 months`,
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
-      rightTop: "Founders Slot Reserved",
+      rightTop: "Founding Membership",
       rightCenter: (
         <div
           className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
@@ -191,7 +195,7 @@ export default function SummaryProduct({
           </span>
         </div>
       ),
-      rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
+      rightBottom: `${orderPackage.remainingSpots} Founding Member Spots Remaining!`,
     },
     EARLY_MEMBER: {
       leftTop: `${
@@ -202,7 +206,11 @@ export default function SummaryProduct({
           : `${orderPackage.units.slice(0, -1)} Pouch`
       }`,
       leftCenter: "LAUNCH PACKAGE",
-      leftBottom: `Takes you up to: ${nextEditableDate ? format(new Date(nextEditableDate), "MMMM dd yyyy") : ""} Drop`,
+      leftBottom: `Takes you up to: ${
+        nextEditableDate
+          ? format(new Date(nextEditableDate), "MMMM dd yyyy")
+          : ""
+      } Drop`,
       rightTop: "Includes Early Member 5% Extra Discount",
       rightCenter: (
         <div
@@ -274,7 +282,7 @@ export default function SummaryProduct({
       {!showOnlyTotal && (
         <>
           <h1 className="text-[24px] leading-[27px] font-hagerman text-blue mb-[8px]">
-            ORDER SUMMARY
+            {isTopUp && !isReactivatePlan ? "TOP UP ORDER SUMMARY" : "ORDER SUMMARY"}
           </h1>
 
           {model?.corporation && model.name && (
@@ -307,9 +315,9 @@ export default function SummaryProduct({
                     />
 
                     <p className="text-[14px] leading-[16px] text-grey6">
-                      {(Number(model.quantityOfSubUnitPerOrder ?? 0) *
+                      {!isTopUp ? (Number(model.quantityOfSubUnitPerOrder ?? 0) *
                         (orderPackage?.capsuleCount ?? 0)) /
-                        (orderPackage?.gPerCount ?? 0)}{" "}
+                        (orderPackage?.gPerCount ?? 0) : Number(model.quantityOfSubUnitPerOrder ?? 0)+" "}
                       {model.unitsOfMeasurePerSubUnit}
                     </p>
                   </div>
@@ -317,61 +325,70 @@ export default function SummaryProduct({
             </div>
           )}
 
-          <hr className="border-grey3 border" />
+         {!isTopUp && !isReactivatePlan && <hr className="border-grey3 border" />}
 
-          {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-            <div className="font-inconsolata bg-blue2 rounded-sm">
-              <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
-                FOUNDING MEMBER PRICING – You’re claiming a spot before stock
-                arrives and securing an extra {orderPackage.extraDiscount}% off
-                for life.
-              </p>
-            </div>
-          )}
-          {orderPackage.memberType === MemberType.EARLY_MEMBER && (
-            <div className="font-inconsolata bg-blue2 rounded-sm">
-              <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
-                EARLY MEMBER PRICING – You’re ordering before stock arrives and
-                securing an extra {orderPackage.extraDiscount}% off for life.
-              </p>
-            </div>
+          {(!isTopUp && !isReactivatePlan) && (
+            <>
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                <div className="font-inconsolata bg-blue2 rounded-sm">
+                  <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
+                    FOUNDING MEMBER PRICING – You’re claiming a spot before
+                    stock arrives and securing an extra{" "}
+                    {orderPackage.extraDiscount}% off for life.
+                  </p>
+                </div>
+              )}
+              {orderPackage.memberType === MemberType.EARLY_MEMBER && (
+                <div className="font-inconsolata bg-blue2 rounded-sm">
+                  <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
+                    EARLY MEMBER PRICING – You’re ordering before stock arrives
+                    and securing an extra {orderPackage.extraDiscount}% off for
+                    life.
+                  </p>
+                </div>
+              )}
+            </>
           )}
 
-          <div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <p className="text-xl font-bold font-inconsolata">
-                  {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
-                    "LAUNCH PACKAGE"}
-                  {orderPackage.memberType !== MemberType.FOUNDING_MEMBER &&
-                    "BILLED TODAY"}
-                </p>
-                {orderPackage.memberType !== MemberType.MEMBER && (
-                  <Image
-                    src="/images/icons/info-icon.svg"
-                    alt="arrow right icon"
-                    width={20}
-                    height={20}
-                    className="cursor-pointer"
-                    onClick={() => setIsInfoIconClicked?.(true)}
-                  />
+          {!isReactivatePlan && (
+            <div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <p className="text-xl font-bold font-inconsolata">
+                    {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
+                      "LAUNCH PACKAGE"}
+                    {orderPackage.memberType !== MemberType.FOUNDING_MEMBER &&
+                      "BILLED TODAY"}
+                  </p>
+                  {orderPackage.memberType !== MemberType.MEMBER && (
+                    <Image
+                      src="/images/icons/info-icon.svg"
+                      alt="arrow right icon"
+                      width={20}
+                      height={20}
+                      className="cursor-pointer"
+                      onClick={() => setIsInfoIconClicked?.(true)}
+                    />
+                  )}
+                </div>
+                {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                  <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
+                    Reserved at £{orderPackage.pricePerCount?.toFixed(2)} /
+                    count
+                  </p>
                 )}
               </div>
-              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-                <p className="text-xs font-bold text-blue bg-[#E5E6F4] px-2.5 py-1.5 rounded-full font-inconsolata">
-                  Reserved at £{orderPackage.pricePerCount?.toFixed(2)} / count
-                </p>
-              )}
+              <hr className="bg-grey3 h-[1.5px] mt-6" />
             </div>
-            <hr className="bg-grey3 h-[1.5px] mt-6" />
-          </div>
+          )}
 
           {model.name && orderPackage.memberType === MemberType.MEMBER && (
-            <div>
-              {hasAlignmentPackage &&
-              (storageQuantityState ?? storageQuantity) &&
-              (storageQuantityState ?? storageQuantity) > 0 ? (
-                <>
+            <>
+              {(hasAlignmentPackage &&
+                (storageQuantityState ?? storageQuantity) &&
+                (storageQuantityState ?? storageQuantity) > 0) ||
+              (isReactivatePlan && hasAlignmentPackage) ? (
+                <div>
                   <p className="text-xl font-bold font-inconsolata mb-4">
                     DISPATCHED TODAY - ROYAL MAIL 48H
                   </p>
@@ -390,31 +407,37 @@ export default function SummaryProduct({
                     storageQuantityState={storageQuantityState}
                     isMember={orderPackage.memberType === MemberType.MEMBER}
                     isAlignmentDialog={false}
-                    isUpdatableQuantity={true}
+                    isUpdatableQuantity={isReactivatePlan ? false : true}
                     step={step}
                     gPerCount={orderPackage?.gPerCount ?? 0}
                     pochesRequired={orderPackage?.pochesRequired ?? 0}
                   />
-                </>
+                </div>
               ) : (
-                <Button
-                  variant="link"
-                  className="text-center w-fit mx-auto flex justify-center"
-                  onClick={() => {
-                    setStorageQuantity(1);
-                    setStorageQuantityState(1);
-                    setHasAlignmentPackage(true);
-                  }}
-                >
-                  <p className="text-black font-inconsolata font-bold text-base underline text-center w-full">
-                    Add My Alignment Package
-                  </p>
-                </Button>
+                <>
+                  {!isReactivatePlan && (
+                    <Button
+                      variant="link"
+                      className="text-center w-fit mx-auto flex justify-center"
+                      onClick={() => {
+                        setStorageQuantity(1);
+                        setStorageQuantityState(1);
+                        setHasAlignmentPackage(true);
+                      }}
+                    >
+                      <p className="text-black font-inconsolata font-bold text-base underline text-center w-full">
+                        Add My Alignment Package
+                      </p>
+                    </Button>
+                  )}
+                </>
               )}
-            </div>
+            </>
           )}
-          {model.name && (
+
+          {!isReactivatePlan && model.name && (
             <div>
+             {!isTopUp && <>
               {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
                 <p className="text-xl font-bold font-inconsolata mb-4 uppercase">
                   DELIVERED {orderPackage.deliveryDate} • (IN{" "}
@@ -426,25 +449,28 @@ export default function SummaryProduct({
                   Quarterly Subscription
                 </p>
               )}
+              </>}
               <OrderSummaryCard2
                 imageSrc={orderPackage.imageSrc}
                 leftTopText={
-                  orderPackage.memberType === MemberType.MEMBER
+                 !isTopUp ? (orderPackage.memberType === MemberType.MEMBER
                     ? `${
                         Number(orderPackage.capsuleCount) *
                         Number(orderPackage.days)
                       }${orderPackage.units} Every 3 months`
-                    : leftTopText
+                    : leftTopText ): `${storageQuantity}${orderPackage.units} Top Up`
                 }
                 leftCenterText={
-                  orderPackage.memberType === MemberType.MEMBER
+                  !isTopUp ? (orderPackage.memberType === MemberType.MEMBER
                     ? `Q${nextQuater} DROP`
                     : leftCenterText
+                  ) : 'Alignment Package'
                 }
                 leftBottomText={
-                  orderPackage.memberType === MemberType.MEMBER
+                  !isTopUp ? (orderPackage.memberType === MemberType.MEMBER
                     ? `FREE DELIVERY • ${orderPackage.deliveryDate?.toUpperCase()}`
                     : leftBottomText
+                  ) : 'Ships Today'
                 }
                 rightTopText={rightTopText}
                 rightCenterText={
@@ -476,88 +502,93 @@ export default function SummaryProduct({
             </div>
           )}
 
-          {!hasActiveSupplement && orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-            <>
-              <hr className="border-grey3 border" />
+          {!hasActiveSupplement &&
+            orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+              <>
+                <hr className="border-grey3 border" />
 
-              <div>
-                <p className="text-xl font-bold font-inconsolata">
-                  Membership Fee
-                </p>
-
-                <p className="text-base font-inconsolata text-grey16">
-                  Membership trial begins only once your team launches — not
-                  before.
-                </p>
-              </div>
-
-              <OrderSummaryCard2
-                imageSrc={`/images/membership-card.svg`}
-                isMembership={true}
-                leftTopText={`Free for your first 2 drops`}
-                leftCenterText={`Renews at £${membershipAmount}/year`}
-                leftBottomText={`Renews on ${membershipExpiry}`}
-                rightTopText={
-                  <p className="text-xl text-black font-bold font-inconsolata">
-                    £{membershipPrice.toFixed(2)}
+                <div>
+                  <p className="text-xl font-bold font-inconsolata">
+                    Membership Fee
                   </p>
-                }
-                rightCenterText={
-                  <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
-                    RRP{" "}
-                    <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-                      £{membershipRrp.toFixed(2)}
-                    </span>{" "}
-                    <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
-                      {membershipDiscount}% OFF
-                    </span>
-                  </div>
-                }
-                rightBottomText={""}
-                updateQuantityAction={(val) => {
-                  setStorageQuantity(val);
-                  setStorageQuantityState(val);
-                }}
-                storageQuantityState={storageQuantityState}
-                isMember={
-                  orderPackage.memberType === MemberType.FOUNDING_MEMBER
-                }
-                isAlignmentDialog={false}
-                isUpdatableQuantity={false}
-                gPerCount={orderPackage?.gPerCount ?? 0}
-                pochesRequired={orderPackage?.pochesRequired ?? 0}
-              />
-            </>
-          )}
 
-          {context?.user &&
-            orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
-                Referral Code
-              </p>
+                  <p className="text-base font-inconsolata text-grey16">
+                    Membership trial begins only once your team launches — not
+                    before.
+                  </p>
+                </div>
+
+                <OrderSummaryCard2
+                  imageSrc={`/images/membership-card.svg`}
+                  isMembership={true}
+                  leftTopText={`Free for your first 2 drops`}
+                  leftCenterText={`Renews at £${membershipAmount}/year`}
+                  leftBottomText={`Renews on ${membershipExpiry}`}
+                  rightTopText={
+                    <p className="text-xl text-black font-bold font-inconsolata">
+                      £{membershipPrice.toFixed(2)}
+                    </p>
+                  }
+                  rightCenterText={
+                    <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+                      RRP{" "}
+                      <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+                        £{membershipRrp.toFixed(2)}
+                      </span>{" "}
+                      <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+                        {membershipDiscount}% OFF
+                      </span>
+                    </div>
+                  }
+                  rightBottomText={""}
+                  updateQuantityAction={(val) => {
+                    setStorageQuantity(val);
+                    setStorageQuantityState(val);
+                  }}
+                  storageQuantityState={storageQuantityState}
+                  isMember={
+                    orderPackage.memberType === MemberType.FOUNDING_MEMBER
+                  }
+                  isAlignmentDialog={false}
+                  isUpdatableQuantity={false}
+                  gPerCount={orderPackage?.gPerCount ?? 0}
+                  pochesRequired={orderPackage?.pochesRequired ?? 0}
+                />
+              </>
             )}
 
-          {context?.user && !referralInfo?.referrer?.name && step !== 4 && (
-            <div className="flex items-center gap-2 relative mt-9 mb-8">
-              <input
-                type="text"
-                className="w-full font-roboto text-base border border-grey32 px-3 py-6 absolute bg-transparent focus:outline-none"
-                placeholder="Referral Code"
-                value={referralCode}
-                onChange={(e) => setReferralCode(e.target.value)}
-              />
-              <button
-                className={`${
-                  referralCode ? "bg-blue" : "bg-grey2"
-                } text-white px-6 py-3 absolute right-3 flex items-center gap-1`}
-                onClick={() =>
-                  handleApplyReferralCode(referralCode, totalCount)
-                }
-              >
-                {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                Apply
-              </button>
-            </div>
+          {!isReactivatePlan && (
+            <>
+              {context?.user &&
+                orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+                  <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
+                    Referral Code
+                  </p>
+                )}
+
+              {context?.user && !referralInfo?.referrer?.name && step !== 4 && (
+                <div className="flex items-center gap-2 relative mt-9 mb-8">
+                  <input
+                    type="text"
+                    className="w-full font-roboto text-base border border-grey32 px-3 py-6 absolute bg-transparent focus:outline-none"
+                    placeholder="Referral Code"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value)}
+                  />
+                  <button
+                    className={`${
+                      referralCode ? "bg-blue" : "bg-grey2"
+                    } text-white px-6 py-3 absolute right-3 flex items-center gap-1`}
+                    onClick={() =>
+                      handleApplyReferralCode(referralCode, totalCount)
+                    }
+                  >
+                    {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                    Apply
+                  </button>
+                </div>
+              )}
+            </>
           )}
 
           {referralInfo?.referrer?.name && (
@@ -580,7 +611,7 @@ export default function SummaryProduct({
           )}
           <hr className="border-grey3 border" />
 
-          {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+          { orderPackage.memberType === MemberType.FOUNDING_MEMBER && !isReactivatePlan && (
             <div className="font-inconsolata bg-blue2 rounded-sm">
               <p className="text-blue font-inconsolata text-sm leading-6 font-bold text-center py-2 px-2.5">
                 Founder slot secured. You’ll be notified when the team is ready
@@ -647,109 +678,116 @@ export default function SummaryProduct({
             </div>
           </div>
         </div>
-        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-          <hr className="border-grey3 border my-6" />
-        )}
-        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-          <p className="text-[20px] md:leading-[16px] font-[600] font-inconsolata mb-6">
-            SUBSCRIPTIONS
-          </p>
-        )}
-        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-          <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-4">
-            Quarterly Drop Subscription
-          </p>
-        )}
-        {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-          <OrderSummaryCard2
-            imageSrc={orderPackage.imageSrc}
-            leftTopText={`${
-              Number(orderPackage.capsuleCount) * Number(orderPackage.days)
-            }${orderPackage.units} Every 3 months`}
-            leftCenterText={
-              orderPackage.memberType === MemberType.EARLY_MEMBER
-                ? `EARLY MEMBER`
-                : `QUARTERLY SUBSCRIPTION`
-            }
-            leftBottomText={
-              <p className="text-sm text-grey4 font-normal font-inconsolata relative">
-                Next Subscription Billed: <br />
-                <span className="absolute text-sm text-grey4 font-normal font-inconsolata">
-                  {nextEditableDate ? format(new Date(nextEditableDate), "MMMM dd yyyy") : ""}
-                </span>
-              </p>
-            }
-            rightTopText={
-              orderPackage.memberType === MemberType.EARLY_MEMBER
-                ? `Early Bird Pricing Forever`
-                : ``
-            }
-            rightCenterText={
-              <div
-                className={`text-xl  leading-[20px] flex !font-bold text-black font-inconsolata`}
-              >
-                £{Number(orderPackage.price).toFixed(2)}
-              </div>
-            }
-            rightBottomText={rightBottomText}
-            updateQuantityAction={(val) => {
-              setStorageQuantity(val);
-              setStorageQuantityState(val);
-            }}
-            storageQuantityState={storageQuantityState}
-            isMember={orderPackage.memberType === MemberType.MEMBER}
-            isAlignmentDialog={false}
-            isUpdatableQuantity={false}
-            gPerCount={orderPackage?.gPerCount ?? 0}
-            pochesRequired={orderPackage?.pochesRequired ?? 0}
-            className="mb-11"
-          />
-        )}
-        {!hasActiveSupplement && orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+        {!isReactivatePlan && (
           <>
-            <div>
-              <p className="text-base font-bold font-inconsolata mb-4">
-                Membership Fee
+            {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+              <hr className="border-grey3 border my-6" />
+            )}
+            {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+              <p className="text-[20px] md:leading-[16px] font-[600] font-inconsolata mb-6">
+                SUBSCRIPTIONS
               </p>
-            </div>
+            )}
+            {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-4">
+                Quarterly Drop Subscription
+              </p>
+            )}
+            {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+              <OrderSummaryCard2
+                imageSrc={orderPackage.imageSrc}
+                leftTopText={`${
+                  Number(orderPackage.capsuleCount) * Number(orderPackage.days)
+                }${orderPackage.units} Every 3 months`}
+                leftCenterText={
+                  orderPackage.memberType === MemberType.EARLY_MEMBER
+                    ? `EARLY MEMBER`
+                    : `QUARTERLY SUBSCRIPTION`
+                }
+                leftBottomText={
+                  <p className="text-sm text-grey4 font-normal font-inconsolata relative">
+                    Next Subscription Billed: <br />
+                    <span className="absolute text-sm text-grey4 font-normal font-inconsolata">
+                      {nextEditableDate
+                        ? format(new Date(nextEditableDate), "MMMM dd yyyy")
+                        : ""}
+                    </span>
+                  </p>
+                }
+                rightTopText={
+                  orderPackage.memberType === MemberType.EARLY_MEMBER
+                    ? `Early Bird Pricing Forever`
+                    : ``
+                }
+                rightCenterText={
+                  <div
+                    className={`text-xl  leading-[20px] flex !font-bold text-black font-inconsolata`}
+                  >
+                    £{Number(orderPackage.price).toFixed(2)}
+                  </div>
+                }
+                rightBottomText={rightBottomText}
+                updateQuantityAction={(val) => {
+                  setStorageQuantity(val);
+                  setStorageQuantityState(val);
+                }}
+                storageQuantityState={storageQuantityState}
+                isMember={orderPackage.memberType === MemberType.MEMBER}
+                isAlignmentDialog={false}
+                isUpdatableQuantity={false}
+                gPerCount={orderPackage?.gPerCount ?? 0}
+                pochesRequired={orderPackage?.pochesRequired ?? 0}
+                className="mb-11"
+              />
+            )}
+            {!hasActiveSupplement &&
+              orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+                <>
+                  <div>
+                    <p className="text-base font-bold font-inconsolata mb-4">
+                      Membership Fee
+                    </p>
+                  </div>
 
-            <OrderSummaryCard2
-              imageSrc={`/images/membership-card.svg`}
-              isMembership={true}
-              leftTopText={`Free for your first 2 drops`}
-              leftCenterText={`Renews at £${membershipAmount}/year`}
-              leftBottomText={`Renews on ${membershipExpiry}`}
-              rightTopText={
-                <p className="text-xl text-black font-bold font-inconsolata">
-                  £{membershipPrice.toFixed(2)}
-                </p>
-              }
-              rightCenterText={
-                <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
-                  RRP{" "}
-                  <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-                    £{membershipRrp.toFixed(2)}
-                  </span>{" "}
-                  <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
-                    {membershipDiscount}% OFF
-                  </span>
-                </div>
-              }
-              rightBottomText={""}
-              updateQuantityAction={(val) => {
-                setStorageQuantity(val);
-                setStorageQuantityState(val);
-              }}
-              storageQuantityState={storageQuantityState}
-              isMember={false}
-              isAlignmentDialog={false}
-              isUpdatableQuantity={false}
-              gPerCount={orderPackage?.gPerCount ?? 0}
-              pochesRequired={orderPackage?.pochesRequired ?? 0}
-            />
+                  <OrderSummaryCard2
+                    imageSrc={`/images/membership-card.svg`}
+                    isMembership={true}
+                    leftTopText={`Free for your first 2 drops`}
+                    leftCenterText={`Renews at £${membershipAmount}/year`}
+                    leftBottomText={`Renews on ${membershipExpiry}`}
+                    rightTopText={
+                      <p className="text-xl text-black font-bold font-inconsolata">
+                        £{membershipPrice.toFixed(2)}
+                      </p>
+                    }
+                    rightCenterText={
+                      <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+                        RRP{" "}
+                        <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+                          £{membershipRrp.toFixed(2)}
+                        </span>{" "}
+                        <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+                          {membershipDiscount}% OFF
+                        </span>
+                      </div>
+                    }
+                    rightBottomText={""}
+                    updateQuantityAction={(val) => {
+                      setStorageQuantity(val);
+                      setStorageQuantityState(val);
+                    }}
+                    storageQuantityState={storageQuantityState}
+                    isMember={false}
+                    isAlignmentDialog={false}
+                    isUpdatableQuantity={false}
+                    gPerCount={orderPackage?.gPerCount ?? 0}
+                    pochesRequired={orderPackage?.pochesRequired ?? 0}
+                  />
+                </>
+              )}
+            <div className="grid gap-[10px]">{children}</div>
           </>
         )}
-        <div className="grid gap-[10px]">{children}</div>
       </div>
     </div>
   );
