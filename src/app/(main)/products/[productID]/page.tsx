@@ -346,7 +346,7 @@ export default function ProductDetails() {
                     height: isSticky ? stickyRef.current?.offsetHeight : 0,
                   }}
                 />
-                <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
+                <div className="flex flex-row justify-center items-center md:items-start gap-[45px] md:gap-[8px]">
                   <div className="grid justify-center gap-[8px] md:max-w-[166px] text-[12px] leading-[14px] text-center">
                     <Image
                       className="mx-auto"

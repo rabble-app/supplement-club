@@ -14,7 +14,23 @@ import useLocalStorage from "use-local-storage";
 export default function EmailVerification() {
   const searchParams = useSearchParams();
   const context = useUser();
-  const token = searchParams.get("token");
+  const tokenParam = searchParams.get("token");
+  
+  // Extract token from path if it's not a query parameter
+  const pathToken = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() : '';
+  
+  // Clean the token - remove any URL parts and get only the JWT token
+  const cleanToken = (tokenValue: string) => {
+    // If it contains the full URL, extract just the token part
+    if (tokenValue.includes('auth/email-verification?token=')) {
+      return tokenValue.split('token=')[1];
+    }
+    // If it's just the token, return as is
+    return tokenValue;
+  };
+  
+  const token = cleanToken(tokenParam || pathToken || '');
+  
   const { setUser } = useUserStore((state) => state);
   const router = useRouter();
   const [, setHasAlignmentPackage] = useLocalStorage<boolean>("hasAlignmentPackage", false);
@@ -23,6 +39,7 @@ export default function EmailVerification() {
 
   useEffect(() => {
     const fetchToken = async () => {
+      console.log("token", token);
       const response = (await authService.emailVerify(token as string)) as {
         data: IUserResponse;
       };

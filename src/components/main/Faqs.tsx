@@ -13,7 +13,7 @@ const faqs = [
 		id: 1,
 		question: "How does Supplement Club work?",
 		answer:
-			"We orchestrate quarterly drops from the world's leading supplement manufacturers at a fraction of the cost. By ordering in sync, you save up to 72% off retail prices. When you sign up, we send you a sync package to align you with the next quarterly drop. As you and others share referral invites to the team, prices drop even further.",
+			"We orchestrate quarterly drops from the world's leading supplement manufacturers at a fraction of the cost. By ordering in sync, you save up to 72% off retail prices. When you sign up, we send you a alignment package to align you with the next quarterly drop. As you and others share referral invites to the team, prices drop even further.",
 	},
 	{
 		id: 2,
@@ -31,7 +31,7 @@ const faqs = [
 		id: 4,
 		question: "What happens if I miss a drop?",
 		answer:
-			"No problem. We'll send you a sync package via Next Day Delivery with enough capsules to align you with the next drop, so you can still benefit from synchronized ordering.",
+			"No problem. We'll send you a alignment package via Next Day Delivery with enough capsules to align you with the next drop, so you can still benefit from synchronized ordering.",
 	},
 	{
 		id: 5,

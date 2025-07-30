@@ -34,7 +34,6 @@ export default function UserLoggedIn({
             localStorage.removeItem("capsuleCount");
           }}
           className="p-[0] flex gap-[10px] text-[16px] leading-[16px] font-inconsolata"
-          asChild
         >
           <Image
             src="/images/logout.svg"

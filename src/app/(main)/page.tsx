@@ -31,8 +31,9 @@ const homeCards = [
     title: "There’s Savings in Numbers",
     subtitle: "The More People Join the Cheaper it Gets",
     description:
-      "Your sync package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of sync with the bulk ordering cycle.",
+      "Your alignment package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of alignment with the bulk ordering cycle.",
   },
+ 
   {
     id: 3,
     src: "/images/truck.svg",
@@ -40,7 +41,7 @@ const homeCards = [
     title: "Get Started Today",
     subtitle: "Next Day Delivery",
     description:
-      "Choose the supplements you want today, and we'll ship you a 'sync package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
+      "Choose the supplements you want today, and we'll ship you an 'Alignment package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
   },
 ] as IHomeCardModel[];
 
@@ -199,10 +200,7 @@ export default async function Home() {
                 YOU DON’T NEED <br /> ANOTHER SUPPLEMENT <br /> BRAND
               </div>
               <p className="text-[16px] lg:text-[20px] leading-[24px] lg:leading-[36px] text-[#757575] mb-[58px]">
-                You need pure ingredients before brands get to them. Access
-                quarterly drops of pure, pharmaceutical-grade compounds,
-                delivered direct from the labs, untouched, unblended, and up to
-                55% cheaper.
+              You need pure ingredients before brands get to them. Access quarterly drops of pure, pharmaceutical-grade compounds, delivered direct from the labs, untouched, unblended, and up to 55% cheaper.
               </p>
               <a href="#products">
                 <Image
@@ -242,8 +240,8 @@ export default async function Home() {
             <div className="ml-auto">
               {" "}
               <div className="grid gap-y-[56px] justify-end lg:my-[0] lg:px-[0]">
-                <div className="text-[56px] h-fit lg:text-[64px] leading-[46px] lg:leading-[64px] font-[400] font-hagerman text-blue">
-                  How does it work?
+                <div className="text-[56px] h-fit lg:text-[64px] leading-[100%] lg:leading-[64px] font-[400] font-hagerman text-blue">
+                  How does it<br className="md:hidden" /> work?
                 </div>
                 {homeCards.map((card) => (
                   <HomeCardComponent key={card.id} {...card} />
@@ -253,7 +251,7 @@ export default async function Home() {
             <div className="relative flex flex-col w-full mt-[310px]">
               <div className="md:w-full h-full">
                 <Image
-                  className="w-[308px] mx-auto h-[520px] absolute top-[-280px] left-0 right-0 hidden md:block"
+                  className="w-[308px] mx-auto h-[520px] absolute top-[-280px] left-0 right-0 hidden md:block object-cover"
                   src={productModel?.imageUrl ?? ""}
                   alt={productModel?.imageKey ?? "main product"}
                   width={308}
@@ -261,7 +259,7 @@ export default async function Home() {
                   unoptimized
                 />
                 <Image
-                  className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-260px] left-0 right-0"
+                  className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-326px] left-0 right-0"
                   src={productModel?.imageUrl ?? ""}
                   alt={productModel?.imageKey ?? "main product"}
                   width={545}
@@ -361,7 +359,7 @@ export default async function Home() {
 
             <div className="flex flex-col justify-between">
               <div>
-                <p className="text-[32px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-[800] text-blue pt-[32px] lg:pt-[0px] pb-[16px] font-inconsolata">
+                <p className="text-[24px] md:text-[32px] lg:text-[40px] leading-[32px] lg:leading-[58px] font-[800] text-blue pt-[32px] lg:pt-[0px] pb-[16px] font-inconsolata">
                   Pharmaceutical Grade Ingredients Aren&apos;t Expensive.
                   Marketing them is.
                 </p>

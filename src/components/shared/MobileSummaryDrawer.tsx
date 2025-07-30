@@ -61,7 +61,7 @@ export default function MobileSummaryDrawer({
             <span
               className="font-hagerman font-normal text-[24px] leading-[100%] text-[#00038F]"
             >
-              ${totalPrice.toFixed(2)}
+              £{totalPrice.toFixed(2)}
             </span>
           )}
           <Image
