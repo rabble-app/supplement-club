@@ -559,7 +559,7 @@ export default function SummaryProduct({
           {!isReactivatePlan && (
             <>
               {context?.user &&
-                orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
+                orderPackage.memberType !== MemberType.FOUNDING_MEMBER && step !== 4 && (
                   <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata">
                     Referral Code
                   </p>
@@ -591,6 +591,10 @@ export default function SummaryProduct({
           )}
 
           {referralInfo?.referrer?.name && (
+            <div>
+              <p className="text-[16px] leading-[18px] md:leading-[16px] font-[600] font-inconsolata mb-4">
+              Referral Code
+            </p>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-1 bg-blue p-2.5 rounded-sm">
                 <GiftIcon className="text-white w-6 h-6 mx-auto" />
@@ -606,6 +610,7 @@ export default function SummaryProduct({
                 <CheckmarkIcon className="w-4 h-4" />
                 You’re getting additional 2 free drops
               </div>
+            </div>
             </div>
           )}
           <hr className="border-grey3 border" />
