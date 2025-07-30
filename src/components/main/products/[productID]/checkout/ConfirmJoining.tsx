@@ -239,7 +239,6 @@ export default function ConfirmJoining({
           </div>
         </div>
       )}
-      {step === 4 && <ShareBox />}
     </div>
   );
 }
