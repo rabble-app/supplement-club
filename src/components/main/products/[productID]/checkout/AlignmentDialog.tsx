@@ -341,10 +341,10 @@ export default function AlignmentDialog({
           </div>
 
           {orderPackage.memberType === MemberType.MEMBER && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 mb-[70px]">
               <Button
                 type="submit"
-                className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue mb-[70px]`}
+                className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
                 value={orderPackage.stockStatus === "IN_STOCK" ? "yes" : "no"}
               >
                 Yes
@@ -353,7 +353,7 @@ export default function AlignmentDialog({
                 type={
                   orderPackage.stockStatus === "IN_STOCK" ? "submit" : "button"
                 }
-                className={`text-blue text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-[#7878801F] mb-[70px]`}
+                className={`text-blue text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-[#7878801F]`}
                 value={orderPackage.stockStatus === "IN_STOCK" ? "no" : ""}
                 onClick={() => {
                   if (orderPackage.stockStatus === "OUT_OF_STOCK") {
@@ -366,10 +366,10 @@ export default function AlignmentDialog({
             </div>
           )}
           {orderPackage.memberType !== MemberType.MEMBER && (
-            <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col gap-4 mt-1 mb-[70px]">
               <Button
                 type="submit"
-                className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue mb-[70px]`}
+                className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
                 value="yes"
                 onClick={() => {
                   setIsInfoIconClicked?.(false);
