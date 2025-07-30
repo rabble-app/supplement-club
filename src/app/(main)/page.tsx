@@ -17,12 +17,12 @@ import { getQuarterInfo } from "@/utils/utils";
 const homeCards = [
   {
     id: 1,
-    src: "/images/truck.svg",
-    alt: "Truck",
-    title: "Get Started Today",
-    subtitle: "Next Day Delivery",
+    src: "/images/labs.svg",
+    alt: "Labs",
+    title: "Straight from the Source",
+    subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
     description:
-      "Choose the supplements you want today, and we'll ship you an 'Alignment package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
+      "Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door.",
   },
   {
     id: 2,
@@ -33,14 +33,15 @@ const homeCards = [
     description:
       "Your alignment package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of alignment with the bulk ordering cycle.",
   },
+ 
   {
     id: 3,
-    src: "/images/labs.svg",
-    alt: "Labs",
-    title: "Straight from the Source",
-    subtitle: "Don’t Trust Expensive Branding. Trust Renowned Labs",
+    src: "/images/truck.svg",
+    alt: "Truck",
+    title: "Get Started Today",
+    subtitle: "Next Day Delivery",
     description:
-      "Each quarter, we combine individual orders and send them collectively to the worlds most prominent lab for that product. Your individual order is shipped to your door.",
+      "Choose the supplements you want today, and we'll ship you an 'Alignment package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
   },
 ] as IHomeCardModel[];
 
@@ -271,19 +272,6 @@ export default async function Home() {
                   <div className="w-full grid items-end pt-[0px] px-[16px] lg:px-[32px] py-[32px]">
                     <div>
                       <div className="md:mb-[40px] mb-[20px] text-white">
-                       <span className="w-[114px] h-[26px] bg-white flex items-center gap-[8px] px-[7px] py-[10px] rounded-[40px] mb-[16px]" id="lab-verfied">
-                         <Image
-                           src="/images/icons/verified.svg"
-                           alt="Verified icon"
-                           width={16}
-                           height={16}
-                         />
-                         <span 
-                           className="font-hagerman font-normal text-[16px] leading-[100%] text-[#00038F] tracking-negative-43"
-                         >
-                           Lab Verified
-                         </span>
-                       </span>
                         <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
                           {productModel?.name}{" "}
                           <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">

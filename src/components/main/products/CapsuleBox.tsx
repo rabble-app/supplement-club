@@ -13,7 +13,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import OrderSummaryCard2 from "@/components/shared/OrderSummaryCard2";
 import { getQuarterInfo } from "@/utils/utils";
-import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
+import IOrderPackageModel, {
+  MemberType,
+} from "@/utils/models/IOrderPackageModel";
 
 const generateImage = (count: number) => (
   <div
@@ -46,7 +48,7 @@ export default function CapsuleBox({
   price,
   pricePerCount,
   discount,
-  activePercentageDiscount,
+  // activePercentageDiscount,
   capsuleCount,
   capsules,
   setCapsuleCount,
@@ -88,9 +90,9 @@ export default function CapsuleBox({
   const { currentQuarter } = getQuarterInfo();
   const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
 
-  const leftTopText = `${
-    (orderPackage.capsuleCount * orderPackage.days)
-  }${orderPackage.units} Every 3 months`;
+  const leftTopText = `${orderPackage.capsuleCount * orderPackage.days}${
+    orderPackage.units
+  } Every 3 months`;
 
   const rightCenterText = (
     <div
@@ -159,16 +161,16 @@ export default function CapsuleBox({
         }}
         className={`grid gap-[5px] ${
           capsuleInfo?.length === 2
-            ? "md:grid-cols-2"
+            ? "grid-cols-2 md:grid-cols-2"
             : capsuleInfo?.length === 3
-            ? "md:grid-cols-3"
-            : "md:grid-cols-4"
+            ? "grid-cols-3 md:grid-cols-3"
+            : "grid-cols-4 md:grid-cols-4"
         }`}
       >
         {capsuleInfo?.map((option) => (
           <label
             key={option.capsuleCount}
-            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] ${
+            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] md:min-h-[239px] min-h-[80px] ${
               capsuleCount === option.capsuleCount
                 ? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
                 : "border-[1px] border-grey18"
@@ -200,11 +202,12 @@ export default function CapsuleBox({
                 generateImage(option.capsuleCount)
               )}
             </div>
-            <p className="text-[12px] h-[14px] font-bold font-helvetica text-center">
+            <p className="text-[9px] md:text-[12px] h-[14px] font-bold font-helvetica text-center md:block">
               {getCapsuleLabel(option.capsuleCount)}
             </p>
-            <Separator className="bg-grey3 h-[1px]" />
-            <div className="grid gap-[4px]">
+            <Separator className="bg-grey3 h-[1px] md:block hidden" />
+            {/* web */}
+            <div className="hidden gap-[4px] md:grid">
               <p className="text-grey6 text-[12px] leading-[16px]">
                 {option.title1}
               </p>
@@ -212,8 +215,8 @@ export default function CapsuleBox({
                 {option.description1}
               </p>
             </div>
-            <Separator className="bg-grey3 h-[1px]" />
-            <div className="grid gap-[4px]">
+            <Separator className="bg-grey3 h-[1px] md:block hidden" />
+            <div className="hidden gap-[4px] md:grid">
               <p className="text-grey6 text-[12px] leading-[16px]">
                 {option.title2}
               </p>
@@ -222,13 +225,10 @@ export default function CapsuleBox({
               </p>
             </div>
             {capsuleCount === option.capsuleCount && (
-              <div className="hidden md:flex absolute bottom-[-10px] w-full h-[20px] bg-white" />
+              <div className="md:flex absolute bottom-[-18px] md:bottom-[-10px] w-full h-[20px] bg-white z-[100]" />
             )}
             {capsuleCount === option.capsuleCount && (
-              <div
-                key={option.capsuleCount}
-                className="grid md:hidden gap-[8px]"
-              >
+              <div key={option.capsuleCount} className="hidden gap-[8px]">
                 <div className="flex justify-between">
                   <p className="text-grey7 text-[12px] leading-[14px] max-w-[132px]">
                     3 Month Subscription <br />({capsules}
@@ -270,9 +270,39 @@ export default function CapsuleBox({
           </label>
         ))}
       </RadioGroup>
-      <div className="grid gap-[16px] md:outline outline-[2px] outline-blue p-0 md:p-[16px]">
-        <div className="hidden md:flex flex-col gap-[2px]">
-          <p className="text-grey7 text-[12px] leading-[12px]">
+
+      {/* Mobile-only selected item content */}
+      <div className="md:hidden grid gap-[8px] pt-[6px] pb-[8px] px-[8px] border-[1px] outline outline-[2px] outline-blue">
+        <Separator className="bg-grey3 h-[1px]" />
+        <div className="grid gap-[4px]">
+          <p className="text-grey6 text-[12px] leading-[16px]">
+            {capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)?.title1}
+          </p>
+          <p className="text-grey7 text-[12px] leading-[14px]">
+            {
+              capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)
+                ?.description1
+            }
+          </p>
+        </div>
+        <Separator className="bg-grey3 h-[1px]" />
+        <div className="grid gap-[4px]">
+          <p className="text-grey6 text-[12px] leading-[16px]">
+            {capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)?.title2}
+          </p>
+          <p className="text-grey7 text-[12px] leading-[14px]">
+            {
+              capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)
+                ?.description2
+            }
+          </p>
+        </div>
+      </div>
+      <div className="grid gap-[16px] outline outline-[2px] outline-blue p-0 md:p-[16px] relative mt-[-2px]">
+        <div className="md:hidden absolute top-[-9px] w-full h-[10px] bg-white" > &nbsp; </div>
+        <Separator className="bg-grey3 h-[2px] md:hidden" />
+        <div className="flex flex-col gap-[2px] py-[2px] md:py-0 px-[8px] md:px-0">
+          <p className="mt-[10px] text-grey7 text-[12px] leading-[12px]">
             {getCapsuleLabel(
               capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)
                 ?.capsuleCount || 0
@@ -285,21 +315,21 @@ export default function CapsuleBox({
 
         <hr className="border-grey3 h-[1px] mb-[10px] md:hidden" />
         <div className="grid gap-[16px]">
-            <OrderSummaryCard2
-              imageSrc={orderPackage.imageSrc}
-              leftTopText={leftTopText}
-              leftCenterText={leftCenterText}
-              leftBottomText={leftBottomText}
-              rightTopText={rightTopText}
-              rightCenterText={rightCenterText}
-              rightBottomText={rightBottomText}
-              updateQuantityAction={updateQuantityAction}
-              isMember={orderPackage.memberType === MemberType.MEMBER}
-            />
+          <OrderSummaryCard2
+            imageSrc={orderPackage.imageSrc}
+            leftTopText={leftTopText}
+            leftCenterText={leftCenterText}
+            leftBottomText={leftBottomText}
+            rightTopText={rightTopText}
+            rightCenterText={rightCenterText}
+            rightBottomText={rightBottomText}
+            updateQuantityAction={updateQuantityAction}
+            isMember={orderPackage.memberType === MemberType.MEMBER}
+          />
 
-            {/* TODO: MOBILE SECTION  */}
+          {/* TODO: MOBILE SECTION  */}
           <hr className="border-grey3 h-[1px] mt-[10px] md:hidden" />
-          <div className="md:hidden grid gap-[7px] md:gap-0 grid-cols-[84px_1fr] items-center w-full">
+          {/* <div className="md:hidden grid gap-[7px] md:gap-0 grid-cols-[84px_1fr] items-center w-full">
             <div>
               <p className="text-[32px] leading-[33px] font-inconsolata font-[900] text-black">
                 Total
@@ -330,7 +360,7 @@ export default function CapsuleBox({
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <Button className="bg-blue text-white w-full font-bold fixed bottom-[0] left-[0] md:relative z-[100]">
             <Link

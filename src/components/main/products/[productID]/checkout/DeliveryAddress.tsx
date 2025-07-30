@@ -173,7 +173,7 @@ export default function DeliveryAddress({
           name="mobileNumber"
         />
 
-        <Button type="submit" className="bg-blue text-white w-full font-bold">
+        <Button type="submit" className="bg-blue text-white w-full font-bold mb-[70px]">
           Next
         </Button>
       </form>

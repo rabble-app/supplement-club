@@ -6,13 +6,13 @@ const ReferralSection = ({ percentage, remainingDays }: { percentage: "0" | "30"
   return (
     <div className="flex gap-4">
       <div className="flex flex-col items-center justify-center bg-blue h-[180px] rounded-sm shadow-4 px-4">
-        <h3 className="text-[16px] leading-[28px] font-hagerman uppercase text-center text-white">
+        <h3 className="text-[12px] md:text-[16px] leading-[14px] md:leading-[28px] font-hagerman uppercase text-center text-white">
           DAYS REMAINING
         </h3>
-        <h1 className="text-[48px] leading-[48px] font-inconsolata text-white text-center py-1">
+        <h1 className="text-[20px] md:text-[48px] leading-[20px] md:leading-[48px] font-inconsolata text-white text-center py-1">
           {remainingDays}
         </h1>
-        <p className="text-[12px] font-helvetica text-white text-center leading-tight">
+        <p className="text-[10px] md:text-[12px] font-helvetica text-white text-center leading-tight">
           You have 30 days from sign up to maximise your free membership months
         </p>
       </div>

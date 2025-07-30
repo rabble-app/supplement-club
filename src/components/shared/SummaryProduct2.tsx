@@ -300,7 +300,7 @@ export default function SummaryProduct2({
             <div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <p className="text-xl font-bold font-inconsolata">
+                  <p className="text-[14px] md:text-xl font-bold font-inconsolata">
                     {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
                       "LAUNCH PACKAGE"}
                     {orderPackage.memberType !== MemberType.FOUNDING_MEMBER &&
@@ -333,7 +333,7 @@ export default function SummaryProduct2({
               {hasAlignmentPackage &&
               (isReactivatePlan && hasAlignmentPackage) ? (
                 <div>
-                  <p className="text-xl font-bold font-inconsolata mb-4">
+                  <p className="text-[14px] md:text-xl font-bold font-inconsolata mb-4">
                     DISPATCHED TODAY - ROYAL MAIL 48H
                   </p>
                   <OrderSummaryCard2

@@ -186,7 +186,7 @@ export default function SummaryProduct({
       rightTop: "Founding Membership",
       rightCenter: (
         <div
-          className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
+          className={`text-xl md:text-3xl md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
         >
           £{Number(orderPackage.price).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -213,7 +213,7 @@ export default function SummaryProduct({
       rightTop: "Includes Early Member 5% Extra Discount",
       rightCenter: (
         <div
-          className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
+          className={`text-xl md:text-3xl md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
         >
           £{Number(orderPackage.price).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -236,7 +236,7 @@ export default function SummaryProduct({
       rightTop: "",
       rightCenter: (
         <div
-          className={`text-xl md:text-3xl md:leading-[30px] flex font-[800] text-black items-center gap-1 font-inconsolata`}
+          className={`text-xl md:text-3xl md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
         >
           £{(Number(orderPackage.pricePerPoche) * storageQuantity).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -245,12 +245,12 @@ export default function SummaryProduct({
         </div>
       ),
       rightBottom: (
-        <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+        <div className="text-[14px] md:text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
           RRP{" "}
-          <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+          <span className="text-[14px] md:text-[20px] leading-[20px] line-through font-bold font-inconsolata">
             £{Number(memberTypeRrp).toFixed(2)}
           </span>{" "}
-          <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+          <span className="text-[14px] md:text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
             {(
               Number(orderPackage.discount ?? 0) +
               Number(orderPackage.extraDiscount ?? 0)
@@ -353,7 +353,7 @@ export default function SummaryProduct({
             <div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <p className="text-xl font-bold font-inconsolata">
+                  <p className="text-[14px] md:text-xl font-bold font-inconsolata">
                     {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
                       "LAUNCH PACKAGE"}
                     {orderPackage.memberType !== MemberType.FOUNDING_MEMBER &&
@@ -388,7 +388,7 @@ export default function SummaryProduct({
                 (storageQuantityState ?? storageQuantity) > 0) ||
               (isReactivatePlan && hasAlignmentPackage) ? (
                 <div>
-                  <p className="text-xl font-bold font-inconsolata mb-4">
+                  <p className="text-[14px] md:text-xl font-bold font-inconsolata mb-4">
                     DISPATCHED TODAY - ROYAL MAIL 48H
                   </p>
                   <OrderSummaryCard2
@@ -475,7 +475,7 @@ export default function SummaryProduct({
                 rightCenterText={
                   orderPackage.memberType === MemberType.MEMBER ? (
                     <div
-                      className={`text-xl md:text-3xl flex font-[800] text-black items-center gap-1 font-inconsolata`}
+                      className={`text-xl md:text-3xl flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
                     >
                       £{Number(orderPackage.price).toFixed(2)}
                       <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -683,7 +683,7 @@ export default function SummaryProduct({
               <hr className="border-grey3 border my-6" />
             )}
             {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-              <p className="text-[20px] md:leading-[16px] font-[600] font-inconsolata mb-6">
+              <p className="text-[14px] md:text-[20px] md:leading-[16px] font-[600] font-inconsolata mb-6">
                 SUBSCRIPTIONS
               </p>
             )}

@@ -82,21 +82,7 @@ html body[data-scroll-locked] {
     width: 100%;
   }
 
-  /* #order-summary-card #order-summary-image {
-    margin-top: -100px;
-  }
-
-  #summary-product #order-summary-image {
-    margin-top: -76px !important;
-  }
-
   #order-summary-card #order-summary-image.membership-image {
-    margin-top: -31px !important;
+    padding: 1px 2px !important;
   }
-
-  #order-summary-price {
-    width: 100%;
-    align-items: baseline;
-  } */
-
 }
