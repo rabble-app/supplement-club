@@ -376,7 +376,7 @@ export default function CapsuleBox({
           </Button>
 
           {isFoundingProduct && (
-            <p className="text-[12px] md:text-sm md:text-grey6 font-helvetica leading-[14px] text-center">
+            <p className="text-[12px] md:text-sm text-grey6 font-helvetica leading-[14px] text-center">
               You’ll be notified when your team launches. You’ll have 24 hours
               to withdraw before payment is taken.
             </p>
