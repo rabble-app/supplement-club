@@ -341,7 +341,7 @@ export default function AlignmentDialog({
           </div>
 
           {orderPackage.memberType === MemberType.MEMBER && (
-            <div className="flex flex-col gap-4 mb-[70px]">
+            <div className="flex flex-col gap-4 mb-[70px] md:mb-6">
               <Button
                 type="submit"
                 className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
@@ -366,7 +366,7 @@ export default function AlignmentDialog({
             </div>
           )}
           {orderPackage.memberType !== MemberType.MEMBER && (
-            <div className="flex flex-col gap-4 mt-1 mb-[70px]">
+            <div className="flex flex-col gap-4 mt-1 mb-[70px] md:mb-6">
               <Button
                 type="submit"
                 className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
