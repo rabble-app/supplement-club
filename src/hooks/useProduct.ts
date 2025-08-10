@@ -164,7 +164,7 @@ const useProduct = (teamId?: string, userId?: string, pId?: string) => {
   const membersSection = [
     {
       id: 1,
-      doseTitle: `${capsuleCount * days}${units} Every 3 months`,
+      doseTitle: `${capsuleCount * days}${units} Every 3 Months`,
       name: "EARLY MEMBER",
       discountTitle: `${product?.supplementTeamProducts?.earlyMembersDiscount}% OFF TEAM PRICE`,
       capsulePrice: Number(earlyMemberPricePerCount.toFixed(2)),
@@ -175,7 +175,7 @@ const useProduct = (teamId?: string, userId?: string, pId?: string) => {
     },
     {
       id: 2,
-      doseTitle: `${capsuleCount * days}${units} Every 3 months`,
+      doseTitle: `${capsuleCount * days}${units} Every 3 Months`,
       name: "MEMBER",
       discountTitle: "Standard Team Price",
       capsulePrice: Number(product?.pricePerCount?.toFixed(2)),

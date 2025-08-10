@@ -259,7 +259,7 @@ export default async function Home() {
                   unoptimized
                 />
                 <Image
-                  className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-326px] left-0 right-0"
+                  className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-326px] left-0 right-0 object-cover"
                   src={productModel?.imageUrl ?? ""}
                   alt={productModel?.imageKey ?? "main product"}
                   width={545}

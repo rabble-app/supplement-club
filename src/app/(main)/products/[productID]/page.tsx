@@ -241,8 +241,8 @@ export default function ProductDetails() {
           </div>
 
           {isFoundingProduct && !hasProduct && (
-            <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-yellow py-[12px] h-[72px]">
-              <div className="text-blue text-[16px] font-bold leading-[24px] font-helvetica flex text-center max-w-[380px] mx-auto">
+            <div className="flex left-0 right-0 transform absolute bottom-[40px] w-full bg-yellow py-[12px] h-[50px] md:h-[72px]">
+              <div className="text-blue text-[12px] md:text-[16px] font-bold leading-[14px] md:leading-[24px] font-helvetica flex text-center max-w-[380px] mx-auto px-4 md:px-0">
                 PRE-ORDER TO BECOME A FOUNDING MEMBER AND GET AN EXTRA{" "}
                 {product?.supplementTeamProducts?.foundingMembersDiscount}% OFF
                 FOREVER

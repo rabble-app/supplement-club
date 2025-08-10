@@ -71,8 +71,7 @@ export default function SummaryProduct({
   const [storageQuantityState, setStorageQuantityState] =
     useState(localStorageQuantity);
 
-  const { currentQuarter } = getQuarterInfo();
-  const nextQuater = currentQuarter + 1 > 4 ? 1 : currentQuarter + 1;
+  const { nextQuarterShort } = getQuarterInfo();
 
   const nextYearDate = new Date();
   nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
@@ -149,6 +148,8 @@ export default function SummaryProduct({
     }
   };
 
+  const totalQuarterlyCapsules = Number(orderPackage.capsuleCount) * Number(orderPackage.days)
+
   const totalDiscountPercentage =
     (orderPackage.discount ?? 0) +
     (Number(orderPackage.extraDiscount ?? 0) ?? 0);
@@ -160,18 +161,24 @@ export default function SummaryProduct({
     (orderPackage.rrpPerCount ?? 0);
 
   const rightBottomContent = (
-    <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+    <div className="text-[14px] md:text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
       RRP{" "}
-      <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-        £{(Number(orderPackage.rrp) ?? 0).toFixed(2)}
+      <span className="text-[14px] md:text-[20px] leading-[20px] line-through font-bold font-inconsolata">
+        £{(Number(orderPackage.rrp) ?? 0).toFixed(0)}
       </span>{" "}
-      <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
+      <span className="text-[14px] md:text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
         {(
           Number(orderPackage.discount ?? 0) +
           Number(orderPackage.extraDiscount ?? 0)
-        ).toFixed(2)}
+        ).toFixed(0)}
         % OFF
       </span>
+      <br/>
+      {orderPackage.memberType === MemberType.EARLY_MEMBER && (
+        <div className="text-[10px] md:text-[14px] leading-[20px] text-[#00038F] font-inconsolata text-right mt-[-4px] md:mt-0">
+          Early Member Pricing
+        </div>
+      )}
     </div>
   );
 
@@ -180,13 +187,13 @@ export default function SummaryProduct({
       leftTop: `${
         (orderPackage.capsuleCount * orderPackage.days) /
         (orderPackage?.gPerCount ?? 0)
-      }${orderPackage.units} Every 3 months`,
+      }${orderPackage.units}`,
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
       rightTop: "Founding Membership",
       rightCenter: (
         <div
-          className={`text-xl md:text-3xl md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
+          className={`text-xl md:text-3xl leading-[14px] md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
         >
           £{Number(orderPackage.price).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -194,26 +201,20 @@ export default function SummaryProduct({
           </span>
         </div>
       ),
-      rightBottom: `${orderPackage.remainingSpots} Founding Member Spots Remaining!`,
+      rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
     },
     EARLY_MEMBER: {
       leftTop: `${
-        (orderPackage?.pochesRequired ?? 0) * orderPackage.storageCapsuleCount
-      } x ${orderPackage.alignmentPoucheSize} ${
-        orderPackage.units === "g"
-          ? `${orderPackage.units} Pouch`
-          : `${orderPackage.units.slice(0, -1)} Pouch`
+        (orderPackage?.pochesRequired ?? 0) * orderPackage.storageCapsuleCount * (orderPackage.alignmentPoucheSize ?? 0) + totalQuarterlyCapsules
+      } ${
+        `${orderPackage.units} Total`
       }`,
       leftCenter: "LAUNCH PACKAGE",
-      leftBottom: `Takes you up to: ${
-        nextEditableDate
-          ? format(new Date(nextEditableDate), "MMMM dd yyyy")
-          : ""
-      } Drop`,
+      leftBottom: `Takes you up to: ${nextQuarterShort} Drop`,
       rightTop: "Includes Early Member 5% Extra Discount",
       rightCenter: (
         <div
-          className={`text-xl md:text-3xl md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
+          className={`text-xl md:text-3xl leading-[14px] md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
         >
           £{Number(orderPackage.price).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -236,7 +237,7 @@ export default function SummaryProduct({
       rightTop: "",
       rightCenter: (
         <div
-          className={`text-xl md:text-3xl md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
+          className={`text-xl md:text-3xl leading-[14px] md:leading-[30px] flex flex-col md:flex-row font-[800] text-black items-center gap-1 font-inconsolata`}
         >
           £{(Number(orderPackage.pricePerPoche) * storageQuantity).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
@@ -287,7 +288,7 @@ export default function SummaryProduct({
           {model?.corporation && model.name && (
             <div className="grid gap-[8px]">
               <p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4 uppercase">
-                {model.corporation}
+                {model.corporation} | 
               </p>
               <div className="text-[24px] md:text-[30px] leading-[28px] md:leading-[48px] font-hagerman flex items-start gap-[5px]">
                 {firstWord}
@@ -330,7 +331,7 @@ export default function SummaryProduct({
             <>
               {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
                 <div className="font-inconsolata bg-blue2 rounded-sm">
-                  <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
+                  <p className="text-blue font-inconsolata text-[12px] md:text-sm leading-[20px] md:leading-[14px] font-bold py-2 text-center px-2 md:px-8">
                     FOUNDING MEMBER PRICING – You’re claiming a spot before
                     stock arrives and securing an extra{" "}
                     {orderPackage.extraDiscount}% off for life.
@@ -339,7 +340,7 @@ export default function SummaryProduct({
               )}
               {orderPackage.memberType === MemberType.EARLY_MEMBER && (
                 <div className="font-inconsolata bg-blue2 rounded-sm">
-                  <p className="text-blue font-inconsolata text-sm leading-6 font-bold py-2 text-center px-8">
+                  <p className="text-blue font-inconsolata text-[12px] md:text-sm leading-[20px] md:leading-[14px] font-bold py-2 text-center px-2 md:px-8">
                     EARLY MEMBER PRICING – You’re ordering before stock arrives
                     and securing an extra {orderPackage.extraDiscount}% off for
                     life.
@@ -438,13 +439,13 @@ export default function SummaryProduct({
             <div>
              {!isTopUp && <>
               {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && (
-                <p className="text-[14px] md:text-xl font-bold font-inconsolata mb-4 uppercase">
+                <p className="text-[14px] md:text-xl font-bold font-inconsolata mb-1 md:mb-4 uppercase">
                   DELIVERED {orderPackage.deliveryDate} • (IN{" "}
                   {daysUntilNextDrop} DAYS)
                 </p>
               )}
               {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-                <p className="text-xl font-bold font-inconsolata mb-4">
+                <p className="text-[14px] md:text-xl font-bold font-inconsolata mb-1 md:mb-4">
                   Quarterly Subscription
                 </p>
               )}
@@ -507,11 +508,11 @@ export default function SummaryProduct({
                 <hr className="border-grey3 border" />
 
                 <div>
-                  <p className="text-xl font-bold font-inconsolata">
+                  <p className="text-[14px] md:text-xl font-bold font-inconsolata">
                     Membership Fee
                   </p>
 
-                  <p className="text-base font-inconsolata text-grey16">
+                  <p className="text-[12px] md:text-base leading-[14px] md:leading-[16px] font-inconsolata text-grey16">
                     Membership trial begins only once your team launches — not
                     before.
                   </p>
@@ -617,7 +618,7 @@ export default function SummaryProduct({
 
           { orderPackage.memberType === MemberType.FOUNDING_MEMBER && !isReactivatePlan && (
             <div className="font-inconsolata bg-blue2 rounded-sm">
-              <p className="text-blue font-inconsolata text-sm leading-6 font-bold text-center py-2 px-2.5">
+              <p className="text-blue font-inconsolata text-[12px] md:text-sm leading-[13px] md:leading-[14px] font-bold text-center py-2 px-2.5">
                 Founder slot secured. You’ll be notified when the team is ready
                 and charged <br /> only if you stay in.
               </p>
@@ -669,7 +670,7 @@ export default function SummaryProduct({
       <div>
         <div className="grid gap-[7px] md:gap-0 grid-cols-[84px_1fr]">
           <div>
-            <p className="text-[32px] leading-[33px] font-inconsolata font-[900] text-black whitespace-nowrap">
+            <p className="text-[24px] md:text-[32px] leading-[33px] font-inconsolata font-[900] text-black whitespace-nowrap">
               {orderPackage.memberType === MemberType.FOUNDING_MEMBER
                 ? "Founder Price"
                 : "Total"}
@@ -677,7 +678,7 @@ export default function SummaryProduct({
           </div>
 
           <div className="grid gap-[7px] text-right">
-            <div className="gap-[2px] text-[32px] font-inconsolata font-[900] flex justify-end items-center">
+            <div className="gap-[2px] text-[24px] md:text-[32px] font-inconsolata font-[900] flex justify-end items-center">
               £{totalCount?.toFixed(2)}{" "}
             </div>
           </div>

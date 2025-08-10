@@ -80,6 +80,7 @@ export const usersService = {
   },
 
   async getSubscriptionPlans(userId: string) {
+    if(!userId) return [];
     const { data } = (await apiRequest(
       USER_ENDPOINTS.SUBSCRIPTION_PLANS(userId),
       "GET"
