@@ -17,4 +17,10 @@ export default interface ISummaryProductModel {
 	referals: IReferalSummaryModel[];
 	subscriptions: ISubscriptionSummaryModel[];
 	membership: IMembershipSummaryModel[];
+	pricePerCount?: number;
+	capsulePerDay?: number;
+	gramsPerCount?: number;
+	orderDate?: string;
+	leadTime?: number;
+	supplierCountry: string;
 }

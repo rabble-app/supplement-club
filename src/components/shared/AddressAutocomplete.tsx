@@ -1,116 +1,163 @@
-"use client";
+/** @format */
 
-import Script from "next/script";
-import { useEffect, useState } from "react";
-import type { UseFormReturn } from "react-hook-form";
+"use client";
+import {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import { UseFormReturn } from "react-hook-form";
 
 export interface AddressFormData {
-	address: string; // Ensure this is a required string
-	address2?: string;
-	city: string;
-	postalCode: string;
-	country: string;
-	buildingNo?: string;
-	building_number?: string;
-	firstName?: string;
-	lastName?: string;
-	mobileNumber?: string;
-	userId?: string;
-	// Add other fields as necessary
+  address: string;
+  address2?: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  buildingNo?: string;
+  building_number?: string;
+  firstName?: string;
+  lastName?: string;
+  mobileNumber?: string;
+  userId?: string;
 }
 
-interface GetAddressEvent {
-	address: {
-		formatted_address: string[];
-		building_number: string;
-		sub_building_number: string;
-		postcode: string;
-		country: string;
-		town_or_city: string;
-		line_2: string;
-	};
+interface Props {
+  form: UseFormReturn<AddressFormData>;
+  onInputFocus?: () => void;
+  onInputBlur?: () => void;
 }
 
-interface GetAddress {
-	autocomplete: (field: string, apiKey?: string) => Promise<unknown>;
+interface Suggestion {
+  id: string;
+  address: string;
 }
 
-interface Window {
-	getAddress?: GetAddress;
+export interface AddressAutocompleteRef {
+  handleInputFocus: () => void;
+  handleInputBlur: () => void;
 }
 
-interface AddressAutocompleteProps {
-	form: UseFormReturn<AddressFormData>;
-}
+const AddressAutocomplete = forwardRef<AddressAutocompleteRef, Props>(
+  ({ form, onInputFocus, onInputBlur }, ref) => {
+    const addressValue = form.watch("address");
+    const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [isInputFocused, setIsInputFocused] = useState(false);
+    const suppressNextFetch = useRef(false); // prevent fetch loop
 
-interface Autocomplete {
-	addEventListener: (
-		event: string,
-		callback: (e: GetAddressEvent) => void,
-	) => void;
-	// Add other methods or properties as needed
-}
+    useEffect(() => {
+      if (suppressNextFetch.current) {
+        suppressNextFetch.current = false;
+        return;
+      }
 
-export default function AddressAutocomplete({
-	form,
-}: Readonly<AddressAutocompleteProps>) {
-	const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+      if (!addressValue || addressValue.length < 3 || !isInputFocused) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			if ((window as Window).getAddress) {
-				setIsScriptLoaded(true);
-				clearInterval(interval);
-			} else {
-				console.warn("getAddress not available, retrying...");
-			}
-		}, 500);
+      const timeout = setTimeout(async () => {
+        try {
+          const res = await fetch(
+            `https://api.getaddress.io/autocomplete/${encodeURIComponent(
+              addressValue
+            )}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
+          );
+          const data = await res.json();
+          if (data?.suggestions) {
+            setSuggestions(data.suggestions);
+            setShowSuggestions(true);
+          }
+        } catch (err) {
+          console.error("Autocomplete error", err);
+        }
+      }, 300);
 
-		return () => clearInterval(interval);
-	}, []);
+      return () => clearTimeout(timeout);
+    }, [addressValue, isInputFocused]);
 
-	useEffect(() => {
-		if (!isScriptLoaded) return;
+    const handleSelect = async (id: string) => {
+      try {
+        const res = await fetch(
+          `https://api.getaddress.io/get/${id}?api-key=${process.env.NEXT_PUBLIC_GETADDRESS_API_KEY}`
+        );
+        const data = await res.json();
 
-		const enableAutocomplete = async () => {
-			const getAddress = (window as Window).getAddress;
-			if (!getAddress) {
-				console.error("getAddress is still undefined.");
-				return;
-			}
+        suppressNextFetch.current = true;
 
-			try {
-				const autocomplete = (await getAddress.autocomplete(
-					"address",
-					process.env.NEXT_PUBLIC_GETADDRESS_API_KEY,
-				)) as Autocomplete;
+        form.setValue("address", data.line_1);
+        form.setValue("address2", data.line_2);
+        form.setValue("city", data.town_or_city);
+        form.setValue("postalCode", data.postcode);
+        form.setValue("country", "United Kingdom");
 
-				autocomplete.addEventListener(
-					"getaddress-autocomplete-selected",
-					(e: GetAddressEvent) => {
-						form.setValue("address", e.address.formatted_address[0]);
-						form.setValue("address2", e.address.line_2);
-						form.setValue(
-							"buildingNo",
-							e.address.building_number ?? e.address.sub_building_number,
-						);
-						form.setValue("city", e.address.town_or_city);
-						form.setValue("country", e.address.country);
-						form.setValue("postalCode", e.address.postcode);
-					},
-				);
-			} catch (error) {
-				console.error("Error initializing getAddress:", error);
-			}
-		};
+        setSuggestions([]);
+        setShowSuggestions(false);
+        setIsInputFocused(false);
+      } catch (err) {
+        console.error("Fetch full address error", err);
+      }
+    };
 
-		enableAutocomplete();
-	}, [isScriptLoaded, form]);
+    const handleInputFocus = () => {
+      setIsInputFocused(true);
+      onInputFocus?.();
+    };
 
-	return (
-		<Script
-			src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-3.0.3.js"
-			strategy="afterInteractive"
-		/>
-	);
-}
+    const handleInputBlur = () => {
+      // Delay hiding suggestions to allow clicking on them
+      setTimeout(() => {
+        setIsInputFocused(false);
+        setShowSuggestions(false);
+      }, 150);
+      onInputBlur?.();
+    };
+
+    useImperativeHandle(ref, () => ({
+      handleInputFocus,
+      handleInputBlur,
+    }));
+
+    return (
+      <div className="relative">
+        {showSuggestions && suggestions.length > 0 && isInputFocused && (
+          <ul className="absolute z-50 bg-white border border-gray-300 w-full mt-1 shadow-md rounded-md">
+            {suggestions.map((sug) => {
+              const parts = sug.address
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+              const [line1, ...rest] = parts;
+
+              return (
+                <li
+                  key={sug.id}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm w-full"
+                  onClick={() => handleSelect(sug.id)}
+                >
+                  <p className="text-sm font-semibold">{line1}</p>
+                  <span className="text-sm text-gray-600">
+                    {rest.map((line, index) => (
+                      <span key={index}>
+                        {line}
+                        {index < rest.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    );
+  }
+);
+
+AddressAutocomplete.displayName = "AddressAutocomplete";
+
+export default AddressAutocomplete;

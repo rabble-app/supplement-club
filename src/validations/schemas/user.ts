@@ -11,6 +11,14 @@ export const deliveryAddressSchema = z.object({
 	mobileNumber: z.string({ required_error: "Field is required." }),
 });
 
+export const billingAddressSchema = z.object({
+	address: z.string({ required_error: "Field is required." }),
+	address2: z.string().optional(),
+	city: z.string({ required_error: "Field is required." }),
+	postalCode: z.string({ required_error: "Field is required." }),
+	country: z.string({ required_error: "Field is required." }),
+});
+
 export const shippingDetailsShema = z.object({
 	address: z.string({ required_error: "Field is required." }),
 	address2: z.string({ required_error: "Field is required." }),

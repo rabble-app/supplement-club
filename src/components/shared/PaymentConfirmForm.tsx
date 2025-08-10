@@ -18,23 +18,32 @@ export default function PaymentConfirmForm({
 }>) {
 	const [clientSecret, setClientSecret] = useState("");
 
-	useEffect(() => {
-		const fetchPaymentIntent = async () => {
-			const model = await paymentService.setupIntent();
-			setClientSecret(model.clientSecret);
-		};
+	const fetchPaymentIntent = async () => {
+		const model = await paymentService.setupIntent();
+		setClientSecret(model.clientSecret);
+	};
 
+	useEffect(() => {
 		fetchPaymentIntent();
 	}, []);
 
-	function onCardAction(paymentMethod: string | PaymentMethod | null) {
-		successAction(paymentMethod);
+	async function onCardAction(paymentMethod: string | PaymentMethod | null) {
+		try {
+			await successAction(paymentMethod); // your `addCreditCard`
+		  } catch (error) {
+			console.error("Card submission failed:", error);
+			// 💡 Re-fetch intent so retry uses a fresh one
+			await fetchPaymentIntent();
+		  }
 	}
 
 	return (
 		<div className="mx-auto w-full">
+			<p className="text-[24px] leading-[27px] font-hagerman uppercase">
+				CARD DETAILS
+			</p>
 			{clientSecret ? (
-				<Elements options={{ clientSecret }} stripe={stripePromise}>
+				<Elements options={{ clientSecret }} stripe={stripePromise} key={clientSecret}>
 					<PaymentElements
 						clientSecret={clientSecret}
 						cardAction={onCardAction}

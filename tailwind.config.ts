@@ -105,13 +105,16 @@ export default {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
+			letterSpacing: {
+				"negative-43": "-0.43px",
+			},
 			fontFamily: {
 				inconsolata: ["inconsolata"],
 				figtree: ["figtree"],
 				inter: ["inter"],
 				roboto: ["roboto"],
 				helvetica: ["helvetica"],
-				hagerman: ["hagerman"],
+				hagerman: ["Hagerman_Font"],
 				"sf-pro": ["sf-pro-text"],
 				poppins: ["poppins"],
 			},
@@ -120,10 +123,11 @@ export default {
 				login: "0px 1px 2px 0px #0000000D",
 				"3": "0px 4px 16px 0px #00000014",
 				"4": "0px 8px 8px -4px #00000008",
-				"5": "#0px 1px 2px 0px #0000000F",
+				"5": "0px 1px 2px 0px #0000000F",
 				progress: "0px 4px 4px 0px #5B5B5B1A inset",
 			},
 		},
 	},
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;

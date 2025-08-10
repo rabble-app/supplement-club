@@ -101,7 +101,9 @@ export default async function RootLayout({
 			<body
 				className={`${inter.variable} ${figtree.variable} ${roboto.variable} ${poppins.variable} ${helvetica.variable} ${inconsolata.variable} ${hagerman.variable} ${pro.variable} antialiased`}
 			>
-				<UserProvider state={state}>{children}</UserProvider>
+				<UserProvider state={state}>
+					<div className="overflow-x-hidden">{children}</div>
+				</UserProvider>
 
 				<Toaster visibleToasts={1} />
 			</body>

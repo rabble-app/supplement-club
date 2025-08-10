@@ -3,6 +3,7 @@ import { apiRequest } from "@/utils/helpers";
 import type IReferalModel from "@/utils/models/api/IReferalModel";
 import type IReferalResponse from "@/utils/models/api/response/IReferalResponse";
 import type { default as IReferalInfoApiResponse } from "@/utils/models/services/IReferalInfoApiResponse";
+import type IReferralCodeApiResponse from "@/utils/models/services/IReferralCodeApiResponse";
 import type IReferralHistoryApiResponse from "@/utils/models/services/IReferralHistoryApiResponse";
 import type IRewardsApiResponse from "@/utils/models/services/IRewardsApiResponse";
 import {
@@ -39,6 +40,18 @@ export const referalService = {
 		)) as IReferralHistoryApiResponse;
 
 		return mapReferalHistoryModel(response.data);
+	},
+	async postApplyReferralCode(code: string, amount: number) {
+		const response = (await apiRequest(
+			REFERAL_ENDPOINTS.APPLY_REFERRAL_CODE,
+			"POST",
+			{
+				userCode: code,
+				purchaseAmount: amount,
+			}
+		)) as IReferralCodeApiResponse;
+
+		return response;
 	},
 	updateClaimReward: async (userId: string, amount: number) =>
 		await apiRequest(REFERAL_ENDPOINTS.CLAIM_REWARD, "POST", {

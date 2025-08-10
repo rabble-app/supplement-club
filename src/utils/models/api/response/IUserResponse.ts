@@ -1,3 +1,5 @@
+import IOrderSummaryModel from "../../IOrderSummaryModel";
+import ISubscriptionSummaryModel from "../../ISubscriptionSummaryModel";
 import type { IBaseTimestamps } from "../IBaseTimestamps";
 import type IShippingResponse from "./IShippingResponse";
 
@@ -30,8 +32,12 @@ export interface IUserResponse extends IBaseTimestamps {
 	metadata?: IMetadata;
 }
 
-interface IMetadata {
+export interface IMetadata {
 	productId?: string;
+	teamId?: string;
+	hasAlignmentPackage?: boolean;
+	storageQuantity?: number;
+	capsuleCount?: number;
 }
 
 interface IBasketsC {

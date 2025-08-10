@@ -1,15 +1,11 @@
+/** @format */
+
 "use client";
+import { useEffect, useState } from "react";
 
-import { useCallback, useEffect, useState } from "react";
-
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useUser } from "@/contexts/UserContext";
-import { productService } from "@/services/productService";
-import { useProductStore } from "@/stores/productStore";
-import { getQuarterInfo } from "@/utils/utils";
-
-import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import type ISummaryProductModel from "@/utils/models/ISummaryProductModel";
 
 import ConfirmJoining from "@/components/main/products/[productID]/checkout/ConfirmJoining";
@@ -18,243 +14,317 @@ import Delivery from "@/components/main/products/[productID]/checkout/Delivery";
 import DeliveryAddress from "@/components/main/products/[productID]/checkout/DeliveryAddress";
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import PaymentList from "@/components/shared/PaymentList";
-import Spinner from "@/components/shared/Spinner";
 import Steps from "@/components/shared/Steps";
 import SummaryProduct from "@/components/shared/SummaryProduct";
-
-const PreOrderMessage = () => {
-	return (
-		<div className="grid gap-[16px]">
-			<p className="text-[20px] leading-[24px] font-bold font-inconsolata">
-				PRE-ORDER Now to Become a Founding Member
-			</p>
-			<div className="grid gap-[8px]">
-				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-					Only get charged when we hit 50 pre-orders.
-				</p>
-				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-					By becoming a founding member you get an extra 10% off the team price
-					forever.
-				</p>
-				<p className="text-[14px] leading-[16px] font-helvetica text-grey6">
-					Lead time is 6 weeks from when we charge you - but you get 10% off
-					your subscription forever.
-				</p>
-			</div>
-		</div>
-	);
-};
+import AlignmentDialog from "@/components/main/products/[productID]/checkout/AlignmentDialog";
+import useLocalStorage from "use-local-storage";
+import { referalService } from "@/services/referalService";
+import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
+import { usersService } from "@/services/usersService";
+import IManagePlanModel from "@/utils/models/IManagePlanModel";
+import useProduct from "@/hooks/useProduct";
+import { MemberType } from "@/utils/models/IOrderPackageModel";
+import MobileSummaryDrawer from "@/components/shared/MobileSummaryDrawer";
 
 export default function Checkout({
-	params,
+  params,
 }: Readonly<{ params: Promise<{ productID: string }> }>) {
-	const [loading, setLoading] = useState(true);
-	const router = useRouter();
-	const days = 90;
-	const context = useUser();
-	const productStore = useProductStore();
+  const router = useRouter();
 
-	const [step, setStep] = useState<number>(1);
-	const [productId, setProductId] = useState<string>("");
-	const [totalPrice, setTotalPrice] = useState<number>(0);
-	const [unitPerPouches, setUnitPerPouches] = useState<number>(0);
-	const steps = ["Create an Account", "Delivery Address", "Payment Details"];
+  const context = useUser();
 
-	const [capsulePerDay] = useState(productStore.capsulesPerDay ?? 2);
-	const [product, setProduct] = useState<ISingleProductModel>();
-	const [summary, setSummary] = useState<ISummaryProductModel>(
-		{} as ISummaryProductModel,
-	);
+  const [step, setStep] = useState<number>(1);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [storageQuantity, setStorageQuantity] = useLocalStorage(
+    "storageQuantity",
+    0
+  );
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-	const { year, endDate, remainsDaysToNextQuater } = getQuarterInfo();
+  const [referralInfo, setReferralInfo] = useState<IReferalInfoModel>();
+  const [isInfoIconClicked, setIsInfoIconClicked] = useState<boolean>(false);
+  const [hasActiveSupplement, setHasActiveSupplement] = useState<boolean>(false);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<
+    IManagePlanModel[]
+  >([]);
+  const [, setIsReferralCodeApplied] = useState<boolean>(false);
+  const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
-	const nextDeliveryProductText = `Next Drop Delivered: ${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`;
+  const getSubscriptionPlan = (productID: string) => {
+    return subscriptionPlans.find((plan) =>
+      plan.team.basket.some((basket) => basket.product.id === productID)
+    );
+  };
 
-	const [capsulesPackage, setCapsulesPackage] = useState<number>(
-		remainsDaysToNextQuater * capsulePerDay,
-	);
+  useEffect(() => {
+    const fetchSubscriptionPlans = async () => {
+      try {
+        const response = await usersService.getSubscriptionPlans(
+          context?.user?.id ?? ""
+        );
+        setSubscriptionPlans(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
 
-	useEffect(() => {
-		const fetchProductId = async () => {
-			const { productID } = await params;
-			setProductId(productID);
-			const response = await productService.product(productID);
+    const fetchHasActiveSupplement = async () => {
+      try {
+        const response = await usersService.getHasActiveSupplement(context?.user?.id ?? "");
+        setHasActiveSupplement(response);
+      } catch (error) {
+        console.error("error", error);
+      }
+    };
 
-			const localUnits =
-				response.unitsOfMeasurePerSubUnit === "grams" ? "g" : " Capsules";
-			setProduct(response);
+    fetchSubscriptionPlans();
+    fetchHasActiveSupplement();
+  }, [context?.user?.id]);
 
-			const unit =
-				response.unitsOfMeasurePerSubUnit === "capsules" ? "capsules" : "g";
-			const unitPerPouches = unit === "capsules" ? 30 : 150;
-			setUnitPerPouches(unitPerPouches);
+  const searchParams = useSearchParams();
+  const { productID } = useParams<{ productID: string }>();
 
-			const orders = [];
-			const subscriptions = [];
-			const membership = [
-				{
-					id: "12",
-					alt: "supplement mockup",
-					description: "Free for your first 2 drops",
-					name: "Membership Subscription",
-					delivery: `${endDate.toLocaleString("en", { month: "long" })} 1st ${year}`,
-					src: "/images/membership-card.svg",
-					capsules: 0,
-					price: 0,
-					imageBorder: true,
-				},
-			];
+  const contextTeamId = context?.user?.metadata?.teamId;
+  const teamId = subscriptionPlans.length > 0 ? searchParams.get("teamId") : contextTeamId;
 
-			if (response.isComming) {
-				orders.push({
-					price: 0,
-					id: "1",
-					alt: "supplement mockup",
-					description: `${capsulePerDay * days}${localUnits} Every 3 months`,
-					name: "Quarterly Subscription",
-					delivery: nextDeliveryProductText,
-					src: "/images/supplement-mockup.svg",
-					capsules: capsulePerDay * days,
-					count: 1,
-				});
-			} else {
-				orders.unshift({
-					id: "1",
-					alt: "",
-					description: `${capsulesPackage}${localUnits} to align you with next drop`,
-					name: "Alignment Capsules",
-					src: "/images/supplement-mockup.svg",
-					delivery: "Delivered Tomorrow",
-					capsules: capsulesPackage,
-					price: 0,
-					quantity:
-						Math.round(capsulesPackage / unitPerPouches) === 0
-							? 1
-							: Math.round(capsulesPackage / unitPerPouches),
-				});
+  const {
+    product: productMain,
+    orderPackage,
+    gPerCount,
+    hasAlignmentPackage,
+    setHasAlignmentPackage,
+  } = useProduct(searchParams.get("teamId") ?? contextTeamId ?? "", context?.user?.id ?? "");
 
-				subscriptions.push({
-					id: 2,
-					alt: "supplement mockup",
-					description: `${capsulePerDay * days}${localUnits} Every 3 months`,
-					name: "Quarterly Subscription",
-					delivery: nextDeliveryProductText,
-					src: "/images/supplement-mockup.svg",
-					capsules: capsulePerDay * days,
-				});
-			}
+  const subscriptionPlan = getSubscriptionPlan(orderPackage?.productId ?? "");
 
-			const ordersSum = orders?.reduce(
-				(sum, item) => sum + item.capsules * 0.25,
-				0,
-			);
-			const totalSumOfSubs = subscriptions?.reduce(
-				(sum, item) => sum + item.capsules * 0.25,
-				0,
-			);
-			setTotalPrice(ordersSum + totalSumOfSubs);
+  useEffect(() => {
+    let totalPrice = orderPackage.price;
 
-			setSummary({
-				referals: [],
-				id: 0,
-				title: "Order Summary",
-				corporation: response?.teamName,
-				name: response.name,
-				deliveryText:
-					!response.isComming && step < 4 ? "NEXT DAY DELIVERY" : "",
-				percentage: (capsulePerDay * days * 0.25) / Number(response.rrp),
-				rrp: response.rrp,
-				subscriptions: subscriptions,
-				membership: membership as [],
-				quantityOfSubUnitPerOrder: response?.quantityOfSubUnitPerOrder,
-				unitsOfMeasurePerSubUnit: response?.unitsOfMeasurePerSubUnit,
-				orders: orders,
-			});
-			setLoading(false);
-		};
+    if ([MemberType.FOUNDING_MEMBER, MemberType.EARLY_MEMBER].includes(orderPackage.memberType)) {
+      totalPrice = orderPackage.price;
+    } else if (orderPackage.memberType === MemberType.MEMBER) {
+      if(hasAlignmentPackage) {
+      totalPrice =
+          (orderPackage?.pricePerPoche ?? 0) *
+          (storageQuantity) + orderPackage.price;
+      } else {
+        totalPrice = orderPackage.price;
+      }
+    }
 
-		if (!product) {
-			fetchProductId();
-		}
-	}, [
-		params,
-		capsulePerDay,
-		capsulesPackage,
-		nextDeliveryProductText,
-		step,
-		endDate,
-		year,
-		product,
-	]);
+    setTotalPrice(totalPrice);
+  }, [orderPackage, storageQuantity, hasAlignmentPackage]);
 
-	useEffect(() => {
-		if (context?.user) {
-			if (context.user.isVerified) {
-				if (context?.user?.shipping) {
-					setStep(3);
-					return;
-				}
-				setStep(2);
-			} else {
-				router.push(
-					`/auth/email-verify?redirect=/products/${productId}/checkout`,
-				);
-			}
-		}
-	}, [context?.user, router, productId]);
+  useEffect(() => {
+    if (step === 4) {
+      fetchReferralInfo();
+    }
+  }, [step]);
 
-	async function successAction() {
-		const currentStep = step + 1;
-		setStep(currentStep);
-	}
+  useEffect(() => {
+    if (orderPackage.memberType === MemberType.MEMBER && storageQuantity > 0) {
+      setHasAlignmentPackage(true);
+    } else {
+      setHasAlignmentPackage(false);
+    }
+  }, [storageQuantity]);
 
-	const updateQuantityAction = useCallback(
-		(val: number) => {
-			setCapsulesPackage(val * unitPerPouches);
-		},
-		[unitPerPouches],
-	);
+  const fetchReferralInfo = async () => {
+    try {
+      const response = await referalService.getReferalInfo();
+      setReferralInfo(response);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
 
-	if (loading) return <Spinner />;
+  useEffect(() => {
+    if (context?.user) {
+      if (subscriptionPlan) {
+        setStep(4);
+      } else if (context.user.isVerified && !subscriptionPlan) {
+        if (context?.user?.shipping) {
+          setStep(3);
+          return;
+        }
+        setStep(2);
+      } else {
+        router.push(
+          `/auth/email-verify?redirect=/products/${orderPackage?.productId}/checkout`
+        );
+      }
+    }
+  }, [context?.user, router, orderPackage?.productId, subscriptionPlan]);
 
-	return (
-		<div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
-			<div className="flex flex-col gap-[40px] md:mb-[40px]">
-				<Steps activeStep={step} steps={steps} />
 
-				{step === 1 && (
-					<CreateAccount params={params}>
-						{product?.isComming && <PreOrderMessage />}{" "}
-					</CreateAccount>
-				)}
-				{step === 2 && (
-					<DeliveryAddress step={step} updateStepAction={setStep}>
-						{product?.isComming && <PreOrderMessage />}{" "}
-					</DeliveryAddress>
-				)}
-				{step === 3 && (
-					<PaymentList
-						productId={product?.id ?? ""}
-						topupQuantity={capsulesPackage}
-						teamId={product?.supplementTeamProducts?.team.id ?? ""}
-						isComming={product?.isComming}
-						totalPrice={totalPrice}
-						capsulePerDay={capsulePerDay}
-						successAction={successAction}
-					/>
-				)}
-				{step === 4 && <ConfirmJoining email={context?.user?.email} />}
-			</div>
+  const PreOrderMessage = () => {
+    return (
+      <div className="grid gap-[16px]">
+        <p className="text-[20px] leading-[24px] font-bold font-inconsolata">
+        Claim Your Space Now to Become a Founding Member 
+        </p>
+        <div className="grid gap-[8px]">
+          <p className="text-[14px] leading-[16px] font-helvetica text-grey6">
+            Only charged once all Founding Member slots are filled. Your
+            delivery will arrive {productMain?.leadTime} weeks after that, but
+            your {orderPackage.extraDiscount}% lifetime discount is locked in today.
+          </p>
+        </div>
+      </div>
+    );
+  };
 
-			<div className="mx-[-16px] md:mx-[0] mt-[32px]">
-				<SummaryProduct
-					model={summary}
-					showTopLine={product?.isComming}
-					quantityAction={updateQuantityAction}
-				/>
-				{step === 4 && <Delivery />}
-				{step < 4 && <AvailablePayment />}
-			</div>
-		</div>
-	);
+  async function successAction() {
+    const currentStep = step + 1;
+    setStep(currentStep);
+  }
+
+  const updateQuantityAction = (val: number) => {
+    setStorageQuantity(val);
+  };
+
+  useEffect(() => {
+    if (!context?.user) {
+      setStep(1);
+    }
+  }, [context?.user]);
+
+  useEffect(() => {
+    if (step !== 4) {
+      if (context?.user && (subscriptionPlan?.team.basket.length ?? 0) > 0) {
+        router.push(
+          `/products/${orderPackage?.productId}?teamId=${orderPackage?.teamId}`
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    context?.user,
+    subscriptionPlan,
+    orderPackage?.productId,
+    orderPackage?.teamId,
+    step,
+  ]);
+
+  return (
+    <>
+      {productMain && (
+        <AlignmentDialog
+          orderPackage={orderPackage}
+          daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
+          deliveryDate={productMain?.deliveryDate ?? ""}
+          orderDate={productMain?.orderDate ?? ""}
+          updateQuantityAction={updateQuantityAction}
+          isInfoIconClicked={isInfoIconClicked}
+          setIsInfoIconClicked={setIsInfoIconClicked}
+          step={step}
+          leadTime={productMain?.leadTime ?? 0}
+          gPerCount={gPerCount}
+          storageQuantity={storageQuantity}
+          setHasAlignmentPackage={setHasAlignmentPackage}
+          hasSubscriptionPlan={subscriptionPlans.length > 0}
+        />
+      )}
+
+      <div className="grid md:grid-cols-2 gap-[16px] px-[16px] mx-[-16px] container-width">
+        <div className="flex flex-col gap-[40px] md:mb-[40px]">
+          <Steps activeStep={step} steps={steps} />
+
+          {step === 1 && (
+            <CreateAccount params={params}>
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                <PreOrderMessage />
+              )}{" "}
+            </CreateAccount>
+          )}
+          {step === 2 && (
+            <DeliveryAddress step={step} updateStepAction={setStep}>
+              {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
+                <PreOrderMessage />
+              )}{" "}
+            </DeliveryAddress>
+          )}
+          {step === 3 && (
+            <PaymentList
+              orderPackage={orderPackage}
+              poucheSize={productMain?.poucheSize}
+              pricePerCount={productMain?.pricePerCount}
+              productPrice={productMain?.price}
+              productId={productID ?? ""}
+              topupQuantity={storageQuantity}
+              teamId={teamId ?? ""}
+              totalPrice={totalPrice}
+              successAction={successAction}
+            />
+          )}
+          {step === 4 && (
+            <ConfirmJoining
+              orderPackage={orderPackage}
+              productName={productMain?.name}
+              email={context?.user?.email}
+              userType="new"
+              referralInfo={referralInfo}
+              step={step}
+            />
+          )}
+        </div>
+
+        {/* Summary Product Content - Reusable for both desktop and mobile */}
+        {(() => {
+          const summaryProductProps = {
+            model: {
+              id: "1",
+              name: productMain?.name,
+              corporation: productMain?.teamName,
+              quantityOfSubUnitPerOrder:
+                productMain?.quantityOfSubUnitPerOrder,
+              unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,
+              orderDate: productMain?.orderDate,
+              leadTime: productMain?.leadTime,
+            } as unknown as ISummaryProductModel,
+            storageQuantity,
+            setStorageQuantity,
+            daysUntilNextDrop: productMain?.daysUntilNextDrop ?? 0,
+            nextEditableDate: productMain?.nextEditableDate ?? "",
+            orderPackage,
+            step,
+            referralInfo,
+            setIsReferralCodeApplied,
+            setIsInfoIconClicked,
+            hasAlignmentPackage,
+            setHasAlignmentPackage,
+            hasActiveSupplement,
+          };
+
+          const summaryContent = (
+            <>
+              <SummaryProduct {...summaryProductProps} />
+              {step === 4 && <Delivery />}
+              {step < 4 && <AvailablePayment />}
+            </>
+          );
+
+          return (
+            <>
+              {/* Desktop Summary Product - hidden on mobile */}
+              <div id="summary-product" className="hidden md:block mx-[-16px] md:mx-[0] mt-[32px]">
+                {summaryContent}
+              </div>
+
+              {/* Mobile Summary Drawer */}
+              <MobileSummaryDrawer
+                totalPrice={totalPrice}
+                isOpen={isDrawerOpen}
+                onToggle={() => setIsDrawerOpen(!isDrawerOpen)}
+              >
+                <div className="p-4">
+                  {summaryContent}
+                </div>
+              </MobileSummaryDrawer>
+            </>
+          );
+        })()}
+      </div>
+    </>
+  );
 }

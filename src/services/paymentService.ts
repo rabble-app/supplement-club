@@ -10,6 +10,7 @@ import type IPaymentIntentApiResponse from "@/utils/models/services/IPaymentInte
 import type ISetupIntentApiResponse from "@/utils/models/services/ISetupIntentApiResponse";
 import type IUserPaymentOptionsApiResponse from "@/utils/models/services/IUserPaymentOptionsApiResponse";
 import { mapUserPaymentOptionModel } from "@/utils/mapping";
+import IMembershipSubscriptionApiResponse from "@/utils/models/services/IMembershipSubscriptionApiResponse";
 
 export const paymentService = {
 	addCard: async (paymentMethodId: string, stripeCustomerId: string) =>
@@ -95,6 +96,8 @@ export const paymentService = {
 			amount: model.amount,
 			paymentMethodId: model.paymentMethodId,
 			topupQuantity: model.topupQuantity,
+			pricePerCount: model.pricePerCount,
+			discount: model.discount,
 		});
 
 		return resonse;
@@ -107,6 +110,8 @@ export const paymentService = {
 		quantity: number,
 		price: number,
 		capsulePerDay: number,
+		pricePerCount: string,
+		discount: string,
 	) {
 		const resonse = await apiRequest(
 			PAYMENT_ENDPOINTS.JOIN_PREORDER_TEAM,
@@ -119,6 +124,8 @@ export const paymentService = {
 				quantity,
 				price,
 				capsulePerDay,
+				pricePerCount,
+				discount,
 			},
 		);
 
@@ -129,6 +136,7 @@ export const paymentService = {
 		amount: number,
 		currency: string,
 		customerId: string,
+		paymentMethodId: string,
 	) {
 		const { data } = (await apiRequest(
 			PAYMENT_ENDPOINTS.PAYMENT_INTENT,
@@ -137,6 +145,7 @@ export const paymentService = {
 				amount,
 				currency,
 				customerId,
+				paymentMethodId,
 			},
 		)) as IPaymentIntentApiResponse;
 
@@ -154,5 +163,51 @@ export const paymentService = {
 		return data?.map<IUserPaymentOptionModel>((r: IUserPaymentOptionResponse) =>
 			mapUserPaymentOptionModel(r),
 		);
+	},
+
+	async getMembershipSubscription(id: string) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.MEMBERSHIP_SUBSCRIPTION(id),
+			"GET",
+		)) as IMembershipSubscriptionApiResponse;
+		return data;
+	},
+
+	async updateMembershipStatus(
+		userId: string,
+		status: "ACTIVE" | "CANCELED",
+	) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.UPDATE_MEMBERSHIP_STATUS(userId),
+			"PATCH",
+			{
+				status,
+			},
+		)) as IMembershipSubscriptionApiResponse;
+
+		return {
+			status: data.status,
+			expiryDate: data.expiryDate,
+		} as {
+			status: "ACTIVE" | "CANCELED";
+			expiryDate: string;
+		};
+	},
+
+	async unregisterMembership(
+		membershipId: string,
+	) {
+		const { data } = (await apiRequest(
+			PAYMENT_ENDPOINTS.UNREGISTER_MEMBERSHIP(membershipId),
+			"DELETE",
+		)) as IMembershipSubscriptionApiResponse;
+
+		return {
+			status: data.status as "APPROVED" | "PENDING",
+			subscriptionStatus: data.subscriptionStatus,
+		} as {
+			status: "APPROVED" | "PENDING";
+			subscriptionStatus: string;
+		};
 	},
 };

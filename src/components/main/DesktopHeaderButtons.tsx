@@ -42,7 +42,7 @@ export default function DesktopHeaderButtons() {
 			<UserProfile user={context?.user ?? undefined} />
 
 			{context?.user && (
-				<Button onClick={() => context?.logout()}>
+				<Button onClick={() => context?.logout()} className="p-0">
 					<Image
 						src="/images/logout.svg"
 						alt="Logout icon"

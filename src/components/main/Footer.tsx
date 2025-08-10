@@ -1,20 +1,48 @@
 /** @format */
 
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import { productService } from "@/services/productService";
+import type IProductCardModel from "@/utils/models/IProductCardModel";
 
-export default async function Footer() {
-	const fetchProducts = async () => await productService.productsLimit(3);
-
-	const products = await fetchProducts();
+export default function Footer() {
+	const pathname = usePathname();
+	const isCheckoutPage = pathname?.includes('/checkout');
+	const [products, setProducts] = useState<IProductCardModel[]>([]);
+	
+	useEffect(() => {
+		const fetchProducts = async () => {
+			try {
+				const productsData = await productService.productsLimit(3);
+				setProducts(productsData);
+			} catch (error) {
+				console.error('Error fetching products:', error);
+			}
+		};
+		
+		fetchProducts();
+	}, []);
+	
+	// For checkout pages, hide footer on mobile
+	if (isCheckoutPage) {
+		return (
+			<footer className="hidden md:flex flex-col items-center pt-[40px] pb-[40px] lg:pt-[60px] lg:pb-[30px] bg-cream1">
+				{/* Footer content will be loaded dynamically */}
+			</footer>
+		);
+	}
+	
+	// For non-checkout pages, show footer normally
 	return (
-		<footer className="flex flex-col items-center pt-[40px] pb-[40px] lg:pt-[60px] lg:px-[32px] lg:pb-[30px] bg-cream1">
-			<div className="container-width grid gap-[24px] lg:grid-cols-[1fr_805px] lg:gap-[0]">
+		<footer className="flex flex-col items-center pt-[40px] pb-[40px] lg:pt-[60px] lg:pb-[30px] bg-cream1">
+			<div className="max-w-[1500px] px-4 mx-auto w-full grid gap-[24px] lg:grid-cols-[1fr_805px] lg:gap-[0]">
 				<div className="flex flex-col gap-[24px]">
-					<p className="text-[24px] leading-[27px] font-hagerman font-normal text-black">
+					<p className="text-[24px] leading-[27px] font-hagerman font-normal text-[#00038F]">
 						Supplement Club
 					</p>
 					<div className="flex items-center justify-start gap-x-[16px]">
@@ -49,7 +77,7 @@ export default async function Footer() {
 						<p className="text-[18px] leading-[21px] font-[700] font-inconsolata text-black1">
 							Shop
 						</p>
-						{products.map((product) => (
+						{products?.map((product) => (
 							<Link
 								className="text-[15px] leading-[18px] mt-[12px] font-figtree text-black1 line-clamp-3 truncate block"
 								href={`/products/${product.id}`}

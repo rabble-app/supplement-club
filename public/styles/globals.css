@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Hagerman_Font';
+  src: url('/fonts/Hagerman_Font Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 * {
   box-sizing: border-box;
   font-size: 16px;
@@ -11,7 +18,7 @@
 }
 
 .container-width {
-  max-width: 1312px;
+  max-width: 1500px;
   margin: 0 auto;
   width: 100%;
   padding: 0 16px;
@@ -32,13 +39,13 @@
   color: #B42318;
 }
 
-[data-state="closed"] > .plus,
-[data-state="open"] > .minus {
+[data-state="closed"]>.plus,
+[data-state="open"]>.minus {
   display: block;
 }
 
-[data-state="closed"] > .minus,
-[data-state="open"] > .plus {
+[data-state="closed"]>.minus,
+[data-state="open"]>.plus {
   display: none;
 }
 
@@ -58,4 +65,24 @@ html body[data-scroll-locked] {
 .inner-border-box:hover::before {
   content: '';
   @apply absolute inset-5 border-2 border-blue pointer-events-none;
+}
+
+#carousel-content img{
+  margin: auto !important;
+}
+
+@media (max-width: 768px) {
+  .addressBar {
+    width: 100%;
+    margin-top: 14px;
+    text-align: justify;
+  }
+
+  .productBar {
+    width: 100%;
+  }
+
+  #order-summary-card #order-summary-image.membership-image {
+    padding: 1px 2px !important;
+  }
 }

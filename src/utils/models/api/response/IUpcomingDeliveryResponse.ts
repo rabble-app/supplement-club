@@ -1,8 +1,27 @@
 export interface IUpcomingDeliveryResponse {
-	id: string;
 	deliveryDate: string;
-	team: Team;
-	basket: Basket[];
+	user: {
+		postalCode: string;
+		buildingNo: string;
+		address: string;
+		address2: string;
+		city: string;
+		country: string;
+	},
+	deliveries: Delivery[];
+}
+
+export interface Delivery {
+	orderId: string;
+	type: string;
+	product: {
+		name: string;
+		quantity: number;
+		price: string;
+		unitsOfMeasurePerSubUnit: string;
+		imageUrl: string;
+		poucheSize: string;
+	}
 }
 
 export interface Team {

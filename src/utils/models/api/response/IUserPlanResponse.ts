@@ -27,6 +27,9 @@ export interface Basket {
 	quantity: number;
 	product: Product;
 	capsulePerDay: number;
+	price: string;
+	discount: number;
+	pricePerCount: string;
 }
 
 export interface Product {
@@ -41,6 +44,7 @@ export interface Product {
 	capsuleInfo: CapsuleInfo[];
 	imageUrl: string;
 	producer: Producer;
+	gramsPerCount: string;
 }
 
 export interface PriceInfo {
@@ -56,6 +60,7 @@ export interface CapsuleInfo {
 	title1: string;
 	title2: string;
 	title3: string;
+	others: string;
 }
 
 export interface Producer {

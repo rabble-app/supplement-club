@@ -1,5 +1,6 @@
 import CorporationCardInfo from "@/components/main/products/CorporationCardInfo";
 import ImageBox from "@/components/main/products/ImageBox";
+import IOrderPackageModel from "@/utils/models/IOrderPackageModel";
 
 export default function CorporationBox({
 	tags,
@@ -8,13 +9,15 @@ export default function CorporationBox({
 	description,
 	unitsOfMeasurePerSubUnit,
 	quantityOfSubUnitPerOrder,
+	orderPackage,
 }: Readonly<{
 	tags?: string[];
 	name?: string;
 	businessName?: string;
 	description?: string;
 	unitsOfMeasurePerSubUnit?: string;
-	quantityOfSubUnitPerOrder?: string;
+	quantityOfSubUnitPerOrder?: number;
+	orderPackage?: IOrderPackageModel;
 }>) {
 	return (
 		<div className="flex flex-col gap-[16px] md:gap-[24px] w-full">
@@ -23,6 +26,7 @@ export default function CorporationBox({
 				quantityOfSubUnitPerOrder={quantityOfSubUnitPerOrder}
 				businessName={businessName}
 				name={name}
+				orderPackage={orderPackage}
 			/>
 
 			<div className="flex flex-col gap-[16px] font-helvetica">

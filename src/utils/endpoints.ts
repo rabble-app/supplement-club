@@ -20,7 +20,7 @@ export const PAYMENT_ENDPOINTS = {
 	JOIN_TEAM: "payments/supplement/join-team",
 	JOIN_PREORDER_TEAM: "payments/supplement/join-team",
 	SETUP_INTENT: "payments/setup-intent/",
-	PAYMENT_INTENT: "payments/intent",
+	PAYMENT_INTENT: "payments/intent?isSupplementApp=true",
 	SUBSCRIPTION_TOPUP: "payments/supplement/topup",
 	UPDATE_SUBSCRIPTION: (id: string) => `payments/basketC/${id}`,
 	CHARGE_USER: "payments/charge",
@@ -28,18 +28,28 @@ export const PAYMENT_ENDPOINTS = {
 	REMOVE_CARD: "payments/remove-card?isSupplementApp=true",
 	GET_PAYMENT_OPTIONS: (id: string) =>
 		`payments/options/${id}?isSupplementApp=true`,
+	MEMBERSHIP_SUBSCRIPTION: (id: string) =>
+		`payments/subscription/status/${id}`,
+	UPDATE_MEMBERSHIP_STATUS: (id: string) =>
+		`payments/subscription/status/${id}`,
+	UNREGISTER_MEMBERSHIP: (id: string) =>
+		`teams/quit/${id}`,
 };
 
 export const USER_ENDPOINTS = {
 	UPCOMING_DELIVERIES: (userId: string) =>
 		`users/${userId}/supplement/upcoming-deliveries`,
 	DELIVERY_ADDRESS: "users/delivery-address",
+	BILLING_ADDRESS: "users/billing-address",
+	GET_BILLING_ADDRESS: (userId: string) => `users/billing-address/${userId}`,
 	SUBSCRIPTION_PLANS: (userId: string) => `users/${userId}/supplement/plans`,
 	SUBSCRIPTION_PLAN: (userId: string) => `users/supplement/plans/${userId}`,
 	UPDATE_INFO: "users/update",
 	UPDATE_SHIPPING: (userId: string) => `users/delivery-address/${userId}`,
 	PAST_ORDERS: (userId: string) => `users/order-history/${userId}`,
 	INFO: (userId: string) => `users/${userId}`,
+	HAS_ACTIVE_SUPPLEMENT: (userId: string) =>
+		`users/${userId}/has-active-supplement`,
 };
 
 export const AUTH_ENDPOINTS = {
@@ -56,10 +66,12 @@ export const REFERAL_ENDPOINTS = {
 	REFERAL_INFO: "referrals/info",
 	REFERAL_HISTORY: "referrals/tracking",
 	CLAIM_REWARD: "referrals/claim-rewards",
+	APPLY_REFERRAL_CODE: "referrals/apply-user-code",
 };
 
 export const PRODUCT_ENDPOINTS = {
-	PRODUCT: (id: string) => `products/${id}`,
+	PRODUCT: (id: string, teamId?: string, userId?: string) =>
+		`products/${id}?teamId=${teamId ?? ""}&userId=${userId ?? ""}`,
 	PRODUCTS: (userId?: string) => `products/supplement/list?userId=${userId}`,
 	PRODUCTS_LIMIT: (limit?: number) => `products/supplement/list?limit=${limit}`,
 	PRODUCTTAGS: () => "products/supplement/tags",

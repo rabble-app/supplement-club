@@ -5,9 +5,9 @@ import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
 
 export default function LaboratoryCard(card: Readonly<ILaboratoryCardModel>) {
 	return (
-		<Link href={card.url} target="_black" className="grid bg-grey8">
+		<Link href={card.url} target="_black" className="grid bg-grey8 items-start">
 			<Image
-				className="w-full h-full object-cover md:min-h-[260px]"
+				className="w-full h-full object-cover md:min-h-[260px] md:max-h-[260px]"
 				src={card.logo}
 				alt={card.altLogo}
 				width={390}

@@ -10,16 +10,20 @@ import type { PaymentMethod } from "@stripe/stripe-js";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { CustomToast, StatusToast } from "./Toast";
+import { Loader2 } from "lucide-react";
 
 export default function PaymentSetupForm({
 	clientSecret,
 	cardAction,
+	fetchSetupIntent,
 }: Readonly<{
 	clientSecret: string;
 	cardAction: (val: string | PaymentMethod | null) => void;
+	fetchSetupIntent: () => void;
 }>) {
 	const [futurePurchase, setFuturePurchase] = useState(true);
 	const [defaultCard, setDefaultCard] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const stripe = useStripe();
 	const elements = useElements();
@@ -27,7 +31,7 @@ export default function PaymentSetupForm({
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
+		setIsLoading(true);
 		if (!stripe || !elements || !clientSecret) return;
 
 		const submitResult = await elements.submit();
@@ -58,6 +62,7 @@ export default function PaymentSetupForm({
 				context?.user?.stripeCustomerId ?? "",
 			)) as { error?: string } | null;
 			if (addCardResponse?.error) {
+				fetchSetupIntent();
 				CustomToast({
 					title: JSON.parse(addCardResponse.error)?.message,
 					status: StatusToast.ERROR,
@@ -66,6 +71,7 @@ export default function PaymentSetupForm({
 				cardAction(setupIntent.payment_method);
 			}
 		}
+		setIsLoading(false);
 	};
 
 	return (
@@ -105,8 +111,9 @@ export default function PaymentSetupForm({
 
 			<Button
 				type="submit"
-				className="bg-blue text-[16px] flex ml-auto text-white font-bold font-inconsolata h-[48px] w-[179px] mt-[20px]"
+				className="bg-blue text-[16px] flex ml-auto text-white font-bold font-inconsolata h-[48px] mt-[20px] w-fit"
 			>
+				{isLoading && <Loader2 className="w-4 h-4 mr-2" />}
 				Add Card Details
 			</Button>
 		</form>
