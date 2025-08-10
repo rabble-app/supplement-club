@@ -46,7 +46,7 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
   const productLink = `/products/${model.id}?teamId=${model.teamId}`;
 
   const [firstWord, ...rest] = (model.name ?? "").split(" ");
-  const earlyMemberText = "Join early and lock in an extra 5% off forever";
+  const earlyMemberText = `This product is currently in production. Pre-order today and get 5% off forever`;
   const foundingMemberText = "Register your interest in this product today and lock in an extra 10% off when the team launches";
   const normalMemberText = "Join today and we’ll send you an alignment package to take you to the " + nextQuarterShort + " Drop";
 
@@ -145,6 +145,9 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
           <p className="text-blue uppercase text-[16px] font-helvetica">
             FREE DELIVERY
           </p>
+          {/* {model.firstDelivery && (
+            <span>Pre-Order Now</span>
+          )} */}
           <span>{deliveryText}</span>
         </div>
       </div>
