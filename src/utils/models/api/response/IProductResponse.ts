@@ -9,4 +9,5 @@ export default interface IProductResponse {
 	status: string;
 	productId: string;
 	teamId: string;
+	firstDelivery: boolean;
 }

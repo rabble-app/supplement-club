@@ -45,12 +45,12 @@ export default function MemberCard(model: Readonly<IMemberCardModel>) {
 				</div>
 
 				<div className="flex flex-col gap-[8px] justify-center">
-					<div className="flex gap-[5px] items-center justify-end">
+					<div className="flex gap-[5px] items-center justify-end flex-col md:flex-row">
 						<span className="text-[20px] leading-[20px] font-bold font-inconsolata text-[#444444]">
 							£{model.price}
-						</span>{" "}
+						</span>{" "} 
 						<p className="text-[12px] my-[auto] font-bold font-inconsolata text-grey1">
-							(£{model.capsulePrice} / count)
+					   (£{model.capsulePrice} / count)
 						</p>
 					</div>
 

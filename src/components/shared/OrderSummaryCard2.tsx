@@ -14,12 +14,12 @@ function renderPrice(
     <div id="order-summary-price" className="flex flex-col items-end gap-[4px] md:gap-[8px]">
       {rightTopText && (
         <p className="text-blue font-normal text-[10px] md:text-sm font-inconsolata whitespace-nowrap">
-          {rightTopText}
+          {/* {rightTopText} */}
         </p>
       )}
       {rightCenterText}
       {rightBottomText && (
-        <p className="text-blue font-normal text-[10px] md:text-sm font-inconsolata whitespace-nowrap">
+        <p className="text-blue font-normal text-[10px] md:text-sm font-inconsolata whitespace-nowrap mt-[-6px] md:mt-0">
           {rightBottomText}
         </p>
       )}

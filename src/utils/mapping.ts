@@ -6,13 +6,11 @@ import type ISingleProductModel from "./models/ISingleProductModel";
 import type { IProductModel } from "./models/api/IProductModel";
 import type IReferalInfoModel from "./models/api/IReferalInfoModel";
 import type IReferalModel from "./models/api/IReferalModel";
-import type IUpcomingDeliveryModel from "./models/api/IUpcomingDeliveryModel";
 import type IUserModel from "./models/api/IUserModel";
 import type IUserPaymentOptionModel from "./models/api/IUserPaymentOptionModel";
 import type IProductResponse from "./models/api/response/IProductResponse";
 import type IReferalInfoResponse from "./models/api/response/IReferalInfoResponse";
 import type IReferalResponse from "./models/api/response/IReferalResponse";
-import type { IUpcomingDeliveryResponse } from "./models/api/response/IUpcomingDeliveryResponse";
 import type IUserPastOrderReponse from "./models/api/response/IUserPastOrderReponse";
 import type IUserPaymentOptionResponse from "./models/api/response/IUserPaymentOptionResponse";
 import type IUserPlanReponse from "./models/api/response/IUserPlanResponse";
@@ -37,6 +35,7 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 		formulationSummary: model.product.formulationSummary,
 		teamId: model.teamId,
 		tags: model.product.tags,
+		firstDelivery: model.firstDelivery,
 	};
 };
 

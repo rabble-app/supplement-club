@@ -19,4 +19,5 @@ export default interface IProductCardModel {
 	teamName?: string;
 	teamId?: string;
 	subscribers: number;
+	firstDelivery?: boolean;
 }

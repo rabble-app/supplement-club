@@ -282,7 +282,7 @@ export default function TeamPrice({
                   className={`text-[12px] leading-[13px] font-inconsolata font-bold text-center ${
                     item.percentageDiscount === activePercentageDiscount &&
                     !isFoundingProduct
-                      ? "text-[24px] font-bold leading-[25px]"
+                      ? "md:text-[24px] font-bold leading-[25px]"
                       : ""
                   }`}
                 >

@@ -154,7 +154,7 @@ export default function AlignmentDialog({
             <DialogHeader
               className={`flex flex-row justify-between items-center relative ${
                 orderPackage.memberType !== MemberType.MEMBER
-                  ? "pb-[200px] md:pb-[70px]"
+                  ? "pb-[20px] md:pb-[70px] mt-[-45px] md:mt-0"
                   : "pb-60 md:pb-40"
               }`}
             >
@@ -162,7 +162,7 @@ export default function AlignmentDialog({
                 className={`absolute ${
                   orderPackage.memberType !== MemberType.MEMBER
                     ? "top-[70px] md:top-0"
-                    : "top-[120px] md:top-[56px]"
+                    : "top-[45px] md:top-[56px]"
                 } left-0 right-0`}
               >
                 <h1 className="uppercase text-center font-hagerman text-[18px] md:text-2xl font-normal">
@@ -236,7 +236,7 @@ export default function AlignmentDialog({
                 />
               )}
             {orderPackage.memberType !== MemberType.MEMBER && (
-              <div className="bg-[#F6F6F6] p-6">
+              <div className="bg-[#F6F6F6] p-6 mt-[140px] md:mt-0">
                 <h3 className="font-hagerman text-lg font-normal mb-2 text-black">
                   {orderPackage.memberType === MemberType.FOUNDING_MEMBER &&
                     "We’ll notify you when the team launches and orders go to the lab."}
@@ -274,16 +274,16 @@ export default function AlignmentDialog({
                       width={61}
                       height={61}
                     />
-                    <p className="text-black font-inconsolata text-base font-semibold my-0.5">
+                    <p className="text-black font-inconsolata text-base font-semibold my-0.5 text-[14px] md:text-[16px] leading-[14px] md:leading-[16px]">
                       Alignment Package
                     </p>
                     {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-                      <p className="text-grey4 font-inconsolata text-sm font-normal text-center">
+                      <p className="text-grey4 font-inconsolata font-normal text-center text-[12px] md:text-sm">
                         Capsules to cover you until the first drop
                       </p>
                     )}
                     {orderPackage.memberType === MemberType.EARLY_MEMBER && (
-                      <p className="text-grey4 font-inconsolata text-sm font-normal text-center">
+                      <p className="text-grey4 font-inconsolata font-normal text-center text-[12px] md:text-sm">
                         {(orderPackage?.pochesRequired ?? 0) *
                           orderPackage.storageCapsuleCount}{" "}
                         x {orderPackage.alignmentPoucheSize}
@@ -300,7 +300,7 @@ export default function AlignmentDialog({
                       width={61}
                       height={61}
                     />
-                    <p className="text-black font-inconsolata text-base font-semibold my-0.5">
+                    <p className="text-black font-inconsolata text-base font-semibold my-0.5 text-[14px] md:text-[16px] leading-[14px] md:leading-[16px]">
                       {orderPackage.memberType === MemberType.FOUNDING_MEMBER
                         ? "1st Quarterly Drop"
                         : `Q${nextQuater} Drop`}
@@ -314,13 +314,13 @@ export default function AlignmentDialog({
 
                 <div className="bg-blue2 w-full rounded-full mt-6">
                   {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-                    <p className="text-blue font-inconsolata text-sm font-semibold py-1.5 text-center">
+                    <p className="text-blue font-inconsolata text-[12px] md:text-sm leading-[12px] md:leading-[14px] font-semibold py-1.5 text-center px-2">
                       Reminder: You don’t need to do anything — we’ll notify you
                       before charging.
                     </p>
                   )}
                   {orderPackage.memberType === MemberType.EARLY_MEMBER && (
-                    <p className="text-blue font-inconsolata text-sm font-semibold py-1.5 text-center">
+                    <p className="text-blue font-inconsolata text-[12px] md:text-sm leading-[12px] md:leading-[14px] font-semibold py-1.5 text-center px-2">
                       Estimated delivery:{" "}
                       {orderPlusLeadTimeDate
                         ? format(
@@ -332,7 +332,7 @@ export default function AlignmentDialog({
                   )}
                 </div>
                 {orderPackage.memberType === MemberType.EARLY_MEMBER && (
-                  <p className="text-grey4 font-inconsolata text-sm font-normal text-center mt-2">
+                  <p className="text-grey4 font-inconsolata text-[12px] md:text-sm font-normal text-center mt-2">
                     We’ll email you when your shipment is on its way.
                   </p>
                 )}
@@ -341,7 +341,7 @@ export default function AlignmentDialog({
           </div>
 
           {orderPackage.memberType === MemberType.MEMBER && (
-            <div className="flex flex-col gap-4 mb-[70px] md:mb-6">
+            <div className="flex flex-col gap-4 mb-[70px] md:mb-6 mt-3 md:mt-1">
               <Button
                 type="submit"
                 className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
@@ -366,7 +366,7 @@ export default function AlignmentDialog({
             </div>
           )}
           {orderPackage.memberType !== MemberType.MEMBER && (
-            <div className="flex flex-col gap-4 mt-1 mb-[70px] md:mb-6">
+            <div className="flex flex-col gap-4 mt-3 md:mt-1 mb-[70px] md:mb-6">
               <Button
                 type="submit"
                 className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}

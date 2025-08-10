@@ -22,4 +22,5 @@ export default interface ISummaryProductModel {
 	gramsPerCount?: number;
 	orderDate?: string;
 	leadTime?: number;
+	supplierCountry: string;
 }

@@ -13,7 +13,7 @@ import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
 
 export default function ProductCard(model: Readonly<IProductCardModel>) {
-  const { nextDeliveryTextShort } = getQuarterInfo();
+  const { nextQuarterShort } = getQuarterInfo();
   const [userProducts, setUserProducts] = useState<IManagePlanModel[]>([]);
   const context = useUser();
 
@@ -46,7 +46,11 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
   const productLink = `/products/${model.id}?teamId=${model.teamId}`;
 
   const [firstWord, ...rest] = (model.name ?? "").split(" ");
+  const earlyMemberText = "Join early and lock in an extra 5% off forever";
+  const foundingMemberText = "Register your interest in this product today and lock in an extra 10% off when the team launches";
+  const normalMemberText = "Join today and we’ll send you an alignment package to take you to the " + nextQuarterShort + " Drop";
 
+  const deliveryText = model.firstDelivery ? earlyMemberText : model.status=='PREORDER' ? foundingMemberText : normalMemberText;
 
   return (
     <div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
@@ -139,10 +143,9 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 
         <div className="flex flex-col text-center text-grey5 leading-[18px] font-helvetica">
           <p className="text-blue uppercase text-[16px] font-helvetica">
-            FREE NEXT DAY DELIVERY
+            FREE DELIVERY
           </p>
-          Join today and your launch package getting you to the{" "}
-          {nextDeliveryTextShort} Drop will arrive tomorrow
+          <span>{deliveryText}</span>
         </div>
       </div>
     </div>

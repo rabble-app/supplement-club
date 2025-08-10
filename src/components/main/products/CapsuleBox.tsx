@@ -126,7 +126,7 @@ export default function CapsuleBox({
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
       rightTop: "Founding Membership",
-      rightBottom: `${orderPackage.remainingSpots} Founding Member Spots Remaining!`,
+      rightBottom: `${orderPackage.remainingSpots} Founder Spots Remaining!`,
     },
     EARLY_MEMBER: {
       leftCenter: "EARLY MEMBER",
@@ -225,7 +225,7 @@ export default function CapsuleBox({
               </p>
             </div>
             {capsuleCount === option.capsuleCount && (
-              <div className="md:flex absolute bottom-[-18px] md:bottom-[-10px] w-full h-[20px] bg-white z-[100]" />
+              <div className="md:flex absolute bottom-[-13px] md:bottom-[-10px] w-full h-[20px] bg-white z-[100]" />
             )}
             {capsuleCount === option.capsuleCount && (
               <div key={option.capsuleCount} className="hidden gap-[8px]">
@@ -273,7 +273,7 @@ export default function CapsuleBox({
 
       {/* Mobile-only selected item content */}
       <div className="md:hidden grid gap-[8px] pt-[6px] pb-[8px] px-[8px] border-[1px] outline outline-[2px] outline-blue">
-        <Separator className="bg-grey3 h-[1px]" />
+        {/* <Separator className="bg-grey3 h-[1px]" /> */}
         <div className="grid gap-[4px]">
           <p className="text-grey6 text-[12px] leading-[16px]">
             {capsuleInfo?.find((c) => c.capsuleCount === capsuleCount)?.title1}
@@ -314,7 +314,7 @@ export default function CapsuleBox({
         </div>
 
         <hr className="border-grey3 h-[1px] mb-[10px] md:hidden" />
-        <div className="grid gap-[16px]">
+        <div className="grid gap-[16px] pr-[10px] md:pr-0">
           <OrderSummaryCard2
             imageSrc={orderPackage.imageSrc}
             leftTopText={leftTopText}
@@ -376,7 +376,7 @@ export default function CapsuleBox({
           </Button>
 
           {isFoundingProduct && (
-            <p className="text-[12px] md:text-sm text-grey6 font-helvetica leading-[14px] text-center">
+            <p className="text-[12px] md:text-sm text-grey6 font-helvetica leading-[14px] text-center pb-[10px] md:pb-0">
               You’ll be notified when your team launches. You’ll have 24 hours
               to withdraw before payment is taken.
             </p>
