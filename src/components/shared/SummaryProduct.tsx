@@ -71,7 +71,7 @@ export default function SummaryProduct({
   const [storageQuantityState, setStorageQuantityState] =
     useState(localStorageQuantity);
 
-  const { nextQuarterShort, nextQuarter } = getQuarterInfo();
+  const { next2QuarterShort, nextQuarter } = getQuarterInfo();
 
   const nextYearDate = new Date();
   nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
@@ -210,7 +210,7 @@ export default function SummaryProduct({
         `${orderPackage.units} Total`
       }`,
       leftCenter: "LAUNCH PACKAGE",
-      leftBottom: `Takes you up to: ${nextQuarterShort} Drop`,
+      leftBottom: `Takes you up to: ${next2QuarterShort} Drop`,
       rightTop: "Includes Early Member 5% Extra Discount",
       rightCenter: (
         <div

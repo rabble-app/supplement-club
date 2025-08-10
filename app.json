@@ -1,0 +1,23 @@
+{
+  "name": "supplement-club",
+  "description": "Supplement Club Application",
+  "repository": "https://github.com/yourusername/supplement-club",
+  "keywords": ["nextjs", "react", "typescript"],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment setting for the application",
+      "value": "production"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}
