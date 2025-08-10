@@ -71,7 +71,7 @@ export default function SummaryProduct({
   const [storageQuantityState, setStorageQuantityState] =
     useState(localStorageQuantity);
 
-  const { nextQuarterShort } = getQuarterInfo();
+  const { nextQuarterShort, nextQuater } = getQuarterInfo();
 
   const nextYearDate = new Date();
   nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
