@@ -71,7 +71,7 @@ export default function SummaryProduct({
   const [storageQuantityState, setStorageQuantityState] =
     useState(localStorageQuantity);
 
-  const { nextQuarterShort, nextQuater } = getQuarterInfo();
+  const { nextQuarterShort, nextQuarter } = getQuarterInfo();
 
   const nextYearDate = new Date();
   nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
@@ -462,7 +462,7 @@ export default function SummaryProduct({
                 }
                 leftCenterText={
                   !isTopUp ? (orderPackage.memberType === MemberType.MEMBER
-                    ? `Q${nextQuater} DROP`
+                    ? `Q${nextQuarter} DROP`
                     : leftCenterText
                   ) : 'Alignment Package'
                 }
