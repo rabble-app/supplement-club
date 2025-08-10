@@ -19,6 +19,11 @@ export function getQuarterInfo() {
 	// Calculate the next quarter number
 	const nextQuarter = currentQuarter === 4 ? 1 : currentQuarter + 1;
 	const nextQuarterShort = `Q${nextQuarter} ${nextYear}`;
+	
+	// Calculate the next 2 quarters ahead
+	const next2Quarter = currentQuarter === 3 ? 1 : currentQuarter === 4 ? 2 : currentQuarter + 2;
+	const next2QuarterYear = currentQuarter >= 3 ? nextYear : date.getFullYear();
+	const next2QuarterShort = `Q${next2Quarter} ${next2QuarterYear}`;
 
 	// Calculate days remaining for the next quarter
 	const today = new Date();
@@ -55,6 +60,8 @@ export function getQuarterInfo() {
 		currentQuarter,
 		nextQuarter,
 		nextQuarterShort,
+		next2Quarter,
+		next2QuarterShort,
 		daysToNextQuarter: remainsDaysToNextQuater,
 		year: date.getFullYear(),
 		nextQuarterMonth,
