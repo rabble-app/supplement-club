@@ -288,7 +288,7 @@ export default function SummaryProduct({
           {model?.corporation && model.name && (
             <div className="grid gap-[8px]">
               <p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4 uppercase">
-                {model.corporation} | 
+                {model.corporation} 
               </p>
               <div className="text-[24px] md:text-[30px] leading-[28px] md:leading-[48px] font-hagerman flex items-start gap-[5px]">
                 {firstWord}

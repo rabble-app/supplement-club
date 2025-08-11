@@ -35,10 +35,12 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
     () => Math.abs((model.price / model.rrp - 1) * 100).toFixed(2),
     [model]
   );
-  let titleButton = "Join Team";
+  let titleButton = "Subscribe Now";
 
   if (model.isComming && !hasProduct) {
-    titleButton = "Pre - Join Team";
+    titleButton = "Reserve Your Spot";
+  }else if (model.firstDelivery) {
+    titleButton = "Pre-Order Now";
   } else if (!!hasProduct) {
     titleButton = "See Team";
   }
