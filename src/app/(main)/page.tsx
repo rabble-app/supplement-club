@@ -1,5 +1,8 @@
+"use client";
+
 /** @format */
 
+import { useEffect, useState } from "react";
 import Faqs from "@/components/main/Faqs";
 import HomeCardComponent from "@/components/main/HomeCard";
 import ProductInfo from "@/components/main/ProductInfo";
@@ -12,6 +15,7 @@ import MembershipBox from "@/components/main/MembershipBox";
 import { productService } from "@/services/productService";
 import type { IHomeCardModel } from "@/utils/models/IHomeCardModel";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
+import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import { getQuarterInfo } from "@/utils/utils";
 
 const homeCards = [
@@ -175,20 +179,43 @@ const membershipData = [
   },
 ];
 
-export default async function Home() {
+export default function Home() {
   const productId = process.env.NEXT_PUBLIC_PRODUCT_ID as string;
-
-  const fetchProduct = async () =>
-    await productService.product(productId, process.env.NEXT_PUBLIC_TEAM_ID);
-
-  const fetchProducts = async () => await productService.productsLimit(3);
+  const [productModel, setProductModel] = useState<ISingleProductModel | null>(null);
+  const [products, setProducts] = useState<IProductCardModel[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const { nextDeliveryText } = getQuarterInfo();
 
-  const [productModel, products] = await Promise.all([
-    fetchProduct(),
-    fetchProducts(),
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productData, productsData] = await Promise.all([
+          productService.product(productId, process.env.NEXT_PUBLIC_TEAM_ID),
+          productService.productsLimit(3)
+        ]);
+        setProductModel(productData);
+        setProducts(productsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue mx-auto"></div>
+          <p className="mt-4 text-lg text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen grid gap-[32px] bg-white lg:bg-transparent">
@@ -248,63 +275,65 @@ export default async function Home() {
                 ))}
               </div>
             </div>
-            <div className="relative flex flex-col w-full mt-[310px]">
-              <div className="md:w-full h-full">
-                <Image
-                  className="w-[308px] mx-auto h-[520px] absolute top-[-280px] left-0 right-0 hidden md:block object-cover"
-                  src={productModel?.imageUrl ?? ""}
-                  alt={productModel?.imageKey ?? "main product"}
-                  width={308}
-                  height={520}
-                  unoptimized
-                />
-                <Image
-                  className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-326px] left-0 right-0 object-cover"
-                  src={productModel?.imageUrl ?? ""}
-                  alt={productModel?.imageKey ?? "main product"}
-                  width={545}
-                  height={449}
-                  unoptimized
-                />
-              </div>
-              <div className="bg-blue">
-                <div className="md:w-full md:h-[450px] h-[350px] flex flex-col justify-end">
-                  <div className="w-full grid items-end pt-[0px] px-[16px] lg:px-[32px] py-[32px]">
-                    <div>
-                      <div className="md:mb-[40px] mb-[20px] text-white">
-                        <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
-                          {productModel?.name}{" "}
-                          <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
-                            £{Number(productModel?.price).toFixed(2)}{" "}
-                          </span>
+            {productModel && (
+              <div className="relative flex flex-col w-full mt-[310px]">
+                <div className="md:w-full h-full">
+                  <Image
+                    className="w-[308px] mx-auto h-[520px] absolute top-[-280px] left-0 right-0 hidden md:block object-cover"
+                    src={productModel?.imageUrl ?? ""}
+                    alt={productModel?.imageKey ?? "main product"}
+                    width={308}
+                    height={520}
+                    unoptimized
+                  />
+                  <Image
+                    className="md:hidden w-[545px] mx-auto h-[449px] absolute top-[-326px] left-0 right-0 object-cover"
+                    src={productModel?.imageUrl ?? ""}
+                    alt={productModel?.imageKey ?? "main product"}
+                    width={545}
+                    height={449}
+                    unoptimized
+                  />
+                </div>
+                <div className="bg-blue">
+                  <div className="md:w-full md:h-[450px] h-[350px] flex flex-col justify-end">
+                    <div className="w-full grid items-end pt-[0px] px-[16px] lg:px-[32px] py-[32px]">
+                      <div>
+                        <div className="md:mb-[40px] mb-[20px] text-white">
+                          <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
+                            {productModel?.name}{" "}
+                            <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
+                              £{Number(productModel?.price).toFixed(2)}{" "}
+                            </span>
+                          </div>
+                          <div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
+                            {productModel?.producer?.businessName}
+                            <p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
+                              <span className="text-[20px] leading-[23px] text-grey2 line-through">
+                                £{Number(productModel?.rrp).toFixed(2)}
+                              </span>{" "}
+                              {Number(productModel?.activePercentageDiscount)}%
+                              OFF
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-                          {productModel?.producer?.businessName}
-                          <p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
-                            <span className="text-[20px] leading-[23px] text-grey2 line-through">
-                              £{Number(productModel?.rrp).toFixed(2)}
-                            </span>{" "}
-                            {Number(productModel?.activePercentageDiscount)}%
-                            OFF
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        font={"bold"}
-                        className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
-                        asChild
-                      >
-                        <Link
-                          href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}
+                        <Button
+                          font={"bold"}
+                          className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
+                          asChild
                         >
-                          Buy Now
-                        </Link>
-                      </Button>
+                          <Link
+                            href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}
+                          >
+                            Buy Now
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

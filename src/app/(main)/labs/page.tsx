@@ -1,5 +1,8 @@
+"use client";
+
 /** @format */
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import Faqs from "@/components/main/Faqs";
@@ -17,8 +20,9 @@ import {
 import { productService } from "@/services/productService";
 import type { IGoalCardModel } from "@/utils/models/IGoalCardModel";
 import type ILaboratoryCardModel from "@/utils/models/ILaboratoryCardModel";
+import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 
-export default async function Labs() {
+export default function Labs() {
   const laboratories = [
     {
       id: 1,
@@ -114,9 +118,36 @@ export default async function Labs() {
     },
   ] as IGoalCardModel[];
 
-  const product = await productService.product(
-    process.env.NEXT_PUBLIC_PRODUCT_ID as string
-  );
+  const [product, setProduct] = useState<ISingleProductModel | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const productData = await productService.product(
+          process.env.NEXT_PUBLIC_PRODUCT_ID as string
+        );
+        setProduct(productData);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-grey11">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue mx-auto"></div>
+          <p className="mt-4 text-lg text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="md:pt-[57px] bg-grey11 md:bg-transparent grid gap-[80px] md:gap-[140px]">
@@ -318,11 +349,13 @@ export default async function Labs() {
         </div>
       </div>
 
-      <div className="">
-        <div className="max-w-[1520px] mx-auto">
-          <ProductInfo product={product} />
+      {product && (
+        <div className="">
+          <div className="max-w-[1520px] mx-auto">
+            <ProductInfo product={product} />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="px-[16px] lg:px-[32px]">
         <div className="max-w-[1500px] mx-auto">
