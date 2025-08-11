@@ -22,7 +22,8 @@ export function getQuarterInfo() {
 	
 	// Calculate the next 2 quarters ahead
 	const next2Quarter = currentQuarter === 3 ? 1 : currentQuarter === 4 ? 2 : currentQuarter + 2;
-	const next2QuarterYear = currentQuarter >= 3 ? nextYear : date.getFullYear();
+	// For next2Quarter, we need to check if we're going into a new year
+	const next2QuarterYear = next2Quarter < currentQuarter ? nextYear + 1 : nextYear;
 	const next2QuarterShort = `Q${next2Quarter} ${next2QuarterYear}`;
 
 	// Calculate days remaining for the next quarter
