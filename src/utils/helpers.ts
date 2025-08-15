@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import type { IResponseModel } from "./models/api/response/IResponseModel";
 
 export const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+console.log("API_ENDPOINT", API_ENDPOINT);
 
 export const apiRequest = async <T>(
 	endpoint: string,

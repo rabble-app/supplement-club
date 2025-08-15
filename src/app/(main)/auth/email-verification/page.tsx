@@ -39,7 +39,6 @@ export default function EmailVerification() {
 
   useEffect(() => {
     const fetchToken = async () => {
-      console.log("token", token);
       const response = (await authService.emailVerify(token as string)) as {
         data: IUserResponse;
       };

@@ -45,32 +45,60 @@ export default function DeliveryAddress({
   const { setUser } = useUserStore((state) => state);
 
   async function onSubmit(e: FormData) {
-    const result = await usersService.addDeliveryAddress({
-      userId: context?.user?.id ?? "",
-      firstName: e.get("firstName")?.toString() ?? "",
-      lastName: e.get("lastName")?.toString() ?? "",
-      address: e.get("address")?.toString() ?? "",
-      address2: e.get("address2")?.toString() ?? "",
-      city: e.get("city")?.toString() ?? "",
-      postalCode: e.get("postalCode")?.toString() ?? "",
-      country: e.get("country")?.toString() ?? "",
-      phone: e.get("mobileNumber")?.toString() ?? "",
-    });
+    try {
+      const result = await usersService.addDeliveryAddress({
+        userId: context?.user?.id ?? "",
+        firstName: e.get("firstName")?.toString() ?? "",
+        lastName: e.get("lastName")?.toString() ?? "",
+        address: e.get("address")?.toString() ?? "",
+        address2: e.get("address2")?.toString() ?? "",
+        city: e.get("city")?.toString() ?? "",
+        postalCode: e.get("postalCode")?.toString() ?? "",
+        country: e.get("country")?.toString() ?? "",
+        phone: e.get("mobileNumber")?.toString() ?? "",
+      });
 
-    // set payment card by default
-    if (context?.user) {
-      context.user.shipping = result.data;
-      context.user.firstName = e.get("firstName")?.toString() ?? "";
-      context.user.lastName = e.get("lastName")?.toString() ?? "";
-      setUser(context.user);
-      context?.setNewUser(context.user);
-    }
-
-    if (result?.statusCode === 201 || result?.statusCode === 200) {
-      updateStepAction(step + 1);
-    } else {
+      if (result?.statusCode === 201 || result?.statusCode === 200) {
+        // set payment card by default
+        if (context?.user) {
+          context.user.shipping = result.data;
+          context.user.firstName = e.get("firstName")?.toString() ?? "";
+          context.user.lastName = e.get("lastName")?.toString() ?? "";
+          setUser(context.user);
+          context?.setNewUser(context.user);
+        }
+        updateStepAction(step + 1);
+      } else {
+        // Display the error message from the API response
+        const errorMessage = result?.error || result?.message || "An error occurred while saving the delivery address";
+        CustomToast({
+          title: errorMessage,
+          status: StatusToast.ERROR,
+        });
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      
+      // Try to extract the API error message from the thrown error
+      let errorMessage = "Failed to save delivery address. Please try again.";
+      
+      if (error && typeof error === 'object' && 'error' in error) {
+        try {
+          // The error might contain the API response as a JSON string
+          const errorData = JSON.parse(error.error as string);
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch {
+          // If parsing fails, use the error message directly
+          errorMessage = error.error as string || errorMessage;
+        }
+      }
+      
       CustomToast({
-        title: JSON.parse(result?.error).message,
+        title: errorMessage,
         status: StatusToast.ERROR,
       });
     }
