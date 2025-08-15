@@ -40,7 +40,7 @@ export default function PaymentElements({
 		const { error, setupIntent } = await stripe.confirmSetup({
 			elements,
 			clientSecret,
-			confirmParams: { return_url: "" },
+			// confirmParams: { return_url: "" },
 			redirect: "if_required",
 		});
 

@@ -178,7 +178,7 @@ export default function ReactivatePlanDialog({
                   One time Alignment Package
                 </p>
                 <p className="text-[14px] leading-[14px] font-inconsolata text-grey4">
-                  Ships Today
+                SHIPS TODAY
                 </p>
               </div>
               <PricePerCapsule
