@@ -177,7 +177,7 @@ export default function Subscription({
                   managePlan?.team?.basket[0]?.product
                     ?.unitsOfMeasurePerSubUnit === "grams"
                     ? "g"
-                    : " Capsule(s)"
+                    : " capsule(s)"
                 } Every 3 months`}
               </p>
               <p className="text-[16px] leading-[16px] font-[600] font-inconsolata">

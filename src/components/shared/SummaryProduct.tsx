@@ -187,7 +187,7 @@ export default function SummaryProduct({
       leftTop: `${
         (orderPackage.capsuleCount * orderPackage.days) /
         (orderPackage?.gPerCount ?? 0)
-      }${orderPackage.units}`,
+      }${orderPackage.units === 'grams' ? 'g' : ' capsules'}`,
       leftCenter: "FOUNDING MEMBER",
       leftBottom: `${orderPackage.extraDiscount}% OFF TEAM PRICE. FOREVER`,
       rightTop: "Founding Membership",
@@ -207,7 +207,7 @@ export default function SummaryProduct({
       leftTop: `${
         (orderPackage?.pochesRequired ?? 0) * orderPackage.storageCapsuleCount * (orderPackage.alignmentPoucheSize ?? 0) + totalQuarterlyCapsules
       } ${
-        `${orderPackage.units} Total`
+        `${orderPackage.units === 'grams' ? 'g' : ' capsules'} Total`
       }`,
       leftCenter: "LAUNCH PACKAGE",
       leftBottom: `Takes you up to: ${next2QuarterShort} Drop`,
@@ -315,10 +315,10 @@ export default function SummaryProduct({
                     />
 
                     <p className="text-[14px] leading-[16px] text-grey6">
-                      {!isTopUp ? (Number(model.quantityOfSubUnitPerOrder ?? 0) *
+                      {isTopUp ? Number(model.quantityOfSubUnitPerOrder ?? 0): orderPackage.memberType === MemberType.EARLY_MEMBER?(orderPackage?.pochesRequired ?? 0) * orderPackage.storageCapsuleCount * (orderPackage.alignmentPoucheSize ?? 0) + totalQuarterlyCapsules: (Number(model.quantityOfSubUnitPerOrder ?? 0) *
                         (orderPackage?.capsuleCount ?? 0)) /
-                        (orderPackage?.gPerCount ?? 0) : Number(model.quantityOfSubUnitPerOrder ?? 0)+" "}
-                      {model.unitsOfMeasurePerSubUnit}
+                        (orderPackage?.gPerCount ?? 0) }
+                      {model.unitsOfMeasurePerSubUnit === "grams" ? "g" : ` ${model.unitsOfMeasurePerSubUnit}`}
                     </p>
                   </div>
                 )}
@@ -415,7 +415,7 @@ export default function SummaryProduct({
                 </div>
               ) : (
                 <>
-                  {!isReactivatePlan && (
+                  {!isReactivatePlan && step !== 4 && (
                     <Button
                       variant="link"
                       className="text-center w-fit mx-auto flex justify-center"
@@ -426,7 +426,7 @@ export default function SummaryProduct({
                       }}
                     >
                       <p className="text-black font-inconsolata font-bold text-base underline text-center w-full">
-                        Add My Alignment Package
+                      Add My Alignment Package
                       </p>
                     </Button>
                   )}
