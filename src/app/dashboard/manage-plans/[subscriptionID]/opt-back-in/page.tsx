@@ -4,7 +4,6 @@
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import PaymentList from "@/components/shared/PaymentList";
-import SummaryProduct from "@/components/shared/SummaryProduct";
 import SummaryProduct2 from "@/components/shared/SummaryProduct2";
 import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { useUser } from "@/contexts/UserContext";
