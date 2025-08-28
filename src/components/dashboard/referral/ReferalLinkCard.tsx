@@ -26,7 +26,7 @@ export default function ReferalLinkCard({
 		if (navigator.share) {
 			navigator.share({
 				title: "Join Supplement Club with my referral link!",
-				text: "Refer friends or post your code online — we'll automatically credit your account when they join.",
+				// text: "Refer friends or post your code online — we'll automatically credit your account when they join.",
 				url: link,
 			});
 		}
