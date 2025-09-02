@@ -1,5 +1,3 @@
-import IOrderSummaryModel from "../../IOrderSummaryModel";
-import ISubscriptionSummaryModel from "../../ISubscriptionSummaryModel";
 import type { IBaseTimestamps } from "../IBaseTimestamps";
 import type IShippingResponse from "./IShippingResponse";
 
@@ -30,6 +28,7 @@ export interface IUserResponse extends IBaseTimestamps {
 	token?: string;
 	shipping?: IShippingResponse;
 	metadata?: IMetadata;
+	firstPaymentDate?: string;
 }
 
 export interface IMetadata {

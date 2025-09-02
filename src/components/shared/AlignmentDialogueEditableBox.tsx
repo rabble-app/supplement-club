@@ -27,7 +27,7 @@ function renderPrice(
   );
 }
 
-export default function OrderSummaryCard2({
+export default function AlignmentDialogueEditableBox({
   imageSrc,
   leftTopText,
   leftBottomText,

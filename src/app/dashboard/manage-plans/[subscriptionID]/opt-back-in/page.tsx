@@ -130,11 +130,6 @@ export default function OptBackIn({
     </div>
   );
 
-  console.log('orderPackage', orderPackage);
-  console.log('product', product);
-  console.log('storageQuantity', storageQuantity);
-  console.log('capsuleBase', capsuleBase);
-
   return (
     <div className="grid gap-[16px] py-[24px] md:grid-cols-[600px_600px] md:justify-center">
       <div>

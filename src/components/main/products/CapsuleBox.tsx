@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import type { ICapsuleInfoModel } from "@/utils/models/api/ICapsuleInfoModel";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import OrderSummaryCard2 from "@/components/shared/OrderSummaryCard2";
+import OrderSummaryCard2 from "@/components/shared/AlignmentDialogueEditableBox";
 import { getQuarterInfo } from "@/utils/utils";
 import IOrderPackageModel, {
   MemberType,
