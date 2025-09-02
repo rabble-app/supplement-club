@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const ReferralSection = ({ percentage, remainingDays }: { percentage: "0" | "30" | "60" | "90", remainingDays: number }) => {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-0 md:gap-4">
       <div className="flex flex-col items-center justify-center bg-blue h-[180px] rounded-sm shadow-4 px-4">
         <h3 className="text-[12px] md:text-[16px] leading-[14px] md:leading-[28px] font-hagerman uppercase text-center text-white">
           DAYS REMAINING

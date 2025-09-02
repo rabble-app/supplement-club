@@ -103,10 +103,15 @@ export default function Header() {
                   <DialogClose asChild>
                     <Link href="/labs">Labs</Link>
                   </DialogClose>
+                  {context?.user && (
+                  <DialogClose asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </DialogClose>
+                  )}
                 </div>
                 <DialogFooter className="grid gap-[16px]">
                   {!context?.user && <UserLoggedOut />}
-                  {context?.user && <UserLoggedIn user={context?.user} />}
+                  {context?.user && <Link href="/dashboard"><UserLoggedIn user={context?.user} /></Link>}
                 </DialogFooter>
               </DialogContent>
             </Dialog>

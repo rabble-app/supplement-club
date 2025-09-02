@@ -8,7 +8,6 @@ import AvailablePayment from "@/components/shared/AvailablePayment";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import PaymentList from "@/components/shared/PaymentList";
 import Steps from "@/components/shared/Steps";
-import SummaryProduct from "@/components/shared/SummaryProduct";
 import { useUser } from "@/contexts/UserContext";
 import { paymentService } from "@/services/paymentService";
 import { usersService } from "@/services/usersService";

@@ -25,7 +25,8 @@ export default interface ISingleProductModel {
 	unitsOfMeasurePerSubUnit?: string;
 	measuresPerSubUnit?: number;
 	approvalStatus?: string;
-	stock?: number;
+	stock: number;
+	alignmentStock: number;
 	tags?: string[];
 	priceInfo?: IPriceInfoModel[];
 	pricePerCount?: number;

@@ -70,6 +70,9 @@ html body[data-scroll-locked] {
 #carousel-content img{
   margin: auto !important;
 }
+.makeStyles-container-1 {
+  padding: 0 !important;
+}
 
 @media (max-width: 768px) {
   .addressBar {

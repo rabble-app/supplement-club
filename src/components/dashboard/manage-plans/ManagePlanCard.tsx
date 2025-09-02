@@ -115,7 +115,6 @@ export default function ManagePlanCard({
   const now = new Date();
   const nextQuarterStart = startOfQuarter(addQuarters(now, 1));
 
-  console.log('model', model);
 
   return (
     <ConditionalLink

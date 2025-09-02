@@ -4,7 +4,6 @@
 import AvailablePayment from "@/components/shared/AvailablePayment";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import PaymentList from "@/components/shared/PaymentList";
-import SummaryProduct from "@/components/shared/SummaryProduct";
 import SummaryProduct2 from "@/components/shared/SummaryProduct2";
 import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import { useUser } from "@/contexts/UserContext";
@@ -130,11 +129,6 @@ export default function OptBackIn({
       Delivering {product?.deliveryDate ? format(product?.deliveryDate, "MMMM d, yyyy") : format(nextQuarterStart, "MMMM d, yyyy")}
     </div>
   );
-
-  console.log('orderPackage', orderPackage);
-  console.log('product', product);
-  console.log('storageQuantity', storageQuantity);
-  console.log('capsuleBase', capsuleBase);
 
   return (
     <div className="grid gap-[16px] py-[24px] md:grid-cols-[600px_600px] md:justify-center">

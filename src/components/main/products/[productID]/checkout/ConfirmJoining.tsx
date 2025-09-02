@@ -1,17 +1,15 @@
 /** @format */
 
 import Image from "next/image";
-
-import ShareBox from "@/components/main/products/[productID]/checkout/ShareBox";
 import ReferralSection from "@/components/shared/ReferralSection";
 import Link from "next/link";
-import copy from "copy-to-clipboard";
 import { CustomToast } from "@/components/shared/Toast";
 import { StatusToast } from "@/components/shared/Toast";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { useUser } from "@/contexts/UserContext";
 import { addDays, differenceInDays, startOfDay } from "date-fns";
 import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
+import { useFirst30Days } from "@/hooks/useFirst30Days";
 
 export default function ConfirmJoining({
   orderPackage,
@@ -41,6 +39,36 @@ export default function ConfirmJoining({
   const today = startOfDay(new Date());
 
   const remainingDays = differenceInDays(endDate, today);
+ 
+  const link = `${referralLink}?ref=${referralCode ?? ""}`;
+
+  const isFirst30Days = useFirst30Days();
+
+  const triggerNativeShare = async () => {
+		// This will trigger the native share drawer
+		if (navigator.share) {
+			navigator.share({
+				title: isFirst30Days ? "Get 6 months free membership at Supplement Club when you join using my referral link below" : "Get 10% credit at Supplement Club when you join using my referral link below",
+				// text: "Refer friends or post your code online — we'll automatically credit your account when they join.",
+				url: link,
+			});
+		}
+		try {
+			await navigator.clipboard.writeText(link);
+			CustomToast({
+				title: "Copied link",
+				status: StatusToast.SUCCESS,
+				position: "top-center",
+			});
+		} catch {
+			CustomToast({
+				title: "Failed to copy",
+				status: StatusToast.ERROR,
+				position: "top-right",
+			});
+		}
+		
+	};
 
   return (
     <div className="grid gap-[24px]">
@@ -68,7 +96,7 @@ export default function ConfirmJoining({
 
       {orderPackage.memberType !== MemberType.FOUNDING_MEMBER && <>
         {userType === "new" && (
-          <div className="shadow-card bg-white rounded-sm p-4">
+          <div className="shadow-card bg-white rounded-sm p-4 mb-[85px] md:mb-0">
             <div className="mb-6">
               <h3 className="text-black text-base font-inconsolata mb-2 font-bold">
                 Refer your friends
@@ -90,20 +118,7 @@ export default function ConfirmJoining({
                   width={16}
                   height={16}
                   className="inline-block ml-3 cursor-pointer"
-                  onClick={() => {
-                    const isCopied = copy(
-                      `${referralLink}?ref=${referralCode ?? ""}`
-                    );
-                    if (isCopied) {
-                      CustomToast({
-                        title: "Copied!",
-                        status: StatusToast.SUCCESS,
-                        position: "top-right",
-                      });
-                    } else {
-                      console.error("Copy failed");
-                    }
-                  }}
+                  onClick={triggerNativeShare}
                 />
               </h3>
               <p className="text-[14px] font-helvetica text-grey4">
@@ -122,18 +137,7 @@ export default function ConfirmJoining({
                   width={16}
                   height={16}
                   className="inline-block ml-3 cursor-pointer"
-                  onClick={() => {
-                    const isCopied = copy(referralInfo?.userCode ?? "");
-                    if (isCopied) {
-                      CustomToast({
-                        title: "Copied!",
-                        status: StatusToast.SUCCESS,
-                        position: "top-right",
-                      });
-                    } else {
-                      console.error("Copy failed");
-                    }
-                  }}
+                  onClick={triggerNativeShare}
                 />
               </h3>
               <p className="text-[14px] font-helvetica text-grey4">
@@ -143,7 +147,7 @@ export default function ConfirmJoining({
           </div>
         )}
         {userType === "existing" && (
-          <div className="shadow-card bg-white rounded-sm p-4">
+          <div className="shadow-card bg-white rounded-sm p-4 mb-[85px] md:mb-0">
             <div className="mb-6">
               <h3 className="text-black text-base font-inconsolata mb-2 font-bold">
                 6 Months Free Membership For You and Them
@@ -171,20 +175,7 @@ export default function ConfirmJoining({
                   width={16}
                   height={16}
                   className="inline-block ml-3 cursor-pointer"
-                  onClick={() => {
-                    const isCopied = copy(
-                      `${referralLink}?ref=${referralCode ?? ""}`
-                    );
-                    if (isCopied) {
-                      CustomToast({
-                        title: "Copied!",
-                        status: StatusToast.SUCCESS,
-                        position: "top-right",
-                      });
-                    } else {
-                      console.error("Copy failed");
-                    }
-                  }}
+                    onClick={triggerNativeShare}
                 />
               </div>
             </div>
@@ -213,7 +204,7 @@ export default function ConfirmJoining({
       </>}
 
       {orderPackage.memberType === MemberType.FOUNDING_MEMBER && (
-        <div className="bg-white shadow-card rounded-sm p-4 border border-grey35">
+        <div className="bg-white shadow-card rounded-sm p-4 border border-grey35 mb-[85px] md:mb-0">
           <h3 className="font-hagerman text-[24px]">You’ve Registered as a Founding Member for <br />
             {productName}</h3>
 

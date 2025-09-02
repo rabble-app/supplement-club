@@ -85,6 +85,8 @@ export const mapSingleProductModel = (
 				pochesRequired: model.pochesRequired,
 				orderDate: model.orderDate,
 				nextEditableDate: model.nextEditableDate,
+				stock: model.stock ?? 0,
+				alignmentStock: model.alignmentStock ?? 0,
 			}
 		: ({} as ISingleProductModel);
 };
