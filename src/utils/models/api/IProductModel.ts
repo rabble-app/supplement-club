@@ -28,6 +28,7 @@ export interface IProductModel extends IBaseTimestamps {
 	measuresPerSubUnit?: number;
 	approvalStatus?: string;
 	stock?: number;
+	alignmentStock?: number;
 	tags?: string[];
 	priceInfo?: IPriceInfoModel[];
 	pricePerCount?: number;

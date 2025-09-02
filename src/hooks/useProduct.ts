@@ -99,7 +99,6 @@ const useProduct = (teamId?: string, userId?: string, pId?: string) => {
   const foundingMemberPricePerCount =
     Number(product?.rrpPerCount) * (1 - (foundingMemberDiscount ?? 0) / 100);
 
-    console.log(product?.rrpPerCount)
 
   const isFoundingProduct =
     product?.supplementTeamProducts?.status === "PREORDER";
@@ -154,6 +153,8 @@ const useProduct = (teamId?: string, userId?: string, pId?: string) => {
     remainingSpots: remainingSpots,
     imageSrc: "/images/supplement-mockup.png",
     stockStatus: product?.status,
+    stock: product?.stock ?? 0,
+    alignmentStock: product?.alignmentStock ?? 0,
     pochesRequired: product?.pochesRequired ?? 0,
     alignmentPoucheSize: product?.alignmentPoucheSize ?? 0,
     producer: product?.producer?.businessName ?? "",

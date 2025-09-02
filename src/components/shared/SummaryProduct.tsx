@@ -18,7 +18,7 @@ import { format } from "date-fns";
 import IOrderPackageModel, {
   MemberType,
 } from "@/utils/models/IOrderPackageModel";
-import OrderSummaryCard2 from "./OrderSummaryCard2";
+import OrderSummaryCard2 from "./AlignmentDialogueEditableBox";
 import { getQuarterInfo } from "@/utils/utils";
 
 export default function SummaryProduct({

@@ -22,6 +22,8 @@ export default interface IOrderPackageModel {
     productId?: string;
     teamId?: string;
     gPerCount?: number;
+    stock: number;
+    alignmentStock: number;
 }
 
 export enum MemberType {

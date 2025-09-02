@@ -29,7 +29,6 @@ export const productService = {
       PRODUCT_ENDPOINTS.PRODUCTS(userId),
       "GET"
     )) as IManagePlanApiResponse;
-    console.log(data);
     return data?.map<IProductCardModel>((r: IProductResponse) =>
       mapProductModel(r)
     );

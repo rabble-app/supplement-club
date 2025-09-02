@@ -48,6 +48,7 @@ export default function Checkout({
     IManagePlanModel[]
   >([]);
   const [, setIsReferralCodeApplied] = useState<boolean>(false);
+  const [isAlignmentStockAvailable, setIsAlignmentStockAvailable] = useState<boolean>(false);
   const steps = ["Create an Account", "Delivery Address", "Payment Details"];
 
   const getSubscriptionPlan = (productID: string) => {
@@ -128,6 +129,12 @@ export default function Checkout({
       setHasAlignmentPackage(false);
     }
   }, [storageQuantity]);
+
+  // Update isAlignmentStockAvailable when storageQuantity or orderPackage changes
+  useEffect(() => {
+    const stockAvailable = orderPackage.alignmentStock > 0 && orderPackage.alignmentStock >= storageQuantity;
+    setIsAlignmentStockAvailable(stockAvailable);
+  }, [storageQuantity, orderPackage.alignmentStock]);
 
   const fetchReferralInfo = async () => {
     try {
@@ -210,6 +217,7 @@ export default function Checkout({
     <>
       {productMain && (
         <AlignmentDialog
+          isAlignmentStockAvailable={isAlignmentStockAvailable}
           orderPackage={orderPackage}
           daysUntilNextDrop={productMain?.daysUntilNextDrop ?? 0}
           deliveryDate={productMain?.deliveryDate ?? ""}

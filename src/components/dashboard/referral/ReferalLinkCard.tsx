@@ -11,9 +11,11 @@ import { StatusToast } from "@/components/shared/Toast";
 export default function ReferalLinkCard({
 	children,
 	refCode,
+	isFirst30Days = true,
 }: Readonly<{
 	children?: React.ReactNode;
 	refCode?: string;
+	isFirst30Days: boolean;
 }>) {
 	const [link] = useState(
 		`${process.env.NEXT_PUBLIC_WEBSITE_URL}?ref=${refCode}`,
@@ -25,7 +27,7 @@ export default function ReferalLinkCard({
 		// This will trigger the native share drawer
 		if (navigator.share) {
 			navigator.share({
-				title: "Join Supplement Club with my referral link!",
+				title: isFirst30Days ? "Get 6 months free membership at Supplement Club when you join using my referral link below" : "Get 10% credit at Supplement Club when you join using my referral link below",
 				// text: "Refer friends or post your code online — we'll automatically credit your account when they join.",
 				url: link,
 			});

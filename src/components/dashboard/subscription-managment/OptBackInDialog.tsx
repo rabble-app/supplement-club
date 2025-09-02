@@ -100,7 +100,6 @@ export default function OptBackInDialog({
     </div>
   );
 
-  console.log('product111', product);
 
   return (
     <>

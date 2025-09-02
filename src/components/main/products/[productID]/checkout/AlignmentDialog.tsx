@@ -2,7 +2,7 @@
 
 "use client";
 import { useEffect, useState } from "react";
-import OrderSummaryCard2 from "@/components/shared/OrderSummaryCard2";
+import AlignmentDialogueEditableBox from "@/components/shared/AlignmentDialogueEditableBox";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -36,6 +36,7 @@ type AlignmentDialogProps = {
   storageQuantity: number;
   setHasAlignmentPackage: (val: boolean) => void;
   hasSubscriptionPlan: boolean;
+  isAlignmentStockAvailable: boolean;
 };
 
 export default function AlignmentDialog({
@@ -52,6 +53,7 @@ export default function AlignmentDialog({
   storageQuantity,
   setHasAlignmentPackage,
   hasSubscriptionPlan,
+  isAlignmentStockAvailable,
 }: Readonly<AlignmentDialogProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -178,14 +180,14 @@ export default function AlignmentDialog({
                     `You’ll lock in ${orderPackage.extraDiscount}% extra off for life if you stay in when the team goes live.`}
 
                   {orderPackage.memberType === MemberType.MEMBER &&
-                    orderPackage.stockStatus === "IN_STOCK" &&
+                    isAlignmentStockAvailable &&
                     `Do you want us to send you an alignment package to cover the next ${daysUntilNextDrop} days. This takes you up to ${
                       deliveryDate
                         ? format(new Date(deliveryDate), "MMMM dd yyyy")
                         : ""
                     } and aligns you with the team.`}
                   {orderPackage.memberType === MemberType.MEMBER &&
-                    orderPackage.stockStatus === "OUT_OF_STOCK" &&
+                    !isAlignmentStockAvailable &&
                     `We’ve run out of alignment packages. The next drop is on ${
                       deliveryDate
                         ? format(new Date(deliveryDate), "MMMM dd yyyy")
@@ -216,8 +218,8 @@ export default function AlignmentDialog({
             </VisuallyHidden>
 
             {orderPackage.memberType === MemberType.MEMBER &&
-              orderPackage.stockStatus === "IN_STOCK" && (
-                <OrderSummaryCard2
+              isAlignmentStockAvailable && (
+                <AlignmentDialogueEditableBox
                   imageSrc={orderPackage.imageSrc}
                   leftTopText={leftTopText}
                   leftCenterText={leftCenterText}
@@ -345,18 +347,18 @@ export default function AlignmentDialog({
               <Button
                 type="submit"
                 className={`text-white text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-blue`}
-                value={orderPackage.stockStatus === "IN_STOCK" ? "yes" : "no"}
+                value={isAlignmentStockAvailable ? "yes" : "no"}
               >
                 Yes
               </Button>
               <Button
                 type={
-                  orderPackage.stockStatus === "IN_STOCK" ? "submit" : "button"
+                  isAlignmentStockAvailable ? "submit" : "button"
                 }
                 className={`text-blue text-[16px] md:text-[18px] font-inconsolata w-full ml-auto font-bold bg-[#7878801F]`}
-                value={orderPackage.stockStatus === "IN_STOCK" ? "no" : ""}
+                value={isAlignmentStockAvailable ? "no" : ""}
                 onClick={() => {
-                  if (orderPackage.stockStatus === "OUT_OF_STOCK") {
+                  if (!isAlignmentStockAvailable) {
                     router.back();
                   }
                 }}
