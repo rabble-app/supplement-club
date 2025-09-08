@@ -3,13 +3,11 @@
 import Image from "next/image";
 import ReferralSection from "@/components/shared/ReferralSection";
 import Link from "next/link";
-import { CustomToast } from "@/components/shared/Toast";
-import { StatusToast } from "@/components/shared/Toast";
 import IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
 import { useUser } from "@/contexts/UserContext";
 import { addDays, differenceInDays, startOfDay } from "date-fns";
 import IOrderPackageModel, { MemberType } from "@/utils/models/IOrderPackageModel";
-import { useFirst30Days } from "@/hooks/useFirst30Days";
+import { useNativeShare } from "@/hooks/useNativeShare";
 
 export default function ConfirmJoining({
   orderPackage,
@@ -42,33 +40,7 @@ export default function ConfirmJoining({
  
   const link = `${referralLink}?ref=${referralCode ?? ""}`;
 
-  const isFirst30Days = useFirst30Days();
-
-  const triggerNativeShare = async () => {
-		// This will trigger the native share drawer
-		if (navigator.share) {
-			navigator.share({
-				title: isFirst30Days ? "Get 6 months free membership at Supplement Club when you join using my referral link below" : "Get 10% credit at Supplement Club when you join using my referral link below",
-				// text: "Refer friends or post your code online — we'll automatically credit your account when they join.",
-				url: link,
-			});
-		}
-		try {
-			await navigator.clipboard.writeText(link);
-			CustomToast({
-				title: "Copied link",
-				status: StatusToast.SUCCESS,
-				position: "top-center",
-			});
-		} catch {
-			CustomToast({
-				title: "Failed to copy",
-				status: StatusToast.ERROR,
-				position: "top-right",
-			});
-		}
-		
-	};
+  const { triggerNativeShare } = useNativeShare({ url: link });
 
   return (
     <div className="grid gap-[24px]">

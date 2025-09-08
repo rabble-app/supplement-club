@@ -7,7 +7,6 @@ import { differenceInDays } from "date-fns";
  */
 export const useFirst30Days = (): boolean => {
   const context = useUser();
-  console.log('firstPaymentDate',context?.user?.firstPaymentDate);
 
   if (!context?.user?.firstPaymentDate) {
     return true;
