@@ -58,7 +58,7 @@ export default function ProductInfo({
               className="bg-[#FBF89F] leading-[18px] text-blue w-full font-bold mb-[14px] font-inconsolata"
               asChild
             >
-              <Link href={`/products/${product?.id}`}>Buy Now</Link>
+              <Link href={`/products/${product?.id}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID ?? ""}`}>Buy Now</Link>
             </Button>
 
             <div className="flex justify-between">

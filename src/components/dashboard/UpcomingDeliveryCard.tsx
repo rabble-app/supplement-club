@@ -2,6 +2,7 @@ import type { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpc
 import { formatDate } from "@/utils/utils";
 import Image from "next/image";
 import UpcomingDeliveryProductBox from "./UpcomingDeliveryProductBox";
+import { uniqueId } from "lodash";
 
 export default function UpcomingDeliveryCard({
 	model,
@@ -22,11 +23,11 @@ export default function UpcomingDeliveryCard({
 			<div className="flex flex-row justify-between flex-wrap">
 				{model.deliveries.map((delivery, index) => (
 					<UpcomingDeliveryProductBox 
-						key={index}
+						key={index + uniqueId()}
 						model={{
 							name: delivery.product.name,
 							image: delivery.product.imageUrl || '/images/supplement-new.png',
-							quantity: `${delivery.product.poucheSize} ${delivery.product.unitsOfMeasurePerSubUnit} pouche(${delivery.product.quantity})`,
+							quantity: `${delivery.product.poucheSize}${delivery.product.unitsOfMeasurePerSubUnit === "grams" ? "g" : " capsules"} Pouch(${delivery.product.quantity})`,
 							type: delivery.type,
 						}} 
 					/>
