@@ -82,7 +82,9 @@ export default function SummaryProduct({
   const membershipDiscount = Number(
     process.env.NEXT_PUBLIC_MEMBERSHIP_DISCOUNT
   );
-  const membershipExpiry = format(nextYearDate, "MMMM dd yyyy");
+  const next6monthsDate = new Date();
+  next6monthsDate.setMonth(next6monthsDate.getMonth() + 6);
+  const membershipExpiry = format(next6monthsDate, "MMMM dd yyyy");
 
   useEffect(() => {
     if (!storageQuantity || storageQuantity === 0) {
@@ -566,7 +568,7 @@ export default function SummaryProduct({
                   </p>
                 )}
 
-              {context?.user && !referralInfo?.referrer?.name && step !== 4 && (
+              {!referralInfo?.referrer?.name && step !== 4 && (
                 <div className="flex items-center gap-2 relative mt-9 mb-8">
                   <input
                     type="text"

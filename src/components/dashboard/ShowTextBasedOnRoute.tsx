@@ -24,7 +24,7 @@ const ShowTextBasedOnRoute = () => {
 			case `/dashboard/manage-plans/${params.subscriptionID}/opt-back-in`:
 				return "Opt Back in";
 			case `/dashboard/manage-plans/${params.subscriptionID}/top-up-checkout`:
-				return "Order Top Up Capsules";
+				return "Order a Top Up";
 			case `/dashboard/manage-plans/${params.subscriptionID}`:
 				return "Subscription Management";
 			case "/dashboard/manage-plans":

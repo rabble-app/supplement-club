@@ -5,7 +5,6 @@ import type IReferalModel from "@/utils/models/api/IReferalModel";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { useFirst30Days } from "@/hooks/useFirst30Days";
 import BalanceCard from "../dashboard/referral/BalanceCard";
 import MilestoneCard from "../dashboard/referral/MilestoneCard";
 import ReferInfoCard from "../dashboard/referral/ReferInfoCard";
@@ -32,9 +31,6 @@ export default function ReferralCardsWithLink({
 	const [referalInfo, setReferalInfo] = useState<IReferalInfoModel>({
 		balance: 0,
 	} as IReferalInfoModel);
-
-	// Use custom hook to determine if user is within first 30 days
-	const isFirst30Days = useFirst30Days();
 
 	const fetchReferralData = useCallback(async () => {
 		try {
@@ -108,7 +104,6 @@ export default function ReferralCardsWithLink({
 				)}
 				<ReferalLinkCard
 					refCode={context?.user?.refCode ?? referalInfo?.referralCode}
-					isFirst30Days={isFirst30Days}
 				>
 					{!isDashboard && (
 						<Button

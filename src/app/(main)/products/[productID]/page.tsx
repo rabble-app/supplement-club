@@ -174,6 +174,8 @@ export default function ProductDetails() {
 
     const fetchReferralInfo = async () => {
       try {
+        // make this call only if the user is logged in
+        if (!context?.user) return;
         const response = await referalService.getReferalInfo();
         setReferralInfo(response);
       } catch (error) {

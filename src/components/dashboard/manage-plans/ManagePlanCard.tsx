@@ -160,7 +160,7 @@ export default function ManagePlanCard({
                 £{Number(basketPrice).toFixed(2)}{" "}
                 <span className="text-[10px] leading-[11px] text-grey1 font-bold font-inconsolata">
                   (£
-                  {Number(basketPricePerCount).toFixed(2)}
+                  {Number(basketPricePerCount)?.toFixed(2)}
                   /count)
                 </span>
               </div>
@@ -168,12 +168,12 @@ export default function ManagePlanCard({
               <div className="text-[12px] leading-[13px] font-inconsolata font-[400] text-grey4">
                 RRP{" "}
                 <span className="text-[12px] leading-[13px] font-inconsolata line-through font-bold">
-                  £{basketRrp.toFixed(2)}
+                  £{basketRrp?.toFixed(2)}
                 </span>{" "}
                 <span className="text-[12px] leading-[13px] font-inconsolata font-bold text-blue">
                   {(
                     Number(model.team?.basket[0]?.discount ?? 0) + extraDiscount
-                  ).toFixed(2)}
+                  )?.toFixed(2)}
                   % OFF
                 </span>
               </div>

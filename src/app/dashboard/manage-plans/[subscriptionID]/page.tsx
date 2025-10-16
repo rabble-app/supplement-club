@@ -157,7 +157,7 @@ export default function Subscription({
               <Link
                 href={`/dashboard/manage-plans/${subscriptionID}/top-up-checkout/`}
               >
-                Order Top Up Capsules
+                Order a Top Up
               </Link>
             </Button>
           </SubscriptionCard>
