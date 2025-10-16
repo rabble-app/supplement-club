@@ -48,12 +48,12 @@ const otherActions = [
 import UpcomingDeliveryCard from "@/components/dashboard/UpcomingDeliveryCard";
 import UpcomingDeliverySlider from "@/components/dashboard/UpcomingDeliverySlider";
 import { useUser } from "@/contexts/UserContext";
-import type IUpcomingDeliveryModel from "@/utils/models/api/IUpcomingDeliveryModel";
 import { useEffect, useState } from "react";
 
 import { usersService } from "@/services/usersService";
 import Spinner from "@/components/shared/Spinner";
 import { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
+import { uniqueId } from "lodash";
 
 export default function ManagerPage() {
 	const [loading, setLoading] = useState(true);
@@ -110,7 +110,7 @@ export default function ManagerPage() {
 							// Mobile: Simple list
 							<div className="grid gap-[16px]">
 								{upcomingDeliveries?.map((model: IUpcomingDeliveryResponse) => (
-									<UpcomingDeliveryCard key={`${model.deliveryDate}`} model={model} />
+									<UpcomingDeliveryCard key={`${model.deliveryDate} ${uniqueId()}`} model={model} />
 								))}
 							</div>
 						) : (

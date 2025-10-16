@@ -103,7 +103,7 @@ export default function LoginPage() {
 
             <FormFieldComponent
               form={form}
-              placeholder="e.g. newton@mail.com"
+              placeholder="**********"
               name="password"
               type="password"
               labelContent={passwordLabelContent()}

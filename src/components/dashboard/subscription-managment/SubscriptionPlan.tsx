@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { CustomToast, StatusToast } from "@/components/shared/Toast";
 import useProduct from "@/hooks/useProduct";
 import { useUser } from "@/contexts/UserContext";
+import { getQuarterInfo } from "@/utils/utils";
 
 export default function SubscriptionPlan({
   managePlan,
@@ -36,23 +37,8 @@ export default function SubscriptionPlan({
 }>) {
   const [changePlan, setChangePlan] = useState(false);
   const [initCapsule, setInitCapsule] = useState(1);
-  const [deadline, setDeadline] = useState<string>();
   const context = useUser();
 
-  useEffect(() => {
-    const date = new Date(
-      managePlan?.team?.latestOrder?.deadline ?? Date.now()
-    );
-
-    setDeadline(
-      `${date.toLocaleString("en", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        timeZone: "UTC",
-      })}`
-    );
-  }, [managePlan]);
 
   useEffect(() => {
     const currentCapsule = Number(managePlan?.team?.basket[0]?.capsulePerDay);
@@ -246,7 +232,7 @@ export default function SubscriptionPlan({
                       ?.unitsOfMeasurePerSubUnit === "grams"
                       ? "g"
                       : " capsule(s)"}{" "}
-                    per day. This update will apply from {deadline} onwards.
+                    per day. This update will apply from {getQuarterInfo().nextDeliveryText} onwards.
                   </p>
                 </div>
               </div>
