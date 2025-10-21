@@ -363,7 +363,7 @@ export default function SummaryProduct2({
                 </div>
               ) : (
                 <>
-                  {!isReactivatePlan && (
+                  {!isReactivatePlan && (orderPackage.alignmentStock ?? 0) > 0 && (
                     <Button
                       variant="link"
                       className="text-center w-fit mx-auto flex justify-center"
