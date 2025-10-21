@@ -302,6 +302,7 @@ export default function Checkout({
             hasAlignmentPackage,
             setHasAlignmentPackage,
             hasActiveSupplement,
+            isAlignmentStockAvailable: isAlignmentStockAvailable,
           };
 
           const summaryContent = (

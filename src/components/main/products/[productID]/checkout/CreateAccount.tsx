@@ -18,6 +18,8 @@ import type { IResponseModel } from "@/utils/models/api/response/IResponseModel"
 import { createAccountSchema } from "@/validations";
 import { Loader2Icon } from "lucide-react";
 import useLocalStorage from "use-local-storage";
+import { usersService } from "@/services/usersService";
+import ILaunchPromotion from "@/utils/models/IUsersServiceModel";
 
 export default function CreateAccount({
   params,
@@ -34,6 +36,7 @@ export default function CreateAccount({
 
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
+  const [isLaunchPromotion, setIsLaunchPromotion] = useState<ILaunchPromotion>({ isEarly: false, availableSlots: 0 });
 
   const router = useRouter();
 
@@ -43,6 +46,12 @@ export default function CreateAccount({
       setProductId(productID);
     };
     fetchProductId();
+
+    const fetchLaunchPromotion = async () => {
+      const response = await usersService.getLaunchPromotion();
+      setIsLaunchPromotion(response);
+    };
+    fetchLaunchPromotion();
   }, [params]);
 
   const currentForm = useForm({
@@ -136,6 +145,11 @@ export default function CreateAccount({
             Log in
           </Link>
         </div>
+        {isLaunchPromotion.isEarly && (
+          <div className="text-blue bg-blue2 font-inconsolata font-bold p-[10px] rounded-sm text-[15.88px]">
+            LAUNCH PROMOTION{" "}  - First 100 signs ups get their first year of membership for free: {isLaunchPromotion.availableSlots} spots remaining.
+          </div>
+        )}
       </form>
     </Form>
   );

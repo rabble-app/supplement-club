@@ -229,13 +229,13 @@ export default function TeamPrice({
       {isFoundingProduct && members < priceInfo[0]?.teamMemberCount && (
         <div className="bg-blue2 rounded-sm w-full mt-8 mb-2">
           <p className="text-blue font-bold text-base font-inconsolata w-full text-center py-2">
-            When all {membersToLaunch + members} founding slots are reserved, we'll launch
+            When all {membersToLaunch + members} founding slots are reserved, we&apos;ll launch
             the product
           </p>
         </div>
       )}
 
-      <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mt-0">
+      <div className="flex justify-center mb-[46px] relative md:mx-auto gap-[0] mt-0 invisible">
         {priceInfo.map((item, index) => (
           <div
             key={`info-${index + 1}`}
