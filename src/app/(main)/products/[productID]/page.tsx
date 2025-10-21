@@ -208,7 +208,7 @@ export default function ProductDetails() {
       <div className="contents md:grid gap-[32px]">
         <Carousel
           setApi={setApi}
-          className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0] h-[430px] md:h-auto"
+          className="w-full relative order-1 md:order-none pt-[53px] md:pt-[0] h-[430px] md:h-[700px]"
         >
           <CarouselContent
             className={`${isFoundingProduct ? "opacity-[40%]" : ""}`}
@@ -252,7 +252,7 @@ export default function ProductDetails() {
             </div>
           )}
         </Carousel>
-        <div className="order-2 md:order-none bg-white md:bg-transparent mx-[-16px] !mt-0 md:mt-20 md:mx-[0] px-[16px] md:px-[0]">
+        <div className="order-2 md:order-none bg-white md:bg-transparent mx-[-16px] !mt-0 md:mt-20 md:mx-[0] px-[16px] md:px-[0] mb-[-250px] md:mb-[5px]">
           {product && (
             <TeamPrice
               isFoundingProduct={isFoundingProduct}
@@ -265,8 +265,8 @@ export default function ProductDetails() {
               pricePerCount={product.pricePerCount!}
               nextPriceDiscountLevel={product.nextPriceDiscountLevel!}
               discount={product.discount!}
-              activePercentageDiscount={product?.activePercentageDiscount!}
-              gramsPerCount={product?.gramsPerCount!}
+              activePercentageDiscount={product?.activePercentageDiscount ?? 0}
+              gramsPerCount={product?.gramsPerCount ?? 0}
             />
           )}
         </div>
@@ -503,8 +503,8 @@ export default function ProductDetails() {
       {/* Product info moved to standalone container */}
       <div
         id="product-info"
-        className={`mt-[50px] grid gap-[60px] order-4 md:order-none bg-white md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0] ${
-          isFoundingProduct ? "md:mt-[70px]" : "md:mt-[0] pb-[200px]"
+        className={`mt-[50px] md:mt-[-320px] grid gap-[60px] order-4 md:order-none bg-white md:bg-transparent mx-[-16px] md:mx-[0] px-[16px] md:px-[0] ${
+          isFoundingProduct ? "" : "pb-[200px]"
         }`}
       >
         <PreOrderInfo productBenefits={product?.productBenefits} />

@@ -50,6 +50,7 @@ export const USER_ENDPOINTS = {
 	INFO: (userId: string) => `users/${userId}`,
 	HAS_ACTIVE_SUPPLEMENT: (userId: string) =>
 		`users/${userId}/has-active-supplement`,
+	LAUNCH_PROMOTION: () => `users/is-early-user`,
 };
 
 export const AUTH_ENDPOINTS = {

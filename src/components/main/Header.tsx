@@ -22,7 +22,7 @@ export default function Header() {
         <div className="text-blue underline">
           <span className="font-inconsolata font-bold text-blue">
             NEXT DROP: {remainsDaysToNextQuater} DAYS!{" "}
-            <span className="hidden md:inline">
+            <span className="hidden md:inline font-inconsolata">
               - Join Today and Get 6 Months Free. Cancel Anytime.
             </span>
           </span>

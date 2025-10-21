@@ -40,6 +40,7 @@ export default function SummaryProduct({
   nextEditableDate,
   isReactivatePlan,
   isTopUp,
+  isAlignmentStockAvailable,
 }: Readonly<{
   model: ISummaryProductModel;
   storageQuantity: number;
@@ -59,6 +60,7 @@ export default function SummaryProduct({
   nextEditableDate: string;
   isReactivatePlan?: boolean;
   isTopUp?: boolean;
+  isAlignmentStockAvailable: boolean;
 }>) {
   const [totalCount, setTotalCount] = useState(0);
   const [totalRrp, setTotalRrp] = useState(0);
@@ -417,7 +419,7 @@ export default function SummaryProduct({
                 </div>
               ) : (
                 <>
-                  {!isReactivatePlan && step !== 4 && (
+                  {!isReactivatePlan && step !== 4 && isAlignmentStockAvailable && (
                     <Button
                       variant="link"
                       className="text-center w-fit mx-auto flex justify-center"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /** @format */
 
 import { USER_ENDPOINTS } from "@/utils/endpoints";
@@ -20,6 +21,7 @@ import {
 } from "@/utils/mapping";
 import IAddBillingAddressRequest from "@/utils/models/api/request/IAddBillingAddressRequest";
 import { IUpcomingDeliveryResponse } from "@/utils/models/api/response/IUpcomingDeliveryResponse";
+import { ILaunchPromotionResponse } from "@/utils/models/IUsersServiceModel";
 
 export const usersService = {
   getUpcomingDeliveries: async (
@@ -149,4 +151,12 @@ export const usersService = {
       country,
       postalCode,
     }),
+
+  async getLaunchPromotion() {
+    const { data } = (await apiRequest(
+      USER_ENDPOINTS.LAUNCH_PROMOTION(),
+      "GET"
+    )) as ILaunchPromotionResponse;
+    return data;
+  },
 };
