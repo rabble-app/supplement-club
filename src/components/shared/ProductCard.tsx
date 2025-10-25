@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 import { useUser } from "@/contexts/UserContext";
 import type IProductCardModel from "@/utils/models/IProductCardModel";
-import { getQuarterInfo } from "@/utils/utils";
+import { getLastWord, getQuarterInfo } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { usersService } from "@/services/usersService";
 import IManagePlanModel from "@/utils/models/IManagePlanModel";
@@ -35,10 +35,10 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
     () => Math.abs((model.price / model.rrp - 1) * 100).toFixed(2),
     [model]
   );
-  let titleButton = "Subscribe Now";
+  let titleButton = "Join Team";
 
   if (model.isComming && !hasProduct) {
-    titleButton = "Reserve Your Spot";
+    titleButton = "Reserve Place";
   }else if (model.firstDelivery) {
     titleButton = "Pre-Order Now";
   } else if (!!hasProduct) {
@@ -56,17 +56,17 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
 
   return (
     <div className="grid gap-y-[24px] border-[1px] border-grey3 p-[16px] relative bg-white">
-      <span className="text=[16px] leading-[18px] font-helvetica text-blue bg-yellow py-[4px] px-[10px] absolute top-[16px] left-[16px] z-[1]">
+      <span className="text=[16px] leading-[18px] font-helvetica text-blue bg-[#D8FF75] py-[4px] px-[10px] absolute top-[16px] left-[16px] z-[1]">
         3 Month Supply
       </span>
       {model.isComming && (
-        <p className="text-[36px] leading-[37px]  bg-[#FBF89F] py-[6px] px-[10px] font-[400] absolute top-[200px] left-[0] right-[0] text-blue font-inconsolata text-center z-[1]">
+        <p className="text-[36px] leading-[37px]  bg-[#D8FF75] py-[6px] px-[10px] font-[400] absolute top-[200px] left-[0] right-[0] text-blue font-inconsolata text-center z-[1]">
           Coming Soon
         </p>
       )}
       <div className={`${model.isComming ? "blur-[4px] bg-black/25" : ""}`}>
         <Image
-          className={`mx-auto w-full ${model.isComming ? "rounded-[4px]" : ""}`}
+          className={`h-[300px] w-[165px] object-cover mx-auto ${model.isComming ? "rounded-[4px]" : ""}`}
           src={model.imageUrl}
           alt={model.imageKey ?? model.name}
           width={165}
@@ -87,11 +87,10 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
             {model.subscribers > 0 && <span>{model.subscribers}</span>}
           </div>
         </div>
-
         <div className="grid gap-y-[8px]">
-          {model.producer?.businessName && (
-            <p className="leading-[18px] text-black font-inconsolata text-base font-normal uppercase">
-              {model.producer?.businessName}
+          {model.businessName && (
+            <p className="leading-[18px] text-[#767676] font-inconsolata text-base font-normal uppercase mb-[10px]">
+              {model.businessName} | {getLastWord(model.businessAddress ?? "")}
             </p>
           )}
           <div className="text-[24px] font-[400] text-black font-hagerman flex items-start gap-[5px]">
@@ -119,10 +118,17 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
           </p>
         </div>
 
-        <div className="text-[20px] leading-[23px] text-grey4 font-inconsolata">
+        <div className="text-[16px] leading-[23px] text-grey4 font-inconsolata">
+          Monthly:{" "}
+          <span className="text-[32px] leading-[23px] font-bold text-black font-inconsolata">
+            £{Number(model.price/3).toFixed(2)}
+          </span> <span className="text-[16px] leading-[23px] font-bold text-grey4 font-inconsolata">(£{Number(model.price).toFixed(2)}/Drop)</span>
+        </div>
+
+        <div className="text-[16px] leading-[23px] text-grey4 font-inconsolata">
           RRP{" "}
           <span className="text-[20px] leading-[23px] font-bold line-through font-inconsolata">
-            £{model.rrp}
+            £{Number(model.rrp/3).toFixed(2)}
           </span>{" "}
           <span className="text-[20px] leading-[23px] font-bold text-blue font-inconsolata">
             {discount}% OFF
@@ -132,14 +138,14 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
         <Button className="bg-blue font-bold" asChild>
           <Link
             href={productLink}
-            className="flex justify-between py-[16px] px-[24px] w-full"
+            className="flex justify-center py-[16px] px-[24px] w-full"
           >
             <span className={`leading-[18px] font-bold font-inconsolata text-lg ${!!hasProduct ? 'mx-auto' : ''}`}>
               {titleButton}{" "}
             </span>
-            {!hasProduct && <span className="leading-[18px] font-bold font-inconsolata">
+            {/* {!hasProduct && <span className="leading-[18px] font-bold font-inconsolata">
               £{Number(model.price).toFixed(2)}
-            </span>}
+            </span>} */}
           </Link>
         </Button>
 

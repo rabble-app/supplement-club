@@ -48,6 +48,7 @@ export default function Products() {
           productService.products(),
           productService.productTags(),
         ]);
+        console.log('productsResponse',productsResponse);
 
         setProducts(productsResponse);
         setInitProducts(productsResponse);

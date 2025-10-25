@@ -284,6 +284,7 @@ export default function Checkout({
               id: "1",
               name: productMain?.name,
               corporation: productMain?.teamName,
+              businessAddress: productMain?.producer?.businessAddress,
               quantityOfSubUnitPerOrder:
                 productMain?.quantityOfSubUnitPerOrder,
               unitsOfMeasurePerSubUnit: productMain?.unitsOfMeasurePerSubUnit,

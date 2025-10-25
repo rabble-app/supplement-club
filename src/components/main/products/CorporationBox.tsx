@@ -10,6 +10,7 @@ export default function CorporationBox({
 	unitsOfMeasurePerSubUnit,
 	quantityOfSubUnitPerOrder,
 	orderPackage,
+	businessAddress,
 }: Readonly<{
 	tags?: string[];
 	name?: string;
@@ -18,6 +19,7 @@ export default function CorporationBox({
 	unitsOfMeasurePerSubUnit?: string;
 	quantityOfSubUnitPerOrder?: number;
 	orderPackage?: IOrderPackageModel;
+	businessAddress?: string;
 }>) {
 	return (
 		<div className="flex flex-col gap-[16px] md:gap-[24px] w-full">
@@ -27,6 +29,7 @@ export default function CorporationBox({
 				businessName={businessName}
 				name={name}
 				orderPackage={orderPackage}
+				businessAddress={businessAddress}
 			/>
 
 			<div className="flex flex-col gap-[16px] font-helvetica">

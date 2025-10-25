@@ -30,7 +30,7 @@ export function getQuarterInfo() {
 	const today = new Date();
 	const normalizedNextQuarterMonth = nextQuarterMonth % 12;
 	const firstDayOfNextQuarter = new Date(nextYear, normalizedNextQuarterMonth, 1);
-	const remainsDaysToNextQuater = getDifferenceInDays(firstDayOfNextQuarter.toISOString(), today.toISOString());
+	const remainsDaysToNextQuater = getDifferenceInDays(firstDayOfNextQuarter.toISOString(), today.toISOString()) -1;
 
 	// Previous quarter calculations
 	const prevQuarterMonth = (Math.floor(month / 3) - 1) * 3;
@@ -163,3 +163,12 @@ export function formatDate(value: string) {
 
 	return `${monthYear.split(" ")[0]} ${day}${suffix} ${monthYear.split(" ")[1]}`;
 }
+
+export function getLastWord(str: string) {
+	// Trim whitespace and split the string by spaces
+	const words = str.trim().split(/\s+/);
+	
+	// Return the last word (if any)
+	return words.length > 0 ? words[words.length - 1] : '';
+  }
+  

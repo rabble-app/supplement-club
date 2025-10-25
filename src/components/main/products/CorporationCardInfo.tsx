@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import IOrderPackageModel from "@/utils/models/IOrderPackageModel";
+import { getLastWord } from "@/utils/utils";
 
 export default function CorporationCardInfo({
   name,
@@ -9,19 +10,21 @@ export default function CorporationCardInfo({
   unitsOfMeasurePerSubUnit,
   quantityOfSubUnitPerOrder,
   orderPackage,
+  businessAddress,
 }: Readonly<{
   name?: string;
   businessName?: string;
   unitsOfMeasurePerSubUnit?: string;
   quantityOfSubUnitPerOrder?: number;
   orderPackage?: IOrderPackageModel;
+  businessAddress?: string;
 }>) {
   const [firstWord, ...rest] = (name ?? "").split(" ");
 
   return (
     <div className="grid gap-[8px]">
       <p className="text-[20px] leading-[24px] tracking-[-0.43px] md:font-[500] font-inconsolata md:text-grey4">
-        {businessName}
+        {businessName} | {getLastWord(businessAddress ?? "")}
       </p>
       <div className="text-[24px] md:text-[32px] leading-[28px] md:leading-[150%] font-hagerman flex items-start gap-[5px]">
         {firstWord}
