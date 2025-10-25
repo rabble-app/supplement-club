@@ -111,7 +111,7 @@ export default function AlignmentDialog({
     >
       £{(Number(orderPackage.pricePerPoche) * storageQuantity).toFixed(2)}
       <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+        (£{orderPackage.pricePerPoche?.toFixed(2)}/Month)
       </span>
     </div>
   );

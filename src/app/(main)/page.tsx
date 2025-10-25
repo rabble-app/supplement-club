@@ -30,22 +30,21 @@ const homeCards = [
   },
   {
     id: 2,
-    src: "/images/icons/people.svg",
-    alt: "People",
-    title: "There’s Savings in Numbers",
-    subtitle: "The More People Join the Cheaper it Gets",
-    description:
-      "Your alignment package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of alignment with the bulk ordering cycle.",
-  },
- 
-  {
-    id: 3,
     src: "/images/truck.svg",
     alt: "Truck",
     title: "Get Started Today",
     subtitle: "Next Day Delivery",
     description:
       "Choose the supplements you want today, and we'll ship you an 'Alignment package' the next day. This ensures you have enough supply to last until the next quarterly drop.",
+  },
+  {
+    id: 3,
+    src: "/images/icons/people.svg",
+    alt: "People",
+    title: "There’s Savings in Numbers",
+    subtitle: "The More People Join the Cheaper it Gets",
+    description:
+      "Your alignment package will align you with the rest of the country, so you’re always part of the nationwide quarterly drop. This means you’re never out of alignment with the bulk ordering cycle.",
   },
 ] as IHomeCardModel[];
 
@@ -181,7 +180,9 @@ const membershipData = [
 
 export default function Home() {
   const productId = process.env.NEXT_PUBLIC_PRODUCT_ID as string;
-  const [productModel, setProductModel] = useState<ISingleProductModel | null>(null);
+  const [productModel, setProductModel] = useState<ISingleProductModel | null>(
+    null
+  );
   const [products, setProducts] = useState<IProductCardModel[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -192,12 +193,12 @@ export default function Home() {
       try {
         const [productData, productsData] = await Promise.all([
           productService.product(productId, process.env.NEXT_PUBLIC_TEAM_ID),
-          productService.productsLimit(3)
+          productService.productsLimit(3),
         ]);
         setProductModel(productData);
         setProducts(productsData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -224,10 +225,13 @@ export default function Home() {
           <div className="relative lg:mx-[auto] lg:w-full flex flex-col lg:flex-row gap-x-[32px] gap-y-[24px] justify-between">
             <div className="flex flex-col items-start  pt-[32px] lg:pt-[72px] lg:left-[68px] h-full">
               <div className="text-[48px] lg:text-[64px] leading-[48px] lg:leading-[74px] font-[400] font-hagerman text-blue mb-[23px]">
-                YOU DON’T NEED <br /> ANOTHER SUPPLEMENT <br /> BRAND
+                YOU DON’T NEED ANOTHER <br /> SUPPLEMENT BRAND
               </div>
               <p className="text-[16px] lg:text-[20px] leading-[24px] lg:leading-[36px] text-[#757575] mb-[58px]">
-              You need pure ingredients before brands get to them. Access quarterly drops of pure, pharmaceutical-grade compounds, delivered direct from the labs, untouched, unblended, and up to 55% cheaper.
+                You need pure ingredients before brands get to them. Access
+                quarterly drops of pure, pharmaceutical-grade compounds,
+                delivered direct from the labs, untouched, unblended, and up to
+                55% cheaper.
               </p>
               <a href="#products">
                 <Image
@@ -240,7 +244,7 @@ export default function Home() {
               </a>
             </div>
             <Image
-              className="hidden lg:block lg:m-auto"
+              className="hidden lg:block lg:m-auto !mt-[195px]"
               src="/images/hero-image.png"
               alt="Vercel logomark"
               width={754}
@@ -264,11 +268,12 @@ export default function Home() {
       <div className="px-[16px] lg:px-[32px] lg:pt-[32px] bg-[#fbfbfb]">
         <div className="max-w-[1500px] mx-auto">
           <div className="grid md:grid-cols-2 gap-x-[32px]  w-full">
-            <div className="ml-auto">
+            <div className="ml-auto mr-[30px]">
               {" "}
               <div className="grid gap-y-[56px] justify-end lg:my-[0] lg:px-[0]">
                 <div className="text-[56px] h-fit lg:text-[64px] leading-[100%] lg:leading-[64px] font-[400] font-hagerman text-blue">
-                  How does it<br className="md:hidden" /> work?
+                  How does it
+                  <br className="md:hidden" /> work?
                 </div>
                 {homeCards.map((card) => (
                   <HomeCardComponent key={card.id} {...card} />
@@ -302,24 +307,43 @@ export default function Home() {
                         <div className="md:mb-[40px] mb-[20px] text-white">
                           <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
                             {productModel?.name}{" "}
-                            <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
-                              £{Number(productModel?.price).toFixed(2)}{" "}
+                            <span>
+                              <span className="font-inconsolata font-semibold text-base text-[#EBEBEB] ml-[38px]">(£{Number(productModel?.price).toFixed(2)}/Drop)</span>
+                              <span className="flex flex-row items-baseline">
+                                <span
+                                  id="price"
+                                  className="font-inconsolata font-semibold text-base leading-none text-[#EBEBEB]"
+                                >
+                                  Monthly:{" "}
+                                </span>{" "}
+                                <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
+                                  £{Number(productModel?.price / 3).toFixed(2)}
+                                </span>
+                              </span>
                             </span>
                           </div>
                           <div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-                            {productModel?.producer?.businessName}
-                            <p className="text-[20px] leading-[23px] text-blue4 font-inconsolata">
-                              <span className="text-[20px] leading-[23px] text-grey2 line-through">
-                                £{Number(productModel?.rrp).toFixed(2)}
+                            By {productModel?.producer?.businessName}
+                            <p className="text-[16px] leading-[23px] text-[#D8FF75] font-inconsolata">
+                              <span
+                                id="price"
+                                className="text-[16px] font-inconsolata font-semibold text-base leading-none text-[#EBEBEB]"
+                              >
+                                RRP:{" "}
                               </span>{" "}
-                              {Number(productModel?.activePercentageDiscount)}%
-                              OFF
+                              <span className="leading-[23px] text-grey2 line-through">
+                                £{Number(productModel?.rrp / 3).toFixed(0)}
+                              </span>{" "}
+                              {Number(
+                                productModel?.activePercentageDiscount
+                              ).toFixed(0)}
+                              % OFF
                             </p>
                           </div>
                         </div>
                         <Button
                           font={"bold"}
-                          className="bg-[#FBF89F] text-blue w-full font-helvetica text-base font-bold"
+                          className="bg-[white] text-blue w-full font-helvetica text-base font-bold"
                           asChild
                         >
                           <Link
@@ -341,7 +365,7 @@ export default function Home() {
       <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
         <div className="max-w-[1500px] mx-auto">
           <div className="lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[32px] bg-white">
-            <div className="relative w-full">
+            {/* <div className="relative w-full">
               <Image
                 className="max-h-[716px] lg:h-[716px] w-full"
                 src="/images/pillow.png"
@@ -384,7 +408,8 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
+            <Image src="/images/homepage.png" alt="Pillow" className="w-full h-[510px] md:h-[759px] object-contain md:object-fill" width={632} height={729}  />
 
             <div className="flex flex-col justify-between">
               <div>
@@ -430,7 +455,7 @@ export default function Home() {
                       width={32}
                       height={32}
                     />
-                    <p className="leading-[16px]">Expensive Advertising</p>
+                    <p className="leading-[16px]">Expensive <br/>Advertising</p>
                   </div>
 
                   <div className="flex flex-col gap-[8px] max-w-[100px]">
@@ -483,13 +508,13 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex flex-col gap-[48px]">
-                <div className="flex items-center gap-[8px] text-[56px] font-bold font-inconsolata">
+                <div className="flex items-center gap-[8px] text-[56px] font-bold font-inconsolata text-[#D8FF75]">
                   £29.00
                   <div className="text-[16px] font-bold font-inconsolata text-[#D1D1D1]">
                     Per Year (Less than £2.50 per month)
                   </div>
                 </div>
-                <div className="flex flex-col gap-[32px] max-w-[604px] w-full mx-auto">
+                <div className="flex flex-col gap-[32px] max-w-[604px] w-full  m-[0px]">
                   <div className="text-left text-[32px] leading-[34px] font-hagerman uppercase">
                     Membership Benefits
                   </div>
@@ -529,12 +554,12 @@ export default function Home() {
                 <div className="flex flex-col gap-[16px] mx-auto w-full">
                   <Button
                     font={"bold"}
-                    className="bg-[#FBF89F] text-blue w-full text-[18px] font-helvetica text-base font-bold h-[49px]"
+                    className="bg-[white] text-blue w-full text-[18px] font-helvetica text-base font-bold h-[49px]"
                     asChild
                   >
                     <Link href="/products">Join Supplement Club</Link>
                   </Button>
-                  <div className="text-center text-[16px] font-helvetica italic tracking-[-0.43px]">
+                  <div className="text-[#D8FF75] text-center text-[16px] font-helvetica italic tracking-[-0.43px]">
                     Try it free — no membership fee on your first 2 drops
                   </div>
                 </div>

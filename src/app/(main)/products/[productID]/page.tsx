@@ -267,6 +267,7 @@ export default function ProductDetails() {
               discount={product.discount!}
               activePercentageDiscount={product?.activePercentageDiscount ?? 0}
               gramsPerCount={product?.gramsPerCount ?? 0}
+              daysUntilNextDrop={product?.daysUntilNextDrop ?? 0}
             />
           )}
         </div>
@@ -301,6 +302,7 @@ export default function ProductDetails() {
           quantityOfSubUnitPerOrder={product?.quantityOfSubUnitPerOrder}
           unitsOfMeasurePerSubUnit={product?.unitsOfMeasurePerSubUnit}
           orderPackage={orderPackage}
+          businessAddress={product?.producer?.businessAddress}
         />
 
         {context?.user &&

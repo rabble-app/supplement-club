@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import type ISingleProductModel from "@/utils/models/ISingleProductModel";
 import { Button } from "../ui/button";
+import { getLastWord } from "@/utils/utils";
 
 export default function ProductInfo({
   product,
@@ -18,7 +19,7 @@ export default function ProductInfo({
           </p>
           <div className="max-w-[500px] text-[32px] lg:text-[48px] leading-[36px] lg:leading-[55px] font-[400] text-white order-2 font-hagerman">
             <p className="pb-[8px] text-[20px] leading-[24px] text-grey9 font-inconsolata">
-              {product?.producer?.businessName}
+              {product?.producer?.businessName} | {getLastWord(product?.producer?.businessAddress ?? "")}
             </p>
             {product?.name}
           </div>
@@ -33,14 +34,10 @@ export default function ProductInfo({
             />
           )}
           <div className="w-full mx-auto lg:m-0 lg:max-w-[410px] order-4">
-            <p className="leading-[18px] text-grey9 mb-[2px]">
-              Quarterly Subscription
-            </p>
-
             <div className="text-[40px] leading-[46px] font-[700] text-white mb-[2px] flex items-center font-inconsolata">
-              £{Number(product?.price ?? 0).toFixed(2)}{" "}
+             <span>Monthly:</span>  £{(Number(product?.price)/3).toFixed(2)}{" "}
               <span className="text-[16px] leading-[18px] text-grey9 ml-[2px]">
-                (£{Number(product?.pricePerCount ?? 0).toFixed(2)} / count)
+                (£{Number(product?.price).toFixed(2)} / Drop)
               </span>
             </div>
 
@@ -49,20 +46,20 @@ export default function ProductInfo({
               <span className="text-[24px] leading-[27px] line-through font-[400] font-inconsolata">
                 £{product?.rrp}
               </span>{" "}
-              <span className="text-[24px] leading-[27px] font-[700] text-blue4 font-inconsolata">
+              <span className="text-[24px] leading-[27px] font-[700] text-[#D8FF75] font-inconsolata">
                 {Number(product?.activePercentageDiscount)}% OFF
               </span>
             </div>
 
             <Button
-              className="bg-[#FBF89F] leading-[18px] text-blue w-full font-bold mb-[14px] font-inconsolata"
+              className="bg-[white] leading-[18px] text-blue w-full font-bold mb-[14px] font-inconsolata"
               asChild
             >
               <Link href={`/products/${product?.id}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID ?? ""}`}>Buy Now</Link>
             </Button>
 
             <div className="flex justify-between">
-              <div className="flex gap-[6px] items-center text-[12px] leading-[20px] font-inter text-white">
+              <div className="flex gap-[6px] items-center text-[12px] leading-[20px] font-inter text-[#D8FF75]">
                 <Image
                   className="text-white"
                   src="/images/icons/check-icon.svg"
@@ -72,7 +69,7 @@ export default function ProductInfo({
                 />
                 Update or cancel anytime
               </div>
-              <div className="flex gap-[6px] items-center text-[12px] leading-[20px] font-inter text-white">
+              <div className="flex gap-[6px] items-center text-[12px] leading-[20px] font-inter text-[#D8FF75]">
                 <Image
                   src="/images/icons/check-icon.svg"
                   alt="Checkmark icon"

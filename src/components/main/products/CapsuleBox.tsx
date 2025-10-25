@@ -96,12 +96,16 @@ export default function CapsuleBox({
 
   const rightCenterText = (
     <div
-      className={`text-xl md:text-3xl flex font-[800] text-black items-center gap-1 font-inconsolata`}
+      className="text-[#767676]"
     >
-      £{orderPackage.price}
-      <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+      <span className="text-[12px] md:text-[16px] leading-3 font-inconsolata block text-right">
+        (£{orderPackage.price?.toFixed(2)}/Drop)
       </span>
+      <span className="flex flex-row items-center gap-1">
+        <span className="text-[12px] md:text-[16px] leading-3 font-inconsolata">Monthly:</span> 
+        <span className="text-xl md:text-3xl flex flex-col font-[800] gap-1 font-inconsolata text-[black]">£{(orderPackage.price/3).toFixed(2)}</span>  
+      </span>   
+      {/* <span className="text-xl md:text-3xl flex flex-col font-[800] text-black gap-1 font-inconsolata">£{(orderPackage.price/3).toFixed(2)}</span>   */}
     </div>
   );
 
@@ -109,7 +113,7 @@ export default function CapsuleBox({
     <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
       RRP{" "}
       <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-        £{(Number(orderPackage.rrp) ?? 0).toFixed(2)}
+        £{(Number(orderPackage.rrp/3) ?? 0).toFixed(2)}
       </span>{" "}
       <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
         {(
