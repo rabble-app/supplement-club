@@ -36,6 +36,8 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 		teamId: model.teamId,
 		tags: model.product.tags,
 		firstDelivery: model.firstDelivery,
+		businessAddress: model.product.producer?.businessAddress ?? "",
+		businessName: model.product.producer?.businessName ?? "",
 	};
 };
 

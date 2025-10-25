@@ -20,4 +20,6 @@ export default interface IProductCardModel {
 	teamId?: string;
 	subscribers: number;
 	firstDelivery?: boolean;
+	businessAddress?: string;
+	businessName?: string;
 }

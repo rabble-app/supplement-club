@@ -4,20 +4,23 @@ import Image from "next/image";
 
 import type IPriceInfoModel from "@/utils/models/api/IPriceInfoModel";
 import { Separator } from "@radix-ui/react-separator";
+import { getQuarterInfo } from "@/utils/utils";
+const { nextQuarter } = getQuarterInfo();
 
 export default function TeamPrice({
   members,
-  rrp,
-  price,
+  // rrp,
+  // price,
   priceInfo,
   isFoundingProduct,
-  pricePerCount,
-  nextPriceDiscountLevel,
+  // pricePerCount,
+  // nextPriceDiscountLevel,
   activeMemberIndex,
-  discount,
+  // discount,
   activePercentageDiscount,
   gramsPerCount,
   capsuleCount,
+  daysUntilNextDrop,
 }: Readonly<{
   rrp: number;
   members: number;
@@ -34,6 +37,7 @@ export default function TeamPrice({
   activePercentageDiscount: number;
   gramsPerCount: number;
   capsuleCount: number;
+  daysUntilNextDrop: number;
 }>) {
   const gPerCount = Number(gramsPerCount) === 0 ? 1 : Number(gramsPerCount);
   function getCurrentClasses(percentageDiscount: number) {
@@ -190,13 +194,13 @@ export default function TeamPrice({
             />
             {members} {`${isFoundingProduct ? "Founding Members" : "Members"}`}
           </div>
-          {!isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
+          {/* {!isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
             <p className="text-[14px] md:text-[16px] font-semibold text-[#999999] leading-[18px] mb-2 md:mb-10">
               {nextPriceDiscountLevel?.membersNeeded} more members unlocks{" "}
               {nextPriceDiscountLevel?.expectedDiscount.toFixed(2)}% off for
               everyone
             </p>
-          )}
+          )} */}
           {isFoundingProduct && activeMemberIndex + 1 < priceInfo.length && (
             <p className="text-[14px] md:text-[16px] leading-[18px] font-semibold text-[#999999]">
               {membersToLaunch} more pre-orders until product launches!
@@ -205,7 +209,10 @@ export default function TeamPrice({
         </div>
 
         <div className="grid gap-[8px]">
-          <div className="text-[28px] font-[900] font-inconsolata flex items-center">
+          {!isFoundingProduct && (
+            <span className="text-[16px] leading-[18px] font-semibold text-[#999999]">Q{nextQuarter} drop in {daysUntilNextDrop} days</span>
+          )}
+          {/* <div className="text-[28px] font-[900] font-inconsolata flex items-center">
             £{Number((price * capsuleCount) / gPerCount).toFixed(2)}{" "}
             <span className="text-[14px] md:text-[16px] leading-[18px] font-bold font-inconsolata text-grey1 ml-[2px] whitespace-nowrap">
               (£{pricePerCount.toFixed(2)} / count)
@@ -222,7 +229,7 @@ export default function TeamPrice({
                 : discount.toFixed(2)}
               % OFF
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
 

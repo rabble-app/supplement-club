@@ -19,7 +19,7 @@ import IOrderPackageModel, {
   MemberType,
 } from "@/utils/models/IOrderPackageModel";
 import OrderSummaryCard2 from "./AlignmentDialogueEditableBox";
-import { getQuarterInfo } from "@/utils/utils";
+import { getLastWord, getQuarterInfo } from "@/utils/utils";
 
 export default function SummaryProduct({
   model,
@@ -201,7 +201,7 @@ export default function SummaryProduct({
         >
           £{Number(orderPackage.price).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-            (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+            (£{(orderPackage.price/3).toFixed(2)}/Month)
           </span>
         </div>
       ),
@@ -222,7 +222,7 @@ export default function SummaryProduct({
         >
           £{Number(orderPackage.price).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-            (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+            (£{(orderPackage.price/3).toFixed(2)}/Month)
           </span>
         </div>
       ),
@@ -245,7 +245,7 @@ export default function SummaryProduct({
         >
           £{(Number(orderPackage.pricePerPoche) * storageQuantity).toFixed(2)}
           <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-            (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+            (£{orderPackage.pricePerPoche?.toFixed(2)}/Month)
           </span>
         </div>
       ),
@@ -292,7 +292,7 @@ export default function SummaryProduct({
           {model?.corporation && model.name && (
             <div className="grid gap-[8px]">
               <p className="text-[20px] leading-[24px] md:font-[500] font-inconsolata md:text-grey4 uppercase">
-                {model.corporation} 
+                {model.corporation} | {getLastWord(model.businessAddress ?? "")}
               </p>
               <div className="text-[24px] md:text-[30px] leading-[28px] md:leading-[48px] font-hagerman flex items-start gap-[5px]">
                 {firstWord}
@@ -484,7 +484,7 @@ export default function SummaryProduct({
                     >
                       £{Number(orderPackage.price).toFixed(2)}
                       <span className="text-xs leading-3 text-grey1 font-inconsolata font-bold">
-                        (£{orderPackage.pricePerCount?.toFixed(2)}/count)
+                        (£{(orderPackage.price/3).toFixed(2)}/Month)
                       </span>
                     </div>
                   ) : (

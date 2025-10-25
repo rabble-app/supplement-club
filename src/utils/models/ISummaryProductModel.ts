@@ -23,4 +23,5 @@ export default interface ISummaryProductModel {
 	orderDate?: string;
 	leadTime?: number;
 	supplierCountry: string;
+	businessAddress?: string;
 }
