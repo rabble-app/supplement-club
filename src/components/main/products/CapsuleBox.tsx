@@ -98,28 +98,28 @@ export default function CapsuleBox({
     <div
       className="text-[#767676]"
     >
-      <span className="text-[12px] md:text-[16px] leading-3 font-inconsolata block text-right">
+      <span className="text-[12px] md:text-[16px] leading-[100%] font-inconsolata block text-right font-[600] mb-[4px]">
         (£{orderPackage.price?.toFixed(2)}/Drop)
       </span>
       <span className="flex flex-row items-center gap-1">
-        <span className="text-[12px] md:text-[16px] leading-3 font-inconsolata">Monthly:</span> 
-        <span className="text-xl md:text-3xl flex flex-col font-[800] gap-1 font-inconsolata text-[black]">£{(orderPackage.price/3).toFixed(2)}</span>  
+        <span className="text-[12px] md:text-[16px] leading-[100%] font-inconsolata font-[600] mt-[-2px]">Monthly:</span> 
+        <span className="text-xl md:text-[32px] leading-[100%] flex flex-col font-[800] gap-1 font-inconsolata text-[black]">£{(orderPackage.price/3).toFixed(2)}</span>  
       </span>   
       {/* <span className="text-xl md:text-3xl flex flex-col font-[800] text-black gap-1 font-inconsolata">£{(orderPackage.price/3).toFixed(2)}</span>   */}
     </div>
   );
 
   const rightBottomContent = (
-    <div className="hidden md:block text-[20px] leading-[20px] text-grey4 md:text-end font-inconsolata whitespace-nowrap">
+    <div className="text-[20px] leading-[100%] text-[#767676] md:text-end font-inconsolata whitespace-nowrap font-[400] mt-[1px] md:mt-[-6px]">
       RRP{" "}
       <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
-        £{(Number(orderPackage.rrp/3) ?? 0).toFixed(2)}
+        £{(Number(orderPackage.rrp/3) ?? 0).toFixed(0)}
       </span>{" "}
       <span className="text-[20px] leading-[20px] font-bold text-blue font-inconsolata whitespace-nowrap">
         {(
           Number(orderPackage.discount ?? 0) +
           Number(orderPackage.extraDiscount ?? 0)
-        ).toFixed(2)}
+        ).toFixed(0)}
         % OFF
       </span>
     </div>

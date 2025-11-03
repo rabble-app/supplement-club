@@ -210,7 +210,7 @@ export default function TeamPrice({
 
         <div className="grid gap-[8px]">
           {!isFoundingProduct && (
-            <span className="text-[16px] leading-[18px] font-semibold text-[#999999]">Q{nextQuarter} drop in {daysUntilNextDrop} days</span>
+            <span className="text-[16px] leading-[100%] font-bold text-[#999999] font-helvetica">Q{nextQuarter} drop in {daysUntilNextDrop} days</span>
           )}
           {/* <div className="text-[28px] font-[900] font-inconsolata flex items-center">
             £{Number((price * capsuleCount) / gPerCount).toFixed(2)}{" "}
