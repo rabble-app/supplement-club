@@ -301,15 +301,23 @@ export default function Home() {
                   />
                 </div>
                 <div className="bg-blue">
-                  <div className="md:w-full md:h-[450px] h-[350px] flex flex-col justify-end">
+                  <div className="md:w-full md:h-[450px] h-[350px] flex flex-col justify-end mt-[50px] md:mt-[0px]">
                     <div className="w-full grid items-end pt-[0px] px-[16px] lg:px-[32px] py-[32px]">
                       {/* <div> */}
-                        <div className="md:mb-[40px] mb-[20px] text-white">
-                          <div className="flex justify-between mb-[7px]">
-                           <p className="text-[36px] leading-[36px] font-[400] font-hagerman">{productModel?.name}<br/><span className="text-[20px] leading-[100%] !text-[#CCCCCC] font-inconsolata">By {productModel?.producer?.businessName}</span></p>
-                           <p>
+                      <div className="md:mb-[40px] mb-[20px] text-white">
+                        <div className="flex justify-between mb-[7px]">
+                          <p className="text-[24px] md:text-[36px] leading-[100%] font-[400] font-hagerman">
+                            {productModel?.name}
+                            <br />
+                            <span className="text-[16px] md:text-[20px] leading-[100%] !text-[#CCCCCC] font-inconsolata">
+                              By {productModel?.producer?.businessName}
+                            </span>
+                          </p>
+                          <p>
                             <span>
-                              <span className="font-inconsolata font-semibold text-base text-[#EBEBEB] ml-[38px]">(£{Number(productModel?.price).toFixed(2)}/Drop)</span>
+                              <span className="font-inconsolata font-semibold text-[14px] md:text-base text-[#EBEBEB] ml-[38px]">
+                                (£{Number(productModel?.price).toFixed(2)}/Drop)
+                              </span>
                               <span className="flex flex-row items-baseline">
                                 <span
                                   id="price"
@@ -317,14 +325,31 @@ export default function Home() {
                                 >
                                   Monthly:{" "}
                                 </span>{" "}
-                                <span className="text-[32px] leading-[100%] font-[800] font-inconsolata ">
+                                <span className="text-[24px] md:text-[32px] leading-[100%] font-[800] font-inconsolata ">
                                   £{Number(productModel?.price / 3).toFixed(2)}
                                 </span>
                               </span>
+                              <p className="text-[16px] md:text-[20px] leading-[100%] font-[400] text-[#EBEBEB] font-inconsolata mt-[5px]">
+                                <span
+                                  id="price"
+                                  className="text-[16px] md:text-[20px] font-inconsolata font-[400px] leading-[100%] text-[#EBEBEB]"
+                                >
+                                  RRP
+                                </span>{" "}
+                                <span className="font-inconsolata leading-[100%] text-[16px] md:text-[20px] font-bold line-through !text-[#EBEBEB]">
+                                  £{Number(productModel?.rrp / 3).toFixed(0)}
+                                </span>{" "}
+                                <span className="font-inconsolata leading-[100%] text-[16px] md:text-[20px] font-bold !text-[#D8FF75]">
+                                  {Number(
+                                    productModel?.activePercentageDiscount
+                                  ).toFixed(0)}
+                                  % OFF
+                                </span>
+                              </p>
                             </span>
-                           </p>   
-                          </div>
-                          <div className="mt-[-17px] text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
+                          </p>
+                        </div>
+                        {/* <div className="mt-[-17px] text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
                            <p>&nbsp;</p>
                             <p className="text-[16px] leading-[23px] text-[#D8FF75] font-inconsolata ">
                               <span
@@ -343,19 +368,19 @@ export default function Home() {
                               % OFF
                               </span>
                             </p>
-                          </div>
-                        </div>
-                        <Button
-                          font={"bold"}
-                          className="bg-[white] text-blue w-full font-helvetica text-base font-bold"
-                          asChild
+                          </div> */}
+                      </div>
+                      <Button
+                        font={"bold"}
+                        className="bg-[white] text-blue w-full font-helvetica text-base font-bold"
+                        asChild
+                      >
+                        <Link
+                          href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}
                         >
-                          <Link
-                            href={`/products/${productId}?teamId=${process.env.NEXT_PUBLIC_TEAM_ID}`}
-                          >
-                            Buy Now
-                          </Link>
-                        </Button>
+                          Buy Now
+                        </Link>
+                      </Button>
                       {/* </div> */}
                     </div>
                   </div>
@@ -413,7 +438,13 @@ export default function Home() {
                 </div>
               </div>
             </div> */}
-            <Image src="/images/homepage.png" alt="Pillow" className="w-full h-[510px] md:h-[759px] object-contain md:object-fill" width={632} height={729}  />
+            <Image
+              src="/images/homepage.png"
+              alt="Pillow"
+              className="w-full h-[510px] md:h-[759px] object-contain md:object-fill"
+              width={632}
+              height={729}
+            />
 
             <div className="flex flex-col justify-between">
               <div>
@@ -459,7 +490,10 @@ export default function Home() {
                       width={32}
                       height={32}
                     />
-                    <p className="leading-[16px]">Expensive <br/>Advertising</p>
+                    <p className="leading-[16px]">
+                      Expensive <br />
+                      Advertising
+                    </p>
                   </div>
 
                   <div className="flex flex-col gap-[8px] max-w-[100px]">

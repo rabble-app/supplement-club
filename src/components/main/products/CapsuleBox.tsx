@@ -98,7 +98,7 @@ export default function CapsuleBox({
     <div
       className="text-[#767676]"
     >
-      <span className="text-[12px] md:text-[16px] leading-[100%] font-inconsolata block text-right font-[600]">
+      <span className="text-[12px] md:text-[16px] leading-[100%] font-inconsolata block text-right font-[600] mb-[4px]">
         (£{orderPackage.price?.toFixed(2)}/Drop)
       </span>
       <span className="flex flex-row items-center gap-1">
@@ -110,7 +110,7 @@ export default function CapsuleBox({
   );
 
   const rightBottomContent = (
-    <div className="hidden md:block text-[20px] leading-[100%] text-[#767676] md:text-end font-inconsolata whitespace-nowrap font-[400] mt-[-6px]">
+    <div className="text-[20px] leading-[100%] text-[#767676] md:text-end font-inconsolata whitespace-nowrap font-[400] mt-[1px] md:mt-[-6px]">
       RRP{" "}
       <span className="text-[20px] leading-[20px] line-through font-bold font-inconsolata">
         £{(Number(orderPackage.rrp/3) ?? 0).toFixed(0)}
