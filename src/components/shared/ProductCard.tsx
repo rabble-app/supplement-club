@@ -118,14 +118,14 @@ export default function ProductCard(model: Readonly<IProductCardModel>) {
           </p>
         </div>
 
-        <div className="text-[16px] leading-[23px] text-grey4 font-inconsolata">
+        <div className="text-[16px] leading-[100%] text-grey4 font-inconsolata font-[600]">
           Monthly:{" "}
-          <span className="text-[32px] leading-[23px] font-bold text-black font-inconsolata">
+          <span className="text-[32px] leading-[100%] font-[800] text-black font-inconsolata">
             £{Number(model.price/3).toFixed(2)}
-          </span> <span className="text-[16px] leading-[23px] font-bold text-grey4 font-inconsolata">(£{Number(model.price).toFixed(2)}/Drop)</span>
+          </span> <span className="text-[16px] leading-[100%] font-semibold text-[#767676] font-inconsolata">(£{Number(model.price).toFixed(2)}/Drop)</span>
         </div>
 
-        <div className="text-[16px] leading-[23px] text-grey4 font-inconsolata">
+        <div className="text-[20px] leading-[100%] font-[300] text-grey4 font-inconsolata mt-[-10px]">
           RRP{" "}
           <span className="text-[20px] leading-[23px] font-bold line-through font-inconsolata">
             £{Number(model.rrp/3).toFixed(2)}
