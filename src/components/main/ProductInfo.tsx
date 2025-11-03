@@ -34,16 +34,16 @@ export default function ProductInfo({
             />
           )}
           <div className="w-full mx-auto lg:m-0 lg:max-w-[410px] order-4">
-            <div className="text-[40px] leading-[46px] font-[700] text-white mb-[2px] flex items-center font-inconsolata">
-             <span>Monthly:</span>  £{(Number(product?.price)/3).toFixed(2)}{" "}
-              <span className="text-[16px] leading-[18px] text-grey9 ml-[2px]">
+            <div className="text-[40px] leading-[46px] font-[700] text-white mb-[2px] flex font-inconsolata items-baseline">
+             <span className="text-[16px] leading-[100%] font-[700] !text-[#D1D1D1] font-inconsolata">Monthly:</span>  £{(Number(product?.price)/3).toFixed(2)}{" "}
+              <span className="text-[16px] leading-[100%] font-[700] font-inconsolata !text-[#D1D1D1] ml-[2px]">
                 (£{Number(product?.price).toFixed(2)} / Drop)
               </span>
             </div>
 
-            <div className="text-[24px] leading-[27px] text-grey9 mb-[20px] lg:mb-[16px] font-inconsolata">
+            <div className="text-[24px] leading-[27px] text-[#D1D1D1] mb-[20px] lg:mb-[16px] font-inconsolata font-[400]">
               RRP{" "}
-              <span className="text-[24px] leading-[27px] line-through font-[400] font-inconsolata">
+              <span className="text-[24px] leading-[27px] line-through font-[700] font-inconsolata">
                 £{product?.rrp}
               </span>{" "}
               <span className="text-[24px] leading-[27px] font-[700] text-[#D8FF75] font-inconsolata">

@@ -303,10 +303,11 @@ export default function Home() {
                 <div className="bg-blue">
                   <div className="md:w-full md:h-[450px] h-[350px] flex flex-col justify-end">
                     <div className="w-full grid items-end pt-[0px] px-[16px] lg:px-[32px] py-[32px]">
-                      <div>
+                      {/* <div> */}
                         <div className="md:mb-[40px] mb-[20px] text-white">
-                          <div className="text-[32px] leading-[36px] font-[400] flex justify-between mb-[7px] font-hagerman">
-                            {productModel?.name}{" "}
+                          <div className="flex justify-between mb-[7px]">
+                           <p className="text-[36px] leading-[36px] font-[400] font-hagerman">{productModel?.name}<br/><span className="text-[20px] leading-[100%] !text-[#CCCCCC] font-inconsolata">By {productModel?.producer?.businessName}</span></p>
+                           <p>
                             <span>
                               <span className="font-inconsolata font-semibold text-base text-[#EBEBEB] ml-[38px]">(£{Number(productModel?.price).toFixed(2)}/Drop)</span>
                               <span className="flex flex-row items-baseline">
@@ -316,28 +317,31 @@ export default function Home() {
                                 >
                                   Monthly:{" "}
                                 </span>{" "}
-                                <span className="text-[32px] leading-[36px] font-[700] font-inconsolata">
+                                <span className="text-[32px] leading-[100%] font-[800] font-inconsolata ">
                                   £{Number(productModel?.price / 3).toFixed(2)}
                                 </span>
                               </span>
                             </span>
+                           </p>   
                           </div>
-                          <div className="text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
-                            By {productModel?.producer?.businessName}
-                            <p className="text-[16px] leading-[23px] text-[#D8FF75] font-inconsolata">
+                          <div className="mt-[-17px] text-[20px] leading-[23px] flex justify-between text-grey2 font-inconsolata">
+                           <p>&nbsp;</p>
+                            <p className="text-[16px] leading-[23px] text-[#D8FF75] font-inconsolata ">
                               <span
                                 id="price"
-                                className="text-[16px] font-inconsolata font-semibold text-base leading-none text-[#EBEBEB]"
+                                className="text-[20px] font-inconsolata font-[400px] leading-[100%] text-[#EBEBEB]"
                               >
-                                RRP:{" "}
+                                RRP
                               </span>{" "}
-                              <span className="leading-[23px] text-grey2 line-through">
+                              <span className="font-inconsolata leading-[23px] text-[20px] font-bold line-through !text-[#EBEBEB]">
                                 £{Number(productModel?.rrp / 3).toFixed(0)}
                               </span>{" "}
+                              <span className="font-inconsolata leading-[23px] text-[20px] font-bold !text-[#D8FF75]">
                               {Number(
                                 productModel?.activePercentageDiscount
                               ).toFixed(0)}
                               % OFF
+                              </span>
                             </p>
                           </div>
                         </div>
@@ -352,7 +356,7 @@ export default function Home() {
                             Buy Now
                           </Link>
                         </Button>
-                      </div>
+                      {/* </div> */}
                     </div>
                   </div>
                 </div>
