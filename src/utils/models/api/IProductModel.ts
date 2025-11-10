@@ -1,4 +1,5 @@
 import type { IProductBenefits } from "../IProductBenefits";
+import { IProductCertificationModel } from "../IProductCardModel";
 import type { IBaseTimestamps } from "./IBaseTimestamps";
 import type { ICapsuleInfoModel } from "./ICapsuleInfoModel";
 import type { IHealthCategories } from "./IHealthCategories";
@@ -59,4 +60,5 @@ export interface IProductModel extends IBaseTimestamps {
 	pochesRequired?: number;
 	orderDate?: string;
 	nextEditableDate?: string;
+	certifications?: IProductCertificationModel[];
 }
