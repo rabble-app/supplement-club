@@ -38,6 +38,7 @@ export const mapProductModel = (model: IProductResponse): IProductCardModel => {
 		firstDelivery: model.firstDelivery,
 		businessAddress: model.product.producer?.businessAddress ?? "",
 		businessName: model.product.producer?.businessName ?? "",
+		certifications: model.product.certifications,
 	};
 };
 
