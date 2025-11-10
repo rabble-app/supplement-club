@@ -22,4 +22,10 @@ export default interface IProductCardModel {
 	firstDelivery?: boolean;
 	businessAddress?: string;
 	businessName?: string;
+	certifications?: IProductCertificationModel[];
+}
+
+export interface IProductCertificationModel {
+	batchNo: string;
+	docUrl: string;
 }
