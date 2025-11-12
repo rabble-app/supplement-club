@@ -11,7 +11,15 @@ export function middleware(req: NextRequest) {
 
 		if (!protoHeader || protoHeader.split(",")[0].trim() !== "https") {
 			const secureUrl = req.nextUrl.clone();
+			const forwardedHost = req.headers.get("x-forwarded-host");
+			const originalHost = forwardedHost || req.headers.get("host");
+
 			secureUrl.protocol = "https";
+			if (originalHost) {
+				const [hostOnly] = originalHost.split(",");
+				secureUrl.host = hostOnly.trim();
+			}
+			secureUrl.port = "";
 
 			return NextResponse.redirect(secureUrl, 301);
 		}
