@@ -6,6 +6,17 @@ const routeMiddlewares = [
 ];
 
 export function middleware(req: NextRequest) {
+	if (process.env.NODE_ENV === "production") {
+		const protoHeader = req.headers.get("x-forwarded-proto");
+
+		if (!protoHeader || protoHeader.split(",")[0].trim() !== "https") {
+			const secureUrl = req.nextUrl.clone();
+			secureUrl.protocol = "https";
+
+			return NextResponse.redirect(secureUrl, 301);
+		}
+	}
+
 	const res = NextResponse.next(); // Initialize response
 
 	// ✅ Set cookie if "ref" query param exists
