@@ -174,7 +174,7 @@ export default function CapsuleBox({
         {capsuleInfo?.map((option) => (
           <label
             key={option.capsuleCount}
-            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer min-h-[239px] md:min-h-[239px] min-h-[80px] ${
+            className={`grid gap-[8px] pt-[6px] pb-[8px] px-[8px] relative cursor-pointer md:min-h-[239px] min-h-[80px] ${
               capsuleCount === option.capsuleCount
                 ? "outline outline-[2px] outline-blue border-b-transparent pb-[7px] mb-[-2px]"
                 : "border-[1px] border-grey18"
