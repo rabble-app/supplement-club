@@ -469,7 +469,7 @@ export default function Home() {
                   <br />
                   <br />
                 </p>
-                <p className="font-[700] mb-[32px] lg:mb-[18px]">
+                <p className="font-[700] mb-[32px] lg:mb-[18px] mt-[0px] md:mt-[74px]">
                   Supplement Club Subscribers don&apos;t pay for:
                 </p>
                 <div className="grid grid-cols-2 gap-[32px] lg:gap-[0] lg:grid-cols-4 items-start mb-[48px] lg:mb-[0px]">
@@ -532,7 +532,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
+      <div className="px-[16px] lg:px-[32px] lg:pt-[32px] mt-[665px] md:mt-[0px]">
         <div className="max-w-[1500px] mx-auto">
           <div className="lg:mx-[auto] w-full grid lg:grid-cols-2 gap-y-[32px] md:gap-x-[32px]">
             <div className="bg-blue w-full py-[60px] px-[32px] text-white flex flex-col gap-[24px]">
