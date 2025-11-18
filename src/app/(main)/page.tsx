@@ -392,59 +392,59 @@ export default function Home() {
       </div>
 
       <div className="px-[16px] lg:px-[32px] lg:pt-[32px]">
-        <div className="max-w-[1500px] mx-auto">
-          <div className="lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[32px] bg-white">
-            {/* <div className="relative w-full">
+        <div className="max-w-[1500px] mx-auto h-[450px] lg:h-[740px]">
+          <div className="lg:mx-[auto] w-full grid lg:grid-cols-2 gap-x-[32px] bg-white h-full">
+            <div className="relative w-full bg-[#6A6255]">
               <Image
-                className="max-h-[716px] lg:h-[716px] w-full"
+                className="float-right h-[430px] md:h-[400px] w-[259px] md:w-[400px] mt-[-100px] md:mt-0 object-contain md:object-cover"
                 src="/images/pillow.png"
                 alt="Checkmark icon"
-                width={632}
-                height={716}
+                width={400}
+                height={400}
               />
               <div className="absolute left-[0] top-[0] w-full h-full grid grid-cols-2 gap-[24px] items-end px-[17px] lg:px-[32px] py-[10px] lg:py-[42px]">
                 <div className="flex flex-col gap-[4px] lg:gap-[22px]">
-                  <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
+                  <p className="font-helvetica text-center text-[24px] leading-[100%] font-[700] text-white">
                     ££££
                   </p>
                   <div className="flex flex-col">
-                    <div className="lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-yellow text-[16px] lg:text-[20px] leading-[18px] lg:leading-[23px] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px]">
+                    <div className="font-helvetica lg:py-[30px] h-[157px] lg:h-[326px] text-center bg-[#D8FF75] text-[16px] lg:text-[20px] leading-[100%] font-[700] flex justify-center items-center w-full px-[10px] lg:px-[30px]">
                       Typical Advertising Spend
                     </div>
-                    <div className="px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[100px] bg-yello1 text-[15px] lg:text-[20px] leading-[17px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
+                    <div className="font-helvetica px-[5px] py-[25px] lg:py-[50px] text-center lg:h-[150px] bg-[#EFFFC8] text-[15px] lg:text-[20px] leading-[100%] font-[700] flex justify-center items-center w-full">
                       The Middlemen&apos;s Cut
                     </div>
-                    <div className="px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[72px] bg-white text-[12px] lg:text-[20px] leading-[14px] lg:leading-[23px] font-[700] flex justify-center items-center w-full">
+                    <div className="font-helvetica px-[5px] py-[14px] lg:py-[30px] text-center lg:h-[100px] bg-white text-[12px] lg:text-[20px] leading-[100%] font-[700] flex justify-center items-center w-full">
                       The Cost of Ingredients
                     </div>
                   </div>
-                  <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
+                  <p className="text-center text-[12px] lg:text-[18px] leading-[100%] font-[700] text-white">
                     What brands charge
                   </p>
                 </div>
                 <div className="flex flex-col gap-[4px] lg:gap-[22px]">
-                  <p className="text-center text-[20px] leading-[27px] font-[700] text-black">
+                  <p className="font-helvetica text-center text-[24px] leading-[100%] font-[700] text-black">
                     £
                   </p>
                   <Button
-                    className="bg-blue text-white w-full font-bold h-[58px] lg:h-[107px] text-[18px] lg:text-[24px] leading-[18px] lg:leading-[27px]"
+                    className="font-helvetica bg-blue text-white w-full font-bold h-[58px] lg:h-[107px] text-[15px] lg:text-[24px] leading-[18px] lg:leading-[27px]"
                     asChild
                   >
-                    <Link href="#">Club Price</Link>
+                    <Link href="#">CLUB PRICE</Link>
                   </Button>
-                  <p className="text-center text-[12px] lg:text-[18px] leading-[14px] lg:leading-[20px] font-[700] text-white">
+                  <p className="font-helvetica text-center text-[12px] lg:text-[18px] leading-[100%] font-[700] text-white">
                     What we charge
                   </p>
                 </div>
               </div>
-            </div> */}
-            <Image
+            </div>
+            {/* <Image
               src="/images/homepage.png"
               alt="Pillow"
               className="w-full h-[510px] md:h-[759px] object-contain md:object-fill"
               width={632}
               height={729}
-            />
+            /> */}
 
             <div className="flex flex-col justify-between">
               <div>
