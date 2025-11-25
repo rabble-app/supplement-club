@@ -182,6 +182,7 @@ export const mapReferalInfoModel = (
 		teams: model?.teams,
 		totalSaved: model?.totalSaved,
 		referrer: model?.referrer,
+		freeMonthsReceived: model.freeMonthsReceived,
 	};
 };
 

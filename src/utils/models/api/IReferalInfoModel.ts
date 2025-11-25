@@ -7,6 +7,7 @@ export default interface IReferalInfoModel {
 	totalSaved: number;
 	referrer: Referrer;
 	userCode: string;
+	freeMonthsReceived: number;
 }
 
 export interface Bonus {
