@@ -7,15 +7,19 @@ export default function ReferInfoCard({
 	teams,
 	price,
 	totalCoint,
+	type = "subscription",
+	freeMonthsReceived,
 }: Readonly<{
 	name: string;
 	referrals: number;
 	teams: number;
 	price: number;
 	totalCoint: number;
+	type?: "coin" | "subscription";
+	freeMonthsReceived: number;
 }>) {
 	return (
-		<div className="p-[16px] grid gap-[16px] rounded-[4px] shadow-3 border-[1px] border-grey35">
+		<div className="p-[16px] flex flex-col rounded-[4px] shadow-3 border-[1px] border-grey35 justify-between">
 			<div>
 				<p className="text-[32px] leading-[36px] font-hagerman uppercase">
 					{name}
@@ -30,27 +34,27 @@ export default function ReferInfoCard({
 					Member of {teams} teams
 				</p>
 			</div>
-			<div className="grid gap-[10px]">
+			<div className="grid gap-[10px] mt-[15px] md:mt-[-62px]">
 				<p className="text-[16px] leading-[18px] font-hagerman uppercase">
-					All Time CLub coin earned
+					{type === "coin" ? "All Time CLub coin earned" : "Membership Months earned"}
 				</p>
 				<div className="flex items-center gap-[10px]">
 					<Image
-						src="/images/coin.svg"
-						alt="Coin balance"
+						src={type === "coin" ? "/images/coin.svg" : "/images/membership-card.svg"}
+						alt={type === "coin" ? "Coin balance" : "Membership card"}
 						width={24}
 						height={24}
 					/>
-					<p className="text-[14px] leading-[14px] font-[600] font-inconsolata">
-						{totalCoint} CC
+					<p className="text-[14px] leading-[100%] font-[600] font-inconsolata">
+						{type === "coin" ? `${totalCoint} CC` : `${freeMonthsReceived} months free earned so far!`}
 					</p>
 				</div>
 			</div>
-			<div className="bg-grey36 p-[10px] rounded-[4px] flex justify-between items-center">
+			<div className="bg-grey36 py-[5px] px-[0] md:px-[10px] rounded-[4px] flex justify-between items-center mt-[15px] md:mt-0">
 				<p className="text-[16px] leading-[18px] font-hagerman uppercase">
 					Savings since joining
 				</p>
-				<p className="text-[14px] font-[900] font-inconsolata">£{price}</p>
+				<p className="text-[14px] font-[900] font-inconsolata">£{type === "coin" ? price : freeMonthsReceived/12 * +process.env.NEXT_PUBLIC_MEMBERSHIP_AMOUNT!}</p>
 			</div>
 		</div>
 	);

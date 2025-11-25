@@ -13,7 +13,7 @@ interface UseNativeShareProps {
  * @returns Function to trigger native share
  */
 export const useNativeShare = ({ url }: UseNativeShareProps) => {
-  const isFirst30Days = useFirst30Days();
+  const [isFirst30Days] = useFirst30Days();
 
   const triggerNativeShare = async () => {
     // Check if it's a mobile device (screen width <= 768px or touch device)

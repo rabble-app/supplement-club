@@ -1,25 +1,26 @@
 import { useUser } from "@/contexts/UserContext";
 import { referalService } from "@/services/referalService";
 import type IReferalInfoModel from "@/utils/models/api/IReferalInfoModel";
-import type IReferalModel from "@/utils/models/api/IReferalModel";
+// import type IReferalModel from "@/utils/models/api/IReferalModel";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import BalanceCard from "../dashboard/referral/BalanceCard";
-import MilestoneCard from "../dashboard/referral/MilestoneCard";
+// import MilestoneCard from "../dashboard/referral/MilestoneCard";
 import ReferInfoCard from "../dashboard/referral/ReferInfoCard";
-import ReferalCard from "../dashboard/referral/ReferalCard";
+// import ReferalCard from "../dashboard/referral/ReferalCard";
 import ReferalLinkCard from "../dashboard/referral/ReferalLinkCard";
 import ViewTrakingDialog from "../dashboard/referral/ViewTrakingDialog";
 import { Button } from "../ui/button";
 import Spinner from "./Spinner";
 import { CustomToast, StatusToast } from "./Toast";
+import ReferralSection from "./ReferralSection";
 
 export default function ReferralCardsWithLink({
 	className,
 }: Readonly<{ className?: string }>) {
 	const [loading, setLoading] = useState(true);
-	const [nextMilestone, setNextMilestone] = useState<IReferalModel>();
+	// const [nextMilestone, setNextMilestone] = useState<IReferalModel>();
 	const [openReferal, setOpenReferal] = useState(false);
 	const pathname = usePathname();
 	const [isDashboard] = useState(pathname === "/dashboard/referral");
@@ -27,7 +28,7 @@ export default function ReferralCardsWithLink({
 	const [userName] = useState(
 		`${context?.user?.firstName ?? ""} ${context?.user?.lastName ?? ""}`,
 	);
-	const [referalRewars, setReferalRewars] = useState<IReferalModel[]>([]);
+	// const [referalRewars, setReferalRewars] = useState<IReferalModel[]>([]);
 	const [referalInfo, setReferalInfo] = useState<IReferalInfoModel>({
 		balance: 0,
 	} as IReferalInfoModel);
@@ -35,18 +36,22 @@ export default function ReferralCardsWithLink({
 	const fetchReferralData = useCallback(async () => {
 		try {
 			setLoading(true);
-			const [referalInfoResponse, referalRewardsResponse] = await Promise.all([
+			// const [referalInfoResponse, referalRewardsResponse] = await Promise.all([
+			// 	referalService.getReferalInfo(),
+			// 	referalService.getRewars(),
+			// ]);
+			const [referalInfoResponse] = await Promise.all([
 				referalService.getReferalInfo(),
-				referalService.getRewars(),
+				// referalService.getRewars(),
 			]);
 
 			setReferalInfo(referalInfoResponse);
-			setReferalRewars(referalRewardsResponse);
+			// setReferalRewars(referalRewardsResponse);
 
-			const next = referalRewardsResponse.find(
-				(i) => i.amount > referalInfoResponse?.balance,
-			);
-			setNextMilestone(next);
+			// const next = referalRewardsResponse.find(
+			// 	(i) => i.amount > referalInfoResponse?.balance,
+			// );
+			// setNextMilestone(next);
 		} catch (error) {
 			CustomToast({
 				title: `Error fetching referral data: ${error}`,
@@ -61,16 +66,19 @@ export default function ReferralCardsWithLink({
 		fetchReferralData();
 	}, [fetchReferralData]);
 
-	async function claimReward() {
-		await fetchReferralData();
-	}
+	// async function claimReward() {
+	// 	await fetchReferralData();
+	// }
 
 	function updateVisibility(val: boolean) {
 		setOpenReferal(val);
 	}
 
 	if (loading) return <Spinner />;
-
+	const monthsreceived = referalInfo?.freeMonthsReceived ? referalInfo.freeMonthsReceived : 0;
+	// const monthsreceived = 6;
+    const percentage = monthsreceived ? (monthsreceived / 24) * 100 : 0;
+	
 	return (
 		<div
 			className={`mx-[-16px] px-[16px] md:mx-auto pt-[16px] md:py-[24px] md:px-[32px] bg-grey11 md:bg-white ${className}`}
@@ -87,14 +95,20 @@ export default function ReferralCardsWithLink({
 									.length ?? 0
 							}
 							teams={referalInfo.teams ?? 0}
+							freeMonthsReceived={referalInfo.freeMonthsReceived}
 						/>
 
 						<div className="grid gap-[10px]">
-							<BalanceCard balance={referalInfo?.balance} />
+							<BalanceCard balance={referalInfo?.balance} type="subscription" />
 
-							<MilestoneCard
+							{/* <MilestoneCard
 								balance={referalInfo?.balance}
 								nextMilestone={nextMilestone}
+							/> */}
+							<ReferralSection 
+								percentage={percentage} 
+								remainingDays={30} 
+								route="referral" 
 							/>
 						</div>
 					</div>
@@ -104,6 +118,7 @@ export default function ReferralCardsWithLink({
 				)}
 				<ReferalLinkCard
 					refCode={context?.user?.refCode ?? referalInfo?.referralCode}
+					userCode={context?.user?.userCode ?? referalInfo?.userCode}
 				>
 					{!isDashboard && (
 						<Button
@@ -116,7 +131,7 @@ export default function ReferralCardsWithLink({
 						</Button>
 					)}
 				</ReferalLinkCard>
-				{isDashboard && (
+				{/* {isDashboard && (
 					<div className="text-[32px] leading-[38px] font-hagerman mt-[10px]">
 						Spend your club coins
 					</div>
@@ -153,7 +168,7 @@ export default function ReferralCardsWithLink({
 							isBestValue={idx + 1 === referalRewars.length}
 						/>
 					))}
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);
